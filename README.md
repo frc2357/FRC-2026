@@ -1,2 +1,7 @@
 # FRC-2026
-GitHub repository for the First Robotics Competition team 2357, System Meltdown in the year of our Lord two thousand and twenty six.
+
+Repository for FRC Team 2357 for the 2026 year: Rebuilt
+
+### Dev Setup
+
+[Check out this file to learn how to setup your environment](./_documentation/devSetup.md)
