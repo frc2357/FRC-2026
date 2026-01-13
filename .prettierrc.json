@@ -1,4 +1,4 @@
 {
-    "plugins": ["prettier-plugin-java"],
-    "tabWidth": 2
+  "plugins": ["prettier-plugin-java"],
+  "tabWidth": 2
 }
