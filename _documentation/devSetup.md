@@ -16,7 +16,6 @@
 
 1. Node.js is used to control the formatting in our repository
 2. To manage multiple version of Node, we will first install Node Version Manager
-
    - [Windows Install](https://github.com/coreybutler/nvm-windows/releases/latest)
    - [Mac/Linux Install](https://github.com/nvm-sh/nvm/releases/latest)
 
