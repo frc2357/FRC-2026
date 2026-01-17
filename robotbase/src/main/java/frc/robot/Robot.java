@@ -71,6 +71,14 @@ public class Robot extends TimedRobot {
       m_driverControls::getLeftY,
       m_driverControls::getRightX
     );
+    spindexer = new Spindexer();
+
+    backLeftCam = new PhotonVisionCamera(
+      Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
+      Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
+    );
+
+    swerve.registerTelemetry(logger::telemeterize);
     Robot.swerve.setDefaultCommand(m_defaultDrive);
     SmartDashboard.putNumber("Spindexer", 0.0);
     Robot.spindexer.setDefaultCommand(
