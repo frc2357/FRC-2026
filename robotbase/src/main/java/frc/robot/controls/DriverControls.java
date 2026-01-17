@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
-import frc.robot.commands.PullYaw;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.controls.util.RumbleInterface;
@@ -24,8 +23,6 @@ public class DriverControls implements RumbleInterface {
   public void mapControls() {
     m_controller.back().onTrue(new FlipPerspective());
     m_controller.start().onTrue(new ResetPerspective());
-
-    m_controller.a().whileTrue(new PullYaw());
   }
 
   public Dimensionless getRightX() {
