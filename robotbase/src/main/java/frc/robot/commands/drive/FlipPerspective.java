@@ -18,6 +18,7 @@ public class FlipPerspective extends Command {
   @Override
   public void end(boolean interrupted) {
     Robot.swerve.setOperatorPerspectiveForward(
-        Robot.swerve.getOperatorForwardDirection().rotateBy(Rotation2d.k180deg));
+      Robot.swerve.getOperatorForwardDirection().rotateBy(Rotation2d.k180deg)
+    );
   }
 }

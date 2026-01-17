@@ -5,15 +5,15 @@ import frc.robot.Robot;
 
 public class SpindexerStop extends Command {
 
-    public SpindexerStop() {
-        addRequirements(Robot.spindexer);
-    }
+  public SpindexerStop() {
+    addRequirements(Robot.spindexer);
+  }
 
-    public boolean isFinished() {
-        return false;
-    }
+  public boolean isFinished() {
+    return false;
+  }
 
-    public void end(boolean interrupted) {
-        Robot.spindexer.stop();
-    }
+  public void end(boolean interrupted) {
+    Robot.spindexer.stop();
+  }
 }

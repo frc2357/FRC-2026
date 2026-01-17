@@ -13,26 +13,27 @@ import frc.robot.Constants.SPINDEXER;
 
 public class Spindexer extends SubsystemBase {
 
-    private SparkMax m_motor;
+  private SparkMax m_motor;
 
-    public Spindexer() {
-        m_motor = new SparkMax(CAN_ID.SPINDEXER_MOTOR, MotorType.kBrushless);
-        m_motor.configure(
-                SPINDEXER.MOTOR_CONFIG,
-                ResetMode.kNoResetSafeParameters,
-                PersistMode.kNoPersistParameters);
-    }
+  public Spindexer() {
+    m_motor = new SparkMax(CAN_ID.SPINDEXER_MOTOR, MotorType.kBrushless);
+    m_motor.configure(
+      SPINDEXER.MOTOR_CONFIG,
+      ResetMode.kNoResetSafeParameters,
+      PersistMode.kNoPersistParameters
+    );
+  }
 
-    public void setAxisSpeed(Dimensionless axisSpeed) {
-        axisSpeed.times(SPINDEXER.AXIS_MAX_SPEED);
-        setSpeed(axisSpeed);
-    }
+  public void setAxisSpeed(Dimensionless axisSpeed) {
+    axisSpeed.times(SPINDEXER.AXIS_MAX_SPEED);
+    setSpeed(axisSpeed);
+  }
 
-    public void setSpeed(Dimensionless percentOutput) {
-        m_motor.set(percentOutput.in(Value));
-    }
+  public void setSpeed(Dimensionless percentOutput) {
+    m_motor.set(percentOutput.in(Value));
+  }
 
-    public void stop() {
-        m_motor.stopMotor();
-    }
+  public void stop() {
+    m_motor.stopMotor();
+  }
 }

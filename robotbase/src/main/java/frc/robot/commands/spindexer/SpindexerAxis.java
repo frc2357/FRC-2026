@@ -7,26 +7,26 @@ import java.util.function.Supplier;
 
 public class SpindexerAxis extends Command {
 
-    private Supplier<Dimensionless> m_axis;
+  private Supplier<Dimensionless> m_axis;
 
-    public SpindexerAxis(Supplier<Dimensionless> axis) {
-        m_axis = axis;
-        addRequirements(Robot.spindexer);
-    }
+  public SpindexerAxis(Supplier<Dimensionless> axis) {
+    m_axis = axis;
+    addRequirements(Robot.spindexer);
+  }
 
-    @Override
-    public void execute() {
-        Dimensionless axisValue = m_axis.get();
-        Robot.spindexer.setAxisSpeed(axisValue);
-    }
+  @Override
+  public void execute() {
+    Dimensionless axisValue = m_axis.get();
+    Robot.spindexer.setAxisSpeed(axisValue);
+  }
 
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 
-    @Override
-    public void end(boolean interrupted) {
-        Robot.spindexer.stop();
-    }
+  @Override
+  public void end(boolean interrupted) {
+    Robot.spindexer.stop();
+  }
 }

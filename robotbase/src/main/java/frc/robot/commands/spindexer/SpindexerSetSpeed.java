@@ -6,25 +6,25 @@ import frc.robot.Robot;
 
 public class SpindexerSetSpeed extends Command {
 
-    private Dimensionless m_speed;
+  private Dimensionless m_speed;
 
-    public SpindexerSetSpeed(Dimensionless speed) {
-        addRequirements(Robot.spindexer);
-        m_speed = speed;
-    }
+  public SpindexerSetSpeed(Dimensionless speed) {
+    addRequirements(Robot.spindexer);
+    m_speed = speed;
+  }
 
-    @Override
-    public void initialize() {
-        Robot.spindexer.setSpeed(m_speed);
-    }
+  @Override
+  public void initialize() {
+    Robot.spindexer.setSpeed(m_speed);
+  }
 
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 
-    @Override
-    public void end(boolean interrupted) {
-        Robot.spindexer.stop();
-    }
+  @Override
+  public void end(boolean interrupted) {
+    Robot.spindexer.stop();
+  }
 }
