@@ -5,28 +5,47 @@
 package frc.robot;
 
 import com.ctre.phoenix6.HootAutoReplay;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.drive.DefaultDrive;
+import frc.robot.controls.DriverControls;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
+  private static DriverControls m_driverControls;
+  private static Command m_defaultDrive;
+  public static CommandSwerveDrivetrain swerve;
 
-  private final RobotContainer m_robotContainer;
-
+  private final Telemetry logger = new Telemetry(
+    Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
+  );
   /* log and replay timestamp and joystick data */
   private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
     .withTimestampReplay()
     .withJoystickReplay();
 
   public Robot() {
-    m_robotContainer = new RobotContainer();
+    swerve = TunerConstants.createDrivetrain();
+    m_driverControls = new DriverControls();
+    m_defaultDrive = new DefaultDrive(
+      m_driverControls::getLeftX,
+      m_driverControls::getLeftY,
+      m_driverControls::getRightX
+    );
+
+    swerve.registerTelemetry(logger::telemeterize);
+    Robot.swerve.setDefaultCommand(m_defaultDrive);
   }
 
   @Override
   public void robotPeriodic() {
     m_timeAndJoystickReplay.update();
+
     CommandScheduler.getInstance().run();
   }
 
@@ -41,8 +60,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
