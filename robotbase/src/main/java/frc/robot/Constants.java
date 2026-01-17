@@ -110,10 +110,6 @@ public class Constants {
       .inverted(false)
       .smartCurrentLimit(40, 40)
       .openLoopRampRate(0.25); // TODO: double check these values
-        .idleMode(IdleMode.kCoast)
-        .inverted(false)
-        .smartCurrentLimit(20, 20)
-        .openLoopRampRate(0.25); // TODO: double check these values
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
   }

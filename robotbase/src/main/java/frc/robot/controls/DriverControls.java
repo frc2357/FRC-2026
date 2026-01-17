@@ -71,8 +71,9 @@ public class DriverControls implements RumbleInterface {
   private double modifyAxis(double value) {
     value = deadband(value, CONTROLLER.DRIVER_CONTROLLER_DEADBAND);
     value = Math.copySign(
-        Math.pow(value, Constants.CONTROLLER.JOYSTICK_RAMP_EXPONENT),
-        value);
+      Math.pow(value, Constants.CONTROLLER.JOYSTICK_RAMP_EXPONENT),
+      value
+    );
     return value;
   }
 
