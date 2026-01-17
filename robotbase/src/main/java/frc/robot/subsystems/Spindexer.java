@@ -4,10 +4,8 @@ import static edu.wpi.first.units.Units.Value;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkMax;
-
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-
+import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
@@ -37,5 +35,4 @@ public class Spindexer extends SubsystemBase {
     public void stop() {
         m_motor.stopMotor();
     }
-
 }
