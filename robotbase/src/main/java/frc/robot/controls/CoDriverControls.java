@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.controls.util.RumbleInterface;
-import edu.wpi.first.units.measure.Dimensionless;
 
 public class CoDriverControls implements RumbleInterface {
 
@@ -16,12 +15,12 @@ public class CoDriverControls implements RumbleInterface {
 
   public CoDriverControls() {
     m_controller = new CommandXboxController(
-        CONTROLLER.CODRIVER_CONTROLLER_PORT);
+      CONTROLLER.CODRIVER_CONTROLLER_PORT
+    );
     mapControls();
   }
 
-  public void mapControls() {
-  }
+  public void mapControls() {}
 
   public Dimensionless getRightX() {
     return Value.of(modifyAxis(-m_controller.getRightX()));
@@ -30,8 +29,9 @@ public class CoDriverControls implements RumbleInterface {
   private double modifyAxis(double value) {
     value = deadband(value, CONTROLLER.DRIVER_CONTROLLER_DEADBAND);
     value = Math.copySign(
-        Math.pow(value, Constants.CONTROLLER.JOYSTICK_RAMP_EXPONENT),
-        value);
+      Math.pow(value, Constants.CONTROLLER.JOYSTICK_RAMP_EXPONENT),
+      value
+    );
     return value;
   }
 
