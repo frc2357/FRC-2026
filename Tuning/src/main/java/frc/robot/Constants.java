@@ -18,8 +18,8 @@ package frc.robot;
  */
 public final class Constants {
 
-  public static final class CAN_ID {
+  public static final class CONTROLLER {
 
-    public static final int kDriverControllerPort = 0;
+    public static final int DRIVER_CONTROLLER_PORT = 1;
   }
 }
