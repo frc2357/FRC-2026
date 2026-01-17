@@ -14,6 +14,7 @@ import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.PhotonVisionCamera;
+import frc.robot.subsystems.Spindexer;
 
 public class Robot extends TimedRobot {
 
@@ -23,6 +24,7 @@ public class Robot extends TimedRobot {
   public static CommandSwerveDrivetrain swerve;
 
   public static PhotonVisionCamera backLeftCam;
+  public static Spindexer spindexer;
 
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
@@ -40,6 +42,7 @@ public class Robot extends TimedRobot {
       m_driverControls::getLeftY,
       m_driverControls::getRightX
     );
+    spindexer = new Spindexer();
 
     backLeftCam = new PhotonVisionCamera(
       Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,

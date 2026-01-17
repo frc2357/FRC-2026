@@ -1,11 +1,14 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Acceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -79,5 +82,21 @@ public class Constants {
         )
       );
     }
+  }
+
+  public static final class CAN_ID {
+
+    public static final int SPINDEXER_MOTOR = 1; // TODO: Figure out CAN_ID
+  }
+
+  public static final class SPINDEXER {
+
+    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
+      .idleMode(IdleMode.kCoast)
+      .inverted(false)
+      .smartCurrentLimit(20, 20)
+      .openLoopRampRate(0.25); // TODO: double check these values
+
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50);
   }
 }
