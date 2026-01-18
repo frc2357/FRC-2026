@@ -1,0 +1,21 @@
+package frc.robot.commands.Intake;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
+
+public class IntakeStop extends Command {
+
+    public IntakeStop() {
+        addRequirements(Robot.Intake);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        Robot.Intake.stop();
+    }
+}
