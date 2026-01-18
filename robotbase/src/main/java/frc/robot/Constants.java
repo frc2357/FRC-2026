@@ -86,7 +86,7 @@ public class Constants {
 
   public static final class CAN_ID {
 
-    public static final int SPINDEXER_MOTOR = 1; // TODO: Figure out CAN_ID
+    public static final int SPINDEXER_MOTOR = 23; // TODO: Figure out CAN_ID
   }
 
   public static final class SPINDEXER {
