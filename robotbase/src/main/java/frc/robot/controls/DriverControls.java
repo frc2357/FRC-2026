@@ -1,6 +1,5 @@
 package frc.robot.controls;
 
-import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
