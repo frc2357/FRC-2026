@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -378,6 +379,13 @@ public class CommandSwerveDrivetrain
   private final SwerveRequest.PointWheelsAt m_pointAt =
     new SwerveRequest.PointWheelsAt();
 
+  private final SwerveRequest.FieldCentricFacingAngle m_driveAtAngle =
+    new SwerveRequest.FieldCentricFacingAngle().withHeadingPID(
+      Constants.SWERVE.HEADING_CONTROLLER_P,
+      Constants.SWERVE.HEADING_CONTROLLER_I,
+      Constants.SWERVE.HEADING_CONTROLLER_D
+    );
+
   public void driveFieldRelative(
     LinearVelocity x,
     LinearVelocity y,
@@ -388,6 +396,19 @@ public class CommandSwerveDrivetrain
         .withVelocityX(x)
         .withVelocityY(y)
         .withRotationalRate(rotationalRate)
+    );
+  }
+
+  public void driveAtAngle(
+    LinearVelocity x,
+    LinearVelocity y,
+    Rotation2d angle
+  ) {
+    this.setControl(
+      m_driveAtAngle
+        .withVelocityX(x)
+        .withVelocityY(y)
+        .withTargetDirection(angle)
     );
   }
 
