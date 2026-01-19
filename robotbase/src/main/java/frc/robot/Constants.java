@@ -61,13 +61,25 @@ public class Constants {
 
       public static final String NAME = "backRight";
       // real transform
+      // public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
+      //   Units.Inches.of(-4.624),
+      //   Units.Inches.of(7.799),
+      //   Units.Inches.of(22.055),
+      //   new Rotation3d(
+      //     Units.Degrees.of(0),
+      //     Units.Degrees.of(10),
+      //     Units.Degrees.of(180)
+      //   )
+      // );
+
+      // Transform of camera flipped
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
         Units.Inches.of(-4.624),
-        Units.Inches.of(7.799),
+        Units.Inches.of(7.299),
         Units.Inches.of(22.055),
         new Rotation3d(
           Units.Degrees.of(0),
-          Units.Degrees.of(10),
+          Units.Degrees.of(-10),
           Units.Degrees.of(180)
         )
       );
@@ -77,13 +89,25 @@ public class Constants {
 
       public static final String NAME = "backLeft";
       // true transform
+      // public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
+      //   Units.Inches.of(-6.516),
+      //   Units.Inches.of(-5.028),
+      //   Units.Inches.of(21.137),
+      //   new Rotation3d(
+      //     Units.Degrees.of(0),
+      //     Units.Degrees.of(10),
+      //     Units.Degrees.of(180)
+      //   )
+      // );
+
+      // Camera flipped
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-        Units.Inches.of(-6.516),
+        Units.Inches.of(-9.516),
         Units.Inches.of(-5.028),
         Units.Inches.of(21.137),
         new Rotation3d(
           Units.Degrees.of(0),
-          Units.Degrees.of(10),
+          Units.Degrees.of(-10),
           Units.Degrees.of(180)
         )
       );
