@@ -16,7 +16,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -26,7 +25,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -64,7 +62,10 @@ public class CommandSwerveDrivetrain
   private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization =
     new SwerveRequest.SysIdSwerveRotation();
 
-  /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
+  /*
+   * SysId routine for characterizing translation. This is used to find PID gains
+   * for the drive motors.
+   */
   private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
     new SysIdRoutine.Config(
       null, // Use default ramp rate (1 V/s)
@@ -81,7 +82,11 @@ public class CommandSwerveDrivetrain
     )
   );
 
-  /* SysId routine for characterizing steer. This is used to find PID gains for the steer motors. */
+  /*
+   * SysId routine for characterizing steer. This is used to find PID gains for
+   * the steer motors.
+   */
+  @SuppressWarnings("unused")
   private final SysIdRoutine m_sysIdRoutineSteer = new SysIdRoutine(
     new SysIdRoutine.Config(
       null, // Use default ramp rate (1 V/s)
@@ -99,8 +104,10 @@ public class CommandSwerveDrivetrain
 
   /*
    * SysId routine for characterizing rotation.
-   * This is used to find PID gains for the FieldCentricFacingAngle HeadingController.
-   * See the documentation of SwerveRequest.SysIdSwerveRotation for info on importing the log to SysId.
+   * This is used to find PID gains for the FieldCentricFacingAngle
+   * HeadingController.
+   * See the documentation of SwerveRequest.SysIdSwerveRotation for info on
+   * importing the log to SysId.
    */
   private final SysIdRoutine m_sysIdRoutineRotation = new SysIdRoutine(
     new SysIdRoutine.Config(
@@ -132,12 +139,14 @@ public class CommandSwerveDrivetrain
   /**
    * Constructs a CTRE SwerveDrivetrain using the specified constants.
    * <p>
-   * This constructs the underlying hardware devices, so users should not construct
-   * the devices themselves. If they need the devices, they can access them through
+   * This constructs the underlying hardware devices, so users should not
+   * construct
+   * the devices themselves. If they need the devices, they can access them
+   * through
    * getters in the classes.
    *
-   * @param drivetrainConstants   Drivetrain-wide constants for the swerve drive
-   * @param modules               Constants for each specific module
+   * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
+   * @param modules             Constants for each specific module
    */
   public CommandSwerveDrivetrain(
     SwerveDrivetrainConstants drivetrainConstants,
@@ -152,8 +161,10 @@ public class CommandSwerveDrivetrain
   /**
    * Constructs a CTRE SwerveDrivetrain using the specified constants.
    * <p>
-   * This constructs the underlying hardware devices, so users should not construct
-   * the devices themselves. If they need the devices, they can access them through
+   * This constructs the underlying hardware devices, so users should not
+   * construct
+   * the devices themselves. If they need the devices, they can access them
+   * through
    * getters in the classes.
    *
    * @param drivetrainConstants     Drivetrain-wide constants for the swerve drive
@@ -176,19 +187,27 @@ public class CommandSwerveDrivetrain
   /**
    * Constructs a CTRE SwerveDrivetrain using the specified constants.
    * <p>
-   * This constructs the underlying hardware devices, so users should not construct
-   * the devices themselves. If they need the devices, they can access them through
+   * This constructs the underlying hardware devices, so users should not
+   * construct
+   * the devices themselves. If they need the devices, they can access them
+   * through
    * getters in the classes.
    *
-   * @param drivetrainConstants       Drivetrain-wide constants for the swerve drive
+   * @param drivetrainConstants       Drivetrain-wide constants for the swerve
+   *                                  drive
    * @param odometryUpdateFrequency   The frequency to run the odometry loop. If
-   *                                  unspecified or set to 0 Hz, this is 250 Hz on
+   *                                  unspecified or set to 0 Hz, this is 250 Hz
+   *                                  on
    *                                  CAN FD, and 100 Hz on CAN 2.0.
-   * @param odometryStandardDeviation The standard deviation for odometry calculation
-   *                                  in the form [x, y, theta]ᵀ, with units in meters
+   * @param odometryStandardDeviation The standard deviation for odometry
+   *                                  calculation
+   *                                  in the form [x, y, theta]ᵀ, with units in
+   *                                  meters
    *                                  and radians
-   * @param visionStandardDeviation   The standard deviation for vision calculation
-   *                                  in the form [x, y, theta]ᵀ, with units in meters
+   * @param visionStandardDeviation   The standard deviation for vision
+   *                                  calculation
+   *                                  in the form [x, y, theta]ᵀ, with units in
+   *                                  meters
    *                                  and radians
    * @param modules                   Constants for each specific module
    */
@@ -212,7 +231,8 @@ public class CommandSwerveDrivetrain
   }
 
   /**
-   * Returns a command that applies the specified control request to this swerve drivetrain.
+   * Returns a command that applies the specified control request to this swerve
+   * drivetrain.
    *
    * @param request Function returning the request to apply
    * @return Command to run
@@ -247,10 +267,14 @@ public class CommandSwerveDrivetrain
   public void periodic() {
     /*
      * Periodically try to apply the operator perspective.
-     * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.
-     * This allows us to correct the perspective in case the robot code restarts mid-match.
-     * Otherwise, only check and apply the operator perspective if the DS is disabled.
-     * This ensures driving behavior doesn't change until an explicit disable event occurs during testing.
+     * If we haven't applied the operator perspective before, then we should apply
+     * it regardless of DS state.
+     * This allows us to correct the perspective in case the robot code restarts
+     * mid-match.
+     * Otherwise, only check and apply the operator perspective if the DS is
+     * disabled.
+     * This ensures driving behavior doesn't change until an explicit disable event
+     * occurs during testing.
      */
     if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
       DriverStation.getAlliance().ifPresent(allianceColor -> {
@@ -280,11 +304,14 @@ public class CommandSwerveDrivetrain
   }
 
   /**
-   * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate
+   * Adds a vision measurement to the Kalman Filter. This will correct the
+   * odometry pose estimate
    * while still accounting for measurement noise.
    *
-   * @param visionRobotPoseMeters The pose of the robot as measured by the vision camera.
-   * @param timestampSeconds The timestamp of the vision measurement in seconds.
+   * @param visionRobotPoseMeters The pose of the robot as measured by the vision
+   *                              camera.
+   * @param timestampSeconds      The timestamp of the vision measurement in
+   *                              seconds.
    */
   @Override
   public void addVisionMeasurement(
@@ -298,17 +325,22 @@ public class CommandSwerveDrivetrain
   }
 
   /**
-   * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate
+   * Adds a vision measurement to the Kalman Filter. This will correct the
+   * odometry pose estimate
    * while still accounting for measurement noise.
    * <p>
    * Note that the vision measurement standard deviations passed into this method
    * will continue to apply to future measurements until a subsequent call to
    * {@link #setVisionMeasurementStdDevs(Matrix)} or this method.
    *
-   * @param visionRobotPoseMeters The pose of the robot as measured by the vision camera.
-   * @param timestampSeconds The timestamp of the vision measurement in seconds.
-   * @param visionMeasurementStdDevs Standard deviations of the vision pose measurement
-   *     in the form [x, y, theta]ᵀ, with units in meters and radians.
+   * @param visionRobotPoseMeters    The pose of the robot as measured by the
+   *                                 vision camera.
+   * @param timestampSeconds         The timestamp of the vision measurement in
+   *                                 seconds.
+   * @param visionMeasurementStdDevs Standard deviations of the vision pose
+   *                                 measurement
+   *                                 in the form [x, y, theta]ᵀ, with units in
+   *                                 meters and radians.
    */
   @Override
   public void addVisionMeasurement(
@@ -327,14 +359,15 @@ public class CommandSwerveDrivetrain
    * Return the pose at a given timestamp, if the buffer is not empty.
    *
    * @param timestampSeconds The timestamp of the pose in seconds.
-   * @return The pose at the given timestamp (or Optional.empty() if the buffer is empty).
+   * @return The pose at the given timestamp (or Optional.empty() if the buffer is
+   *         empty).
    */
   @Override
   public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
     return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
   }
 
-  //NON-GENERATED CODE BEYOND THIS POINT
+  // NON-GENERATED CODE BEYOND THIS POINT
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final SwerveRequest.FieldCentric m_driveFieldCentric =
     new SwerveRequest.FieldCentric().withDriveRequestType(
