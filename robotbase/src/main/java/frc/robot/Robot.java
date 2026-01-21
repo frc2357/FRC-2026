@@ -4,14 +4,23 @@
 
 package frc.robot;
 
+import static frc.robot.Constants.CHOREO.AUTO_FACTORY;
+
+import choreo.auto.AutoRoutine;
 import com.ctre.phoenix6.HootAutoReplay;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.auto.choreoGenerated.ChoreoTraj;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
+import frc.robot.networkTables.AutoChooserManager;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.PhotonVisionCamera;
 import frc.robot.subsystems.Spindexer;
@@ -25,6 +34,11 @@ public class Robot extends TimedRobot {
 
   public static PhotonVisionCamera backLeftCam;
   public static Spindexer spindexer;
+  public static Alliance alliance = null;
+
+  public static ChoreoTraj m_choreoTraj;
+
+  private AutoChooserManager m_autoChooserManager;
 
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
@@ -43,6 +57,8 @@ public class Robot extends TimedRobot {
       m_driverControls::getRightX
     );
     spindexer = new Spindexer();
+
+    m_autoChooserManager = new AutoChooserManager();
 
     backLeftCam = new PhotonVisionCamera(
       Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
@@ -72,6 +88,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    swerve.configNeutralMode(NeutralModeValue.Brake);
+    //AutoRoutine routine = AUTO_FACTORY.newRoutine("FlipTest");
+
+    m_autonomousCommand = Commands.sequence(
+      new InstantCommand(() -> System.out.println("Start Auto")),
+      AUTO_FACTORY.resetOdometry("FlipTest"),
+      new InstantCommand(() -> System.out.println("Crab")),
+      AUTO_FACTORY.trajectoryCmd("FlipTest"),
+      new InstantCommand(() -> System.out.println("Finished Auto"))
+    );
+
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
