@@ -1,12 +1,11 @@
 package frc.robot.commands.Intake;
-
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class IntakeStop extends Command {
 
     public IntakeStop() {
-        addRequirements(Robot.Intake);
+        addRequirements(Robot.intake);
     }
 
     @Override
@@ -16,6 +15,6 @@ public class IntakeStop extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        Robot.Intake.stop();
+        Robot.intake.stop();
     }
 }

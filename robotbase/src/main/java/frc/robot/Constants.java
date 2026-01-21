@@ -8,6 +8,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
@@ -31,14 +32,11 @@ public class Constants {
 
   public static final class SWERVE {
 
-    public static final AngularVelocity MAX_ANGULAR_RATE =
-      RotationsPerSecond.of(1);
-    public static final LinearVelocity MAX_SPEED =
-      TunerConstants.kSpeedAt12Volts;
+    public static final AngularVelocity MAX_ANGULAR_RATE = RotationsPerSecond.of(1);
+    public static final LinearVelocity MAX_SPEED = TunerConstants.kSpeedAt12Volts;
 
     public static final Dimensionless AXIS_MAX_ANGULAR_RATE = Units.Percent.of(
-      50
-    );
+        50);
     public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
   }
 
@@ -98,14 +96,20 @@ public class Constants {
       .openLoopRampRate(0.25); // TODO: double check these values
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50);
+  public static final class CAN_ID {
+
+    public static final int INTAKE_MOTOR = 0;
+
   }
 
   public static final class INTAKE {
 
-    public static final SparkBaseConfig MOTOR_CONFIG_LEFT = new SparkMaxConfig();
-    .idleMode(IdleMode.kCoast)
-    .inverted(false)
-    .smartCurrentLimit(20, 20)
-    .openLoopRampRate(0.25)
+    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
+
+    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
+        .idleMode(IdleMode.kCoast)
+        .inverted(false)
+        .smartCurrentLimit(20, 20)
+        .openLoopRampRate(0.25);
   }
 }
