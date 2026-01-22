@@ -4,7 +4,7 @@ import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
-public class IntakeSetSpeed  extends Command {
+public class IntakeSetSpeed extends Command {
 
   private Dimensionless m_speed;
 
