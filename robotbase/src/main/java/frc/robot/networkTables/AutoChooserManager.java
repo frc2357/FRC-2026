@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.commands.auto.AutoBase;
+import frc.robot.commands.auto.Crab;
+import frc.robot.commands.auto.FlipTest;
 import java.util.Map;
 
 public class AutoChooserManager {
@@ -15,7 +17,7 @@ public class AutoChooserManager {
   private Map<String, Command> m_autoCommandsToBind = Map.of();
 
   // The auto routines that will show up on the auto command chooser.
-  private AutoBase[] m_autos = {};
+  private AutoBase[] m_autos = { new Crab(), new FlipTest() };
 
   private AutoChooser m_autoChooser = new AutoChooser();
 
