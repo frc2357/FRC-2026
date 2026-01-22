@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import choreo.trajectory.SwerveSample;
+import choreo.util.ChoreoAllianceFlipUtil;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -14,8 +16,12 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,6 +31,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.CHOREO;
+import frc.robot.Robot;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -378,6 +386,53 @@ public class CommandSwerveDrivetrain
   private final SwerveRequest.PointWheelsAt m_pointAt =
     new SwerveRequest.PointWheelsAt();
 
+  public void resetHeading(Rotation2d heading) {
+    super.resetRotation(heading);
+  }
+
+  public void resetTranslation(Translation2d translation) {
+    super.resetTranslation(translation);
+  }
+
+  public ChassisSpeeds getCurrentChassisSpeeds() {
+    return super.getState().Speeds;
+  }
+
+  private Twist2d m_fieldRelativeRobotVelocity = new Twist2d();
+
+  public LinearVelocity getXVelocity() {
+    return Units.MetersPerSecond.of(
+      getCurrentChassisSpeeds().vxMetersPerSecond
+    );
+  }
+
+  public LinearVelocity getYVelocity() {
+    return Units.MetersPerSecond.of(
+      getCurrentChassisSpeeds().vyMetersPerSecond
+    );
+  }
+
+  private void updateFieldVelocity() {
+    Translation2d linearFieldVelocity = new Translation2d(
+      getXVelocity().in(Units.MetersPerSecond),
+      getYVelocity().in(Units.MetersPerSecond)
+    ).rotateBy(getFieldRelativePose2d().getRotation());
+
+    m_fieldRelativeRobotVelocity = new Twist2d(
+      linearFieldVelocity.getX(),
+      linearFieldVelocity.getY(),
+      getPigeon2()
+        .getAngularVelocityZWorld()
+        .getValue()
+        .in(Units.RadiansPerSecond)
+    );
+  }
+
+  private final SwerveRequest.ApplyFieldSpeeds m_fieldSpeedsRequest =
+    new SwerveRequest.ApplyFieldSpeeds().withDriveRequestType(
+      DriveRequestType.Velocity
+    );
+
   public void driveFieldRelative(
     LinearVelocity x,
     LinearVelocity y,
@@ -409,5 +464,88 @@ public class CommandSwerveDrivetrain
       module.getDriveMotor().stopMotor();
       module.getSteerMotor().stopMotor();
     }
+  }
+
+  public void followChoreoPath(SwerveSample sample) {
+    System.out.println("choreo following path" + sample.toString());
+    Pose2d pose = getFieldRelativePose2d();
+    CHOREO.ROTATION_CONTROLLER.enableContinuousInput(-Math.PI, Math.PI);
+
+    var targetSpeeds = sample.getChassisSpeeds();
+    targetSpeeds.vxMetersPerSecond += CHOREO.X_CONTROLLER.calculate(
+      pose.getX(),
+      sample.x
+    );
+    targetSpeeds.vyMetersPerSecond += CHOREO.Y_CONTROLLER.calculate(
+      pose.getY(),
+      sample.y
+    );
+    targetSpeeds.omegaRadiansPerSecond += CHOREO.ROTATION_CONTROLLER.calculate(
+      pose.getRotation().getRadians(),
+      sample.heading
+    );
+    setControl(
+      m_fieldSpeedsRequest
+        .withSpeeds(targetSpeeds)
+        .withWheelForceFeedforwardsX(sample.moduleForcesX())
+        .withWheelForceFeedforwardsY(sample.moduleForcesY())
+    );
+  }
+
+  /**
+   * Sets the pose straight as you input it, with no flipping to compensate for alliance.
+   * @param poseToSet The pose it will set.
+   */
+  public void setFieldRelativePose2d(Pose2d poseToSet) {
+    super.resetPose(poseToSet);
+  }
+
+  /**
+   * Sets the translation straight as you input it, with no flipping to compensate for alliance.
+   * @param translationToSet The translation it will set.
+   */
+  public void setFieldRelativeTranslation2d(Translation2d translationToSet) {
+    super.resetTranslation(translationToSet);
+  }
+
+  /**
+   * Gets the pose, with no flipping to compensate for alliance.
+   * @return The field relative pose.
+   */
+  public Pose2d getFieldRelativePose2d() {
+    return super.getState().Pose;
+  }
+
+  /**
+   * The pose with flipping to ensure it is always on the blue origin.
+   * @return The pose flipped to ensure it is on the blue origin.
+   */
+  public Pose2d getAllianceRelativePose2d() {
+    var curPose = getFieldRelativePose2d();
+    return Robot.alliance == Alliance.Blue
+      ? curPose
+      : ChoreoAllianceFlipUtil.flip(curPose);
+  }
+
+  public Pose2d makePoseAllianceRelative(Pose2d pose) {
+    return Robot.alliance == Alliance.Blue
+      ? pose
+      : ChoreoAllianceFlipUtil.flip(pose);
+  }
+
+  public Pose2d flipYAxis(Pose2d poseToFlip) {
+    return new Pose2d(
+      poseToFlip.getX(),
+      ChoreoAllianceFlipUtil.flipY(poseToFlip.getY()),
+      poseToFlip.getRotation()
+    );
+  }
+
+  public Pose2d flipXAxis(Pose2d poseToFlip) {
+    return new Pose2d(
+      ChoreoAllianceFlipUtil.flipX(poseToFlip.getX()),
+      poseToFlip.getY(),
+      poseToFlip.getRotation()
+    );
   }
 }
