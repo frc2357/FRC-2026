@@ -47,7 +47,7 @@ public class Constants {
     );
     public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
 
-    public static final double HEADING_CONTROLLER_P = 0.1;
+    public static final double HEADING_CONTROLLER_P = 4.5;
     public static final double HEADING_CONTROLLER_I = 0;
     public static final double HEADING_CONTROLLER_D = 0;
   }

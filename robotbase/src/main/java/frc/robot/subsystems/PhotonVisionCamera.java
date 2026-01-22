@@ -242,4 +242,8 @@ public class PhotonVisionCamera extends SubsystemBase {
     }
     return Double.NaN;
   }
+
+  // public TargetInfo getNewestTargetInfo(long timeoutMs) {
+  //   m_targetInfo
+  // }
 }
