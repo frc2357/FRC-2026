@@ -18,7 +18,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 // https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/tuner-swerve/index.html
 public class TunerConstants {
 
-  // Both sets of gains need to be tuned to your individual robot.
+    // Both sets of gains need to be tuned to your individual robot.
 
   // The steer motor uses any SwerveModule.SteerRequestType control request with
   // the
@@ -61,9 +61,9 @@ public class TunerConstants {
   private static final SteerFeedbackType kSteerFeedbackType =
     SteerFeedbackType.FusedCANcoder;
 
-  // The stator current at which the wheels start to slip;
-  // This needs to be tuned to your individual robot
-  private static final Current kSlipCurrent = Amps.of(120);
+    // The stator current at which the wheels start to slip;
+    // This needs to be tuned to your individual robot
+    private static final Current kSlipCurrent = Amps.of(120);
 
   // Initial configs for the drive and steer motors and the azimuth encoder; these
   // cannot be null.
@@ -92,22 +92,22 @@ public class TunerConstants {
     "./logs/example.hoot"
   );
 
-  // Theoretical free speed (m/s) at 12 V applied output;
-  // This needs to be tuned to your individual robot
-  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.12);
+    // Theoretical free speed (m/s) at 12 V applied output;
+    // This needs to be tuned to your individual robot
+    public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.12);
 
-  // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
-  // This may need to be tuned to your individual robot
-  private static final double kCoupleRatio = 3.5714285714285716;
+    // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
+    // This may need to be tuned to your individual robot
+    private static final double kCoupleRatio = 3.5714285714285716;
 
-  private static final double kDriveGearRatio = 6.746031746031747;
-  private static final double kSteerGearRatio = 21.428571428571427;
-  private static final Distance kWheelRadius = Inches.of(1.8);
+    private static final double kDriveGearRatio = 6.746031746031747;
+    private static final double kSteerGearRatio = 21.428571428571427;
+    private static final Distance kWheelRadius = Inches.of(1.8);
 
-  private static final boolean kInvertLeftSide = false;
-  private static final boolean kInvertRightSide = true;
+    private static final boolean kInvertLeftSide = false;
+    private static final boolean kInvertRightSide = true;
 
-  private static final int kPigeonId = 5;
+    private static final int kPigeonId = 5;
 
   // These are only used for simulation
   private static final MomentOfInertia kSteerInertia = KilogramSquareMeters.of(
@@ -166,8 +166,8 @@ public class TunerConstants {
   private static final boolean kFrontLeftSteerMotorInverted = true;
   private static final boolean kFrontLeftEncoderInverted = false;
 
-  private static final Distance kFrontLeftXPos = Inches.of(13);
-  private static final Distance kFrontLeftYPos = Inches.of(13);
+    private static final Distance kFrontLeftXPos = Inches.of(13);
+    private static final Distance kFrontLeftYPos = Inches.of(13);
 
   // Front Right
   private static final int kFrontRightDriveMotorId = 13;
@@ -179,8 +179,8 @@ public class TunerConstants {
   private static final boolean kFrontRightSteerMotorInverted = true;
   private static final boolean kFrontRightEncoderInverted = false;
 
-  private static final Distance kFrontRightXPos = Inches.of(13);
-  private static final Distance kFrontRightYPos = Inches.of(-13);
+    private static final Distance kFrontRightXPos = Inches.of(13);
+    private static final Distance kFrontRightYPos = Inches.of(-13);
 
   // Back Left
   private static final int kBackLeftDriveMotorId = 15;
@@ -192,8 +192,8 @@ public class TunerConstants {
   private static final boolean kBackLeftSteerMotorInverted = true;
   private static final boolean kBackLeftEncoderInverted = false;
 
-  private static final Distance kBackLeftXPos = Inches.of(-13);
-  private static final Distance kBackLeftYPos = Inches.of(13);
+    private static final Distance kBackLeftXPos = Inches.of(-13);
+    private static final Distance kBackLeftYPos = Inches.of(13);
 
   // Back Right
   private static final int kBackRightDriveMotorId = 17;
@@ -205,8 +205,8 @@ public class TunerConstants {
   private static final boolean kBackRightSteerMotorInverted = true;
   private static final boolean kBackRightEncoderInverted = false;
 
-  private static final Distance kBackRightXPos = Inches.of(-13);
-  private static final Distance kBackRightYPos = Inches.of(-13);
+    private static final Distance kBackRightXPos = Inches.of(-13);
+    private static final Distance kBackRightYPos = Inches.of(-13);
 
   public static final SwerveModuleConstants<
     TalonFXConfiguration,
@@ -292,16 +292,8 @@ public class TunerConstants {
   {
 
     /**
-     * Constructs a CTRE SwerveDrivetrain using the specified constants.
-     * <p>
-     * This constructs the underlying hardware devices, so users should not
-     * construct
-     * the devices themselves. If they need the devices, they can access them
-     * through
-     * getters in the classes.
-     *
-     * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
-     * @param modules             Constants for each specific module
+     * Creates a CommandSwerveDrivetrain instance.
+     * This should only be called once in your robot program,.
      */
     public TunerSwerveDrivetrain(
       SwerveDrivetrainConstants drivetrainConstants,
@@ -314,22 +306,18 @@ public class TunerConstants {
         drivetrainConstants,
         modules
       );
+    public static CommandSwerveDrivetrain createDrivetrain() {
+        return new CommandSwerveDrivetrain(
+                DrivetrainConstants,
+                FrontLeft,
+                FrontRight,
+                BackLeft,
+                BackRight);
     }
 
     /**
-     * Constructs a CTRE SwerveDrivetrain using the specified constants.
-     * <p>
-     * This constructs the underlying hardware devices, so users should not
-     * construct
-     * the devices themselves. If they need the devices, they can access them
-     * through
-     * getters in the classes.
-     *
-     * @param drivetrainConstants     Drivetrain-wide constants for the swerve drive
-     * @param odometryUpdateFrequency The frequency to run the odometry loop. If
-     *                                unspecified or set to 0 Hz, this is 250 Hz on
-     *                                CAN FD, and 100 Hz on CAN 2.0.
-     * @param modules                 Constants for each specific module
+     * Swerve Drive class utilizing CTR Electronics' Phoenix 6 API with the selected
+     * device types.
      */
     public TunerSwerveDrivetrain(
       SwerveDrivetrainConstants drivetrainConstants,
@@ -391,5 +379,4 @@ public class TunerConstants {
         modules
       );
     }
-  }
 }
