@@ -1,6 +1,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -41,6 +42,9 @@ public class Constants {
     public static final LinearVelocity MAX_SPEED =
       TunerConstants.kSpeedAt12Volts;
 
+    public static final AngularVelocity MAX_DRIVE_AT_ANGLE_ANGULAR_RATE =
+      RadiansPerSecond.of(2);
+
     public static final Dimensionless AXIS_MAX_ANGULAR_RATE = Units.Percent.of(
       50
     );
@@ -59,6 +63,10 @@ public class Constants {
       "CONNECTION REGAINED WITH ORANGE PI*********";
 
     public static final double MAX_ANGLE = 45;
+
+    public static final int NAIVE_APRIL_TAG_PIPELINE = 0;
+
+    public static final long NAIVE_APRIL_TAG_TARGET_TIMEOUT = 50;
 
     public static final class BACK_RIGHT_CAM {
 

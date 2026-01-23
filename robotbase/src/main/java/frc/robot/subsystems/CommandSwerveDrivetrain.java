@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
+import frc.robot.Constants.SWERVE;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -288,11 +289,6 @@ public class CommandSwerveDrivetrain
         m_hasAppliedOperatorPerspective = true;
       });
     }
-
-    SmartDashboard.putNumber(
-      "robot angle",
-      this.getState().Pose.getRotation().getDegrees()
-    );
   }
 
   private void startSimThread() {
@@ -386,11 +382,13 @@ public class CommandSwerveDrivetrain
     new SwerveRequest.PointWheelsAt();
 
   private final SwerveRequest.FieldCentricFacingAngle m_driveAtAngle =
-    new SwerveRequest.FieldCentricFacingAngle().withHeadingPID(
-      Constants.SWERVE.HEADING_CONTROLLER_P,
-      Constants.SWERVE.HEADING_CONTROLLER_I,
-      Constants.SWERVE.HEADING_CONTROLLER_D
-    );
+    new SwerveRequest.FieldCentricFacingAngle()
+      .withHeadingPID(
+        SWERVE.HEADING_CONTROLLER_P,
+        SWERVE.HEADING_CONTROLLER_I,
+        SWERVE.HEADING_CONTROLLER_D
+      )
+      .withMaxAbsRotationalRate(SWERVE.MAX_DRIVE_AT_ANGLE_ANGULAR_RATE);
 
   public void driveFieldRelative(
     LinearVelocity x,
@@ -415,7 +413,6 @@ public class CommandSwerveDrivetrain
         .withVelocityX(x)
         .withVelocityY(y)
         .withTargetDirection(angle)
-        .withMaxAbsRotationalRate(RadiansPerSecond.of(2))
     );
   }
 
