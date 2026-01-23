@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.CHOREO;
+import frc.robot.Constants.SWERVE;
 import frc.robot.Robot;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import java.util.Optional;
@@ -430,11 +431,13 @@ public class CommandSwerveDrivetrain
     );
 
   private final SwerveRequest.FieldCentricFacingAngle m_driveAtAngle =
-    new SwerveRequest.FieldCentricFacingAngle().withHeadingPID(
-      Constants.SWERVE.HEADING_CONTROLLER_P,
-      Constants.SWERVE.HEADING_CONTROLLER_I,
-      Constants.SWERVE.HEADING_CONTROLLER_D
-    );
+    new SwerveRequest.FieldCentricFacingAngle()
+      .withHeadingPID(
+        SWERVE.HEADING_CONTROLLER_P,
+        SWERVE.HEADING_CONTROLLER_I,
+        SWERVE.HEADING_CONTROLLER_D
+      )
+      .withMaxAbsRotationalRate(SWERVE.MAX_DRIVE_AT_ANGLE_ANGULAR_RATE);
 
   public void driveFieldRelative(
     LinearVelocity x,
@@ -459,7 +462,6 @@ public class CommandSwerveDrivetrain
         .withVelocityX(x)
         .withVelocityY(y)
         .withTargetDirection(angle)
-        .withMaxAbsRotationalRate(RadiansPerSecond.of(2))
     );
   }
 
