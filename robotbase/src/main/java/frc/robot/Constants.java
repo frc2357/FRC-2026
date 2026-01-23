@@ -8,7 +8,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
@@ -87,6 +86,7 @@ public class Constants {
 
   public static final class CAN_ID {
 
+    public static final int INTAKE_MOTOR = 0;
     public static final int SPINDEXER_MOTOR = 23; // TODO: Figure out CAN_ID
   }
 
@@ -99,9 +99,6 @@ public class Constants {
       .openLoopRampRate(0.25); // TODO: double check these values
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50);
-  public static final class CAN_ID {
-
-    public static final int INTAKE_MOTOR = 0;
   }
 
   public static final class INTAKE {
