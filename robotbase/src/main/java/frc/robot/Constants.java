@@ -32,11 +32,14 @@ public class Constants {
 
   public static final class SWERVE {
 
-    public static final AngularVelocity MAX_ANGULAR_RATE = RotationsPerSecond.of(1);
-    public static final LinearVelocity MAX_SPEED = TunerConstants.kSpeedAt12Volts;
+    public static final AngularVelocity MAX_ANGULAR_RATE =
+      RotationsPerSecond.of(1);
+    public static final LinearVelocity MAX_SPEED =
+      TunerConstants.kSpeedAt12Volts;
 
     public static final Dimensionless AXIS_MAX_ANGULAR_RATE = Units.Percent.of(
-        50);
+      50
+    );
     public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
   }
 
@@ -99,7 +102,6 @@ public class Constants {
   public static final class CAN_ID {
 
     public static final int INTAKE_MOTOR = 0;
-
   }
 
   public static final class INTAKE {
@@ -107,9 +109,9 @@ public class Constants {
     public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
-        .idleMode(IdleMode.kCoast)
-        .inverted(false)
-        .smartCurrentLimit(20, 20)
-        .openLoopRampRate(0.25);
+      .idleMode(IdleMode.kCoast)
+      .inverted(false)
+      .smartCurrentLimit(20, 20)
+      .openLoopRampRate(0.25);
   }
 }

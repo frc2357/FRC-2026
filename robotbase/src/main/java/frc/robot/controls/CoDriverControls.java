@@ -15,12 +15,12 @@ public class CoDriverControls implements RumbleInterface {
 
   public CoDriverControls() {
     m_controller = new CommandXboxController(
-        CONTROLLER.CODRIVER_CONTROLLER_PORT);
+      CONTROLLER.CODRIVER_CONTROLLER_PORT
+    );
     mapControls();
   }
 
-  public void mapControls() {
-  }
+  public void mapControls() {}
 
   public Dimensionless getRightX() {
     return Value.of(modifyAxis(-m_controller.getRightX()));

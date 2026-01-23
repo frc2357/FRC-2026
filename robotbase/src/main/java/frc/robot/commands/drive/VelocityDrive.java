@@ -20,19 +20,20 @@ public class VelocityDrive extends Command {
   @Override
   public void initialize() {
     Robot.swerve.driveFieldRelative(
-        MetersPerSecond.of(SmartDashboard.getNumber("Drive Target MS", 2)),
-        MetersPerSecond.zero(),
-        RadiansPerSecond.zero());
+      MetersPerSecond.of(SmartDashboard.getNumber("Drive Target MS", 2)),
+      MetersPerSecond.zero(),
+      RadiansPerSecond.zero()
+    );
   }
 
   @Override
   public void execute() {
     double RotationsPerSecond = Robot.swerve
-        .getModule(0)
-        .getDriveMotor()
-        .getVelocity()
-        .getValue()
-        .in(Units.RotationsPerSecond);
+      .getModule(0)
+      .getDriveMotor()
+      .getVelocity()
+      .getValue()
+      .in(Units.RotationsPerSecond);
     SmartDashboard.putNumber("Drive RPS", RotationsPerSecond);
   }
 }
