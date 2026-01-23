@@ -459,6 +459,7 @@ public class CommandSwerveDrivetrain
         .withVelocityX(x)
         .withVelocityY(y)
         .withTargetDirection(angle)
+        .withMaxAbsRotationalRate(RadiansPerSecond.of(2))
     );
   }
 
