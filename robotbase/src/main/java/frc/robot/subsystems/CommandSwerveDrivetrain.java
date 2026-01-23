@@ -415,6 +415,7 @@ public class CommandSwerveDrivetrain
         .withVelocityX(x)
         .withVelocityY(y)
         .withTargetDirection(angle)
+        .withMaxAbsRotationalRate(RadiansPerSecond.of(2))
     );
   }
 
@@ -436,5 +437,9 @@ public class CommandSwerveDrivetrain
       module.getDriveMotor().stopMotor();
       module.getSteerMotor().stopMotor();
     }
+  }
+
+  public Rotation2d getRobotRotation() {
+    return this.getState().Pose.getRotation();
   }
 }

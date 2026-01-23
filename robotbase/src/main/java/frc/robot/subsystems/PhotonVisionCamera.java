@@ -2,9 +2,13 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PHOTON_VISION;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -20,6 +24,10 @@ public class PhotonVisionCamera extends SubsystemBase {
     public double yaw = Double.NaN;
     public double pitch = Double.NaN;
     public long timestamp = 0;
+
+    public long getTimestamp() {
+      return timestamp;
+    }
   }
 
   // all of these are protected so we can use them in the extended classes
@@ -243,7 +251,21 @@ public class PhotonVisionCamera extends SubsystemBase {
     return Double.NaN;
   }
 
-  // public TargetInfo getNewestTargetInfo(long timeoutMs) {
-  //   m_targetInfo
-  // }
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Cam Yaw", getTargetYaw(21, 50));
+  }
+
+  public double getNewestTargetYaw(long timeoutMs) {
+    if (isValidTarget(21, timeoutMs)) {
+      return m_targetInfo[21].yaw;
+    }
+    return Double.NaN;
+    // for (int i = 1; i < m_targetInfo.length; i++) {
+    //   if (isValidTarget(i, timeoutMs)) {
+    //     return Optional.of(m_targetInfo[i]);
+    //   }
+    // }
+    //return Optional.empty();
+  }
 }
