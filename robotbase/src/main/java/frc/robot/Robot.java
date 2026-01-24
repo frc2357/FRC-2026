@@ -14,9 +14,9 @@ import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.PhotonVisionCamera;
 import frc.robot.subsystems.Spindexer;
-import frc.robot.subsystems.Intake;
 
 public class Robot extends TimedRobot {
 
@@ -52,9 +52,6 @@ public class Robot extends TimedRobot {
       Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
       Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
     );
-        m_driverControls::getLeftX,
-        m_driverControls::getLeftY,
-        m_driverControls::getRightX);
 
     swerve.registerTelemetry(logger::telemeterize);
     Robot.swerve.setDefaultCommand(m_defaultDrive);

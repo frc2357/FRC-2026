@@ -14,11 +14,20 @@ import frc.robot.Constants.INTAKE;
 public class Intake extends SubsystemBase {
 
   private SparkMax m_motor;
+  private SparkMax m_motor2;
 
   public Intake() {
     m_motor = new SparkMax(CAN_ID.INTAKE_MOTOR, MotorType.kBrushless);
 
     m_motor.configure(
+      INTAKE.MOTOR_CONFIG,
+      ResetMode.kNoResetSafeParameters,
+      PersistMode.kNoPersistParameters
+    );
+
+    m_motor2 = new SparkMax(CAN_ID.INTAKE_MOTOR, MotorType.kBrushless);
+
+    m_motor2.configure(
       INTAKE.MOTOR_CONFIG,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
