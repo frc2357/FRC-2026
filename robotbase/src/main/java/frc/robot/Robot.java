@@ -17,9 +17,9 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.PhotonVisionCamera;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Spindexer;
+import frc.robot.vision.PhotonVisionCamera;
 
 public class Robot extends TimedRobot {
 
@@ -54,7 +54,9 @@ public class Robot extends TimedRobot {
 
     backLeftCam = new PhotonVisionCamera(
       Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
-      Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
+      Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM,
+      Constants.PHOTON_VISION.BACK_LEFT_CAM.kSingleTagStdDevs,
+      Constants.PHOTON_VISION.BACK_LEFT_CAM.kMultiTagStdDevs
     );
 
     swerve.registerTelemetry(logger::telemeterize);
