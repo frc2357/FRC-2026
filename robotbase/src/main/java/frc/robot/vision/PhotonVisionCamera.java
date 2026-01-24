@@ -1,16 +1,24 @@
-package frc.robot.subsystems;
+package frc.robot.vision;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.PHOTON_VISION;
 import java.util.List;
+import java.util.Optional;
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Controls the photon vision camera options. */
-public class PhotonVisionCamera extends SubsystemBase {
+public class PhotonVisionCamera {
 
   /*
    * The class for the object we use to cache our target data
@@ -21,6 +29,15 @@ public class PhotonVisionCamera extends SubsystemBase {
     public double pitch = Double.NaN;
     public long timestamp = 0;
   }
+
+  /*
+   * Estimate to add to a swerve pose estimator
+   */
+  public record SwervePoseEstimate(
+    Pose2d pose,
+    Matrix<N3, N1> stdDevs,
+    double timestamp
+  ) {}
 
   // all of these are protected so we can use them in the extended classes
   // which are only extended so we can control which pipelines we are using.
@@ -40,6 +57,11 @@ public class PhotonVisionCamera extends SubsystemBase {
    */
   protected final TargetInfo[] m_targetInfo;
 
+  /**
+   * The latest estimated pose for this camera
+   */
+  protected Optional<EstimatedRobotPose> m_poseEstimate = Optional.empty();
+
   /** The robot origin to camera lens transform 3D that we use to make the pose estimator. */
   protected final Transform3d ROBOT_TO_CAMERA_TRANSFORM; // if this changes, we have bigger issues.
 
@@ -53,6 +75,12 @@ public class PhotonVisionCamera extends SubsystemBase {
    */
   protected int m_bestTargetFiducialId;
 
+  private final PhotonPoseEstimator m_estimator;
+
+  private Matrix<N3, N1> m_multiTagStdDevs;
+  private Matrix<N3, N1> m_singleTagStdDevs;
+  private Matrix<N3, N1> m_currentStdDevs;
+
   /**
    * Represents a camera from PhotonVision.
    *
@@ -61,12 +89,14 @@ public class PhotonVisionCamera extends SubsystemBase {
    * @param cameraName Name of the cameras Photon Vision network table. MUST match the net tables
    *     name, or it wont work.
    * @param robotToCameraTransform The Transform3d of the robots coordinate center to the camera.
-   * @param headOnTolerance The tolerance for declaring whether or not the camera is facing a target
-   *     head on.
+   * @param singleTagStdDevs Standard deviations to use on single-tag strategy
+   * @param multiTagStdDevs Standard deviations to use on multi-tag strategt
    */
   public PhotonVisionCamera(
     String cameraName,
-    Transform3d robotToCameraTransform
+    Transform3d robotToCameraTransform,
+    Matrix<N3, N1> singleTagStdDevs,
+    Matrix<N3, N1> multiTagStdDevs
   ) {
     m_camera = new PhotonCamera(cameraName);
     ROBOT_TO_CAMERA_TRANSFORM = robotToCameraTransform;
@@ -76,6 +106,20 @@ public class PhotonVisionCamera extends SubsystemBase {
     for (int i = 0; i < m_targetInfo.length; i++) {
       m_targetInfo[i] = new TargetInfo();
     }
+
+    m_estimator = new PhotonPoseEstimator(
+      Constants.FieldConstants.FIELD_LAYOUT,
+      robotToCameraTransform
+    );
+
+    m_multiTagStdDevs = multiTagStdDevs;
+    m_singleTagStdDevs = singleTagStdDevs;
+
+    m_currentStdDevs = VecBuilder.fill(
+      Double.MAX_VALUE,
+      Double.MAX_VALUE,
+      Double.MAX_VALUE
+    );
   }
 
   /** Sets up everything about the class that is not done in the constructor. */
@@ -102,6 +146,7 @@ public class PhotonVisionCamera extends SubsystemBase {
       return;
     }
     m_results = m_camera.getAllUnreadResults();
+    Optional<EstimatedRobotPose> visionEst = Optional.empty();
 
     for (PhotonPipelineResult result : m_results) {
       if (result == null || !result.hasTargets()) {
@@ -109,6 +154,20 @@ public class PhotonVisionCamera extends SubsystemBase {
       }
       m_bestTargetFiducialId = result.getBestTarget().getFiducialId();
       cacheForAprilTags(result.targets);
+
+      visionEst = m_estimator.estimateCoprocMultiTagPose(result);
+      if (visionEst.isEmpty()) {
+        visionEst = m_estimator.estimateLowestAmbiguityPose(result);
+      }
+
+      if (visionEst.isEmpty()) {
+        return;
+      }
+      m_poseEstimate = visionEst;
+      m_currentStdDevs = updateEstimationStdDevs(
+        visionEst.get(),
+        result.getTargets()
+      );
     }
 
     if (m_connectionLost) {
@@ -124,6 +183,55 @@ public class PhotonVisionCamera extends SubsystemBase {
   }
 
   /**
+   * Calculates new standard deviations This algorithm is a heuristic that creates dynamic standard
+   * deviations based on number of tags, estimation strategy, and distance from the tags.
+   *
+   * From the PhotonVision example code: https://github.com/PhotonVision/photonvision/blob/main/photonlib-java-examples/poseest/src/main/java/frc/robot/Vision.java
+   *
+   * @param estimatedPose The estimated pose to guess standard deviations for.
+   * @param targets All targets in this camera frame
+   */
+  private Matrix<N3, N1> updateEstimationStdDevs(
+    EstimatedRobotPose estimatedPose,
+    List<PhotonTrackedTarget> targets
+  ) {
+    // Pose present. Start running Heuristic
+    var estStdDevs = m_singleTagStdDevs;
+    int numTags = 0;
+    double avgDist = 0;
+
+    // Precalculation - see how many tags we found, and calculate an average-distance metric
+    for (var tgt : targets) {
+      var tagPose = m_estimator.getFieldTags().getTagPose(tgt.getFiducialId());
+      if (tagPose.isEmpty()) continue;
+      numTags++;
+      avgDist += tagPose
+        .get()
+        .toPose2d()
+        .getTranslation()
+        .getDistance(estimatedPose.estimatedPose.toPose2d().getTranslation());
+    }
+
+    if (numTags == 0) {
+      // No tags visible. Default to single-tag std devs
+      return m_singleTagStdDevs;
+    } else {
+      // One or more tags visible, run the full heuristic.
+      avgDist /= numTags;
+      // Decrease std devs if multiple targets are visible
+      if (numTags > 1) estStdDevs = m_multiTagStdDevs;
+      // Increase std devs based on (average) distance
+      if (numTags == 1 && avgDist > 4) estStdDevs = VecBuilder.fill(
+        Double.MAX_VALUE,
+        Double.MAX_VALUE,
+        Double.MAX_VALUE
+      );
+      else estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist) / 30));
+      return estStdDevs;
+    }
+  }
+
+  /**
    * The method to cache target data for AprilTags.
    *
    * @param targetList The list of targets that it pulls data from to cache.
@@ -133,7 +241,6 @@ public class PhotonVisionCamera extends SubsystemBase {
     for (PhotonTrackedTarget targetSeen : targetList) {
       int id = targetSeen.getFiducialId();
       TargetInfo targetInfo = m_targetInfo[id];
-      // System.out.println(targetSeen.getFiducialId());
       targetInfo.yaw = targetSeen.getYaw();
       targetInfo.pitch = targetSeen.getPitch();
       targetInfo.timestamp = now;
@@ -241,5 +348,19 @@ public class PhotonVisionCamera extends SubsystemBase {
       }
     }
     return Double.NaN;
+  }
+
+  public Optional<SwervePoseEstimate> getEstimateForSwerve() {
+    if (m_poseEstimate.isEmpty()) {
+      return Optional.empty();
+    }
+    var est = m_poseEstimate.get();
+    return Optional.of(
+      new SwervePoseEstimate(
+        est.estimatedPose.toPose2d(),
+        m_currentStdDevs,
+        est.timestampSeconds
+      )
+    );
   }
 }

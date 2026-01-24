@@ -37,6 +37,7 @@ import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.PhotonVisionCamera;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Spindexer;
+import frc.robot.vision.PhotonVisionCamera;
 
 public class Robot extends TimedRobot {
 
@@ -81,10 +82,14 @@ public class Robot extends TimedRobot {
     outtake = new Outtake();
     feeder = new Feeder();
 
-    // backLeftCam = new PhotonVisionCamera(
-    //   Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
-    //   Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
-    // );
+    backLeftCam = new PhotonVisionCamera(
+      Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
+      Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM,
+      Constants.PHOTON_VISION.BACK_LEFT_CAM.kSingleTagStdDevs,
+      Constants.PHOTON_VISION.BACK_LEFT_CAM.kMultiTagStdDevs
+    );
+
+    swerve.registerTelemetry(logger::telemeterize);
 
     m_driverControls = new DriverControls();
     m_defaultDrive = new DefaultDrive(
@@ -107,11 +112,6 @@ public class Robot extends TimedRobot {
 
     m_autoChooserManager = new AutoChooserManager();
     m_InitRobotCommand = new InitRobotCommand();
-
-    backLeftCam = new PhotonVisionCamera(
-      Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
-      Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
-    );
 
     SmartDashboard.putNumber("Spindexer", 0.0);
 
