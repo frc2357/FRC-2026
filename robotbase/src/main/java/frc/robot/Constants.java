@@ -17,6 +17,8 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -25,6 +27,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -86,6 +90,8 @@ public class Constants {
 
     public static final int NAIVE_APRIL_TAG_PIPELINE = 0;
 
+    public static final int MULTI_TAG_PIPELINE = 1;
+
     public static final long NAIVE_APRIL_TAG_TARGET_TIMEOUT = 50;
 
     public static final class BACK_RIGHT_CAM {
@@ -114,6 +120,22 @@ public class Constants {
           Units.Degrees.of(180)
         )
       );
+
+      // The standard deviations of our vision estimated poses, which affect correction rate
+      // (Fake values. Experiment and determine estimation noise on an actual robot.)
+      // These are the default values from PhotonVision docs. They can be tuned per camera
+      // by placing the robot at several points, recording the pose estimate and recording
+      // the standard deviations
+      public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(
+        4,
+        4,
+        Double.MAX_VALUE
+      );
+      public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(
+        0.5,
+        0.5,
+        Double.MAX_VALUE
+      );
     }
 
     public static final class BACK_LEFT_CAM {
@@ -141,6 +163,22 @@ public class Constants {
           Units.Degrees.of(-10),
           Units.Degrees.of(180)
         )
+      );
+
+      // The standard deviations of our vision estimated poses, which affect correction rate
+      // (Fake values. Experiment and determine estimation noise on an actual robot.)
+      // These are the default values from PhotonVision docs. They can be tuned per camera
+      // by placing the robot at several points, recording the pose estimate and recording
+      // the standard deviations
+      public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(
+        4,
+        4,
+        Double.MAX_VALUE
+      );
+      public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(
+        0.5,
+        0.5,
+        Double.MAX_VALUE
       );
     }
   }
