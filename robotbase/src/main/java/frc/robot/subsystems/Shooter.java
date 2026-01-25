@@ -26,7 +26,7 @@ public class Shooter extends SubsystemBase {
     );
 
     m_rightMotor = new SparkMax(
-      CAN_ID.RIGHT_INTAKE_MOTOR,
+      CAN_ID.RIGHT_SHOOTER_MOTOR,
       MotorType.kBrushless
     );
 
