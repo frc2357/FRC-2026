@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.commands._intake.IntakeStop;
+import frc.robot.commands.intake.IntakeStop;
 import frc.robot.commands.spindexer.SpindexerStop;
 
 //import frc.robot.commands.shooter.ShooterStop
