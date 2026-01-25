@@ -13,29 +13,32 @@ import frc.robot.Constants.INTAKE;
 
 public class Intake extends SubsystemBase {
 
-  private SparkMax m_motor;
-  private SparkMax m_motor2;
+  private SparkMax m_leftMotor;
+  private SparkMax m_rightMotor;
 
   public Intake() {
-    m_motor = new SparkMax(CAN_ID.INTAKE_MOTOR, MotorType.kBrushless);
+    m_leftMotor = new SparkMax(CAN_ID.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
 
-    m_motor.configure(
-      INTAKE.MOTOR_CONFIG,
+    m_leftMotor.configure(
+      INTAKE.LEFT_MOTOR_CONFIG,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
     );
 
-    m_motor2 = new SparkMax(CAN_ID.INTAKE_MOTOR, MotorType.kBrushless);
+    m_rightMotor = new SparkMax(
+      CAN_ID.RIGHT_INTAKE_MOTOR,
+      MotorType.kBrushless
+    );
 
-    m_motor2.configure(
-      INTAKE.MOTOR_CONFIG,
+    m_rightMotor.configure(
+      INTAKE.LEFT_MOTOR_CONFIG,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
     );
   }
 
   public void setSpeed(Dimensionless percentOutput) {
-    m_motor.set(percentOutput.in(Value));
+    m_leftMotor.set(percentOutput.in(Value));
   }
 
   public void setAxisSpeed(Dimensionless axisSpeed) {
@@ -44,6 +47,6 @@ public class Intake extends SubsystemBase {
   }
 
   public void stop() {
-    m_motor.stopMotor();
+    m_leftMotor.stopMotor();
   }
 }

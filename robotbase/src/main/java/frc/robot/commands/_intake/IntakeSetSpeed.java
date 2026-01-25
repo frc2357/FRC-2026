@@ -1,4 +1,4 @@
-package frc.robot.commands.Intake;
+package frc.robot.commands._intake;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;

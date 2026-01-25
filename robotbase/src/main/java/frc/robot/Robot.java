@@ -9,7 +9,6 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
@@ -20,14 +19,16 @@ import frc.robot.subsystems.Spindexer;
 
 public class Robot extends TimedRobot {
 
-  public static Intake intake;
   private Command m_autonomousCommand;
+
   private static DriverControls m_driverControls;
   private static Command m_defaultDrive;
+
   public static CommandSwerveDrivetrain swerve;
 
   public static PhotonVisionCamera backLeftCam;
   public static Spindexer spindexer;
+  public static Intake intake;
 
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
@@ -38,15 +39,11 @@ public class Robot extends TimedRobot {
     .withJoystickReplay();
 
   public Robot() {
-    intake = new Intake();
     swerve = TunerConstants.createDrivetrain();
     m_driverControls = new DriverControls();
-    m_defaultDrive = new DefaultDrive(
-      m_driverControls::getLeftX,
-      m_driverControls::getLeftY,
-      m_driverControls::getRightX
-    );
+
     spindexer = new Spindexer();
+    intake = new Intake();
 
     backLeftCam = new PhotonVisionCamera(
       Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
@@ -54,6 +51,12 @@ public class Robot extends TimedRobot {
     );
 
     swerve.registerTelemetry(logger::telemeterize);
+
+    m_defaultDrive = new DefaultDrive(
+      m_driverControls::getLeftX,
+      m_driverControls::getLeftY,
+      m_driverControls::getRightX
+    );
     Robot.swerve.setDefaultCommand(m_defaultDrive);
   }
 
