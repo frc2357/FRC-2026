@@ -9,8 +9,8 @@ public class IntakeSetSpeed extends Command {
   private Dimensionless m_speed;
 
   public IntakeSetSpeed(Dimensionless speed) {
-    addRequirements(Robot.intake);
     m_speed = speed;
+    addRequirements(Robot.intake);
   }
 
   @Override

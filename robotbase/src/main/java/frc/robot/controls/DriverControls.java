@@ -9,6 +9,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
+import frc.robot.commands.intake.IntakeAxis;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
@@ -23,6 +24,18 @@ public class DriverControls implements RumbleInterface {
   public void mapControls() {
     m_controller.back().onTrue(new FlipPerspective());
     m_controller.start().onTrue(new ResetPerspective());
+
+    m_controller
+      .leftTrigger()
+      .whileTrue(
+        new IntakeAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
+      );
+
+    m_controller
+      .rightTrigger()
+      .whileTrue(
+        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
+      );
   }
 
   public Dimensionless getRightX() {
