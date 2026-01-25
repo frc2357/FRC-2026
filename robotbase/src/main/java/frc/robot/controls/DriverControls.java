@@ -1,5 +1,6 @@
 package frc.robot.controls;
 
+import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
@@ -9,7 +10,9 @@ import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
+import frc.robot.commands.hood.HoodSetSpeed;
 import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.shooter.ShooterAxis;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
@@ -28,7 +31,7 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .leftTrigger()
       .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
+        new ShooterAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
       );
 
     m_controller
@@ -36,6 +39,9 @@ public class DriverControls implements RumbleInterface {
       .whileTrue(
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
       );
+
+    m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(10)));
+    m_controller.a().whileTrue(new HoodSetSpeed(Percent.of(-10)));
   }
 
   public Dimensionless getRightX() {

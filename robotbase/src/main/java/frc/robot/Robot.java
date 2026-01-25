@@ -14,8 +14,10 @@ import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.PhotonVisionCamera;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Spindexer;
 
 public class Robot extends TimedRobot {
@@ -30,6 +32,8 @@ public class Robot extends TimedRobot {
   public static PhotonVisionCamera backLeftCam;
   public static Spindexer spindexer;
   public static Intake intake;
+  public static Shooter shooter;
+  public static Hood hood;
 
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
@@ -44,6 +48,8 @@ public class Robot extends TimedRobot {
 
     spindexer = new Spindexer();
     intake = new Intake();
+    shooter = new Shooter();
+    hood = new Hood();
 
     backLeftCam = new PhotonVisionCamera(
       Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
