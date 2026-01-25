@@ -41,7 +41,6 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     swerve = TunerConstants.createDrivetrain();
-    m_driverControls = new DriverControls();
 
     spindexer = new Spindexer();
     intake = new Intake();
@@ -53,6 +52,7 @@ public class Robot extends TimedRobot {
 
     swerve.registerTelemetry(logger::telemeterize);
 
+    m_driverControls = new DriverControls();
     m_defaultDrive = new DefaultDrive(
       m_driverControls::getLeftX,
       m_driverControls::getLeftY,
