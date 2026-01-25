@@ -9,22 +9,27 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.PhotonVisionCamera;
 import frc.robot.subsystems.Spindexer;
 
 public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
+
   private static DriverControls m_driverControls;
   private static Command m_defaultDrive;
+
   public static CommandSwerveDrivetrain swerve;
 
   public static PhotonVisionCamera backLeftCam;
   public static Spindexer spindexer;
+  public static Intake intake;
 
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
@@ -37,12 +42,9 @@ public class Robot extends TimedRobot {
   public Robot() {
     swerve = TunerConstants.createDrivetrain();
     m_driverControls = new DriverControls();
-    m_defaultDrive = new DefaultDrive(
-      m_driverControls::getLeftX,
-      m_driverControls::getLeftY,
-      m_driverControls::getRightX
-    );
+
     spindexer = new Spindexer();
+    intake = new Intake();
 
     backLeftCam = new PhotonVisionCamera(
       Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
@@ -50,6 +52,12 @@ public class Robot extends TimedRobot {
     );
 
     swerve.registerTelemetry(logger::telemeterize);
+
+    m_defaultDrive = new DefaultDrive(
+      m_driverControls::getLeftX,
+      m_driverControls::getLeftY,
+      m_driverControls::getRightX
+    );
     Robot.swerve.setDefaultCommand(m_defaultDrive);
   }
 
@@ -62,7 +70,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    CommandScheduler.getInstance().schedule(new StopAllMotors());
+  }
 
   @Override
   public void disabledPeriodic() {}

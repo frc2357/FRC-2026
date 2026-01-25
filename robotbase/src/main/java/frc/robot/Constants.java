@@ -86,7 +86,10 @@ public class Constants {
 
   public static final class CAN_ID {
 
-    public static final int SPINDEXER_MOTOR = 23; // TODO: Figure out CAN_ID
+    public static final int SPINDEXER_MOTOR = 23;
+
+    public static final int LEFT_INTAKE_MOTOR = 24;
+    public static final int RIGHT_INTAKE_MOTOR = 25;
   }
 
   public static final class SPINDEXER {
@@ -98,5 +101,22 @@ public class Constants {
       .openLoopRampRate(0.25); // TODO: double check these values
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50);
+  }
+
+  public static final class INTAKE {
+
+    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
+
+    public static final SparkBaseConfig LEFT_MOTOR_CONFIG = new SparkMaxConfig()
+      .idleMode(IdleMode.kCoast)
+      .inverted(false)
+      .smartCurrentLimit(20, 20)
+      .openLoopRampRate(0.25)
+      .voltageCompensation(12);
+
+    public static final SparkBaseConfig RIGHT_MOTOR_CONFIG =
+      new SparkMaxConfig()
+        .apply(LEFT_MOTOR_CONFIG)
+        .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
   }
 }
