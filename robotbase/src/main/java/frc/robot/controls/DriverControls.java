@@ -40,8 +40,8 @@ public class DriverControls implements RumbleInterface {
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
       );
 
-    m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(10)));
-    m_controller.a().whileTrue(new HoodSetSpeed(Percent.of(-10)));
+    m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(30)));
+    m_controller.a().whileTrue(new HoodSetSpeed(Percent.of(-30)));
   }
 
   public Dimensionless getRightX() {

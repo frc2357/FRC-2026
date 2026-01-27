@@ -55,10 +55,10 @@ public class Robot extends TimedRobot {
     shooter = new Shooter();
     hood = new Hood();
 
-    backLeftCam = new PhotonVisionCamera(
-      Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
-      Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
-    );
+    // backLeftCam = new PhotonVisionCamera(
+    //   Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
+    //   Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
+    // );
 
     swerve.registerTelemetry(logger::telemeterize);
 
@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    backLeftCam.updateResult();
+    // backLeftCam.updateResult();
     m_timeAndJoystickReplay.update();
 
     CommandScheduler.getInstance().run();
