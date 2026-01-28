@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.HootAutoReplay;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -65,6 +66,10 @@ public class Robot extends TimedRobot {
       m_driverControls::getRightX
     );
     Robot.swerve.setDefaultCommand(m_defaultDrive);
+
+    // DON'T DELETE - Load the april tag field
+    // This prevents a loop overrun when we first access the constants
+    AprilTagFieldLayout layout = Constants.FieldConstants.FIELD_LAYOUT;
   }
 
   @Override
