@@ -4,13 +4,17 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Value;
+
 import com.ctre.phoenix6.HootAutoReplay;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
+import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -51,10 +55,10 @@ public class Robot extends TimedRobot {
     shooter = new Shooter();
     hood = new Hood();
 
-    backLeftCam = new PhotonVisionCamera(
-      Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
-      Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
-    );
+    // backLeftCam = new PhotonVisionCamera(
+    //   Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
+    //   Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
+    // );
 
     swerve.registerTelemetry(logger::telemeterize);
 
@@ -65,11 +69,17 @@ public class Robot extends TimedRobot {
       m_driverControls::getRightX
     );
     Robot.swerve.setDefaultCommand(m_defaultDrive);
+    SmartDashboard.putNumber("Spindexer", 0.0);
+    Robot.spindexer.setDefaultCommand(
+      new SpindexerAxis(() -> {
+        return Value.of(SmartDashboard.getNumber("Spindexer", 0.0));
+      })
+    );
   }
 
   @Override
   public void robotPeriodic() {
-    backLeftCam.updateResult();
+    // backLeftCam.updateResult();
     m_timeAndJoystickReplay.update();
 
     CommandScheduler.getInstance().run();

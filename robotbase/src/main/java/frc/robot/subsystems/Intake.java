@@ -32,7 +32,7 @@ public class Intake extends SubsystemBase {
     // );
 
     // m_rightMotor.configure(
-    //   INTAKE.LEFT_MOTOR_CONFIG,
+    //   INTAKE.RIGHT_MOTOR_CONFIG,
     //   ResetMode.kNoResetSafeParameters,
     //   PersistMode.kNoPersistParameters
     // );
