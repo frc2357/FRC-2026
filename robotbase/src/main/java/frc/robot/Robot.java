@@ -16,6 +16,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.PhotonVisionCamera;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Spindexer;
@@ -34,6 +35,7 @@ public class Robot extends TimedRobot {
   public static Intake intake;
   public static Shooter shooter;
   public static Hood hood;
+  public static Outtake outtake;
 
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
