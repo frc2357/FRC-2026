@@ -3,14 +3,17 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.generated.TunerConstants;
 
@@ -87,6 +90,9 @@ public class Constants {
   public static final class CAN_ID {
 
     public static final int SPINDEXER_MOTOR = 23; // TODO: Figure out CAN_ID
+
+    public static final int SHOOTER_LEFT_MOTOR = 24;
+    public static final int SHOOTER_RIGHT_MOTOR = 25;
   }
 
   public static final class SPINDEXER {
@@ -98,5 +104,46 @@ public class Constants {
       .openLoopRampRate(0.25); // TODO: double check these values
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50);
+  }
+
+  public static final class SHOOTER {
+
+    public static final SparkBaseConfig MOTOR_CONFIG_LEFT = new SparkMaxConfig()
+      .idleMode(IdleMode.kBrake)
+      .inverted(false)
+      .openLoopRampRate(0.25)
+      .smartCurrentLimit(60, 40)
+      .voltageCompensation(12); //
+
+    public static final SparkBaseConfig MOTOR_CONFIG_RIGHT =
+      new SparkMaxConfig()
+        .apply(MOTOR_CONFIG_LEFT)
+        .follow(CAN_ID.SHOOTER_LEFT_MOTOR, true);
+
+    public static final double LEFT_MOTOR_P = 0;
+    public static final double LEFT_MOTOR_I = 0;
+    public static final double LEFT_MOTOR_D = 0;
+    public static final double LEFT_MOTOR_VEL_F = 0;
+    public static final double LEFT_MOTOR_ARB_F = 0; //TODO: find actual values
+
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50); //
+
+    public static final Double HOLD_VOLTAGE = 0.5; //
+
+    public static final ClosedLoopConfig CLOSED_LOOP_CONFIG_LEFT =
+      MOTOR_CONFIG_LEFT.closedLoop
+        .pidf(LEFT_MOTOR_P, LEFT_MOTOR_I, LEFT_MOTOR_D, LEFT_MOTOR_VEL_F)
+        .outputRange(-1, 1);
+    public static final Angle SMART_MOTION_ALLOWED_ERROR_ROTATIONS =
+      Units.Rotations.of(0.1);
+
+    public static final double GEAR_RATIO = (1 / 0) * 2.0; //
+
+    public static final Distance HTD5_PULLEY_PITCH = Units.Millimeters.of(0.5); //
+    public static final double OUTPUT_PULLEY_NUMBER_OF_TEETH = 28; //
+    public static final Distance OUTPUT_PULLEY_CIRCUMFERENCE =
+      HTD5_PULLEY_PITCH.times(OUTPUT_PULLEY_NUMBER_OF_TEETH); //
+
+    public static final double ZERO_STALL_AMPS = 0; //
   }
 }
