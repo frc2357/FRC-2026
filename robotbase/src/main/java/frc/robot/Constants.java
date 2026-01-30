@@ -104,16 +104,6 @@ public class Constants {
       true,
       Robot.swerve
     );
-
-    public static final AutoFactory Y_FLIPPED_FACTORY = new AutoFactory(
-      () -> Robot.swerve.flipYAxis(Robot.swerve.getFieldRelativePose2d()),
-      (Pose2d pose) -> Robot.swerve.resetPose(Robot.swerve.flipYAxis(pose)),
-      Robot.swerve::followChoreoPath,
-      true,
-      Robot.swerve
-    );
-
-    public static final double PREPOSE_SECONDS = 0.05;
   }
 
   public static final class CAN_ID {

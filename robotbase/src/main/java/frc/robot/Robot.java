@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.drive.DefaultDrive;
+import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
 import frc.robot.networkTables.AutoChooserManager;
@@ -34,6 +35,8 @@ public class Robot extends TimedRobot {
   public static PhotonVisionCamera backLeftCam;
   public static Spindexer spindexer;
   public static Alliance alliance = null;
+
+  public static InitRobotCommand m_InitRobotCommand;
 
   private AutoChooserManager m_autoChooserManager;
 
@@ -54,6 +57,8 @@ public class Robot extends TimedRobot {
       m_driverControls::getRightX
     );
     spindexer = new Spindexer();
+
+    m_InitRobotCommand = new InitRobotCommand();
 
     m_autoChooserManager = new AutoChooserManager();
 

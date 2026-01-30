@@ -527,12 +527,6 @@ public class CommandSwerveDrivetrain
       : ChoreoAllianceFlipUtil.flip(curPose);
   }
 
-  public Pose2d makePoseAllianceRelative(Pose2d pose) {
-    return Robot.alliance == Alliance.Blue
-      ? pose
-      : ChoreoAllianceFlipUtil.flip(pose);
-  }
-
   public Pose2d flipYAxis(Pose2d poseToFlip) {
     return new Pose2d(
       poseToFlip.getX(),

@@ -15,10 +15,5 @@ public class FlipTest extends AutoBase {
    */
   public FlipTest() {
     super("FlipTest");
-  } /**
-   * This will initialize an auto routine
-   * Will create the first trajectory, and set the routine to wait, reset odometry, and run the first trajectory
-   * @param name Name of the auto routine
-   * @param startTraj Trajectory to start with
-   */
+  }
 }

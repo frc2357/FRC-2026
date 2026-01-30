@@ -6,10 +6,11 @@ import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants;
 import frc.robot.commands.util.VariableWaitCommand;
 
 public class AutoBase {
+
+  //TODO: Rewrite this (possibly from scratch) to join autos according to our plans for this year
 
   protected AutoRoutine m_routine;
   protected AutoTrajectory m_startTraj;
@@ -56,53 +57,15 @@ public class AutoBase {
       );
   }
 
-  /**
-   * Takes in 2 AutoTrajectory objects and sets up the requiste triggers to go from the coral station to the reef (traj1),
-   * score, and start heading back to the coral station (traj2)
-   * @param traj1 The AutoTrajectory that takes the robot from the coral sttation to the reef
-   * @param traj2 The AutoTrajectory that takes the robot from the reef to the coral station
-   */
-  protected void scoringSegment(AutoTrajectory traj1, AutoTrajectory traj2) {
-    /** 
-    traj1.atTimeBeforeEnd(PREPOSE_SECONDS).onTrue(new AutoCoralPreposeL4());
-    traj1
-      .done()
-      .onTrue(
-        new AutoCoralConfirmScore(
-          Constants.CORAL_RUNNER.SCORING_PERCENT_L4
-        ).andThen(new CoralPreposeIntake(), traj2.cmd()) 
-      );*/
-  }
+  protected void scoringSegment(AutoTrajectory traj1, AutoTrajectory traj2) {}
 
-  /**
-   * Takes in 2 AutoTrajectory objects and sets up the requiste triggers to go from the coral station to the reef (traj1),
-   * score, and start heading back to the coral station (traj2)
-   * @param traj1 The AutoTrajectory that takes the robot from the coral sttation to the reef
-   * @param traj2 The AutoTrajectory that takes the robot from the reef to the coral station
-   */
   protected void scoringSegment(String traj1, String traj2) {
     scoringSegment(m_routine.trajectory(traj1), m_routine.trajectory(traj2));
   }
 
-  /**
-   * Takes in 2 AutoTrajectory objects and sets up the requiste triggers to make the robot go from the reef to the coral station (traj1),
-   * intake, and go back to the reef (traj2)
-   * @param traj1 The AutoTrajectory that takes the robot from the reef to the coral station
-   * @param traj2 The AutoTrajectory that takes the robot from the coral station back to the reef
-   */
-  protected void intakingSegment(AutoTrajectory traj1, AutoTrajectory traj2) {
-    //traj1.done().onTrue(new CoralIntake().andThen(traj2.cmd()));
-  }
+  protected void intakingSegment(AutoTrajectory traj1, AutoTrajectory traj2) {}
 
-  /**
-   * Takes in 2 AutoTrajectory objects and sets up the requiste triggers to make the robot go from the reef to the coral station (traj1),
-   * intake, and go back to the reef (traj2)
-   * @param traj1 The AutoTrajectory that takes the robot from the reef to the coral station
-   * @param traj2 The AutoTrajectory that takes the robot from the coral station back to the reef
-   */
-  protected void intakingSegment(String traj1, String traj2) {
-    intakingSegment(m_routine.trajectory(traj1), m_routine.trajectory(traj2));
-  }
+  protected void intakingSegment(String traj1, String traj2) {}
 
   /**
    * Takes an arbitrary number of trajectory names and sets up the required triggers to make them run a full auto
@@ -113,7 +76,7 @@ public class AutoBase {
     scoringSegment(m_startTraj, m_routine.trajectory(trajectoryNames[0]));
     // we then start looping through the provided trajectory names to segment them based on if i is even or odd
     for (int i = 0; i < trajectoryNames.length - 1; i++) {
-      // we score with the start trajectory, so 0 is going to the coral station, making it an intaking segment.
+      // we score with the start trajectory, intaking segment.
       if (i % 2 == 0) {
         intakingSegment(trajectoryNames[i], trajectoryNames[i + 1]);
       } else {
