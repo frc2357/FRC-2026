@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class PressToContinue extends Command {
 
   private Trigger m_button;
-  private boolean m_wasReleased;
+  private Boolean m_wasReleased;
 
   public PressToContinue(Trigger button) {
     m_button = button;
