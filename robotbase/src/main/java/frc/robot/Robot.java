@@ -4,11 +4,10 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Value;
 import static frc.robot.Constants.CHOREO.AUTO_FACTORY;
 
 import choreo.auto.AutoRoutine;
-import static edu.wpi.first.units.Units.Value;
-
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.Units;
@@ -17,13 +16,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.commands.drive.DefaultDrive;
-import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.spindexer.SpindexerAxis;
+import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
 import frc.robot.networkTables.AutoChooserManager;
@@ -68,6 +64,7 @@ public class Robot extends TimedRobot {
     intake = new Intake();
     shooter = new Shooter();
     hood = new Hood();
+    spindexer = new Spindexer();
 
     // backLeftCam = new PhotonVisionCamera(
     //   Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
@@ -82,7 +79,15 @@ public class Robot extends TimedRobot {
       m_driverControls::getLeftY,
       m_driverControls::getRightX
     );
-    spindexer = new Spindexer();
+
+    swerve.registerTelemetry(logger::telemeterize);
+    swerve.setDefaultCommand(m_defaultDrive);
+
+    spindexer.setDefaultCommand(
+      new SpindexerAxis(() -> {
+        return Value.of(SmartDashboard.getNumber("Spindexer", 0.0));
+      })
+    );
 
     m_InitRobotCommand = new InitRobotCommand();
 
@@ -93,14 +98,7 @@ public class Robot extends TimedRobot {
       Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
     );
 
-    swerve.registerTelemetry(logger::telemeterize);
-    Robot.swerve.setDefaultCommand(m_defaultDrive);
     SmartDashboard.putNumber("Spindexer", 0.0);
-    Robot.spindexer.setDefaultCommand(
-      new SpindexerAxis(() -> {
-        return Value.of(SmartDashboard.getNumber("Spindexer", 0.0));
-      })
-    );
   }
 
   @Override
