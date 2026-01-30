@@ -97,6 +97,8 @@ public class Constants {
 
     public static final int HOOD_MOTOR = 28;
 
+    public static final int OUTTAKE_MOTOR = 31;
+
     public static final int LEFT_SHOOTER_MOTOR = 29;
     public static final int RIGHT_SHOOTER_MOTOR = 30;
   }
@@ -127,6 +129,18 @@ public class Constants {
       new SparkMaxConfig()
         .apply(LEFT_MOTOR_CONFIG)
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
+  }
+
+  public static final class OUTTAKE {
+
+    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(100);
+
+    public static final SparkBaseConfig OUTTAKE_CONFIG = new SparkMaxConfig()
+      .idleMode(IdleMode.kCoast)
+      .inverted(false)
+      .smartCurrentLimit(30, 30)
+      .openLoopRampRate(0.5)
+      .voltageCompensation(12);
   }
 
   public static final class SHOOTER {
