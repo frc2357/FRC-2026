@@ -52,6 +52,7 @@ public class Robot extends TimedRobot {
     intake = new Intake();
     shooter = new Shooter();
     hood = new Hood();
+    outtake = new Outtake();
 
     backLeftCam = new PhotonVisionCamera(
       Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
