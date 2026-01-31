@@ -8,6 +8,7 @@ public class InitSwerve extends Command {
   @Override
   public void initialize() {
     Robot.swerve.seedFieldCentric();
+    Robot.swerve.setOperatorPerspectiveForward(Robot.alliance);
   }
 
   @Override

@@ -456,6 +456,14 @@ public class CommandSwerveDrivetrain
     }
   }
 
+  public void setOperatorPerspectiveForward(DriverStation.Alliance alliance) {
+    setOperatorPerspectiveForward(
+      alliance == Alliance.Red
+        ? kRedAlliancePerspectiveRotation
+        : kBlueAlliancePerspectiveRotation
+    );
+  }
+
   public void followChoreoPath(SwerveSample sample) {
     System.out.println("choreo following path" + sample.toString());
     Pose2d pose = getFieldRelativePose2d();
