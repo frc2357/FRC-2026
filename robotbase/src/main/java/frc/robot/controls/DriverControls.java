@@ -49,11 +49,11 @@ public class DriverControls implements RumbleInterface {
   }
 
   public Dimensionless getLeftX() {
-    return Value.of(modifyAxis(m_controller.getLeftX()));
+    return Value.of(modifyAxis(-m_controller.getLeftX()));
   }
 
   public Dimensionless getLeftY() {
-    return Value.of(modifyAxis(m_controller.getLeftY()));
+    return Value.of(modifyAxis(-m_controller.getLeftY()));
   }
 
   private double deadband(double value, double deadband) {
