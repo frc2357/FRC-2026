@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.HootAutoReplay;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -112,6 +113,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);
+      swerve.configNeutralMode(NeutralModeValue.Brake);
     }
   }
 
@@ -125,7 +127,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().cancel(m_autonomousCommand);
-
+      swerve.configNeutralMode(NeutralModeValue.Brake);
       m_setCoastOnDisable.cancel();
     }
   }
@@ -139,6 +141,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
+    swerve.configNeutralMode(NeutralModeValue.Brake);
   }
 
   @Override
