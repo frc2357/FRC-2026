@@ -5,9 +5,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Value;
-import static frc.robot.Constants.CHOREO.AUTO_FACTORY;
 
-import choreo.auto.AutoRoutine;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.Units;
@@ -22,6 +20,7 @@ import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
+import frc.robot.commands.shooter.ShooterAxis;
 import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.DriverControls;
@@ -95,7 +94,9 @@ public class Robot extends TimedRobot {
     swerve.registerTelemetry(logger::telemeterize);
     swerve.setDefaultCommand(m_defaultDrive);
 
-    spindexer.setDefaultCommand(
+    SmartDashboard.putNumber("Spindexer", 0.0);
+    SmartDashboard.putNumber("Shooter", 0.0);
+    Robot.spindexer.setDefaultCommand(
       new SpindexerAxis(() -> {
         return Value.of(SmartDashboard.getNumber("Spindexer", 0.0));
       })
@@ -112,7 +113,11 @@ public class Robot extends TimedRobot {
       Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
     );
 
-    SmartDashboard.putNumber("Spindexer", 0.0);
+    Robot.shooter.setDefaultCommand(
+      new ShooterAxis(() -> {
+        return Value.of(SmartDashboard.getNumber("Shooter", 0.0));
+      })
+    );
   }
 
   @Override
