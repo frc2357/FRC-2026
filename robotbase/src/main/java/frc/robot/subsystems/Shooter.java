@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Value;
 
 import com.revrobotics.PersistMode;
@@ -11,6 +12,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import edu.wpi.first.units.AngularVelocityUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -26,18 +28,17 @@ import frc.robot.util.Utility;
 
 public class Shooter extends SubsystemBase {
 
+  private AngularVelocity m_targetRPM = RPM.of(Double.NaN);
+
   private SparkMax m_motorLeft;
   private SparkMax m_motorRight;
   private SparkClosedLoopController m_PIDController;
   private RelativeEncoder m_encoder;
 
-  private boolean m_isAtZero = false;
+  // private ShooterCurveTuner m_curveTuner; TODO: implement later
 
-  private MutAngle m_targetRotations = Units.Rotations.mutable(Double.NaN);
+  private MutAngularVelocity m_targetVelocity = Units.RPM.mutable(Double.NaN);
   private MutAngularVelocity m_currentAngularVelocityHolder = Units.RPM.mutable(
-    Double.NaN
-  );
-  private MutAngle m_currentRotationsHolder = Units.Rotations.mutable(
     Double.NaN
   );
 
@@ -54,7 +55,7 @@ public class Shooter extends SubsystemBase {
       PersistMode.kNoPersistParameters
     );
     m_motorRight.configure(
-      SHOOTER.MOTOR_CONFIG_LEFT,
+      SHOOTER.MOTOR_CONFIG_RIGHT,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
     );
@@ -66,38 +67,18 @@ public class Shooter extends SubsystemBase {
 
   public void setSpeed(Dimensionless percentOutput) {
     m_motorLeft.set(percentOutput.in(Value));
-    m_targetRotations.mut_replace(Double.NaN, Units.Rotations);
+    m_targetVelocity.mut_replace(Double.NaN, Units.RPM);
   }
 
   public void setAxisSpeed(Dimensionless speed) {
     double m_speed = speed.times(SHOOTER.AXIS_MAX_SPEED).in(Value);
     m_motorLeft.set(m_speed);
-    m_targetRotations.mut_replace(Double.NaN, Units.Rotations);
+    m_targetVelocity.mut_replace(Double.NaN, Units.RPM);
   }
 
   public void stop() {
     m_motorLeft.stopMotor();
-    m_targetRotations.mut_replace(Double.NaN, Units.Rotations);
-  }
-
-  private void setTargetRotations(Angle targetRotations) {
-    m_targetRotations.mut_replace(targetRotations);
-    m_PIDController.setReference(
-      m_targetRotations.in(Units.Rotations),
-      ControlType.kMAXMotionVelocityControl,
-      ClosedLoopSlot.kSlot0, //
-      SHOOTER.LEFT_MOTOR_ARB_F,
-      ArbFFUnits.kVoltage
-    );
-  }
-
-  public void setTargetDistance(Distance targetDistance) {
-    setTargetRotations(distanceToRotations(targetDistance));
-  }
-
-  public void holdPosition() {
-    m_targetRotations.mut_replace(Double.NaN, Units.Rotations);
-    m_motorLeft.setVoltage(SHOOTER.HOLD_VOLTAGE);
+    m_targetVelocity.mut_replace(Double.NaN, Units.RPM);
   }
 
   public AngularVelocity getVelocity() {
@@ -108,70 +89,26 @@ public class Shooter extends SubsystemBase {
     return m_currentAngularVelocityHolder;
   }
 
-  private Angle getRotations() {
-    m_currentRotationsHolder.mut_replace(
-      m_encoder.getPosition(),
-      Units.Rotations
-    );
-    return m_currentRotationsHolder;
+  public void setRPM(AngularVelocity targetRPM) {
+    m_targetRPM = targetRPM;
+    m_PIDController.setReference(m_targetRPM.in(RPM), ControlType.kVelocity);
   }
 
-  public Distance getDistance() {
-    return rotationsToDistance(getRotations());
+  public boolean isAtRPM(double RPM) {
+    return Utility.isWithinTolerance(getVelocity(), RPM, SHOOTER.RPM_TOLERANCE);
   }
 
-  private boolean isAtTargetRotations() {
-    return Utility.isWithinTolerance(
-      getRotations(),
-      m_targetRotations,
-      SHOOTER.SMART_MOTION_ALLOWED_ERROR_ROTATIONS
-    );
-  }
-
-  public boolean isAtTarget() {
-    return isAtTargetRotations();
-  }
-
-  public boolean isGoingDown() {
-    return m_targetRotations.lt(getRotations());
-  }
-
-  public boolean isStalling() {
-    return m_motorLeft.getOutputCurrent() > SHOOTER.ZERO_STALL_AMPS;
-  }
-
-  public boolean isAtZero() {
-    return m_isAtZero;
-  }
-
-  public void setZero() {
-    m_encoder.setPosition(0); //
-  }
-
-  private Angle distanceToRotations(Distance distance) {
-    return Units.Rotations.of(
-      distance
-        .div(SHOOTER.OUTPUT_PULLEY_CIRCUMFERENCE)
-        .times(SHOOTER.GEAR_RATIO)
-        .magnitude()
-    );
-  }
-
-  private Distance rotationsToDistance(Angle rotations) {
-    return (
-      SHOOTER.OUTPUT_PULLEY_CIRCUMFERENCE.times(
-        rotations.div(SHOOTER.GEAR_RATIO).in(Units.Rotations)
-      )
-    );
+  public boolean isAtTargetSpeed() {
+    return isAtRPM(m_targetRPM.in(RPM));
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber(
-      "Shooter Calculated Distance",
-      getDistance().in(Units.Inches)
-    ); //
-
-    SmartDashboard.putBoolean("Hall Effect", isAtZero()); //
+    SmartDashboard.putNumber("RPM", getVelocity().in(RPM));
+    SmartDashboard.putBoolean("Shooter Running", getVelocity().gt(RPM.of(500)));
   }
+
+  // public double[] getShooterCurveRow() {
+  //  return m_curveTuner.getSelectedRow();
+  //} TODO: implement later
 }
