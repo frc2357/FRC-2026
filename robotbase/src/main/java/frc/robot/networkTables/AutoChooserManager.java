@@ -9,6 +9,7 @@ import frc.robot.Robot;
 import frc.robot.commands.auto.AutoBase;
 import frc.robot.commands.auto.Crab;
 import frc.robot.commands.auto.FlipTest;
+import frc.robot.commands.auto.SpinnyCircle;
 import java.util.Map;
 
 public class AutoChooserManager {
@@ -17,7 +18,11 @@ public class AutoChooserManager {
   private Map<String, Command> m_autoCommandsToBind = Map.of();
 
   // The auto routines that will show up on the auto command chooser.
-  private AutoBase[] m_autos = { new Crab(), new FlipTest() };
+  private AutoBase[] m_autos = {
+    new Crab(),
+    new FlipTest(),
+    new SpinnyCircle(),
+  };
 
   private AutoChooser m_autoChooser = new AutoChooser();
 

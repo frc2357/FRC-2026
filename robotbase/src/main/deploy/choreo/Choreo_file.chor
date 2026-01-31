@@ -9,27 +9,27 @@
  "config":{
   "frontLeft":{
    "x":{
-    "exp":"13 in",
-    "val":0.3302
+    "exp":"9.625 in",
+    "val":0.244475
    },
    "y":{
-    "exp":"13 in",
-    "val":0.3302
+    "exp":"12.375 in",
+    "val":0.31432499999999997
    }
   },
   "backLeft":{
    "x":{
-    "exp":"-13 in",
-    "val":-0.3302
+    "exp":"-9.625 in",
+    "val":-0.244475
    },
    "y":{
-    "exp":"13 in",
-    "val":0.3302
+    "exp":"12.375 in",
+    "val":0.31432499999999997
    }
   },
   "mass":{
-   "exp":"125.3 lbs",
-   "val":56.835123961
+   "exp":"70 lbs",
+   "val":31.751465900000003
   },
   "inertia":{
    "exp":"4.460176874376417 kg m ^ 2",
@@ -77,8 +77,8 @@
  "generationFeatures":[],
  "codegen":{
   "root":"..\\..\\java\\frc\\robot\\auto\\choreoGenerated",
-  "genVars":true,
-  "genTrajData":true,
-  "useChoreoLib":true
+  "genVars":false,
+  "genTrajData":false,
+  "useChoreoLib":false
  }
 }
