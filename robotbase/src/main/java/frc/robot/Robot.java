@@ -93,14 +93,17 @@ public class Robot extends TimedRobot {
     m_autoChooserManager = new AutoChooserManager();
     m_InitRobotCommand = new InitRobotCommand();
 
-    CommandScheduler.getInstance().schedule(m_InitRobotCommand);
-
     backLeftCam = new PhotonVisionCamera(
       Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
       Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
     );
 
     SmartDashboard.putNumber("Spindexer", 0.0);
+  }
+
+  @Override
+  public void robotInit() {
+    CommandScheduler.getInstance().schedule(m_InitRobotCommand);
   }
 
   @Override
