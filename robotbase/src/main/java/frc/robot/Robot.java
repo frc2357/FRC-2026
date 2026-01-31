@@ -74,8 +74,6 @@ public class Robot extends TimedRobot {
     //   Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
     // );
 
-    swerve.registerTelemetry(logger::telemeterize);
-
     m_driverControls = new DriverControls();
     m_defaultDrive = new DefaultDrive(
       m_driverControls::getLeftX,
@@ -92,9 +90,10 @@ public class Robot extends TimedRobot {
       })
     );
 
+    m_autoChooserManager = new AutoChooserManager();
     m_InitRobotCommand = new InitRobotCommand();
 
-    m_autoChooserManager = new AutoChooserManager();
+    CommandScheduler.getInstance().schedule(m_InitRobotCommand);
 
     backLeftCam = new PhotonVisionCamera(
       Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
