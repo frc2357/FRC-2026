@@ -112,7 +112,6 @@ public class Constants {
       .idleMode(IdleMode.kBrake)
       .inverted(false)
       .openLoopRampRate(0.25)
-      .smartCurrentLimit(60, 40)
       .voltageCompensation(12); //
 
     public static final SparkBaseConfig MOTOR_CONFIG_RIGHT =
@@ -128,22 +127,11 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50); //
 
-    public static final Double HOLD_VOLTAGE = 0.5; //
+    public static final double RPM_TOLERANCE = 100; //
 
     public static final ClosedLoopConfig CLOSED_LOOP_CONFIG_LEFT =
       MOTOR_CONFIG_LEFT.closedLoop
         .pidf(LEFT_MOTOR_P, LEFT_MOTOR_I, LEFT_MOTOR_D, LEFT_MOTOR_VEL_F)
         .outputRange(-1, 1);
-    public static final Angle SMART_MOTION_ALLOWED_ERROR_ROTATIONS =
-      Units.Rotations.of(0.1);
-
-    public static final double GEAR_RATIO = (1 / 0) * 2.0; //
-
-    public static final Distance HTD5_PULLEY_PITCH = Units.Millimeters.of(0.5); //
-    public static final double OUTPUT_PULLEY_NUMBER_OF_TEETH = 28; //
-    public static final Distance OUTPUT_PULLEY_CIRCUMFERENCE =
-      HTD5_PULLEY_PITCH.times(OUTPUT_PULLEY_NUMBER_OF_TEETH); //
-
-    public static final double ZERO_STALL_AMPS = 0; //
   }
 }

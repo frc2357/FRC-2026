@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 
 public class Utility {
@@ -121,5 +122,10 @@ public class Utility {
 
   public static Angle invert(Angle angle) {
     return angle.plus(m_angle180Degrees);
+  }
+
+  public static boolean isWithinTolerance(AngularVelocity velocity, double rPM, double rpmTolerance) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'isWithinTolerance'");
   }
 }
