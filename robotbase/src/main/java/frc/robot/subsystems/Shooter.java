@@ -6,19 +6,15 @@ import static edu.wpi.first.units.Units.Value;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.units.AngularVelocityUnit;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
-import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.MutAngle;
 import edu.wpi.first.units.measure.MutAngularVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,7 +28,7 @@ public class Shooter extends SubsystemBase {
 
   private SparkMax m_motorLeft;
   private SparkMax m_motorRight;
-  private SparkClosedLoopController m_PIDController;
+  private ProfiledPIDController m_PIDController;
   private RelativeEncoder m_encoder;
 
   // private ShooterCurveTuner m_curveTuner; TODO: implement later
@@ -60,7 +56,12 @@ public class Shooter extends SubsystemBase {
       PersistMode.kNoPersistParameters
     );
 
-    m_PIDController = m_motorLeft.getClosedLoopController();
+    m_PIDController = new ProfiledPIDController(
+      SHOOTER.LEFT_MOTOR_P,
+      SHOOTER.LEFT_MOTOR_I,
+      SHOOTER.LEFT_MOTOR_D,
+      new TrapezoidProfile.Constraints(SHOOTER.MAX_VEL, SHOOTER.MAX_ACCEL)
+    );
 
     m_encoder = m_motorLeft.getEncoder();
   }
@@ -89,9 +90,15 @@ public class Shooter extends SubsystemBase {
     return m_currentAngularVelocityHolder;
   }
 
+  public void updateMotorPIDs() {
+    m_motorLeft.setVoltage(
+      m_PIDController.calculate(getVelocity().in(RPM), m_targetVelocity.in(RPM))
+    );
+  }
+
   public void setRPM(AngularVelocity targetRPM) {
     m_targetRPM = targetRPM;
-    m_PIDController.setReference(m_targetRPM.in(RPM), ControlType.kVelocity);
+    m_PIDController.setGoal(0);
   }
 
   public boolean isAtRPM(double RPM) {

@@ -10,10 +10,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.generated.TunerConstants;
 
@@ -123,7 +121,9 @@ public class Constants {
     public static final double LEFT_MOTOR_I = 0;
     public static final double LEFT_MOTOR_D = 0;
     public static final double LEFT_MOTOR_VEL_F = 0;
-    public static final double LEFT_MOTOR_ARB_F = 0; //TODO: find actual values
+    public static final double LEFT_MOTOR_ARB_F = 0;
+    public static final double MAX_VEL = 0;
+    public static final double MAX_ACCEL = 0; //TODO: find actual values
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50); //
 
