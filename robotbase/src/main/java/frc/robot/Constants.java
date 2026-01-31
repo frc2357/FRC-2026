@@ -236,7 +236,7 @@ public class Constants {
 
   public static final class INTAKE {
 
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(75);
+    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
 
     public static final SparkBaseConfig LEFT_MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
