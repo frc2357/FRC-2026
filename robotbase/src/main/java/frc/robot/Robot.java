@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
+import frc.robot.commands.shooter.ShooterAxis;
 import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
@@ -73,9 +74,15 @@ public class Robot extends TimedRobot {
     );
     Robot.swerve.setDefaultCommand(m_defaultDrive);
     SmartDashboard.putNumber("Spindexer", 0.0);
+    SmartDashboard.putNumber("Shooter", 0.0);
     Robot.spindexer.setDefaultCommand(
       new SpindexerAxis(() -> {
         return Value.of(SmartDashboard.getNumber("Spindexer", 0.0));
+      })
+    );
+    Robot.shooter.setDefaultCommand(
+      new ShooterAxis(() -> {
+        return Value.of(SmartDashboard.getNumber("Shooter", 0.0));
       })
     );
   }

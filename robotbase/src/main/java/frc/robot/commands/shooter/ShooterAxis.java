@@ -1,6 +1,7 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import java.util.function.Supplier;
@@ -12,6 +13,11 @@ public class ShooterAxis extends Command {
   public ShooterAxis(Supplier<Dimensionless> axis) {
     m_axis = axis;
     addRequirements(Robot.shooter);
+  }
+
+  @Override
+  public void initialize() {
+    SmartDashboard.putBoolean("Shooting", true);
   }
 
   @Override
@@ -28,5 +34,6 @@ public class ShooterAxis extends Command {
   @Override
   public void end(boolean interrupted) {
     Robot.shooter.stop();
+    SmartDashboard.putBoolean("Shooting", false);
   }
 }

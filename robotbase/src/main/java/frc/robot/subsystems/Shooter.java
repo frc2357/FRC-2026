@@ -7,6 +7,7 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.SHOOTER;
@@ -31,7 +32,7 @@ public class Shooter extends SubsystemBase {
     );
 
     m_rightMotor.configure(
-      SHOOTER.LEFT_MOTOR_CONFIG,
+      SHOOTER.RIGHT_MOTOR_CONFIG,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
     );
@@ -43,6 +44,7 @@ public class Shooter extends SubsystemBase {
 
   public void setAxisSpeed(Dimensionless axisSpeed) {
     Dimensionless m_speed = axisSpeed.times(SHOOTER.AXIS_MAX_SPEED);
+    SmartDashboard.putNumber("shoot speed", m_speed.in(Value));
     setSpeed(m_speed);
   }
 
