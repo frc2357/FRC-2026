@@ -12,8 +12,12 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
+import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
@@ -28,6 +32,7 @@ import frc.robot.subsystems.Spindexer;
 public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
+  private SequentialCommandGroup m_setCoastOnDisable;
 
   private static DriverControls m_driverControls;
   private static Command m_defaultDrive;
@@ -50,6 +55,9 @@ public class Robot extends TimedRobot {
     .withJoystickReplay();
 
   public Robot() {
+    m_setCoastOnDisable = new WaitCommand(SWERVE.TIME_TO_COAST).andThen(
+      new DriveSetCoast()
+    );
     swerve = TunerConstants.createDrivetrain();
 
     spindexer = new Spindexer();
@@ -91,6 +99,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().schedule(new StopAllMotors());
+    m_setCoastOnDisable.schedule();
   }
 
   @Override
@@ -116,6 +125,8 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().cancel(m_autonomousCommand);
+
+      m_setCoastOnDisable.cancel();
     }
   }
 
