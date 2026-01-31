@@ -57,35 +57,6 @@ public class AutoBase {
       );
   }
 
-  protected void scoringSegment(AutoTrajectory traj1, AutoTrajectory traj2) {}
-
-  protected void scoringSegment(String traj1, String traj2) {
-    scoringSegment(m_routine.trajectory(traj1), m_routine.trajectory(traj2));
-  }
-
-  protected void intakingSegment(AutoTrajectory traj1, AutoTrajectory traj2) {}
-
-  protected void intakingSegment(String traj1, String traj2) {}
-
-  /**
-   * Takes an arbitrary number of trajectory names and sets up the required triggers to make them run a full auto
-   * @param trajectoryNames The list of trajectories that you want to make into a full auto, without the starting trajectory.
-   */
-  protected void makeAutoFromSegments(String... trajectoryNames) {
-    // we start by making a scoring segment with the starting trajectory, and the first trajectory in the list
-    scoringSegment(m_startTraj, m_routine.trajectory(trajectoryNames[0]));
-    // we then start looping through the provided trajectory names to segment them based on if i is even or odd
-    for (int i = 0; i < trajectoryNames.length - 1; i++) {
-      // we score with the start trajectory, intaking segment.
-      if (i % 2 == 0) {
-        intakingSegment(trajectoryNames[i], trajectoryNames[i + 1]);
-      } else {
-        // segments switch between intaking and scoring
-        scoringSegment(trajectoryNames[i], trajectoryNames[i + 1]);
-      }
-    }
-  }
-
   public AutoRoutine getRoutine() {
     return m_routine;
   }
