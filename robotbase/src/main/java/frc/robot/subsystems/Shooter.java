@@ -6,8 +6,6 @@ import static edu.wpi.first.units.Units.Value;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -22,8 +20,6 @@ import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.SHOOTER;
 
 public class Shooter extends SubsystemBase {
-
-  private AngularVelocity m_targetRPM = RPM.of(Double.NaN);
 
   private SparkMax m_motorLeft;
   private SparkMax m_motorRight;
@@ -95,8 +91,8 @@ public class Shooter extends SubsystemBase {
     );
   }
 
-  public void setTargetRPM(AngularVelocity targetRPM) {
-    m_targetRPM = targetRPM;
+  public void setTargetVelocity(MutAngularVelocity targetVelocity) {
+    m_targetVelocity = targetVelocity;
     m_PIDController.setGoal(0);
   }
 
@@ -105,7 +101,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isAtTargetSpeed() {
-    return isAtRPM(m_targetRPM);
+    return isAtRPM(m_targetVelocity);
   }
 
   @Override
