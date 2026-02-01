@@ -1,52 +1,120 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Value;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.units.measure.MutAngularVelocity;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.SHOOTER;
 
 public class Shooter extends SubsystemBase {
 
-  private SparkMax m_leftMotor;
-  private SparkMax m_rightMotor;
+  private AngularVelocity m_targetRPM = RPM.of(Double.NaN);
+
+  private SparkMax m_motorLeft;
+  private SparkMax m_motorRight;
+  private ProfiledPIDController m_PIDController;
+  private RelativeEncoder m_encoder;
+
+  // private ShooterCurveTuner m_curveTuner; TODO: implement later
+
+  private MutAngularVelocity m_targetVelocity = Units.RPM.mutable(Double.NaN);
+  private MutAngularVelocity m_currentAngularVelocityHolder = Units.RPM.mutable(
+    Double.NaN
+  );
 
   public Shooter() {
-    m_leftMotor = new SparkMax(CAN_ID.LEFT_SHOOTER_MOTOR, MotorType.kBrushless);
-
-    m_leftMotor.configure(
-      SHOOTER.LEFT_MOTOR_CONFIG,
-      ResetMode.kNoResetSafeParameters,
-      PersistMode.kNoPersistParameters
-    );
-
-    m_rightMotor = new SparkMax(
+    m_motorLeft = new SparkMax(CAN_ID.LEFT_SHOOTER_MOTOR, MotorType.kBrushless);
+    m_motorRight = new SparkMax(
       CAN_ID.RIGHT_SHOOTER_MOTOR,
       MotorType.kBrushless
     );
 
-    m_rightMotor.configure(
-      SHOOTER.LEFT_MOTOR_CONFIG,
+    m_motorLeft.configure(
+      SHOOTER.MOTOR_CONFIG_LEFT,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
     );
+    m_motorRight.configure(
+      SHOOTER.MOTOR_CONFIG_RIGHT,
+      ResetMode.kNoResetSafeParameters,
+      PersistMode.kNoPersistParameters
+    );
+
+    m_PIDController = new ProfiledPIDController(
+      SHOOTER.LEFT_MOTOR_P,
+      SHOOTER.LEFT_MOTOR_I,
+      SHOOTER.LEFT_MOTOR_D,
+      new TrapezoidProfile.Constraints(SHOOTER.MAX_VEL, SHOOTER.MAX_ACCEL)
+    );
+
+    m_encoder = m_motorLeft.getEncoder();
   }
 
   public void setSpeed(Dimensionless percentOutput) {
-    m_leftMotor.set(percentOutput.in(Value));
+    m_motorLeft.set(percentOutput.in(Value));
+    m_targetVelocity.mut_replace(Double.NaN, Units.RPM);
   }
 
-  public void setAxisSpeed(Dimensionless axisSpeed) {
-    Dimensionless m_speed = axisSpeed.times(SHOOTER.AXIS_MAX_SPEED);
-    setSpeed(m_speed);
+  public void setAxisSpeed(Dimensionless speed) {
+    double m_speed = speed.times(SHOOTER.AXIS_MAX_SPEED).in(Value);
+    m_motorLeft.set(m_speed);
+    m_targetVelocity.mut_replace(Double.NaN, Units.RPM);
   }
 
   public void stop() {
-    m_leftMotor.stopMotor();
+    m_motorLeft.stopMotor();
+    m_targetVelocity.mut_replace(Double.NaN, Units.RPM);
   }
+
+  public AngularVelocity getVelocity() {
+    m_currentAngularVelocityHolder.mut_replace(
+      m_encoder.getVelocity(),
+      Units.RPM
+    );
+    return m_currentAngularVelocityHolder;
+  }
+
+  public void updateMotorPIDs() {
+    m_motorLeft.setVoltage(
+      m_PIDController.calculate(getVelocity().in(RPM), m_targetVelocity.in(RPM))
+    );
+  }
+
+  public void setTargetRPM(AngularVelocity targetRPM) {
+    m_targetRPM = targetRPM;
+    m_PIDController.setGoal(0);
+  }
+
+  public boolean isAtRPM(AngularVelocity RPM) {
+    return RPM.isNear(getVelocity(), SHOOTER.RPM_TOLERANCE);
+  }
+
+  public boolean isAtTargetSpeed() {
+    return isAtRPM(m_targetRPM);
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("RPM", getVelocity().in(RPM));
+    SmartDashboard.putBoolean("Shooter Running", getVelocity().gt(RPM.of(500)));
+  }
+
+  // public double[] getShooterCurveRow() {
+  //  return m_curveTuner.getSelectedRow();
+  //} TODO: implement later
 }
