@@ -3,9 +3,12 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import choreo.auto.AutoFactory;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.Units;
@@ -82,6 +85,25 @@ public class Constants {
         )
       );
     }
+  }
+
+  public static final class CHOREO {
+
+    public static final PIDController X_CONTROLLER = new PIDController(5, 0, 0);
+    public static final PIDController Y_CONTROLLER = new PIDController(5, 0, 0);
+    public static final PIDController ROTATION_CONTROLLER = new PIDController(
+      8,
+      0,
+      0
+    );
+
+    public static final AutoFactory AUTO_FACTORY = new AutoFactory(
+      Robot.swerve::getFieldRelativePose2d,
+      Robot.swerve::setFieldRelativePose2d,
+      Robot.swerve::followChoreoPath,
+      true,
+      Robot.swerve
+    );
   }
 
   public static final class CAN_ID {
