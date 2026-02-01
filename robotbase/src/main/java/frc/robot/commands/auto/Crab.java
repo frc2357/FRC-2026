@@ -1,12 +1,10 @@
 package frc.robot.commands.auto;
 
-import choreo.auto.AutoRoutine;
-import choreo.auto.AutoTrajectory;
+import static edu.wpi.first.units.Units.Percent;
+
+import frc.robot.commands.intake.IntakeSetSpeed;
 
 public class Crab extends AutoBase {
-
-  protected AutoRoutine m_routine;
-  protected AutoTrajectory m_startTraj;
 
   /**
    * This will initialize an auto routine
@@ -15,5 +13,6 @@ public class Crab extends AutoBase {
    */
   public Crab() {
     super("Crab");
+    m_startTraj.active().onTrue(new IntakeSetSpeed(Percent.of(-70)));
   }
 }

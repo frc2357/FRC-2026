@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.commands.auto.AutoBase;
 import frc.robot.commands.auto.Crab;
-import frc.robot.commands.auto.FlipTest;
+import frc.robot.commands.auto.Expedition;
 import frc.robot.commands.auto.SpinnyCircle;
 import java.util.Map;
 
@@ -20,7 +20,7 @@ public class AutoChooserManager {
   // The auto routines that will show up on the auto command chooser.
   private AutoBase[] m_autos = {
     new Crab(),
-    new FlipTest(),
+    new Expedition(),
     new SpinnyCircle(),
   };
 
