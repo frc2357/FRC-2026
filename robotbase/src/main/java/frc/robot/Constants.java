@@ -9,7 +9,6 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.Units;
@@ -169,9 +168,10 @@ public class Constants {
   public static final class SHOOTER {
 
     public static final SparkBaseConfig MOTOR_CONFIG_LEFT = new SparkMaxConfig()
-      .idleMode(IdleMode.kBrake)
+      .idleMode(IdleMode.kCoast)
       .inverted(false)
       .openLoopRampRate(0.25)
+      .smartCurrentLimit(40, 40)
       .voltageCompensation(12); //
 
     public static final SparkBaseConfig MOTOR_CONFIG_RIGHT =
@@ -187,7 +187,7 @@ public class Constants {
     public static final double MAX_VEL = 0;
     public static final double MAX_ACCEL = 0; //TODO: find actual values
 
-    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50); //
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
     public static final double RPM_TOLERANCE = 100; //
 

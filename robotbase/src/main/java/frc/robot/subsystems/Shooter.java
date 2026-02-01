@@ -91,13 +91,13 @@ public class Shooter extends SubsystemBase {
     );
   }
 
-  public void setTargetVelocity(MutAngularVelocity targetVelocity) {
-    m_targetVelocity = targetVelocity;
-    m_PIDController.setGoal(0);
+  public void setTargetVelocity(AngularVelocity targetVelocity) {
+    m_targetVelocity.mut_replace(targetVelocity);
+    m_PIDController.setGoal(m_targetVelocity.in(RPM));
   }
 
-  public boolean isAtRPM(AngularVelocity RPM) {
-    return RPM.isNear(getVelocity(), SHOOTER.RPM_TOLERANCE);
+  public boolean isAtRPM(AngularVelocity rpm) {
+    return rpm.isNear(getVelocity(), SHOOTER.RPM_TOLERANCE);
   }
 
   public boolean isAtTargetSpeed() {
