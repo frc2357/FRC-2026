@@ -22,6 +22,8 @@ public class TunerConstants {
 
   // The steer motor uses any SwerveModule.SteerRequestType control request with
   // the
+  // The steer motor uses any SwerveModule.SteerRequestType control request with
+  // the
   // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
   private static final Slot0Configs steerGains = new Slot0Configs()
     .withKP(100)
@@ -69,11 +71,17 @@ public class TunerConstants {
   // cannot be null.
   // Some configs will be overwritten; check the `with*InitialConfigs()` API
   // documentation.
+  // Initial configs for the drive and steer motors and the azimuth encoder; these
+  // cannot be null.
+  // Some configs will be overwritten; check the `with*InitialConfigs()` API
+  // documentation.
   private static final TalonFXConfiguration driveInitialConfigs =
     new TalonFXConfiguration();
   private static final TalonFXConfiguration steerInitialConfigs =
     new TalonFXConfiguration().withCurrentLimits(
       new CurrentLimitsConfigs()
+        // Swerve azimuth does not require much torque output, so we can set a
+        // relatively low
         // Swerve azimuth does not require much torque output, so we can set a
         // relatively low
         // stator current limit to help avoid brownouts without impacting performance.
@@ -286,6 +294,8 @@ public class TunerConstants {
   /**
    * Swerve Drive class utilizing CTR Electronics' Phoenix 6 API with the selected
    * device types.
+   * Swerve Drive class utilizing CTR Electronics' Phoenix 6 API with the selected
+   * device types.
    */
   public static class TunerSwerveDrivetrain
     extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder>
@@ -298,8 +308,14 @@ public class TunerConstants {
      * construct
      * the devices themselves. If they need the devices, they can access them
      * through
+     * This constructs the underlying hardware devices, so users should not
+     * construct
+     * the devices themselves. If they need the devices, they can access them
+     * through
      * getters in the classes.
      *
+     * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
+     * @param modules             Constants for each specific module
      * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
      * @param modules             Constants for each specific module
      */
@@ -319,6 +335,10 @@ public class TunerConstants {
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
      * <p>
+     * This constructs the underlying hardware devices, so users should not
+     * construct
+     * the devices themselves. If they need the devices, they can access them
+     * through
      * This constructs the underlying hardware devices, so users should not
      * construct
      * the devices themselves. If they need the devices, they can access them
@@ -353,8 +373,14 @@ public class TunerConstants {
      * construct
      * the devices themselves. If they need the devices, they can access them
      * through
+     * This constructs the underlying hardware devices, so users should not
+     * construct
+     * the devices themselves. If they need the devices, they can access them
+     * through
      * getters in the classes.
      *
+     * @param drivetrainConstants       Drivetrain-wide constants for the swerve
+     *                                  drive
      * @param drivetrainConstants       Drivetrain-wide constants for the swerve
      *                                  drive
      * @param odometryUpdateFrequency   The frequency to run the odometry loop. If

@@ -1,7 +1,9 @@
 package frc.robot.controls;
 
 import static edu.wpi.first.units.Units.Value;
+import static edu.wpi.first.units.Units.Value;
 
+import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;

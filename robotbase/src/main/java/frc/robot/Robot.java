@@ -23,6 +23,8 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.PhotonVisionCamera;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Spindexer;
 
 public class Robot extends TimedRobot {
@@ -71,6 +73,7 @@ public class Robot extends TimedRobot {
       m_driverControls::getLeftY,
       m_driverControls::getRightX
     );
+    spindexer = new Spindexer();
     spindexer = new Spindexer();
 
     backLeftCam = new PhotonVisionCamera(
