@@ -29,16 +29,14 @@ public class DriverControls implements RumbleInterface {
     m_controller.start().onTrue(new ResetPerspective());
 
     m_controller
-      .leftTrigger()
-      .whileTrue(
-        new ShooterAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
-      );
+        .leftTrigger()
+        .whileTrue(
+            new ShooterAxis(() -> Value.of(m_controller.getLeftTriggerAxis())));
 
     m_controller
-      .rightTrigger()
-      .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
-      );
+        .rightTrigger()
+        .whileTrue(
+            new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1)));
 
     m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(30)));
     m_controller.a().whileTrue(new HoodSetSpeed(Percent.of(-30)));
@@ -52,8 +50,20 @@ public class DriverControls implements RumbleInterface {
     return Value.of(modifyAxis(-m_controller.getLeftX()));
   }
 
+  public Dimensionless getRightY() {
+    return Value.of(modifyAxis(-m_controller.getRightY()));
+  }
+
   public Dimensionless getLeftY() {
     return Value.of(modifyAxis(-m_controller.getLeftY()));
+  }
+
+  public Dimensionless getRightTrigger() {
+    return Value.of(modifyAxis(-m_controller.getRightTriggerAxis()));
+  }
+
+  public Dimensionless getLeftTrigger() {
+    return Value.of(modifyAxis(-m_controller.getLeftTriggerAxis()));
   }
 
   private double deadband(double value, double deadband) {
@@ -71,9 +81,8 @@ public class DriverControls implements RumbleInterface {
   private double modifyAxis(double value) {
     value = deadband(value, CONTROLLER.DRIVER_CONTROLLER_DEADBAND);
     value = Math.copySign(
-      Math.pow(value, Constants.CONTROLLER.JOYSTICK_RAMP_EXPONENT),
-      value
-    );
+        Math.pow(value, Constants.CONTROLLER.JOYSTICK_RAMP_EXPONENT),
+        value);
     return value;
   }
 
