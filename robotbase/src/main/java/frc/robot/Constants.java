@@ -188,7 +188,7 @@ public class Constants {
     public static final double LEFT_MOTOR_VEL_F = 0;
     public static final double LEFT_MOTOR_ARB_F = 0;
     public static final double MAX_VEL = 0;
-    public static final double MAX_ACCEL = 0; //TODO: find actual values
+    public static final double MAX_ACCEL = 0; // TODO: find actual values
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
