@@ -9,12 +9,14 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.LinearVelocity;
+import frc.robot.generated.KelpyTunerConstants;
 import frc.robot.generated.TunerConstants;
 
 public class Constants {
@@ -37,7 +39,7 @@ public class Constants {
     public static final AngularVelocity MAX_ANGULAR_RATE =
       RotationsPerSecond.of(1);
     public static final LinearVelocity MAX_SPEED =
-      TunerConstants.kSpeedAt12Volts;
+      KelpyTunerConstants.kSpeedAt12Volts;
 
     public static final Dimensionless AXIS_MAX_ANGULAR_RATE = Units.Percent.of(
       50
