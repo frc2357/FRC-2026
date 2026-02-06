@@ -118,6 +118,8 @@ public class Constants {
     public static final int INTAKE_PIVOT_MOTOR = 33;
 
     public static final int KICKER_MOTOR = 26;
+    public static final int FEEDER_MOTOR = 32;
+    //Feeder motor can ID
 
     public static final int OUTAKE_MOTOR = 27;
 
@@ -177,6 +179,18 @@ public class Constants {
       .idleMode(IdleMode.kCoast)
       .inverted(false)
       .smartCurrentLimit(30, 30)
+      .openLoopRampRate(0.5)
+      .voltageCompensation(12);
+  }
+
+  public static final class FEEDER {
+
+    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(100);
+
+    public static final SparkBaseConfig FEEDER_CONFIG = new SparkMaxConfig()
+      .idleMode(IdleMode.kCoast)
+      .inverted(false)
+      .smartCurrentLimit(20, 20)
       .openLoopRampRate(0.5)
       .voltageCompensation(12);
   }
