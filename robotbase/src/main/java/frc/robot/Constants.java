@@ -15,6 +15,7 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Time;
 import frc.robot.generated.TunerConstants;
 
 public class Constants {
@@ -33,6 +34,8 @@ public class Constants {
   }
 
   public static final class SWERVE {
+
+    public static final Time TIME_TO_COAST = Units.Seconds.of(3);
 
     public static final AngularVelocity MAX_ANGULAR_RATE =
       RotationsPerSecond.of(1);
