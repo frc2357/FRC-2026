@@ -24,6 +24,7 @@ import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
 import frc.robot.networkTables.AutoChooserManager;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
@@ -51,6 +52,7 @@ public class Robot extends TimedRobot {
   public static Shooter shooter;
   public static Hood hood;
   public static Outtake outtake;
+  public static Feeder feeder;
 
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
@@ -68,6 +70,7 @@ public class Robot extends TimedRobot {
     hood = new Hood();
     spindexer = new Spindexer();
     outtake = new Outtake();
+    feeder = new Feeder();
 
     // backLeftCam = new PhotonVisionCamera(
     //   Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
