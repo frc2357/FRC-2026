@@ -1,4 +1,4 @@
-package frc.robot.commands.intakepivot;
+package frc.robot.commands.intakePivot;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,13 +11,13 @@ public class IntakePivotAxis extends Command {
 
   public IntakePivotAxis(Supplier<Dimensionless> axis) {
     m_axis = axis;
-    addRequirements(Robot.intakepivot);
+    addRequirements(Robot.intakePivot);
   }
 
   @Override
   public void execute() {
     Dimensionless axisValue = m_axis.get();
-    Robot.intakepivot.setAxisSpeed(axisValue);
+    Robot.intakePivot.setAxisSpeed(axisValue);
   }
 
   @Override
@@ -27,6 +27,6 @@ public class IntakePivotAxis extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    Robot.intakepivot.stop();
+    Robot.intakePivot.stop();
   }
 }

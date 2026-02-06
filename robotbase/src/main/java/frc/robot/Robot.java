@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
 
   private AutoChooserManager m_autoChooserManager;
   public static Intake intake;
-  public static IntakePivot intakepivot;
+  public static IntakePivot intakePivot;
   public static Shooter shooter;
   public static Hood hood;
   public static Outtake outtake;
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
     swerve = TunerConstants.createDrivetrain();
 
     intake = new Intake();
-    intakepivot = new IntakePivot();
+    intakePivot = new IntakePivot();
     shooter = new Shooter();
     hood = new Hood();
     spindexer = new Spindexer();

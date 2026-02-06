@@ -115,8 +115,8 @@ public class Constants {
 
     public static final int LEFT_INTAKE_MOTOR = 24;
     public static final int RIGHT_INTAKE_MOTOR = 25;
-    public static final int INTAKE_PIVOT_MOTOR = 0;
-    //CHANGE LATER
+    public static final int INTAKE_PIVOT_MOTOR = 33;
+
     public static final int KICKER_MOTOR = 26;
 
     public static final int OUTAKE_MOTOR = 27;
@@ -162,7 +162,7 @@ public class Constants {
     public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(75);
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kCoast)
+      .idleMode(IdleMode.kBrake)
       .inverted(false)
       .smartCurrentLimit(30, 30)
       .openLoopRampRate(0.25)

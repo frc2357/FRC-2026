@@ -1,12 +1,13 @@
-package frc.robot.commands.intakepivot;
+package frc.robot.commands.intakePivot;
 
+import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
 public class IntakePivotStop extends Command {
 
   public IntakePivotStop() {
-    addRequirements(Robot.intakepivot);
+    addRequirements(Robot.intakePivot);
   }
 
   @Override
@@ -16,6 +17,6 @@ public class IntakePivotStop extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    Robot.intakepivot.stop();
+    Robot.intakePivot.stop();
   }
 }
