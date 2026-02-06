@@ -16,8 +16,12 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
+import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.DriverControls;
@@ -35,6 +39,7 @@ import frc.robot.subsystems.Spindexer;
 public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
+  private SequentialCommandGroup m_setCoastOnDisable;
 
   private static DriverControls m_driverControls;
   private static Command m_defaultDrive;
@@ -92,6 +97,9 @@ public class Robot extends TimedRobot {
         return Value.of(SmartDashboard.getNumber("Spindexer", 0.0));
       })
     );
+    m_setCoastOnDisable = new WaitCommand(SWERVE.TIME_TO_COAST).andThen(
+      new DriveSetCoast()
+    );
 
     m_autoChooserManager = new AutoChooserManager();
     m_InitRobotCommand = new InitRobotCommand();
@@ -120,6 +128,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().schedule(new StopAllMotors());
+    m_setCoastOnDisable.schedule();
   }
 
   @Override
@@ -147,6 +156,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_setCoastOnDisable.cancel();
+    swerve.configNeutralMode(NeutralModeValue.Brake);
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().cancel(m_autonomousCommand);
     }
@@ -161,6 +172,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
+    swerve.configNeutralMode(NeutralModeValue.Brake);
   }
 
   @Override
