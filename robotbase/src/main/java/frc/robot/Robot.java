@@ -5,10 +5,13 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Value;
+import static frc.robot.Constants.CHOREO.AUTO_FACTORY;
 
+import choreo.auto.AutoRoutine;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,8 +23,10 @@ import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.spindexer.SpindexerAxis;
+import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
+import frc.robot.networkTables.AutoChooserManager;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
@@ -42,6 +47,11 @@ public class Robot extends TimedRobot {
 
   public static PhotonVisionCamera backLeftCam;
   public static Spindexer spindexer;
+  public static Alliance alliance = null;
+
+  public static InitRobotCommand m_InitRobotCommand;
+
+  private AutoChooserManager m_autoChooserManager;
   public static Intake intake;
   public static Shooter shooter;
   public static Hood hood;
@@ -58,10 +68,10 @@ public class Robot extends TimedRobot {
   public Robot() {
     swerve = TunerConstants.createDrivetrain();
 
-    spindexer = new Spindexer();
     intake = new Intake();
     shooter = new Shooter();
     hood = new Hood();
+    spindexer = new Spindexer();
     outtake = new Outtake();
 
     // backLeftCam = new PhotonVisionCamera(
@@ -69,17 +79,17 @@ public class Robot extends TimedRobot {
     //   Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
     // );
 
-    swerve.registerTelemetry(logger::telemeterize);
-
     m_driverControls = new DriverControls();
     m_defaultDrive = new DefaultDrive(
       m_driverControls::getLeftX,
       m_driverControls::getLeftY,
       m_driverControls::getRightX
     );
-    Robot.swerve.setDefaultCommand(m_defaultDrive);
-    SmartDashboard.putNumber("Spindexer", 0.0);
-    Robot.spindexer.setDefaultCommand(
+
+    swerve.registerTelemetry(logger::telemeterize);
+    swerve.setDefaultCommand(m_defaultDrive);
+
+    spindexer.setDefaultCommand(
       new SpindexerAxis(() -> {
         return Value.of(SmartDashboard.getNumber("Spindexer", 0.0));
       })
@@ -87,6 +97,21 @@ public class Robot extends TimedRobot {
     m_setCoastOnDisable = new WaitCommand(SWERVE.TIME_TO_COAST).andThen(
       new DriveSetCoast()
     );
+
+    m_autoChooserManager = new AutoChooserManager();
+    m_InitRobotCommand = new InitRobotCommand();
+
+    backLeftCam = new PhotonVisionCamera(
+      Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
+      Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
+    );
+
+    SmartDashboard.putNumber("Spindexer", 0.0);
+  }
+
+  @Override
+  public void robotInit() {
+    CommandScheduler.getInstance().schedule(m_InitRobotCommand);
   }
 
   @Override
@@ -112,6 +137,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     swerve.configNeutralMode(NeutralModeValue.Brake);
+
+    m_autonomousCommand = m_autoChooserManager.getSelectedCommand();
+
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
