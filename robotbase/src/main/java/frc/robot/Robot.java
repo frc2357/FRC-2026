@@ -30,6 +30,7 @@ import frc.robot.networkTables.AutoChooserManager;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakePivot;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.PhotonVisionCamera;
 import frc.robot.subsystems.Shooter;
@@ -53,6 +54,7 @@ public class Robot extends TimedRobot {
 
   private AutoChooserManager m_autoChooserManager;
   public static Intake intake;
+  public static IntakePivot intakePivot;
   public static Shooter shooter;
   public static Hood hood;
   public static Outtake outtake;
@@ -69,6 +71,7 @@ public class Robot extends TimedRobot {
     swerve = TunerConstants.createDrivetrain();
 
     intake = new Intake();
+    intakePivot = new IntakePivot();
     shooter = new Shooter();
     hood = new Hood();
     spindexer = new Spindexer();
