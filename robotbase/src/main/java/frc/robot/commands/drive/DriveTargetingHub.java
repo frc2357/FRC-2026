@@ -103,7 +103,9 @@ public class DriveTargetingHub extends Command {
 
     Rotation2d cameraYaw = Rotation2d.fromDegrees(rawYaw);
 
-    Rotation2d robotHeading = Robot.swerve.getRobotRotation();
+    Rotation2d robotHeading = Robot.swerve
+      .getFieldRelativePose2d()
+      .getRotation();
 
     // Convert camera yaw into field-relative bearing to the AprilTag
     Rotation2d fieldBearing = robotHeading.plus(cameraYaw);
