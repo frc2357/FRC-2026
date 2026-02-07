@@ -1,12 +1,12 @@
-package frc.robot.commands.outtake;
+package frc.robot.commands.feeder;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
-public class OuttakeStop extends Command {
+public class FeederStop extends Command {
 
-  public OuttakeStop() {
-    addRequirements(Robot.outtake);
+  public FeederStop() {
+    addRequirements(Robot.feeder);
   }
 
   @Override
@@ -16,6 +16,6 @@ public class OuttakeStop extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    Robot.outtake.stop();
+    Robot.feeder.stop();
   }
 }
