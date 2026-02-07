@@ -51,7 +51,7 @@ public class Shooter extends SubsystemBase {
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
     );
-
+    m_PIDController = m_motorLeft.getClosedLoopController();
     m_encoder = m_motorLeft.getEncoder();
   }
 
