@@ -7,6 +7,12 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
+import frc.robot.commands.StopAllMotors;
+import frc.robot.commands.StopAllMotors;
+import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.intake.IntakeSetSpeed;
+import frc.robot.commands.shooter.ShooterAxis;
+import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.controls.util.RumbleInterface;
 
 public class CoDriverControls implements RumbleInterface {
@@ -20,10 +26,16 @@ public class CoDriverControls implements RumbleInterface {
     mapControls();
   }
 
-  public void mapControls() {}
+  public void mapControls() {
+    m_controller.povUp().whileTrue(new ShooterAxis(this::getRightY));
 
-  public Dimensionless getRightX() {
-    return Value.of(modifyAxis(-m_controller.getRightX()));
+    m_controller.povUpLeft().whileTrue(new IntakeAxis(this::getRightY));
+
+    m_controller
+      .leftTrigger()
+      .whileTrue(new SpindexerAxis(this::getLeftTrigger));
+
+    m_controller.start().onTrue(new StopAllMotors());
   }
 
   private double modifyAxis(double value) {
@@ -33,6 +45,30 @@ public class CoDriverControls implements RumbleInterface {
       value
     );
     return value;
+  }
+
+  public Dimensionless getRightX() {
+    return Value.of(modifyAxis(-m_controller.getRightX()));
+  }
+
+  public Dimensionless getLeftX() {
+    return Value.of(modifyAxis(-m_controller.getLeftX()));
+  }
+
+  public Dimensionless getRightY() {
+    return Value.of(modifyAxis(-m_controller.getRightY()));
+  }
+
+  public Dimensionless getLeftY() {
+    return Value.of(modifyAxis(-m_controller.getLeftY()));
+  }
+
+  public Dimensionless getRightTrigger() {
+    return Value.of(modifyAxis(-m_controller.getRightTriggerAxis()));
+  }
+
+  public Dimensionless getLeftTrigger() {
+    return Value.of(modifyAxis(-m_controller.getLeftTriggerAxis()));
   }
 
   private double deadband(double value, double deadband) {
