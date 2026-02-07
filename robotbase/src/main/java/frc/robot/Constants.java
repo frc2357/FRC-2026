@@ -5,6 +5,8 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import choreo.auto.AutoFactory;
 import com.revrobotics.spark.config.ClosedLoopConfig;
+import com.revrobotics.spark.config.FeedForwardConfig;
+import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -182,10 +184,14 @@ public class Constants {
     public static final double LEFT_MOTOR_P = 0;
     public static final double LEFT_MOTOR_I = 0;
     public static final double LEFT_MOTOR_D = 0;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kA = 0;
     public static final double LEFT_MOTOR_VEL_F = 0;
     public static final double LEFT_MOTOR_ARB_F = 0;
     public static final double MAX_VEL = 0;
     public static final double MAX_ACCEL = 0; //TODO: find actual values
+    public static final double MAX_ALLOWED_ERROR = 0;
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
@@ -193,8 +199,17 @@ public class Constants {
 
     public static final ClosedLoopConfig CLOSED_LOOP_CONFIG_LEFT =
       MOTOR_CONFIG_LEFT.closedLoop
-        .pidf(LEFT_MOTOR_P, LEFT_MOTOR_I, LEFT_MOTOR_D, LEFT_MOTOR_VEL_F)
-        .outputRange(-1, 1);
+        .outputRange(-1, 1)
+        .pid(LEFT_MOTOR_P, LEFT_MOTOR_I, LEFT_MOTOR_D);
+
+    public static final FeedForwardConfig FEED_FORWARD_CONFIG =
+      CLOSED_LOOP_CONFIG_LEFT.feedForward.sva(kS, kV, kA);
+
+    public static final MAXMotionConfig MAX_MOTION_CONFIG =
+      CLOSED_LOOP_CONFIG_LEFT.maxMotion
+        .allowedProfileError(MAX_ALLOWED_ERROR)
+        .maxAcceleration(MAX_ACCEL)
+        .cruiseVelocity(MAX_VEL);
   }
 
   public static final class HOOD {
