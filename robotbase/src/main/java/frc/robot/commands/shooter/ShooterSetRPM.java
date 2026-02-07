@@ -20,11 +20,6 @@ public class ShooterSetRPM extends Command {
   }
 
   @Override
-  public void execute() {
-    Robot.shooter.updateMotorPIDs();
-  }
-
-  @Override
   public boolean isFinished() {
     return false;
   }

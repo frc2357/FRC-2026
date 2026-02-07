@@ -11,8 +11,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
@@ -52,13 +50,6 @@ public class Shooter extends SubsystemBase {
       SHOOTER.MOTOR_CONFIG_RIGHT,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
-    );
-
-    m_PIDController = new ProfiledPIDController(
-      SHOOTER.LEFT_MOTOR_P,
-      SHOOTER.LEFT_MOTOR_I,
-      SHOOTER.LEFT_MOTOR_D,
-      new TrapezoidProfile.Constraints(SHOOTER.MAX_VEL, SHOOTER.MAX_ACCEL)
     );
 
     m_encoder = m_motorLeft.getEncoder();
