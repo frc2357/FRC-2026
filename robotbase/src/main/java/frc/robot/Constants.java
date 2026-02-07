@@ -181,33 +181,33 @@ public class Constants {
         .apply(MOTOR_CONFIG_LEFT)
         .follow(CAN_ID.LEFT_SHOOTER_MOTOR, true);
 
-    public static final double LEFT_MOTOR_P = 0;
-    public static final double LEFT_MOTOR_I = 0;
-    public static final double LEFT_MOTOR_D = 0;
-    public static final double kS = 0;
-    public static final double kV = 0;
-    public static final double kA = 0;
-    public static final double LEFT_MOTOR_VEL_F = 0;
-    public static final double LEFT_MOTOR_ARB_F = 0;
+    public static final double LEFT_MOTOR_kP = 0;
+    public static final double LEFT_MOTOR_kI = 0;
+    public static final double LEFT_MOTOR_kD = 0;
+    public static final double LEFT_MOTOR_kS = 0;
+    public static final double LEFT_MOTOR_kV = 0;
+    public static final double LEFT_MOTOR_kA = 0;
     public static final double MAX_VEL = 0;
     public static final double MAX_ACCEL = 0; //TODO: find actual values
-    public static final double MAX_ALLOWED_ERROR = 0;
+    public static final double RPM_TOLERANCE = 100; //
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
-
-    public static final double RPM_TOLERANCE = 100; //
 
     public static final ClosedLoopConfig CLOSED_LOOP_CONFIG_LEFT =
       MOTOR_CONFIG_LEFT.closedLoop
         .outputRange(-1, 1)
-        .pid(LEFT_MOTOR_P, LEFT_MOTOR_I, LEFT_MOTOR_D);
+        .pid(LEFT_MOTOR_kP, LEFT_MOTOR_kI, LEFT_MOTOR_kD);
 
     public static final FeedForwardConfig FEED_FORWARD_CONFIG =
-      CLOSED_LOOP_CONFIG_LEFT.feedForward.sva(kS, kV, kA);
+      CLOSED_LOOP_CONFIG_LEFT.feedForward.sva(
+        LEFT_MOTOR_kS,
+        LEFT_MOTOR_kV,
+        LEFT_MOTOR_kA
+      );
 
     public static final MAXMotionConfig MAX_MOTION_CONFIG =
       CLOSED_LOOP_CONFIG_LEFT.maxMotion
-        .allowedProfileError(MAX_ALLOWED_ERROR)
+        .allowedProfileError(RPM_TOLERANCE)
         .maxAcceleration(MAX_ACCEL)
         .cruiseVelocity(MAX_VEL);
   }
