@@ -83,7 +83,7 @@ public class ShooterTuningSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Shooter maxVel", MAX_VEL);
     SmartDashboard.putNumber("Shooter maxAccel", MAX_ACCEL);
     SmartDashboard.putNumber("RPM Tolerence", RPM_TOLERANCE);
-    SmartDashboard.putNumber("Shooter Setpoint", 0);
+    SmartDashboard.putNumber("Target RPM", 0);
   }
 
   public void updatePIDs() {
@@ -117,7 +117,7 @@ public class ShooterTuningSubsystem extends SubsystemBase {
     MAX_ACCEL = SmartDashboard.getNumber("Shooter MaxAcc", 0);
     RPM_TOLERANCE = SmartDashboard.getNumber("RPM Tolerance", RPM_TOLERANCE);
     SmartDashboard.putNumber("RPM", getVelocity().in(RPM));
-    SmartDashboard.putNumber("Set point", m_PIDController.getSetpoint());
+    SmartDashboard.putNumber("setpoint", m_PIDController.getSetpoint());
     SmartDashboard.putNumber("Voltage", m_motorLeft.getBusVoltage());
     SmartDashboard.putBoolean("Shooter Running", getVelocity().gt(RPM.of(500)));
   }
@@ -150,9 +150,9 @@ public class ShooterTuningSubsystem extends SubsystemBase {
     m_targetVelocity.mut_replace(targetVelocity);
     m_PIDController.setSetpoint(
       m_targetVelocity.in(RPM),
-      ControlType.kMAXMotionVelocityControl,
-      ClosedLoopSlot.kSlot0
+      ControlType.kMAXMotionVelocityControl
     );
+    System.out.println(m_targetVelocity.in(RPM));
   }
 
   public boolean isAtRPM(AngularVelocity rpm) {
@@ -166,7 +166,9 @@ public class ShooterTuningSubsystem extends SubsystemBase {
   public void periodic() {
     updateDashboard();
     updatePIDs();
-    setTargetVelocity(RPM.of(SmartDashboard.getNumber("Shooter Setpoint", 0)));
+    setTargetVelocity(
+      RPM.of(SmartDashboard.getNumber("Target RPM", m_targetVelocity.in(RPM)))
+    );
   }
   // public double[] getShooterCurveRow() {
   //  return m_curveTuner.getSelectedRow();
