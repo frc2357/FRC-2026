@@ -40,8 +40,6 @@ import frc.robot.subsystems.Spindexer;
 public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
-  private SequentialCommandGroup m_setCoastOnDisable;
-
   private static DriverControls m_driverControls;
   private static Command m_defaultDrive;
 
@@ -100,9 +98,6 @@ public class Robot extends TimedRobot {
         return Value.of(SmartDashboard.getNumber("Spindexer", 0.0));
       })
     );
-    m_setCoastOnDisable = new WaitCommand(SWERVE.TIME_TO_COAST).andThen(
-      new DriveSetCoast()
-    );
 
     m_autoChooserManager = new AutoChooserManager();
     m_InitRobotCommand = new InitRobotCommand();
@@ -131,7 +126,10 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().schedule(new StopAllMotors());
-    m_setCoastOnDisable.schedule();
+
+    CommandScheduler.getInstance().schedule(
+      new WaitCommand(SWERVE.TIME_TO_COAST).andThen(new DriveSetCoast())
+    );
   }
 
   @Override
@@ -159,7 +157,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    m_setCoastOnDisable.cancel();
     swerve.configNeutralMode(NeutralModeValue.Brake);
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().cancel(m_autonomousCommand);
