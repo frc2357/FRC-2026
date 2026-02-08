@@ -6,10 +6,11 @@ import static edu.wpi.first.units.Units.Value;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
@@ -23,7 +24,7 @@ public class Shooter extends SubsystemBase {
 
   private SparkMax m_motorLeft;
   private SparkMax m_motorRight;
-  private ProfiledPIDController m_PIDController;
+  private SparkClosedLoopController m_PIDController;
   private RelativeEncoder m_encoder;
 
   // private ShooterCurveTuner m_curveTuner; TODO: implement later
@@ -50,14 +51,7 @@ public class Shooter extends SubsystemBase {
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
     );
-
-    m_PIDController = new ProfiledPIDController(
-      SHOOTER.LEFT_MOTOR_P,
-      SHOOTER.LEFT_MOTOR_I,
-      SHOOTER.LEFT_MOTOR_D,
-      new TrapezoidProfile.Constraints(SHOOTER.MAX_VEL, SHOOTER.MAX_ACCEL)
-    );
-
+    m_PIDController = m_motorLeft.getClosedLoopController();
     m_encoder = m_motorLeft.getEncoder();
   }
 
@@ -85,15 +79,13 @@ public class Shooter extends SubsystemBase {
     return m_currentAngularVelocityHolder;
   }
 
-  public void updateMotorPIDs() {
-    m_motorLeft.setVoltage(
-      m_PIDController.calculate(getVelocity().in(RPM), m_targetVelocity.in(RPM))
-    );
-  }
-
   public void setTargetVelocity(AngularVelocity targetVelocity) {
     m_targetVelocity.mut_replace(targetVelocity);
-    m_PIDController.setGoal(m_targetVelocity.in(RPM));
+    m_PIDController.setSetpoint(
+      m_targetVelocity.in(RPM),
+      ControlType.kMAXMotionVelocityControl,
+      ClosedLoopSlot.kSlot0
+    );
   }
 
   public boolean isAtRPM(AngularVelocity rpm) {
