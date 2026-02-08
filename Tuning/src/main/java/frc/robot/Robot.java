@@ -4,8 +4,14 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,6 +23,13 @@ public class Robot extends TimedRobot {
   Command m_command;
 
   XboxController m_controller;
+
+  AddressableLED m_LED;
+  AddressableLEDBuffer m_ledBuffer;
+  LEDPattern m_rainbow = LEDPattern.rainbow(255, 50);
+
+  LEDPattern m_scrollingRainbow;
+  public boolean camera = false;
 
   ShooterTuningSubsystem m_shooter;
   HoodTuningSubsystem m_hood;

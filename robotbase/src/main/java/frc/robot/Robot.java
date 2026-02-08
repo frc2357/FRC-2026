@@ -34,6 +34,7 @@ import frc.robot.subsystems.Floor;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakePivot;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
 import frc.robot.vision.CameraManager;
 
@@ -62,6 +63,7 @@ public class Robot extends TimedRobot {
   public static ScoreCalculator scoreCalculator;
 
   private static final Field2d m_robotField = new Field2d();
+  public static LEDs led;
 
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
@@ -80,6 +82,7 @@ public class Robot extends TimedRobot {
     hood = new Hood();
     floor = new Floor();
     feeder = new Feeder();
+    led = new LEDs();
 
     cameraManager = new CameraManager();
 
