@@ -80,8 +80,8 @@ public class ShooterTuningSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Shooter kS", LEFT_MOTOR_kS);
     SmartDashboard.putNumber("Shooter kA", LEFT_MOTOR_kA);
 
-    SmartDashboard.putNumber("Shooter maxVel", MAX_VEL);
-    SmartDashboard.putNumber("Shooter maxAccel", MAX_ACCEL);
+    SmartDashboard.putNumber("Shooter MaxVel", MAX_VEL);
+    SmartDashboard.putNumber("Shooter MaxAccel", MAX_ACCEL);
     SmartDashboard.putNumber("RPM Tolerence", RPM_TOLERANCE);
     SmartDashboard.putNumber("Target RPM", 0);
   }
@@ -114,12 +114,16 @@ public class ShooterTuningSubsystem extends SubsystemBase {
     LEFT_MOTOR_kV = SmartDashboard.getNumber("Shooter kV", 0);
     LEFT_MOTOR_kA = SmartDashboard.getNumber("Shooter k", 0);
     MAX_VEL = SmartDashboard.getNumber("Shooter MaxVel", 0);
-    MAX_ACCEL = SmartDashboard.getNumber("Shooter MaxAcc", 0);
+    MAX_ACCEL = SmartDashboard.getNumber("Shooter MaxAccel", 0);
     RPM_TOLERANCE = SmartDashboard.getNumber("RPM Tolerance", RPM_TOLERANCE);
     SmartDashboard.putNumber("RPM", getVelocity().in(RPM));
     SmartDashboard.putNumber("setpoint", m_PIDController.getSetpoint());
     SmartDashboard.putNumber("Voltage", m_motorLeft.getBusVoltage());
-    SmartDashboard.putBoolean("Shooter Running", getVelocity().gt(RPM.of(500)));
+    SmartDashboard.putBoolean(
+      "Shooter Running",
+      !getVelocity().isNear(RPM.zero(), RPM_TOLERANCE)
+    );
+    SmartDashboard.putBoolean("Is At Target", isAtTargetSpeed());
   }
 
   public void setSpeed(Dimensionless percentOutput) {
@@ -152,7 +156,6 @@ public class ShooterTuningSubsystem extends SubsystemBase {
       m_targetVelocity.in(RPM),
       ControlType.kMAXMotionVelocityControl
     );
-    System.out.println(m_targetVelocity.in(RPM));
   }
 
   public boolean isAtRPM(AngularVelocity rpm) {
