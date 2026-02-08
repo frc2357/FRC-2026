@@ -38,7 +38,7 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .rightTrigger()
       .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
+        new IntakeAxis(() -> Value.of(-m_controller.getRightTriggerAxis() * -1))
       );
 
     m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(30)));

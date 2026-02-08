@@ -4,9 +4,11 @@ import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
+import frc.robot.commands.intakePivot.IntakePivotAxis;
 import frc.robot.controls.util.RumbleInterface;
 
 public class CoDriverControls implements RumbleInterface {
@@ -20,7 +22,11 @@ public class CoDriverControls implements RumbleInterface {
     mapControls();
   }
 
-  public void mapControls() {}
+  public void mapControls() {
+    m_controller
+      .axisGreaterThan(XboxController.Axis.kRightY.value, 0.01)
+      .whileTrue(new IntakePivotAxis(() -> Value.of(m_controller.getRightY())));
+  }
 
   public Dimensionless getRightX() {
     return Value.of(modifyAxis(-m_controller.getRightX()));
