@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterTuningSubsystem;
+import frc.robot.subsystems.intakePivotTuningSubsystem;
 
 /**
  * The methods in this class are called automatically corresponding to each
@@ -24,6 +25,8 @@ public class Robot extends TimedRobot {
 
   ShooterTuningSubsystem m_shooter;
 
+  public static intakePivotTuningSubsystem intakePivotTuningSubsystem;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -31,6 +34,7 @@ public class Robot extends TimedRobot {
    */
   public Robot() {
     m_shooter = new ShooterTuningSubsystem();
+    intakePivotTuningSubsystem = new intakePivotTuningSubsystem();
     // m_controller = new XboxController(0);
 
     // Instantiate our RobotContainer. This will perform all our button bindings,

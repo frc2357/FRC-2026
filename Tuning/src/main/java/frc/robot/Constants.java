@@ -12,6 +12,7 @@ import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Dimensionless;
 
 /**
@@ -96,6 +97,41 @@ public final class Constants {
     public static final MAXMotionConfig MAX_MOTION_CONFIG =
       CLOSED_LOOP_CONFIG_LEFT.maxMotion
         .allowedProfileError(RPM_TOLERANCE)
+        .maxAcceleration(MAX_ACCEL)
+        .cruiseVelocity(MAX_VEL);
+  }
+
+  public static final class INTAKE_PIVOT {
+
+    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(75);
+
+    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
+      .idleMode(IdleMode.kBrake)
+      .inverted(false)
+      .smartCurrentLimit(30, 30)
+      .openLoopRampRate(0.25)
+      .voltageCompensation(12);
+
+    public static final double kP = 0;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kA = 0;
+    public static final double kCosG = 0;
+    public static final double MAX_VEL = 0;
+    public static final double MAX_ACCEL = 0; //TODO: find actual values
+    public static final double ANGULAR_TOLERANCE = 100; //
+
+    public static final ClosedLoopConfig CLOSED_LOOP_CONFIG_LEFT =
+      MOTOR_CONFIG.closedLoop.outputRange(-1, 1).pid(kP, kI, kD);
+
+    public static final FeedForwardConfig FEED_FORWARD_CONFIG =
+      CLOSED_LOOP_CONFIG_LEFT.feedForward.sva(kS, kV, kA);
+
+    public static final MAXMotionConfig MAX_MOTION_CONFIG =
+      CLOSED_LOOP_CONFIG_LEFT.maxMotion
+        .allowedProfileError(ANGULAR_TOLERANCE)
         .maxAcceleration(MAX_ACCEL)
         .cruiseVelocity(MAX_VEL);
   }
