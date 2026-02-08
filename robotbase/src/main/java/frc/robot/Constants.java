@@ -69,13 +69,13 @@ public class Constants {
       RadiansPerSecond.of(2);
 
     public static final Dimensionless AXIS_MAX_ANGULAR_RATE = Units.Percent.of(
-      50
+      100
     );
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
 
     public static final double HEADING_CONTROLLER_P = 4.5;
     public static final double HEADING_CONTROLLER_I = 0;
     public static final double HEADING_CONTROLLER_D = 0;
+    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(100);
   }
 
   public static final class PHOTON_VISION {
@@ -236,7 +236,7 @@ public class Constants {
 
   public static final class INTAKE {
 
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
+    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(90);
 
     public static final SparkBaseConfig LEFT_MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
