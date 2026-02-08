@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ShooterTuningSubsystem;
 
 /**
  * The methods in this class are called automatically corresponding to each
@@ -21,13 +22,17 @@ public class Robot extends TimedRobot {
 
   XboxController m_controller;
 
+  ShooterTuningSubsystem m_shooter;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
    * initialization code.
    */
   public Robot() {
-    m_controller = new XboxController(0);
+    m_shooter = new ShooterTuningSubsystem();
+    // m_controller = new XboxController(0);
+
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
@@ -80,7 +85,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    m_shooter.periodic();
+  }
 
   @Override
   public void testInit() {

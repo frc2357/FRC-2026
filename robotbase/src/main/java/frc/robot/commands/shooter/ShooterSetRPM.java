@@ -15,13 +15,8 @@ public class ShooterSetRPM extends Command {
   }
 
   @Override
-  public void initialize() {
-    Robot.shooter.setTargetVelocity(m_targetVelocity);
-  }
-
-  @Override
   public void execute() {
-    Robot.shooter.updateMotorPIDs();
+    Robot.shooter.setTargetVelocity(m_targetVelocity);
   }
 
   @Override
