@@ -125,6 +125,13 @@ public class Constants {
     public static final int RIGHT_SHOOTER_MOTOR = 30;
   }
 
+  public static final class LED {
+
+    public static final int kPort = 7;
+    public static final int kLength = 86;
+    //Change later
+  }
+
   public static final class SPINDEXER {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()

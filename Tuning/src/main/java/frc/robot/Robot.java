@@ -4,6 +4,13 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,6 +28,13 @@ public class Robot extends TimedRobot {
 
   XboxController m_controller;
 
+  AddressableLED m_LED;
+  AddressableLEDBuffer m_ledBuffer;
+  LEDPattern m_rainbow = LEDPattern.rainbow(255, 50);
+
+  LEDPattern m_scrollingRainbow;
+  public boolean camera = false;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -31,6 +45,18 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
+    m_LED = new AddressableLED(7);
+    Distance kLedSpacing = Meters.of(1 / 64.0);
+
+    m_ledBuffer = new AddressableLEDBuffer(86);
+
+    m_LED.setLength(m_ledBuffer.getLength());
+    m_LED.start();
+
+    m_scrollingRainbow = m_rainbow.scrollAtAbsoluteSpeed(
+      MetersPerSecond.of(0.5),
+      kLedSpacing
+    );
   }
 
   /**
@@ -72,6 +98,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    // for (int x = 0; x < m_ledBuffer.getLength(); x++) {
+    // m_ledBuffer.setRGB(x, 255, 0, 0);
+    //m_ledBuffer.LEDPattern.rainbow();
+    //   }
+    //  m_LED.setData(m_ledBuffer);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -80,7 +111,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if (camera == true) {
+      m_scrollingRainbow.applyTo(m_ledBuffer);
+      m_LED.setData(m_ledBuffer);
+    }
+  }
 
   @Override
   public void testInit() {
