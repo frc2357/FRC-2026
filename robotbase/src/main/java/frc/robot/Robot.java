@@ -34,7 +34,6 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakePivot;
 import frc.robot.subsystems.Outtake;
-import frc.robot.subsystems.PhotonVisionCamera;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.vision.PhotonVisionCamera;
