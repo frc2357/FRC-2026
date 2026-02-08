@@ -13,6 +13,7 @@ import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.hood.HoodSetSpeed;
 import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.scoring.FeedAndSpin;
 import frc.robot.commands.shooter.ShooterAxis;
 import frc.robot.controls.util.RumbleInterface;
 
@@ -43,6 +44,7 @@ public class DriverControls implements RumbleInterface {
 
     m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(30)));
     m_controller.a().whileTrue(new HoodSetSpeed(Percent.of(-30)));
+    m_controller.x().whileTrue(new FeedAndSpin());
   }
 
   public Dimensionless getRightX() {
