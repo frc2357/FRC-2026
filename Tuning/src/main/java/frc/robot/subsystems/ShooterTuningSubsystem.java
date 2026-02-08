@@ -47,24 +47,23 @@ public class ShooterTuningSubsystem extends SubsystemBase {
   );
 
   public ShooterTuningSubsystem() {
-    m_motorLeft = new SparkMax(29, MotorType.kBrushless);
-    //m_motorLeft = new SparkMax(CAN_ID.LEFT_SHOOTER_MOTOR, MotorType.kBrushless);
+    m_motorLeft = new SparkMax(CAN_ID.LEFT_SHOOTER_MOTOR, MotorType.kBrushless);
 
-    /*m_motorRight = new SparkMax(
+    m_motorRight = new SparkMax(
       CAN_ID.RIGHT_SHOOTER_MOTOR,
       MotorType.kBrushless
-    );*/
+    );
 
     m_motorLeft.configure(
       m_motorconfig,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
     );
-    /*m_motorRight.configure(
+    m_motorRight.configure(
       SHOOTER.MOTOR_CONFIG_RIGHT,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
-    );*/
+    );
     m_PIDController = m_motorLeft.getClosedLoopController();
     m_encoder = m_motorLeft.getEncoder();
 
@@ -112,7 +111,7 @@ public class ShooterTuningSubsystem extends SubsystemBase {
     LEFT_MOTOR_kD = SmartDashboard.getNumber("Shooter D", 0);
     LEFT_MOTOR_kS = SmartDashboard.getNumber("Shooter kS", 0);
     LEFT_MOTOR_kV = SmartDashboard.getNumber("Shooter kV", 0);
-    LEFT_MOTOR_kA = SmartDashboard.getNumber("Shooter k", 0);
+    LEFT_MOTOR_kA = SmartDashboard.getNumber("Shooter kA", 0);
     MAX_VEL = SmartDashboard.getNumber("Shooter MaxVel", 0);
     MAX_ACCEL = SmartDashboard.getNumber("Shooter MaxAcc", 0);
     RPM_TOLERANCE = SmartDashboard.getNumber("RPM Tolerance", RPM_TOLERANCE);

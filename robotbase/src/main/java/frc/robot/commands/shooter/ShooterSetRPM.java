@@ -1,7 +1,6 @@
 package frc.robot.commands.shooter;
 
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.MutAngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
@@ -15,7 +14,7 @@ public class ShooterSetRPM extends Command {
   }
 
   @Override
-  public void execute() {
+  public void initialize() {
     Robot.shooter.setTargetVelocity(m_targetVelocity);
   }
 
