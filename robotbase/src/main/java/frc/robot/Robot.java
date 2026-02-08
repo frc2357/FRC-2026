@@ -10,6 +10,7 @@ import static frc.robot.Constants.CHOREO.AUTO_FACTORY;
 import choreo.auto.AutoRoutine;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -113,6 +114,10 @@ public class Robot extends TimedRobot {
     );
 
     SmartDashboard.putNumber("Spindexer", 0.0);
+
+    // DON'T DELETE - Load the april tag field
+    // This prevents a loop overrun when we first access the constants
+    AprilTagFieldLayout layout = Constants.FieldConstants.FIELD_LAYOUT;
   }
 
   @Override

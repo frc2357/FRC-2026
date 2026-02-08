@@ -1,6 +1,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import choreo.auto.AutoFactory;
@@ -8,9 +9,14 @@ import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
@@ -42,10 +48,17 @@ public class Constants {
     public static final LinearVelocity MAX_SPEED =
       TunerConstants.kSpeedAt12Volts;
 
+    public static final AngularVelocity MAX_DRIVE_AT_ANGLE_ANGULAR_RATE =
+      RadiansPerSecond.of(2);
+
     public static final Dimensionless AXIS_MAX_ANGULAR_RATE = Units.Percent.of(
       50
     );
     public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
+
+    public static final double HEADING_CONTROLLER_P = 4.5;
+    public static final double HEADING_CONTROLLER_I = 0;
+    public static final double HEADING_CONTROLLER_D = 0;
   }
 
   public static final class PHOTON_VISION {
@@ -57,17 +70,33 @@ public class Constants {
 
     public static final double MAX_ANGLE = 45;
 
+    public static final int NAIVE_APRIL_TAG_PIPELINE = 0;
+
+    public static final long NAIVE_APRIL_TAG_TARGET_TIMEOUT = 50;
+
     public static final class BACK_RIGHT_CAM {
 
       public static final String NAME = "backRight";
       // real transform
+      // public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
+      //   Units.Inches.of(-4.624),
+      //   Units.Inches.of(7.799),
+      //   Units.Inches.of(22.055),
+      //   new Rotation3d(
+      //     Units.Degrees.of(0),
+      //     Units.Degrees.of(10),
+      //     Units.Degrees.of(180)
+      //   )
+      // );
+
+      // Transform of camera flipped
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
         Units.Inches.of(-4.624),
-        Units.Inches.of(7.799),
+        Units.Inches.of(7.299),
         Units.Inches.of(22.055),
         new Rotation3d(
           Units.Degrees.of(0),
-          Units.Degrees.of(10),
+          Units.Degrees.of(-10),
           Units.Degrees.of(180)
         )
       );
@@ -77,13 +106,25 @@ public class Constants {
 
       public static final String NAME = "backLeft";
       // true transform
+      // public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
+      //   Units.Inches.of(-6.516),
+      //   Units.Inches.of(-5.028),
+      //   Units.Inches.of(21.137),
+      //   new Rotation3d(
+      //     Units.Degrees.of(0),
+      //     Units.Degrees.of(10),
+      //     Units.Degrees.of(180)
+      //   )
+      // );
+
+      // Camera flipped
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-        Units.Inches.of(-6.516),
+        Units.Inches.of(-9.516),
         Units.Inches.of(-5.028),
         Units.Inches.of(21.137),
         new Rotation3d(
           Units.Degrees.of(0),
-          Units.Degrees.of(10),
+          Units.Degrees.of(-10),
           Units.Degrees.of(180)
         )
       );
@@ -237,5 +278,100 @@ public class Constants {
       .smartCurrentLimit(20, 20)
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
+  }
+
+  public class FieldConstants {
+
+    public static final AprilTagFieldLayout FIELD_LAYOUT =
+      AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+
+    // AprilTag related constants
+    public static final int aprilTagCount = FIELD_LAYOUT.getTags().size();
+    public static final double aprilTagWidth =
+      edu.wpi.first.math.util.Units.inchesToMeters(6.5);
+
+    // Field dimensions
+    public static final double fieldLength = FIELD_LAYOUT.getFieldLength();
+    public static final double fieldWidth = FIELD_LAYOUT.getFieldWidth();
+
+    /** Hub related constants */
+    public static class Hub {
+
+      // Dimensions
+      public static final double width =
+        edu.wpi.first.math.util.Units.inchesToMeters(47.0);
+      public static final double height =
+        edu.wpi.first.math.util.Units.inchesToMeters(72.0); // includes the catcher at the top
+      public static final double innerWidth =
+        edu.wpi.first.math.util.Units.inchesToMeters(41.7);
+      public static final double innerHeight =
+        edu.wpi.first.math.util.Units.inchesToMeters(56.5);
+
+      // Relevant reference points on alliance side
+      public static final Translation3d topCenterPoint = new Translation3d(
+        FIELD_LAYOUT.getTagPose(26).get().getX() + width / 2.0,
+        fieldWidth / 2.0,
+        height
+      );
+      public static final Translation3d innerCenterPoint = new Translation3d(
+        FIELD_LAYOUT.getTagPose(26).get().getX() + width / 2.0,
+        fieldWidth / 2.0,
+        innerHeight
+      );
+
+      public static final Translation2d nearLeftCorner = new Translation2d(
+        topCenterPoint.getX() - width / 2.0,
+        fieldWidth / 2.0 + width / 2.0
+      );
+      public static final Translation2d nearRightCorner = new Translation2d(
+        topCenterPoint.getX() - width / 2.0,
+        fieldWidth / 2.0 - width / 2.0
+      );
+      public static final Translation2d farLeftCorner = new Translation2d(
+        topCenterPoint.getX() + width / 2.0,
+        fieldWidth / 2.0 + width / 2.0
+      );
+      public static final Translation2d farRightCorner = new Translation2d(
+        topCenterPoint.getX() + width / 2.0,
+        fieldWidth / 2.0 - width / 2.0
+      );
+
+      // Relevant reference points on the opposite side
+      public static final Translation3d oppTopCenterPoint = new Translation3d(
+        FIELD_LAYOUT.getTagPose(4).get().getX() + width / 2.0,
+        fieldWidth / 2.0,
+        height
+      );
+      public static final Translation2d oppNearLeftCorner = new Translation2d(
+        oppTopCenterPoint.getX() - width / 2.0,
+        fieldWidth / 2.0 + width / 2.0
+      );
+      public static final Translation2d oppNearRightCorner = new Translation2d(
+        oppTopCenterPoint.getX() - width / 2.0,
+        fieldWidth / 2.0 - width / 2.0
+      );
+      public static final Translation2d oppFarLeftCorner = new Translation2d(
+        oppTopCenterPoint.getX() + width / 2.0,
+        fieldWidth / 2.0 + width / 2.0
+      );
+      public static final Translation2d oppFarRightCorner = new Translation2d(
+        oppTopCenterPoint.getX() + width / 2.0,
+        fieldWidth / 2.0 - width / 2.0
+      );
+
+      // Hub faces
+      public static final Pose2d nearFace = FIELD_LAYOUT.getTagPose(26)
+        .get()
+        .toPose2d();
+      public static final Pose2d farFace = FIELD_LAYOUT.getTagPose(20)
+        .get()
+        .toPose2d();
+      public static final Pose2d rightFace = FIELD_LAYOUT.getTagPose(18)
+        .get()
+        .toPose2d();
+      public static final Pose2d leftFace = FIELD_LAYOUT.getTagPose(21)
+        .get()
+        .toPose2d();
+    }
   }
 }
