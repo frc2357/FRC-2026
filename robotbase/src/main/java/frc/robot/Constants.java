@@ -227,7 +227,7 @@ public class Constants {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
+      .inverted(true)
       .smartCurrentLimit(40, 40)
       .openLoopRampRate(0.25); // TODO: double check these values
 
@@ -320,7 +320,7 @@ public class Constants {
     public static final SimpleMotorFeedforward FEEDFORWARD =
       new SimpleMotorFeedforward(0, 0.01, 0.01);
 
-    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(80);
 
     public static final Transform2d ROBOT_TO_SHOOTER = new Transform2d(
       Units.Inches.of(-1.566),
