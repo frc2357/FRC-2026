@@ -119,6 +119,9 @@ public class Robot extends TimedRobot {
         return Value.of(SmartDashboard.getNumber("Shooter", 0.0));
       })
     );
+
+    SmartDashboard.putNumber("Spindexer Speed", 30);
+    SmartDashboard.putNumber("Feeder Speed", 30);
   }
 
   @Override

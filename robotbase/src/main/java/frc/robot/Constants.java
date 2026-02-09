@@ -176,7 +176,7 @@ public class Constants {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
+      .inverted(true)
       .smartCurrentLimit(40, 40)
       .openLoopRampRate(0.25); // TODO: double check these values
 
@@ -258,7 +258,7 @@ public class Constants {
     public static final double MAX_VEL = 0;
     public static final double MAX_ACCEL = 0; //TODO: find actual values
 
-    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(80);
 
     public static final double RPM_TOLERANCE = 100; //
 
