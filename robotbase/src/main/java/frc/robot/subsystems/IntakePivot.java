@@ -7,6 +7,7 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.INTAKE_PIVOT;
@@ -26,7 +27,9 @@ public class IntakePivot extends SubsystemBase {
   }
 
   public void setSpeed(Dimensionless percentOutput) {
+    SmartDashboard.putNumber("piv set attempt", percentOutput.in(Value));
     m_motor.set(percentOutput.in(Value));
+    SmartDashboard.putNumber("current speed", m_motor.get());
   }
 
   public void setAxisSpeed(Dimensionless axisSpeed) {
