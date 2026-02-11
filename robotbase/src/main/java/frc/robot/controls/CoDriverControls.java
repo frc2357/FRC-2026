@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.commands.intakePivot.IntakePivotAxis;
+import frc.robot.commands.intakePivot.IntakePivotSetSpeed;
 import frc.robot.controls.util.RumbleInterface;
 
 public class CoDriverControls implements RumbleInterface {
@@ -24,8 +25,10 @@ public class CoDriverControls implements RumbleInterface {
 
   public void mapControls() {
     m_controller
-      .axisGreaterThan(XboxController.Axis.kRightY.value, 0.01)
+      .povDown()
       .whileTrue(new IntakePivotAxis(() -> Value.of(m_controller.getRightY())));
+
+    //m_controller.a().whileTrue(new IntakePivotSetSpeed(Value.of(0.1)));
   }
 
   public Dimensionless getRightX() {
