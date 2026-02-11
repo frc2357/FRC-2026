@@ -122,9 +122,6 @@ public class PhotonVisionCamera {
     );
   }
 
-  /** Sets up everything about the class that is not done in the constructor. */
-  public void configure() {}
-
   /**
    * Fetches the latest pipeline result.
    *

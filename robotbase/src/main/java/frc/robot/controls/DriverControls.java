@@ -47,6 +47,19 @@ public class DriverControls implements RumbleInterface {
 
     m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(30)));
     m_controller.a().whileTrue(new HoodSetSpeed(Percent.of(-30)));
+
+    m_controller
+      .povLeft()
+      .onTrue(
+        new InstantCommand(() -> {
+          var estimate = Robot.backLeftCam.getEstimateForSwerve();
+          if (estimate.isPresent()) {
+            Robot.swerve.setFieldRelativeTranslation2d(
+              estimate.get().pose().getTranslation()
+            );
+          }
+        })
+      );
   }
 
   public Dimensionless getRightX() {

@@ -14,6 +14,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -59,6 +60,9 @@ public class Robot extends TimedRobot {
   public static Hood hood;
   public static Outtake outtake;
   public static Feeder feeder;
+
+  private static final Field2d m_visionField = new Field2d();
+  private static final Field2d m_robotField = new Field2d();
 
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
@@ -112,6 +116,9 @@ public class Robot extends TimedRobot {
     // DON'T DELETE - Load the april tag field
     // This prevents a loop overrun when we first access the constants
     AprilTagFieldLayout layout = Constants.FieldConstants.FIELD_LAYOUT;
+
+    SmartDashboard.putData("Vision Field", m_visionField);
+    SmartDashboard.putData("Robot Field", m_robotField);
   }
 
   @Override
@@ -121,10 +128,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    // backLeftCam.updateResult();
+    backLeftCam.updateResult();
     m_timeAndJoystickReplay.update();
 
     CommandScheduler.getInstance().run();
+
+    m_robotField.setRobotPose(swerve.getFieldRelativePose2d());
+    var estimate = backLeftCam.getEstimateForSwerve();
+    if (estimate.isPresent()) {
+      m_visionField.setRobotPose(estimate.get().pose());
+    }
   }
 
   @Override
