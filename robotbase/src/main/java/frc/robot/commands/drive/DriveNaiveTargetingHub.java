@@ -14,7 +14,7 @@ import frc.robot.util.AllianceFlipUtil;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class DriveTargetingHub extends Command {
+public class DriveNaiveTargetingHub extends Command {
 
   /**
    * Implements a naive hub targeting command for the swerve
@@ -38,7 +38,7 @@ public class DriveTargetingHub extends Command {
   // This is the tag on the right side of the blue hub when looking from the field origin
   private static final int TARGET_ID = 21;
 
-  public DriveTargetingHub(
+  public DriveNaiveTargetingHub(
     Supplier<Dimensionless> x,
     Supplier<Dimensionless> y,
     Supplier<Dimensionless> rotation
@@ -94,7 +94,7 @@ public class DriveTargetingHub extends Command {
 
   public Optional<Rotation2d> computeTargetAngle() {
     double rawYaw = Robot.backLeftCam.getTargetYaw(
-      DriveTargetingHub.TARGET_ID,
+      DriveNaiveTargetingHub.TARGET_ID,
       PHOTON_VISION.NAIVE_APRIL_TAG_TARGET_TIMEOUT
     );
     if (Double.isNaN(rawYaw)) {
@@ -115,7 +115,7 @@ public class DriveTargetingHub extends Command {
       FieldConstants.Hub.topCenterPoint.toTranslation2d()
     );
     Pose3d aprilTag = FieldConstants.FIELD_LAYOUT.getTagPose(
-      DriveTargetingHub.TARGET_ID
+      DriveNaiveTargetingHub.TARGET_ID
     ).get();
 
     Rotation2d fieldBearingFiducialToHub = Rotation2d.fromRadians(

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
-import frc.robot.commands.drive.DriveTargetingHub;
+import frc.robot.commands.drive.DriveNaiveTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.hood.HoodSetSpeed;

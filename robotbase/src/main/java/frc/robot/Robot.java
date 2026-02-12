@@ -27,7 +27,7 @@ import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.DriverControls;
-import frc.robot.generated.TunerConstants;
+import frc.robot.generated.KelpyTunerConstants;
 import frc.robot.networkTables.AutoChooserManager;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
     .withJoystickReplay();
 
   public Robot() {
-    swerve = TunerConstants.createDrivetrain();
+    swerve = KelpyTunerConstants.createDrivetrain();
 
     intake = new Intake();
     intakePivot = new IntakePivot();
