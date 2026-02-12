@@ -4,12 +4,10 @@ import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
-import frc.robot.commands.intakePivot.IntakePivotAxis;
-import frc.robot.commands.intakePivot.IntakePivotSetSpeed;
+import frc.robot.commands.tempsubsystem.IntakePivotAxis;
 import frc.robot.controls.util.RumbleInterface;
 
 public class CoDriverControls implements RumbleInterface {

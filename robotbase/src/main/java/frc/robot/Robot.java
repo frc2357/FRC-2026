@@ -126,6 +126,7 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Spindexer Speed", 30);
     SmartDashboard.putNumber("Feeder Speed", 30);
+    SmartDashboard.putNumber("Intake Speed", 60);
   }
 
   @Override

@@ -5,16 +5,17 @@ import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
-import frc.robot.commands.drive.DriveTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.hood.HoodSetSpeed;
 import frc.robot.commands.intake.IntakeAxis;
 import frc.robot.commands.scoring.FeedAndSpin;
 import frc.robot.commands.shooter.ShooterAxis;
+import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.commands.spindexer.SpindexerSetSpeed;
 import frc.robot.controls.util.RumbleInterface;
 
@@ -32,22 +33,30 @@ public class DriverControls implements RumbleInterface {
     m_controller.start().onTrue(new ResetPerspective());
 
     m_controller
-      .leftTrigger()
-      .whileTrue(
-        new ShooterAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
-      );
+        .leftTrigger()
+        .whileTrue(
+            new ShooterAxis(() -> Value.of(m_controller.getLeftTriggerAxis())));
 
+    // m_controller
+    //     .rightTrigger()
+    //     .whileTrue(
+    //         new IntakeAxis(() -> Value.of(-m_controller.getRightTriggerAxis() * -1)));
     m_controller
       .rightTrigger()
       .whileTrue(
         new IntakeAxis(() ->
-          Value.of(-m_controller.getRightTriggerAxis() * -1)
+          Percent.of(SmartDashboard.getNumber("Intake Speed", 60))
         ).alongWith(new SpindexerSetSpeed(Value.of(0.3)))
       );
+    // m_controller
+    //     .rightTrigger()
+    //     .whileTrue(
+    //         new IntakeAxis(() -> Percent.of(SmartDashboard.getNumber("Intake Speed", 30))));
 
     m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(30)));
     m_controller.a().whileTrue(new HoodSetSpeed(Percent.of(-30)));
     m_controller.x().whileTrue(new FeedAndSpin());
+    m_controller.b().whileTrue(new SpindexerAxis(() -> Percent.of(SmartDashboard.getNumber("Spindexer Speed", 30))));
   }
 
   public Dimensionless getRightX() {
@@ -77,9 +86,8 @@ public class DriverControls implements RumbleInterface {
   private double modifyAxis(double value) {
     value = deadband(value, CONTROLLER.DRIVER_CONTROLLER_DEADBAND);
     value = Math.copySign(
-      Math.pow(value, Constants.CONTROLLER.JOYSTICK_RAMP_EXPONENT),
-      value
-    );
+        Math.pow(value, Constants.CONTROLLER.JOYSTICK_RAMP_EXPONENT),
+        value);
     return value;
   }
 
