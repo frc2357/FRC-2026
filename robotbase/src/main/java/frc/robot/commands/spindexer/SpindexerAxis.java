@@ -14,6 +14,8 @@ public class SpindexerAxis extends Command {
     addRequirements(Robot.spindexer);
   }
 
+  
+
   @Override
   public void execute() {
     Dimensionless axisValue = m_axis.get();

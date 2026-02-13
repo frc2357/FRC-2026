@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Value;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.commands.StopAllMotors;
@@ -26,15 +27,47 @@ public class CoDriverControls implements RumbleInterface {
     mapControls();
   }
 
-  public void mapControls() {
-    m_controller.povUp().whileTrue(new ShooterAxis(this::getRightY));
+  Trigger onlyLeft = m_controller
+    .povUp()
+    .negate()
+    .and(m_controller.povRight().negate())
+    .and(m_controller.povLeft())
+    .and(m_controller.povDown().negate());
 
-    m_controller.povUpLeft().whileTrue(new IntakeAxis(this::getRightY));
+  Trigger onlyRight = m_controller
+    .povUp()
+    .negate()
+    .and(m_controller.povRight())
+    .and(m_controller.povLeft().negate())
+    .and(m_controller.povDown().negate());
+
+  Trigger onlyUp = m_controller
+    .povUp()
+    .and(m_controller.povRight().negate())
+    .and(m_controller.povLeft().negate())
+    .and(m_controller.povDown().negate());
+
+  Trigger onlyDown = m_controller
+    .povUp()
+    .negate()
+    .and(m_controller.povRight().negate())
+    .and(m_controller.povLeft().negate())
+    .and(m_controller.povDown());
+  Trigger noLetterButtons = m_controller
+    .a()
+    .negate()
+    .and(m_controller.b().negate())
+    .and(m_controller.x().negate())
+    .and(m_controller.y().negate());
+
+  public void mapControls() {
+    onlyUp.whileTrue(new ShooterAxis(this::getRightY));
+
+    onlyLeft.whileTrue(new IntakeAxis(this::getRightY));
 
     m_controller
       .leftTrigger()
       .whileTrue(new SpindexerAxis(this::getLeftTrigger));
-
     m_controller.start().onTrue(new StopAllMotors());
   }
 
