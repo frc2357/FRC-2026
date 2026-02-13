@@ -78,7 +78,7 @@ public class DriverControls implements RumbleInterface {
     SmartDashboard.putNumber("IntakeTimeOff", .5);
     SmartDashboard.putNumber("IntakeSpeed", .5);
 
-    m_controller.rightBumper().onTrue((new IntakePivotJiggle()));
+    m_controller.rightBumper().whileTrue((new IntakePivotJiggle()));
   }
 
   public Dimensionless getRightX() {
