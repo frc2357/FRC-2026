@@ -51,7 +51,9 @@ public class DriveNaiveTargetingHub extends Command {
 
   @Override
   public void initialize() {
-    Robot.backLeftCam.setPipeline(PHOTON_VISION.NAIVE_APRIL_TAG_PIPELINE);
+    Robot.cameraManager.m_shooter.setPipeline(
+      PHOTON_VISION.NAIVE_APRIL_TAG_PIPELINE
+    );
   }
 
   @Override
@@ -93,7 +95,7 @@ public class DriveNaiveTargetingHub extends Command {
   }
 
   public Optional<Rotation2d> computeTargetAngle() {
-    double rawYaw = Robot.backLeftCam.getTargetYaw(
+    double rawYaw = Robot.cameraManager.m_shooter.getTargetYaw(
       DriveNaiveTargetingHub.TARGET_ID,
       PHOTON_VISION.NAIVE_APRIL_TAG_TARGET_TIMEOUT
     );

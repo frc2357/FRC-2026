@@ -37,6 +37,7 @@ import frc.robot.subsystems.IntakePivot;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Spindexer;
+import frc.robot.vision.CameraManager;
 import frc.robot.vision.PhotonVisionCamera;
 
 public class Robot extends TimedRobot {
@@ -47,7 +48,6 @@ public class Robot extends TimedRobot {
 
   public static CommandSwerveDrivetrain swerve;
 
-  public static PhotonVisionCamera backLeftCam;
   public static Spindexer spindexer;
   public static Alliance alliance = null;
 
@@ -61,7 +61,8 @@ public class Robot extends TimedRobot {
   public static Outtake outtake;
   public static Feeder feeder;
 
-  private static final Field2d m_visionField = new Field2d();
+  public static CameraManager cameraManager;
+
   private static final Field2d m_robotField = new Field2d();
 
   private final Telemetry logger = new Telemetry(
@@ -83,12 +84,7 @@ public class Robot extends TimedRobot {
     outtake = new Outtake();
     feeder = new Feeder();
 
-    backLeftCam = new PhotonVisionCamera(
-      Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
-      Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM,
-      Constants.PHOTON_VISION.BACK_LEFT_CAM.kSingleTagStdDevs,
-      Constants.PHOTON_VISION.BACK_LEFT_CAM.kMultiTagStdDevs
-    );
+    cameraManager = new CameraManager();
 
     swerve.registerTelemetry(logger::telemeterize);
 
@@ -117,7 +113,6 @@ public class Robot extends TimedRobot {
     // This prevents a loop overrun when we first access the constants
     AprilTagFieldLayout layout = Constants.FieldConstants.FIELD_LAYOUT;
 
-    SmartDashboard.putData("Vision Field", m_visionField);
     SmartDashboard.putData("Robot Field", m_robotField);
   }
 
@@ -128,16 +123,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    backLeftCam.updateResult();
+    Robot.cameraManager.updateResult();
+    Robot.cameraManager.addSwerveEstimates(Robot.swerve::addVisionMeasurement);
+
     m_timeAndJoystickReplay.update();
 
     CommandScheduler.getInstance().run();
 
     m_robotField.setRobotPose(swerve.getFieldRelativePose2d());
-    var estimate = backLeftCam.getEstimateForSwerve();
-    if (estimate.isPresent()) {
-      m_visionField.setRobotPose(estimate.get().pose());
-    }
   }
 
   @Override

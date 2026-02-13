@@ -130,7 +130,7 @@ public class PhotonVisionCamera {
    * <h1>YOU SHOULD NEVER CALL THIS! This is for the Robot periodic ONLY. NEVER call this method
    * outside of it. </h1>
    */
-  public void updateResult() {
+  protected void updateResult() {
     if (!m_camera.isConnected() && !m_connectionLost) {
       m_connectionLost = true;
       DriverStation.reportError(

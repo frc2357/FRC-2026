@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
@@ -47,12 +48,14 @@ public class DrivePoseTargetingHub extends Command {
 
   @Override
   public void initialize() {
-    Robot.backLeftCam.setPipeline(PHOTON_VISION.NAIVE_APRIL_TAG_PIPELINE);
+    Robot.cameraManager.setPipeline(PHOTON_VISION.MULTI_TAG_PIPELINE);
   }
 
   @Override
   public void execute() {
     Rotation2d target = computeTargetAngle();
+    target = target.plus(Rotation2d.k180deg);
+    SmartDashboard.putNumber("Target angle", target.getDegrees());
     Robot.swerve.driveAtAngle(
       m_y.get().times(Constants.SWERVE.AXIS_MAX_SPEED).times(SWERVE.MAX_SPEED),
       m_x.get().times(Constants.SWERVE.AXIS_MAX_SPEED).times(SWERVE.MAX_SPEED),
