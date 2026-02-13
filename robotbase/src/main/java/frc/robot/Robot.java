@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
     intake = new Intake();
     intakePivot = new IntakePivot();
     shooter = new Shooter();
-    hood = new Hood();
+    //hood = new Hood();
     spindexer = new Spindexer();
     outtake = new Outtake();
     feeder = new Feeder();

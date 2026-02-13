@@ -7,7 +7,10 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
+import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.intakePivot.IntakePivotAxis;
 import frc.robot.controls.util.RumbleInterface;
+import frc.robot.subsystems.Intake;
 
 public class CoDriverControls implements RumbleInterface {
 
@@ -20,10 +23,17 @@ public class CoDriverControls implements RumbleInterface {
     mapControls();
   }
 
-  public void mapControls() {}
+  public void mapControls() {
+    m_controller.x().whileTrue(new IntakePivotAxis(this::getLeftY));
+    m_controller.a().whileTrue(new IntakeAxis(this::getLeftY));
+  }
 
   public Dimensionless getRightX() {
     return Value.of(modifyAxis(-m_controller.getRightX()));
+  }
+
+  public Dimensionless getLeftY() {
+    return Value.of(modifyAxis(m_controller.getLeftY()));
   }
 
   private double modifyAxis(double value) {

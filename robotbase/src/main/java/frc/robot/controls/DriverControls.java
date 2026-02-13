@@ -8,13 +8,16 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
+import frc.robot.Robot;
 import frc.robot.commands.drive.DriveTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.hood.HoodSetSpeed;
 import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.intakePivot.IntakePivotAxis;
 import frc.robot.commands.shooter.ShooterAxis;
 import frc.robot.controls.util.RumbleInterface;
+import frc.robot.subsystems.IntakePivot;
 
 public class DriverControls implements RumbleInterface {
 
@@ -41,20 +44,29 @@ public class DriverControls implements RumbleInterface {
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
       );
 
-    m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(30)));
-    m_controller.a().whileTrue(new HoodSetSpeed(Percent.of(-30)));
+    m_controller.povUp().whileTrue(new IntakeAxis(this::getREALLeftY));
+    m_controller
+      .povLeft()
+      .whileTrue(Robot.intakePivot.set(m_controller.getRightY()));
+
+    //m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(30)));
+    //m_controller.a().whileTrue(new HoodSetSpeed(Percent.of(-30)));
   }
 
   public Dimensionless getRightX() {
-    return Value.of(modifyAxis(-m_controller.getRightX()));
+    return Value.of(0 * modifyAxis(-m_controller.getRightX()));
   }
 
   public Dimensionless getLeftX() {
     return Value.of(modifyAxis(-m_controller.getLeftX()));
   }
 
+  public Dimensionless getREALLeftY() {
+    return Value.of(modifyAxis(-m_controller.getRightY()));
+  }
+
   public Dimensionless getLeftY() {
-    return Value.of(modifyAxis(-m_controller.getLeftY()));
+    return Value.of(0);
   }
 
   private double deadband(double value, double deadband) {

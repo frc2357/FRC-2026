@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -20,11 +21,22 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.generated.TunerConstants;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
+import yams.mechanisms.config.ArmConfig;
+import yams.mechanisms.config.PivotConfig;
+import yams.motorcontrollers.SmartMotorController;
+import yams.motorcontrollers.SmartMotorControllerCommandRegistry;
+import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 
 public class Constants {
 
@@ -205,14 +217,37 @@ public class Constants {
   public static final class INTAKE_PIVOT {
 
     public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(75);
-
-    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kBrake)
-      .inverted(false)
-      .smartCurrentLimit(30, 30)
-      .openLoopRampRate(0.25)
-      .voltageCompensation(12);
+    public static final Angle ANGULAR_TOLERANCE = Units.Degrees.of(2);
+    public static final SmartMotorControllerConfig SMC_CONFIG =
+      new SmartMotorControllerConfig()
+        .withControlMode(ControlMode.CLOSED_LOOP)
+        .withClosedLoopController(
+          50,
+          0,
+          0,
+          Units.DegreesPerSecond.of(90),
+          Units.DegreesPerSecondPerSecond.of(45)
+        )
+        .withSimClosedLoopController(
+          50,
+          0,
+          0,
+          Units.DegreesPerSecond.of(90),
+          Units.DegreesPerSecondPerSecond.of(45)
+        )
+        .withFeedforward(new ArmFeedforward(0, 0, 0))
+        .withSimFeedforward(new ArmFeedforward(0, 0, 0))
+        .withTelemetry("ArmMotor", TelemetryVerbosity.HIGH)
+        // Gearing from the motor rotor to final shaft.
+        .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+        .withMotorInverted(false)
+        .withIdleMode(MotorMode.BRAKE)
+        .withStatorCurrentLimit(Units.Amps.of(40))
+        .withClosedLoopRampRate(Units.Seconds.of(0.25))
+        .withOpenLoopRampRate(Units.Seconds.of(0.25));
   }
+
+  //public static final ArmConfig ARM_CONFIG
 
   public static final class OUTTAKE {
 
@@ -287,12 +322,46 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
 
-    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kCoast)
-      .inverted(false)
-      .smartCurrentLimit(20, 20)
-      .openLoopRampRate(0.25)
-      .voltageCompensation(12);
+    public static final Angle ANGULAR_TOLERANCE = Units.Degrees.of(2);
+    public static final SmartMotorControllerConfig SMC_CONFIG =
+      new SmartMotorControllerConfig()
+        .withControlMode(ControlMode.CLOSED_LOOP)
+        .withClosedLoopController(
+          50,
+          0,
+          0,
+          Units.DegreesPerSecond.of(90),
+          Units.DegreesPerSecondPerSecond.of(45)
+        )
+        .withSimClosedLoopController(
+          50,
+          0,
+          0,
+          Units.DegreesPerSecond.of(90),
+          Units.DegreesPerSecondPerSecond.of(45)
+        )
+        .withFeedforward(new ArmFeedforward(0, 0, 0))
+        .withSimFeedforward(new ArmFeedforward(0, 0, 0))
+        .withTelemetry("ArmMotor", TelemetryVerbosity.HIGH)
+        // Gearing from the motor rotor to final shaft.
+        .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+        .withMotorInverted(false)
+        .withIdleMode(MotorMode.BRAKE)
+        .withStatorCurrentLimit(Units.Amps.of(40))
+        .withClosedLoopRampRate(Units.Seconds.of(0.25))
+        .withOpenLoopRampRate(Units.Seconds.of(0.25));
+
+    public static final PivotConfig PIVOT_CONFIG = new PivotConfig()
+      // Soft limit is applied to the SmartMotorControllers PID
+      .withSoftLimits(Units.Degrees.of(-20), Units.Degrees.of(10))
+      // Hard limit is applied to the simulation.
+      .withHardLimit(Units.Degrees.of(-30), Units.Degrees.of(40))
+      // Starting position is where your arm starts
+      .withStartingPosition(Units.Degrees.of(-5))
+      // Length and mass of your arm for sim.
+      .withMOI(Units.Meters.of(1), Units.Pounds.of(1))
+      // Telemetry name and verbosity for the arm.
+      .withTelemetry("Arm", TelemetryVerbosity.HIGH);
   }
 
   public class FieldConstants {
