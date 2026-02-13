@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
@@ -16,6 +17,7 @@ import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.hood.HoodSetSpeed;
 import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.intakePivot.IntakePivotJiggle;
 import frc.robot.commands.scoring.FeedAndSpin;
 import frc.robot.commands.scoring.Score;
 import frc.robot.commands.spindexer.SpindexerSetSpeed;
@@ -70,6 +72,13 @@ public class DriverControls implements RumbleInterface {
         })
       );
     m_controller.x().whileTrue(new FeedAndSpin());
+
+    SmartDashboard.putNumber("IntakePivotSpeed", .5);
+    SmartDashboard.putNumber("IntakeTimeOn", .5);
+    SmartDashboard.putNumber("IntakeTimeOff", .5);
+    SmartDashboard.putNumber("IntakeSpeed", .5);
+
+    m_controller.rightBumper().onTrue((new IntakePivotJiggle()));
   }
 
   public Dimensionless getRightX() {
