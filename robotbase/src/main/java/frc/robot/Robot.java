@@ -26,6 +26,7 @@ import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.commands.util.InitRobotCommand;
+import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
 import frc.robot.networkTables.AutoChooserManager;
@@ -44,6 +45,7 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
   private static DriverControls m_driverControls;
+  public static CoDriverControls m_CoDriverControls;
   private static Command m_defaultDrive;
 
   public static CommandSwerveDrivetrain swerve;
@@ -91,6 +93,7 @@ public class Robot extends TimedRobot {
     scoreCalculator = new ScoreCalculator();
 
     m_driverControls = new DriverControls();
+    m_CoDriverControls = new CoDriverControls();
     m_defaultDrive = new DefaultDrive(
       m_driverControls::getLeftX,
       m_driverControls::getLeftY,

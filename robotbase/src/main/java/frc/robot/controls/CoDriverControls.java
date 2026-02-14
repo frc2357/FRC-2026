@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
+import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.intake.IntakeAxis;
 import frc.robot.commands.intake.IntakeSetSpeed;
-import frc.robot.commands.shooter.ShooterAxis;
 import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.controls.util.RumbleInterface;
 
@@ -28,57 +28,60 @@ public class CoDriverControls implements RumbleInterface {
     mapControls();
   }
 
-  Trigger noDpad = m_controller
-    .povUp()
-    .negate()
-    .and(m_controller.povRight().negate())
-    .and(m_controller.povLeft().negate())
-    .and(m_controller.povDown().negate());
-
-  Trigger onlyLeft = m_controller
-    .povUp()
-    .negate()
-    .and(m_controller.povRight().negate())
-    .and(m_controller.povLeft())
-    .and(m_controller.povDown().negate());
-
-  Trigger onlyRight = m_controller
-    .povUp()
-    .negate()
-    .and(m_controller.povRight())
-    .and(m_controller.povLeft().negate())
-    .and(m_controller.povDown().negate());
-
-  Trigger onlyUp = m_controller
-    .povUp()
-    .and(m_controller.povRight().negate())
-    .and(m_controller.povLeft().negate())
-    .and(m_controller.povDown().negate());
-
-  Trigger onlyDown = m_controller
-    .povUp()
-    .negate()
-    .and(m_controller.povRight().negate())
-    .and(m_controller.povLeft().negate())
-    .and(m_controller.povDown());
-  Trigger noLetterButtons = m_controller
-    .a()
-    .negate()
-    .and(m_controller.b().negate())
-    .and(m_controller.x().negate())
-    .and(m_controller.y().negate());
-
   public void mapControls() {
+    Trigger noDpad = m_controller
+      .povUp()
+      .negate()
+      .and(m_controller.povRight().negate())
+      .and(m_controller.povLeft().negate())
+      .and(m_controller.povDown().negate());
+
+    Trigger onlyLeft = m_controller
+      .povUp()
+      .negate()
+      .and(m_controller.povRight().negate())
+      .and(m_controller.povLeft())
+      .and(m_controller.povDown().negate());
+
+    Trigger onlyRight = m_controller
+      .povUp()
+      .negate()
+      .and(m_controller.povRight())
+      .and(m_controller.povLeft().negate())
+      .and(m_controller.povDown().negate());
+
+    Trigger onlyUp = m_controller
+      .povUp()
+      .and(m_controller.povRight().negate())
+      .and(m_controller.povLeft().negate())
+      .and(m_controller.povDown().negate());
+
+    Trigger onlyDown = m_controller
+      .povUp()
+      .negate()
+      .and(m_controller.povRight().negate())
+      .and(m_controller.povLeft().negate())
+      .and(m_controller.povDown());
+    Trigger noLetterButtons = m_controller
+      .a()
+      .negate()
+      .and(m_controller.b().negate())
+      .and(m_controller.x().negate())
+      .and(m_controller.y().negate());
+
     m_controller.start().onTrue(new StopAllMotors());
 
     // change WaitCommad to ShooterHoodAxis once it is finshed
     onlyUp.whileTrue(new WaitCommand(0));
 
     onlyUp.whileTrue(
-      new ShooterAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+      Robot.shooter.axisSpeed(() ->
+        Value.of(m_controller.getRightTriggerAxis())
+      )
     );
 
-    onlyLeft.whileTrue(new IntakeAxis(null));
+    onlyLeft.whileTrue(new IntakeAxis(this::getLeftTrigger));
+    onlyLeft.whileTrue(new IntakeAxis(this::getRightTrigger));
 
     noDpad.whileTrue(new IntakeSetSpeed(getLeftTrigger()));
   }
@@ -109,11 +112,11 @@ public class CoDriverControls implements RumbleInterface {
   }
 
   public Dimensionless getRightTrigger() {
-    return Value.of(modifyAxis(-m_controller.getRightTriggerAxis()));
+    return Value.of(m_controller.getRightTriggerAxis());
   }
 
   public Dimensionless getLeftTrigger() {
-    return Value.of(modifyAxis(-m_controller.getLeftTriggerAxis()));
+    return Value.of(m_controller.getLeftTriggerAxis());
   }
 
   private double deadband(double value, double deadband) {
