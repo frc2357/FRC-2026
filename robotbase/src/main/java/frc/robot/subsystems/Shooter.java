@@ -1,33 +1,25 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Pounds;
-import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Value;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.math.Pair;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.SHOOTER;
 import java.util.function.Supplier;
-import yams.gearing.GearBox;
-import yams.gearing.MechanismGearing;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
@@ -58,24 +50,22 @@ public class Shooter extends SubsystemBase {
     );
 
     m_smartMotorControllerConfig = new SmartMotorControllerConfig(this)
+      .withControlMode(ControlMode.CLOSED_LOOP)
       .withVendorConfig(SHOOTER.SHOOTER_BASE_CONFIG)
       // Feedback Constants (PID Constants)
-      .withClosedLoopController(1, 0, 0)
-      .withSimClosedLoopController(1, 0, 0)
+      .withClosedLoopController(SHOOTER.PID_CONTROLLER)
+      .withSimClosedLoopController(SHOOTER.PID_CONTROLLER)
       // Feedforward Constants
-      .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
-      .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+      .withFeedforward(SHOOTER.FEEDFORWARD)
+      .withSimFeedforward(SHOOTER.FEEDFORWARD)
       // Telemetry name and verbosity level
       .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
       // Gearing from the motor rotor to final shaft.
       // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
       // You could also use .withGearing(12) which does the same thing.
-      .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+      .withGearing(SHOOTER.GEARING)
       // Motor properties to prevent over currenting.
-      // .withMotorInverted(false)
-      // .withIdleMode(MotorMode.COAST)
-      .withStatorCurrentLimit(Amps.of(40))
-      .withFollowers(Pair.of(m_motorRight, true));
+      .withStatorCurrentLimit(SHOOTER.STALL_LIMIT);
 
     m_sparkSmartMotorController = new SparkWrapper(
       m_motorLeft,
@@ -85,13 +75,13 @@ public class Shooter extends SubsystemBase {
 
     m_shooterConfig = new FlyWheelConfig(m_sparkSmartMotorController)
       // Diameter of the flywheel.
-      .withDiameter(Inches.of(4))
+      .withDiameter(SHOOTER.DIAMETER)
       // Mass of the flywheel.
-      .withMass(Pounds.of(1))
+      .withMass(SHOOTER.MASS)
       // Maximum speed of the shooter.
-      .withUpperSoftLimit(RPM.of(1000))
+      .withUpperSoftLimit(SHOOTER.MAX_VELOCITY)
       // Telemetry name and verbosity for the arm.
-      .withTelemetry("ShooterMech", TelemetryVerbosity.HIGH);
+      .withTelemetry(SHOOTER.NETWORK_KEY, TelemetryVerbosity.HIGH);
 
     m_shooter = new FlyWheel(m_shooterConfig);
   }
@@ -112,7 +102,7 @@ public class Shooter extends SubsystemBase {
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
   public Command setVelocity(AngularVelocity speed) {
-    return m_shooter.run(speed);
+    return m_shooter.run(speed).finallyDo(() -> this.stopMotor());
   }
 
   /**
@@ -133,21 +123,33 @@ public class Shooter extends SubsystemBase {
   public Command set(double dutyCycle) {
     return m_shooter
       .set(dutyCycle)
-      .alongWith(new InstantCommand(() -> System.out.println("Setting")));
+      .alongWith(new InstantCommand(() -> System.out.println("Setting")))
+      .finallyDo(() -> this.stopMotor());
   }
 
   public Command axisSpeed(Supplier<Dimensionless> axis) {
-    return m_shooter.set(() -> {
-      System.out.println(axis.get().in(Value));
-      return axis.get().times(SHOOTER.AXIS_MAX_SPEED).in(Value);
-    });
+    return m_shooter
+      .set(() -> axis.get().times(SHOOTER.AXIS_MAX_SPEED).in(Value))
+      .finallyDo(() -> this.stopMotor());
   }
 
-  public Command stop() {
+  public Command stopCommand() {
     return m_shooter.set(0);
   }
 
-  public Command test() {
-    return Commands.run(() -> m_motorLeft.set(0.5));
+  public void stopMotor() {
+    m_shooter.setDutyCycleSetpoint(0);
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    m_shooter.updateTelemetry();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    // This method will be called once per scheduler run during simulation
+    m_shooter.simIterate();
   }
 }

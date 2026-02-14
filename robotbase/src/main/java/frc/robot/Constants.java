@@ -1,6 +1,10 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.Pounds;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
@@ -14,17 +18,25 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.generated.TunerConstants;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
 
 public class Constants {
 
@@ -240,11 +252,38 @@ public class Constants {
 
   public static final class SHOOTER {
 
+    // TODO: Update to actual physical properties of the shooter
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromReductionStages(3, 4)
+    );
+
+    // Diameter of the flywheel.
+    public static final Distance DIAMETER = Inches.of(4);
+    // Mass of the flywheel.
+    public static final Mass MASS = Pounds.of(1);
+    // Maximum speed of the shooter.
+    public static final AngularVelocity MAX_VELOCITY = RPM.of(1000);
+    // Telemetry name and verbosity for the arm.
+    public static final String NETWORK_KEY = "ShooterMech";
+
+    public static final Current STALL_LIMIT = Amps.of(40);
+
     public static final SparkBaseConfig SHOOTER_BASE_CONFIG =
       new SparkMaxConfig()
         .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit(40, 40)
+        .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
         .voltageCompensation(12);
+
+    public static final ProfiledPIDController PID_CONTROLLER =
+      new ProfiledPIDController(
+        1,
+        0,
+        0,
+        new Constraints(MAX_VELOCITY.in(RPM), 500)
+      );
+
+    public static final SimpleMotorFeedforward FEEDFORWARD =
+      new SimpleMotorFeedforward(0, 0, 0);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
   }

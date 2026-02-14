@@ -39,9 +39,6 @@ public class DriverControls implements RumbleInterface {
         )
       );
 
-    m_controller.b().whileTrue(Robot.shooter.test());
-    m_controller.x().whileTrue(Robot.shooter.set(0.3));
-
     m_controller
       .rightTrigger()
       .whileTrue(
