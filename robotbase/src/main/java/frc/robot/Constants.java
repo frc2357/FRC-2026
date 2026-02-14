@@ -1,6 +1,10 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.Pounds;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
@@ -14,17 +18,25 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.generated.TunerConstants;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
 
 public class Constants {
 
@@ -240,47 +252,40 @@ public class Constants {
 
   public static final class SHOOTER {
 
-    public static final SparkBaseConfig MOTOR_CONFIG_LEFT = new SparkMaxConfig()
-      .idleMode(IdleMode.kCoast)
-      .inverted(false)
-      .openLoopRampRate(0.25)
-      .smartCurrentLimit(40, 40)
-      .voltageCompensation(12); //
+    // TODO: Update to actual physical properties of the shooter
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromReductionStages(3, 4)
+    );
 
-    public static final SparkBaseConfig MOTOR_CONFIG_RIGHT =
+    // Diameter of the flywheel.
+    public static final Distance DIAMETER = Inches.of(4);
+    // Mass of the flywheel.
+    public static final Mass MASS = Pounds.of(1);
+    // Maximum speed of the shooter.
+    public static final AngularVelocity MAX_VELOCITY = RPM.of(1000);
+    // Telemetry name and verbosity for the arm.
+    public static final String NETWORK_KEY = "ShooterMech";
+
+    public static final Current STALL_LIMIT = Amps.of(40);
+
+    public static final SparkBaseConfig SHOOTER_BASE_CONFIG =
       new SparkMaxConfig()
-        .apply(MOTOR_CONFIG_LEFT)
-        .follow(CAN_ID.LEFT_SHOOTER_MOTOR, true);
+        .idleMode(IdleMode.kCoast)
+        .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
+        .voltageCompensation(12);
 
-    public static final double LEFT_MOTOR_kP = 0;
-    public static final double LEFT_MOTOR_kI = 0;
-    public static final double LEFT_MOTOR_kD = 0;
-    public static final double LEFT_MOTOR_kS = 0;
-    public static final double LEFT_MOTOR_kV = 0;
-    public static final double LEFT_MOTOR_kA = 0;
-    public static final double MAX_VEL = 0;
-    public static final double MAX_ACCEL = 0; //TODO: find actual values
-    public static final double RPM_TOLERANCE = 100; //
-
-    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
-
-    public static final ClosedLoopConfig CLOSED_LOOP_CONFIG_LEFT =
-      MOTOR_CONFIG_LEFT.closedLoop
-        .outputRange(-1, 1)
-        .pid(LEFT_MOTOR_kP, LEFT_MOTOR_kI, LEFT_MOTOR_kD);
-
-    public static final FeedForwardConfig FEED_FORWARD_CONFIG =
-      CLOSED_LOOP_CONFIG_LEFT.feedForward.sva(
-        LEFT_MOTOR_kS,
-        LEFT_MOTOR_kV,
-        LEFT_MOTOR_kA
+    public static final ProfiledPIDController PID_CONTROLLER =
+      new ProfiledPIDController(
+        1,
+        0,
+        0,
+        new Constraints(MAX_VELOCITY.in(RPM), 500)
       );
 
-    public static final MAXMotionConfig MAX_MOTION_CONFIG =
-      CLOSED_LOOP_CONFIG_LEFT.maxMotion
-        .allowedProfileError(RPM_TOLERANCE)
-        .maxAcceleration(MAX_ACCEL)
-        .cruiseVelocity(MAX_VEL);
+    public static final SimpleMotorFeedforward FEEDFORWARD =
+      new SimpleMotorFeedforward(0, 0, 0);
+
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
   }
 
   public static final class HOOD {
