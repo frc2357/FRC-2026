@@ -73,10 +73,13 @@ public class CoDriverControls implements RumbleInterface {
 
     // change WaitCommad to ShooterHoodAxis once it is finshed
     onlyUp.whileTrue(new WaitCommand(0));
+
     onlyUp.whileTrue(
       new ShooterAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
     );
+
     onlyLeft.whileTrue(new IntakeAxis(null));
+
     noDpad.whileTrue(new IntakeSetSpeed(getLeftTrigger()));
   }
 
