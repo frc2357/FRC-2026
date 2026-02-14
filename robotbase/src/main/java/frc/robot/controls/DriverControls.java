@@ -1,19 +1,21 @@
 package frc.robot.controls;
 
 import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
+import frc.robot.Robot;
 import frc.robot.commands.drive.DriveTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.hood.HoodSetSpeed;
 import frc.robot.commands.intake.IntakeAxis;
-import frc.robot.commands.shooter.ShooterAxis;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
@@ -32,8 +34,13 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .leftTrigger()
       .whileTrue(
-        new ShooterAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
+        Robot.shooter.axisSpeed(() ->
+          Value.of(m_controller.getLeftTriggerAxis())
+        )
       );
+
+    m_controller.b().whileTrue(Robot.shooter.test());
+    m_controller.x().whileTrue(Robot.shooter.set(0.3));
 
     m_controller
       .rightTrigger()

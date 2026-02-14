@@ -1,38 +1,48 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Value;
 
 import com.revrobotics.PersistMode;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.units.Units;
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
-import edu.wpi.first.units.measure.MutAngularVelocity;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.SHOOTER;
+import java.util.function.Supplier;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
+import yams.mechanisms.config.FlyWheelConfig;
+import yams.mechanisms.velocity.FlyWheel;
+import yams.motorcontrollers.SmartMotorController;
+import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
+import yams.motorcontrollers.local.SparkWrapper;
 
 public class Shooter extends SubsystemBase {
 
   private SparkMax m_motorLeft;
   private SparkMax m_motorRight;
-  private SparkClosedLoopController m_PIDController;
-  private RelativeEncoder m_encoder;
 
-  // private ShooterCurveTuner m_curveTuner; TODO: implement later
+  private SmartMotorControllerConfig m_smartMotorControllerConfig;
+  // Create our SmartMotorController from our Spark and config with the NEO.
+  private SmartMotorController m_sparkSmartMotorController;
 
-  private MutAngularVelocity m_targetVelocity = Units.RPM.mutable(Double.NaN);
-  private MutAngularVelocity m_currentAngularVelocityHolder = Units.RPM.mutable(
-    Double.NaN
-  );
+  private final FlyWheelConfig m_shooterConfig;
+  // Shooter Mechanism
+  private FlyWheel m_shooter;
 
   public Shooter() {
     m_motorLeft = new SparkMax(CAN_ID.LEFT_SHOOTER_MOTOR, MotorType.kBrushless);
@@ -41,68 +51,103 @@ public class Shooter extends SubsystemBase {
       MotorType.kBrushless
     );
 
-    m_motorLeft.configure(
-      SHOOTER.MOTOR_CONFIG_LEFT,
-      ResetMode.kNoResetSafeParameters,
-      PersistMode.kNoPersistParameters
-    );
     m_motorRight.configure(
-      SHOOTER.MOTOR_CONFIG_RIGHT,
+      SHOOTER.SHOOTER_BASE_CONFIG,
       ResetMode.kNoResetSafeParameters,
-      PersistMode.kNoPersistParameters
+      PersistMode.kPersistParameters
     );
-    m_PIDController = m_motorLeft.getClosedLoopController();
-    m_encoder = m_motorLeft.getEncoder();
+
+    m_smartMotorControllerConfig = new SmartMotorControllerConfig(this)
+      .withVendorConfig(SHOOTER.SHOOTER_BASE_CONFIG)
+      // Feedback Constants (PID Constants)
+      .withClosedLoopController(1, 0, 0)
+      .withSimClosedLoopController(1, 0, 0)
+      // Feedforward Constants
+      .withFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+      .withSimFeedforward(new SimpleMotorFeedforward(0, 0, 0))
+      // Telemetry name and verbosity level
+      .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
+      // Gearing from the motor rotor to final shaft.
+      // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
+      // You could also use .withGearing(12) which does the same thing.
+      .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+      // Motor properties to prevent over currenting.
+      // .withMotorInverted(false)
+      // .withIdleMode(MotorMode.COAST)
+      .withStatorCurrentLimit(Amps.of(40))
+      .withFollowers(Pair.of(m_motorRight, true));
+
+    m_sparkSmartMotorController = new SparkWrapper(
+      m_motorLeft,
+      DCMotor.getNEO(1),
+      m_smartMotorControllerConfig
+    );
+
+    m_shooterConfig = new FlyWheelConfig(m_sparkSmartMotorController)
+      // Diameter of the flywheel.
+      .withDiameter(Inches.of(4))
+      // Mass of the flywheel.
+      .withMass(Pounds.of(1))
+      // Maximum speed of the shooter.
+      .withUpperSoftLimit(RPM.of(1000))
+      // Telemetry name and verbosity for the arm.
+      .withTelemetry("ShooterMech", TelemetryVerbosity.HIGH);
+
+    m_shooter = new FlyWheel(m_shooterConfig);
   }
 
-  public void setSpeed(Dimensionless percentOutput) {
-    m_motorLeft.set(percentOutput.in(Value));
-    m_targetVelocity.mut_replace(Double.NaN, Units.RPM);
-  }
-
-  public void setAxisSpeed(Dimensionless speed) {
-    double m_speed = speed.times(SHOOTER.AXIS_MAX_SPEED).in(Value);
-    m_motorLeft.set(m_speed);
-    m_targetVelocity.mut_replace(Double.NaN, Units.RPM);
-  }
-
-  public void stop() {
-    m_motorLeft.stopMotor();
-    m_targetVelocity.mut_replace(Double.NaN, Units.RPM);
-  }
-
+  /**
+   * Gets the current velocity of the shooter.
+   *
+   * @return Shooter velocity.
+   */
   public AngularVelocity getVelocity() {
-    m_currentAngularVelocityHolder.mut_replace(
-      m_encoder.getVelocity(),
-      Units.RPM
-    );
-    return m_currentAngularVelocityHolder;
+    return m_shooter.getSpeed();
   }
 
-  public void setTargetVelocity(AngularVelocity targetVelocity) {
-    m_targetVelocity.mut_replace(targetVelocity);
-    m_PIDController.setSetpoint(
-      m_targetVelocity.in(RPM),
-      ControlType.kMAXMotionVelocityControl,
-      ClosedLoopSlot.kSlot0
-    );
+  /**
+   * Set the shooter velocity.
+   *
+   * @param speed Speed to set.
+   * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
+   */
+  public Command setVelocity(AngularVelocity speed) {
+    return m_shooter.run(speed);
   }
 
-  public boolean isAtRPM(AngularVelocity rpm) {
-    return rpm.isNear(getVelocity(), SHOOTER.RPM_TOLERANCE);
+  /**
+   * Set the shooter velocity setpoint.
+   *
+   * @param speed Speed to set
+   */
+  public void setVelocitySetpoint(AngularVelocity speed) {
+    m_shooter.setMechanismVelocitySetpoint(speed);
   }
 
-  public boolean isAtTargetSpeed() {
-    return isAtRPM(m_targetVelocity);
+  /**
+   * Set the dutycycle of the shooter.
+   *
+   * @param dutyCycle DutyCycle to set.
+   * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
+   */
+  public Command set(double dutyCycle) {
+    return m_shooter
+      .set(dutyCycle)
+      .alongWith(new InstantCommand(() -> System.out.println("Setting")));
   }
 
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("RPM", getVelocity().in(RPM));
-    SmartDashboard.putBoolean("Shooter Running", getVelocity().gt(RPM.of(500)));
+  public Command axisSpeed(Supplier<Dimensionless> axis) {
+    return m_shooter.set(() -> {
+      System.out.println(axis.get().in(Value));
+      return axis.get().times(SHOOTER.AXIS_MAX_SPEED).in(Value);
+    });
   }
 
-  // public double[] getShooterCurveRow() {
-  //  return m_curveTuner.getSelectedRow();
-  //} TODO: implement later
+  public Command stop() {
+    return m_shooter.set(0);
+  }
+
+  public Command test() {
+    return Commands.run(() -> m_motorLeft.set(0.5));
+  }
 }
