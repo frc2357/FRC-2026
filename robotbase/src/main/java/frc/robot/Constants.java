@@ -309,6 +309,7 @@ public class Constants {
         .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
         .voltageCompensation(12);
 
+    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
     public static final double P = 0.1;
     public static final double I = 0;
     public static final double D = 0;
