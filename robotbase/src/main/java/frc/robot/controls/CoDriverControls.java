@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
@@ -26,6 +27,13 @@ public class CoDriverControls implements RumbleInterface {
     );
     mapControls();
   }
+
+  Trigger noDpad = m_controller
+    .povUp()
+    .negate()
+    .and(m_controller.povRight().negate())
+    .and(m_controller.povLeft().negate())
+    .and(m_controller.povDown().negate());
 
   Trigger onlyLeft = m_controller
     .povUp()
@@ -61,14 +69,15 @@ public class CoDriverControls implements RumbleInterface {
     .and(m_controller.y().negate());
 
   public void mapControls() {
-    onlyUp.whileTrue(new ShooterAxis(this::getRightY));
-
-    onlyLeft.whileTrue(new IntakeAxis(this::getRightY));
-
-    m_controller
-      .leftTrigger()
-      .whileTrue(new SpindexerAxis(this::getLeftTrigger));
     m_controller.start().onTrue(new StopAllMotors());
+
+    // change WaitCommad to ShooterHoodAxis once it is finshed
+    onlyUp.whileTrue(new WaitCommand(0));
+    onlyUp.whileTrue(
+      new ShooterAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+    );
+    onlyLeft.whileTrue(new IntakeAxis(null));
+    noDpad.whileTrue(new IntakeSetSpeed(getLeftTrigger()));
   }
 
   private double modifyAxis(double value) {
