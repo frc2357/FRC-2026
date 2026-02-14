@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
+import frc.robot.Constants.INTAKE_PIVOT;
 import frc.robot.Constants.SHOOTER;
 import java.util.function.Supplier;
 import yams.mechanisms.config.FlyWheelConfig;
@@ -53,8 +54,20 @@ public class Shooter extends SubsystemBase {
       .withControlMode(ControlMode.CLOSED_LOOP)
       .withVendorConfig(SHOOTER.SHOOTER_BASE_CONFIG)
       // Feedback Constants (PID Constants)
-      .withClosedLoopController(SHOOTER.PID_CONTROLLER)
-      .withSimClosedLoopController(SHOOTER.PID_CONTROLLER)
+      .withClosedLoopController(
+        INTAKE_PIVOT.P,
+        INTAKE_PIVOT.I,
+        INTAKE_PIVOT.D,
+        INTAKE_PIVOT.MAX_ANGULAR_VELOCITY,
+        INTAKE_PIVOT.MAX_ANGULAR_ACCELERATION
+      )
+      .withSimClosedLoopController(
+        INTAKE_PIVOT.P,
+        INTAKE_PIVOT.I,
+        INTAKE_PIVOT.D,
+        INTAKE_PIVOT.MAX_ANGULAR_VELOCITY,
+        INTAKE_PIVOT.MAX_ANGULAR_ACCELERATION
+      )
       // Feedforward Constants
       .withFeedforward(SHOOTER.FEEDFORWARD)
       .withSimFeedforward(SHOOTER.FEEDFORWARD)
@@ -120,11 +133,15 @@ public class Shooter extends SubsystemBase {
    * @param dutyCycle DutyCycle to set.
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
-  public Command set(double dutyCycle) {
+  private Command set(double dutyCycle) {
     return m_shooter
       .set(dutyCycle)
-      .alongWith(new InstantCommand(() -> System.out.println("Setting")))
+      //.alongWith(new InstantCommand(() -> System.out.println("Setting")))
       .finallyDo(() -> this.stopMotor());
+  }
+
+  public Command setSpeed(Dimensionless speed) {
+    return set(speed.in(Value));
   }
 
   public Command axisSpeed(Supplier<Dimensionless> axis) {

@@ -1,12 +1,14 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import choreo.auto.AutoFactory;
 import com.revrobotics.spark.config.ClosedLoopConfig;
@@ -18,7 +20,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -27,6 +28,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
@@ -216,14 +219,47 @@ public class Constants {
 
   public static final class INTAKE_PIVOT {
 
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(75);
+    // TODO: Update to actual physical properties of the IntakePivot
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromReductionStages(3, 4)
+    );
 
-    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kBrake)
-      .inverted(false)
-      .smartCurrentLimit(30, 30)
-      .openLoopRampRate(0.25)
-      .voltageCompensation(12);
+    // Diameter of the arm.
+    public static final Distance LENGTH = Inches.of(4);
+    // Mass of the arm.
+    public static final Mass MASS = Pounds.of(1);
+    // Maximum speed of the shooter.
+    public static final AngularVelocity MAX_VELOCITY = RPM.of(1000);
+    // Telemetry name and verbosity for the arm.
+    public static final String NETWORK_KEY = "IntakePivotMech";
+
+    public static final Angle SOFT_LOWER_ANGLE = Degrees.of(0);
+    public static final Angle SOFT_UPPER_ANGLE = Degrees.of(45);
+
+    public static final Angle HARD_LOWER_ANGLE = Degrees.of(0);
+    public static final Angle HARD_UPPER_ANGLE = Degrees.of(45);
+
+    public static final Angle STARTING_ANGLE = Degrees.of(0);
+
+    public static final double P = 0;
+    public static final double I = 0;
+    public static final double D = 0;
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(3600);
+    public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
+      RotationsPerSecondPerSecond.of(120);
+
+    public static final Current STALL_LIMIT = Amps.of(40);
+
+    public static final SparkBaseConfig INTAKE_PIVOT_BASE_CONFIG =
+      new SparkMaxConfig()
+        .idleMode(IdleMode.kCoast)
+        .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
+        .voltageCompensation(12);
+
+    public static final SimpleMotorFeedforward FEEDFORWARD =
+      new SimpleMotorFeedforward(0, 0, 0);
+
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
   }
 
   public static final class OUTTAKE {
@@ -274,13 +310,12 @@ public class Constants {
         .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
         .voltageCompensation(12);
 
-    public static final ProfiledPIDController PID_CONTROLLER =
-      new ProfiledPIDController(
-        1,
-        0,
-        0,
-        new Constraints(MAX_VELOCITY.in(RPM), 500)
-      );
+    public static final double P = 0;
+    public static final double I = 0;
+    public static final double D = 0;
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(3600);
+    public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
+      RotationsPerSecondPerSecond.of(120);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
       new SimpleMotorFeedforward(0, 0, 0);
@@ -290,14 +325,43 @@ public class Constants {
 
   public static final class HOOD {
 
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
+    // TODO: Update to actual physical properties of the shooter
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromReductionStages(3, 4)
+    );
 
-    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
+    public static final Angle SOFT_LOWER_ANGLE = Degrees.of(0);
+    public static final Angle SOFT_UPPER_ANGLE = Degrees.of(0);
+
+    public static final Angle HARD_LOWER_ANGLE = Degrees.of(0);
+    public static final Angle HARD_UPPER_ANGLE = Degrees.of(0);
+
+    public static final Angle STARTING_ANGLE = Degrees.of(0);
+
+    // Mass of the flywheel.
+    // Maximum speed of the shooter.
+    public static final AngularVelocity MAX_VELOCITY = RPM.of(1000);
+    // Telemetry name and verbosity for the arm.
+    public static final String NETWORK_KEY = "ShooterMech";
+
+    public static final Current STALL_LIMIT = Amps.of(40);
+
+    public static final SparkBaseConfig HOOD_BASE_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
-      .smartCurrentLimit(20, 20)
-      .openLoopRampRate(0.25)
+      .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
       .voltageCompensation(12);
+
+    public static final double P = 0;
+    public static final double I = 0;
+    public static final double D = 0;
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(3600);
+    public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
+      RotationsPerSecondPerSecond.of(120);
+
+    public static final SimpleMotorFeedforward FEEDFORWARD =
+      new SimpleMotorFeedforward(0, 0, 0);
+
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
   }
 
   public class FieldConstants {

@@ -14,7 +14,6 @@ import frc.robot.Robot;
 import frc.robot.commands.drive.DriveTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
-import frc.robot.commands.hood.HoodSetSpeed;
 import frc.robot.commands.intake.IntakeAxis;
 import frc.robot.controls.util.RumbleInterface;
 
@@ -31,13 +30,13 @@ public class DriverControls implements RumbleInterface {
     m_controller.back().onTrue(new FlipPerspective());
     m_controller.start().onTrue(new ResetPerspective());
 
-    m_controller
+    /*  m_controller
       .leftTrigger()
       .whileTrue(
         Robot.shooter.axisSpeed(() ->
           Value.of(m_controller.getLeftTriggerAxis())
         )
-      );
+      );*/
 
     m_controller
       .rightTrigger()
@@ -45,8 +44,9 @@ public class DriverControls implements RumbleInterface {
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
       );
 
-    m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(30)));
-    m_controller.a().whileTrue(new HoodSetSpeed(Percent.of(-30)));
+    m_controller.y().whileTrue(Robot.intakePivot.setSpeed(Percent.of(75)));
+    m_controller.a().whileTrue(Robot.intakePivot.setSpeed(Percent.of(-75)));
+    m_controller.x().whileTrue(Robot.intakePivot.axisSpeed(this::getREALLeftY));
   }
 
   public Dimensionless getRightX() {
@@ -54,10 +54,14 @@ public class DriverControls implements RumbleInterface {
   }
 
   public Dimensionless getLeftX() {
-    return Value.of(modifyAxis(-m_controller.getLeftX()));
+    return Value.of(0 * modifyAxis(-m_controller.getLeftX()));
   }
 
   public Dimensionless getLeftY() {
+    return Value.of(0 * modifyAxis(-m_controller.getLeftY()));
+  }
+
+  public Dimensionless getREALLeftY() {
     return Value.of(modifyAxis(-m_controller.getLeftY()));
   }
 
