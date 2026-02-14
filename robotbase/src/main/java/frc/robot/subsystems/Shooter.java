@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
 import com.revrobotics.PersistMode;
@@ -9,6 +10,7 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -53,16 +55,26 @@ public class Shooter extends SubsystemBase {
       .withControlMode(ControlMode.CLOSED_LOOP)
       .withVendorConfig(SHOOTER.SHOOTER_BASE_CONFIG)
       // Feedback Constants (PID Constants)
-      .withClosedLoopController(SHOOTER.PID_CONTROLLER)
-      .withSimClosedLoopController(SHOOTER.PID_CONTROLLER)
+      .withClosedLoopController(
+        SHOOTER.P,
+        SHOOTER.I,
+        SHOOTER.D,
+        SHOOTER.MAX_VELOCITY,
+        SHOOTER.MAX_ANGULAR_ACCELERATION
+      )
+      .withSimClosedLoopController(
+        SHOOTER.P,
+        SHOOTER.I,
+        SHOOTER.D,
+        SHOOTER.MAX_VELOCITY,
+        SHOOTER.MAX_ANGULAR_ACCELERATION
+      )
       // Feedforward Constants
       .withFeedforward(SHOOTER.FEEDFORWARD)
       .withSimFeedforward(SHOOTER.FEEDFORWARD)
       // Telemetry name and verbosity level
       .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
       // Gearing from the motor rotor to final shaft.
-      // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
-      // You could also use .withGearing(12) which does the same thing.
       .withGearing(SHOOTER.GEARING)
       // Motor properties to prevent over currenting.
       .withStatorCurrentLimit(SHOOTER.STALL_LIMIT);
@@ -80,6 +92,7 @@ public class Shooter extends SubsystemBase {
       .withMass(SHOOTER.MASS)
       // Maximum speed of the shooter.
       .withUpperSoftLimit(SHOOTER.MAX_VELOCITY)
+      .withSpeedometerSimulation()
       // Telemetry name and verbosity for the arm.
       .withTelemetry(SHOOTER.NETWORK_KEY, TelemetryVerbosity.HIGH);
 
