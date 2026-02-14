@@ -147,7 +147,7 @@ public class PhotonVisionCamera {
 
     for (PhotonPipelineResult result : m_results) {
       if (result == null || !result.hasTargets()) {
-        return;
+        continue;
       }
       m_bestTargetFiducialId = result.getBestTarget().getFiducialId();
       cacheForAprilTags(result.targets);
@@ -158,7 +158,7 @@ public class PhotonVisionCamera {
       }
 
       if (visionEst.isEmpty()) {
-        return;
+        continue;
       }
       m_poseEstimate = visionEst;
       m_currentStdDevs = updateEstimationStdDevs(
