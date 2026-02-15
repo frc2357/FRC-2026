@@ -50,13 +50,7 @@ public class DriverControls implements RumbleInterface {
 
     m_controller
       .x()
-      .whileTrue(
-        new DrivePoseTargetingHub(
-          this::getLeftX,
-          this::getLeftY,
-          this::getRightX
-        )
-      );
+      .whileTrue(new DrivePoseTargetingHub(this::getLeftX, this::getLeftY));
 
     m_controller
       .povLeft()

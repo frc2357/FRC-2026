@@ -16,34 +16,16 @@ import java.util.function.Supplier;
 
 public class DrivePoseTargetingHub extends Command {
 
-  /**
-   * Implements a naive hub targeting command for the swerve
-   *
-   * This works at close-range, and along the y-axis when directly
-   * facing a tag but fails at longer ranges as this strategy
-   * does not account well for changes along the x-axis
-   *
-   * Improving this strategy directly involves calculating the robot's position, at which point we should
-   * just utilize pose estimation
-   *
-   * This strategy could be improved upon by selecting the tag with the yaw value closest to zero to compute
-   * the target angle. That will provide a wider range of "good" targeting but there will still be zones the
-   * computed target angle is off.
-   */
-
   Supplier<Dimensionless> m_x;
   Supplier<Dimensionless> m_y;
-  Supplier<Dimensionless> m_rotation;
 
   public DrivePoseTargetingHub(
     Supplier<Dimensionless> x,
-    Supplier<Dimensionless> y,
-    Supplier<Dimensionless> rotation
+    Supplier<Dimensionless> y
   ) {
     addRequirements(Robot.swerve);
     m_x = x;
     m_y = y;
-    m_rotation = rotation;
   }
 
   @Override
@@ -54,7 +36,6 @@ public class DrivePoseTargetingHub extends Command {
   @Override
   public void execute() {
     Rotation2d target = computeTargetAngle();
-    target = target.plus(Rotation2d.k180deg);
     SmartDashboard.putNumber("Target angle", target.getDegrees());
     Robot.swerve.driveAtAngle(
       m_y.get().times(Constants.SWERVE.AXIS_MAX_SPEED).times(SWERVE.MAX_SPEED),
