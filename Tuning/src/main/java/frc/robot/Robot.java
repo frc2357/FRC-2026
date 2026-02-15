@@ -33,13 +33,8 @@ public class Robot extends TimedRobot {
   LEDPattern m_rainbow = LEDPattern.rainbow(255, 50);
 
   LEDPattern m_scrollingRainbow;
-  public boolean camera = false;
+  public boolean camera = true;
 
-  /**
-   * This function is run when the robot is first started up and should be used
-   * for any
-   * initialization code.
-   */
   public Robot() {
     m_controller = new XboxController(0);
     // Instantiate our RobotContainer. This will perform all our button bindings,
@@ -48,7 +43,7 @@ public class Robot extends TimedRobot {
     m_LED = new AddressableLED(7);
     Distance kLedSpacing = Meters.of(1 / 64.0);
 
-    m_ledBuffer = new AddressableLEDBuffer(86);
+    m_ledBuffer = new AddressableLEDBuffer(1);
 
     m_LED.setLength(m_ledBuffer.getLength());
     m_LED.start();

@@ -1,5 +1,7 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
@@ -14,7 +16,10 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.generated.TunerConstants;
 
 public class Constants {
@@ -128,8 +133,21 @@ public class Constants {
   public static final class LED {
 
     public static final int kPort = 7;
+
+    public static final Color MELTDOWN_ORANGE = new Color(50, 255, 0);
+    public static final Color GREEN = new Color(0, 255, 0);
+    public static final Color BLUE = new Color(0, 0, 225);
+    public static final Color RED = new Color(255, 0, 0);
+    public static final Color PURPLE = new Color(255, 0, 255);
+
+    public static LEDPattern m_rainbow = LEDPattern.rainbow(255, 50);
+    public static Distance kLedSpacing = Meters.of(1 / 64.0);
+    public static final LEDPattern m_scrollingRainbow =
+      m_rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.25), kLedSpacing);
+    public static LEDPattern orange = LEDPattern.solid(new Color(255, 0, 40));
     public static final int kLength = 86;
-    //Change later
+
+    //public static final LEDPattern pattern = LEDPattern.progressMaskLayer(() -> m_elevator.getHeight() / m_elevator.getMaxHeight());
   }
 
   public static final class SPINDEXER {
