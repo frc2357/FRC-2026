@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
-import frc.robot.commands.drive.DriveTargetingHub;
+import frc.robot.commands.drive.DrivePoseTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.hood.HoodSetSpeed;
@@ -47,6 +47,23 @@ public class DriverControls implements RumbleInterface {
 
     m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(30)));
     m_controller.a().whileTrue(new HoodSetSpeed(Percent.of(-30)));
+
+    m_controller
+      .x()
+      .whileTrue(new DrivePoseTargetingHub(this::getLeftX, this::getLeftY));
+
+    m_controller
+      .povLeft()
+      .onTrue(
+        new InstantCommand(() -> {
+          var estimate = Robot.cameraManager.m_shooter.getEstimateForSwerve();
+          if (estimate.isPresent()) {
+            Robot.swerve.setFieldRelativeTranslation2d(
+              estimate.get().pose().getTranslation()
+            );
+          }
+        })
+      );
   }
 
   public Dimensionless getRightX() {
