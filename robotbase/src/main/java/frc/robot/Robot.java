@@ -11,18 +11,25 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
+<<<<<<< HEAD
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
 import frc.robot.commands.floor.FloorAxis;
+=======
+import frc.robot.commands.led.SetLEDPatternCommand;
+import frc.robot.commands.spindexer.SpindexerAxis;
+>>>>>>> 7ad775b (Added Rainbow and orange so far.)
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
@@ -74,14 +81,22 @@ public class Robot extends TimedRobot {
     .withJoystickReplay();
 
   public Robot() {
-    swerve = TunerConstants.createDrivetrain();
+    // swerve = TunerConstants.createDrivetrain();
 
+<<<<<<< HEAD
     intake = new Intake();
     intakePivot = new IntakePivot();
     shooter = new Shooter();
     hood = new Hood();
     floor = new Floor();
     feeder = new Feeder();
+=======
+    // intake = new Intake();
+    // shooter = new Shooter();
+    // hood = new Hood();
+    // spindexer = new Spindexer();
+    // outtake = new Outtake();
+>>>>>>> 7ad775b (Added Rainbow and orange so far.)
     led = new LEDs();
 
     cameraManager = new CameraManager();
@@ -89,6 +104,7 @@ public class Robot extends TimedRobot {
     swerve.registerTelemetry(logger::telemeterize);
     scoreCalculator = new ScoreCalculator();
 
+<<<<<<< HEAD
     m_driverControls = new DriverControls();
     m_coDriverControls = new CoDriverControls();
     m_defaultDrive = new DefaultDrive(
@@ -96,19 +112,36 @@ public class Robot extends TimedRobot {
       m_driverControls::getLeftY,
       m_driverControls::getRightX
     );
+=======
+    // m_driverControls = new DriverControls();
+    // m_defaultDrive = new DefaultDrive(
+    //   m_driverControls::getLeftX,
+    //   m_driverControls::getLeftY,
+    //   m_driverControls::getRightX
+    // );
+>>>>>>> 7ad775b (Added Rainbow and orange so far.)
 
-    swerve.registerTelemetry(logger::telemeterize);
-    swerve.setDefaultCommand(m_defaultDrive);
+    // swerve.registerTelemetry(logger::telemeterize);
+    // swerve.setDefaultCommand(m_defaultDrive);
 
+<<<<<<< HEAD
     floor.setDefaultCommand(
       new FloorAxis(() -> {
         return Value.of(SmartDashboard.getNumber("Floor", 0.0));
       })
     );
+=======
+    // spindexer.setDefaultCommand(
+    //   new SpindexerAxis(() -> {
+    //     return Value.of(SmartDashboard.getNumber("Spindexer", 0.0));
+    //   })
+    // );
+>>>>>>> 7ad775b (Added Rainbow and orange so far.)
 
-    m_autoChooserManager = new AutoChooserManager();
-    m_InitRobotCommand = new InitRobotCommand();
+    // m_autoChooserManager = new AutoChooserManager();
+    // m_InitRobotCommand = new InitRobotCommand();
 
+<<<<<<< HEAD
     SmartDashboard.putNumber("Floor", 0.0);
     SmartDashboard.putNumber("Hood Target Degree", 0);
 
@@ -117,11 +150,19 @@ public class Robot extends TimedRobot {
     AprilTagFieldLayout layout = Constants.FieldConstants.FIELD_LAYOUT;
 
     SmartDashboard.putData("Robot Field", m_robotField);
+=======
+    // backLeftCam = new PhotonVisionCamera(
+    //   Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
+    //   Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
+    // );
+
+    // SmartDashboard.putNumber("Spindexer", 0.0);
+>>>>>>> 7ad775b (Added Rainbow and orange so far.)
   }
 
   @Override
   public void robotInit() {
-    CommandScheduler.getInstance().schedule(m_InitRobotCommand);
+    // CommandScheduler.getInstance().schedule(m_InitRobotCommand);
   }
 
   @Override
@@ -140,6 +181,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+<<<<<<< HEAD
     CommandScheduler.getInstance().schedule(new StopAllMotors());
 
     CommandScheduler.getInstance().schedule(
@@ -150,6 +192,12 @@ public class Robot extends TimedRobot {
 
     // Log curve values when robot is disabled (like when match ends)
     scoreCalculator.logCurveValues();
+=======
+    // CommandScheduler.getInstance().schedule(new StopAllMotors());
+    CommandScheduler.getInstance().schedule(
+      new SetLEDPatternCommand(Constants.LED.m_scrollingRainbow)
+    );
+>>>>>>> 7ad775b (Added Rainbow and orange so far.)
   }
 
   @Override
@@ -181,6 +229,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().cancel(m_autonomousCommand);
     }
+
+    CommandScheduler.getInstance().schedule(
+      new SetLEDPatternCommand(Constants.LED.orange)
+    );
   }
 
   @Override

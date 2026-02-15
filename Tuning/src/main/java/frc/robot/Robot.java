@@ -29,15 +29,36 @@ public class Robot extends TimedRobot {
   LEDPattern m_rainbow = LEDPattern.rainbow(255, 50);
 
   LEDPattern m_scrollingRainbow;
-  public boolean camera = false;
+  public boolean camera = true;
 
+<<<<<<< HEAD
   ShooterTuningSubsystem m_shooter;
   HoodTuningSubsystem m_hood;
 
+=======
+>>>>>>> 7ad775b (Added Rainbow and orange so far.)
   public Robot() {
     //m_shooter = new ShooterTuningSubsystem();
     m_hood = new HoodTuningSubsystem();
     m_controller = new XboxController(0);
+<<<<<<< HEAD
+=======
+    // Instantiate our RobotContainer. This will perform all our button bindings,
+    // and put our
+    // autonomous chooser on the dashboard.
+    m_LED = new AddressableLED(7);
+    Distance kLedSpacing = Meters.of(1 / 64.0);
+
+    m_ledBuffer = new AddressableLEDBuffer(1);
+
+    m_LED.setLength(m_ledBuffer.getLength());
+    m_LED.start();
+
+    m_scrollingRainbow = m_rainbow.scrollAtAbsoluteSpeed(
+      MetersPerSecond.of(0.5),
+      kLedSpacing
+    );
+>>>>>>> 7ad775b (Added Rainbow and orange so far.)
   }
 
   @Override
