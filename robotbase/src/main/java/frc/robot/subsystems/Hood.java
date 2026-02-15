@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.HOOD;
-import frc.robot.Constants.INTAKE_PIVOT;
+import frc.robot.Constants.HOOD;
 import java.util.function.Supplier;
 import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Pivot;
@@ -44,18 +44,18 @@ public class Hood extends SubsystemBase {
       .withVendorConfig(HOOD.HOOD_BASE_CONFIG)
       // Feedback Constants (PID Constants)
       .withClosedLoopController(
-        INTAKE_PIVOT.P,
-        INTAKE_PIVOT.I,
-        INTAKE_PIVOT.D,
-        INTAKE_PIVOT.MAX_ANGULAR_VELOCITY,
-        INTAKE_PIVOT.MAX_ANGULAR_ACCELERATION
+        HOOD.P,
+        HOOD.I,
+        HOOD.D,
+        HOOD.MAX_ANGULAR_VELOCITY,
+        HOOD.MAX_ANGULAR_ACCELERATION
       )
       .withSimClosedLoopController(
-        INTAKE_PIVOT.P,
-        INTAKE_PIVOT.I,
-        INTAKE_PIVOT.D,
-        INTAKE_PIVOT.MAX_ANGULAR_VELOCITY,
-        INTAKE_PIVOT.MAX_ANGULAR_ACCELERATION
+        HOOD.P,
+        HOOD.I,
+        HOOD.D,
+        HOOD.MAX_ANGULAR_VELOCITY,
+        HOOD.MAX_ANGULAR_ACCELERATION
       )
       // Feedforward Constants
       .withFeedforward(HOOD.FEEDFORWARD)
@@ -77,16 +77,10 @@ public class Hood extends SubsystemBase {
 
     m_hoodConfig = new PivotConfig(m_sparkSmartMotorController)
       //both mass and length in a single function, no other implemntation is currently avalible
-      .withMOI(INTAKE_PIVOT.LENGTH, INTAKE_PIVOT.MASS)
-      .withSoftLimits(
-        INTAKE_PIVOT.SOFT_LOWER_ANGLE,
-        INTAKE_PIVOT.SOFT_UPPER_ANGLE
-      )
-      .withHardLimit(
-        INTAKE_PIVOT.HARD_LOWER_ANGLE,
-        INTAKE_PIVOT.HARD_UPPER_ANGLE
-      )
-      .withStartingPosition(INTAKE_PIVOT.STARTING_ANGLE)
+      .withMOI(HOOD.LENGTH, HOOD.MASS)
+      .withSoftLimits(HOOD.SOFT_LOWER_ANGLE, HOOD.SOFT_UPPER_ANGLE)
+      .withHardLimit(HOOD.HARD_LOWER_ANGLE, HOOD.HARD_UPPER_ANGLE)
+      .withStartingPosition(HOOD.STARTING_ANGLE)
       // Mass of the flywheel.
       // Maximum speed of the hood.
       // Telemetry name and verbosity for the arm.

@@ -365,6 +365,8 @@ public class Constants {
       new SimpleMotorFeedforward(0, 0, 0);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+    public static final Distance LENGTH = Inches.of(8);
+    public static final Mass MASS = Pounds.of(1.365);
   }
 
   public class FieldConstants {
