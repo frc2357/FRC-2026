@@ -20,13 +20,14 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -320,6 +321,12 @@ public class Constants {
       new SimpleMotorFeedforward(0, 0.01, 0.01);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+
+    public static final Transform2d ROBOT_TO_SHOOTER = new Transform2d(
+      Units.Inches.of(-1.566),
+      Units.Inches.of(-9.199),
+      new Rotation2d(Units.Degrees.of(-50))
+    );
   }
 
   public static final class HOOD {
