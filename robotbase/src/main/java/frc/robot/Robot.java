@@ -62,6 +62,7 @@ public class Robot extends TimedRobot {
   public static Feeder feeder;
 
   public static CameraManager cameraManager;
+  public static ScoreCalculator scoreCalculator;
 
   private static final Field2d m_robotField = new Field2d();
 
@@ -87,6 +88,7 @@ public class Robot extends TimedRobot {
     cameraManager = new CameraManager();
 
     swerve.registerTelemetry(logger::telemeterize);
+    scoreCalculator = new ScoreCalculator();
 
     m_driverControls = new DriverControls();
     m_defaultDrive = new DefaultDrive(

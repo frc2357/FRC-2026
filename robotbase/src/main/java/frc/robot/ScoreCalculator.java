@@ -3,7 +3,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -40,31 +40,34 @@ public class ScoreCalculator {
     // TODO: Rename to be more indicative of the point
     // Distances should be relative to top center point of the hub
     public static final Distance CLOSEST_POINT = Inches.of(24); // Up against the hub
-    public static final Distance POINT_2 = Inches.of(5);
-    public static final Distance POINT_3 = Inches.of(5);
-    public static final Distance POINT_4 = Inches.of(5);
+    public static final Distance POINT_2 = Inches.of(50);
+    public static final Distance POINT_3 = Inches.of(100);
+    public static final Distance POINT_4 = Inches.of(200);
     public static final Distance FARTHEST_POINT = Inches.of(265); // Far corner of the outpost
   }
 
   public ScoreCalculator() {
-    m_shooterCurve.put(SHOT_POINTS.CLOSEST_POINT, RPM.of(1000));
-    m_shooterCurve.put(SHOT_POINTS.POINT_2, RPM.of(2000));
-    m_shooterCurve.put(SHOT_POINTS.POINT_3, RPM.of(3000));
-    m_shooterCurve.put(SHOT_POINTS.POINT_4, RPM.of(4000));
-    m_shooterCurve.put(SHOT_POINTS.FARTHEST_POINT, RPM.of(5000));
+    m_shooterCurve.put(SHOT_POINTS.CLOSEST_POINT, RotationsPerSecond.of(20));
+    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(40));
+    m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(60));
+    m_shooterCurve.put(SHOT_POINTS.POINT_4, RotationsPerSecond.of(75));
+    m_shooterCurve.put(SHOT_POINTS.FARTHEST_POINT, RotationsPerSecond.of(90));
 
-    m_hoodCurve.put(SHOT_POINTS.CLOSEST_POINT, Degrees.of(0));
-    m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(0));
-    m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(0));
-    m_hoodCurve.put(SHOT_POINTS.POINT_4, Degrees.of(0));
-    m_hoodCurve.put(SHOT_POINTS.FARTHEST_POINT, Degrees.of(0));
+    m_hoodCurve.put(SHOT_POINTS.CLOSEST_POINT, Degrees.of(10));
+    m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(15));
+    m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(20));
+    m_hoodCurve.put(SHOT_POINTS.POINT_4, Degrees.of(25));
+    m_hoodCurve.put(SHOT_POINTS.FARTHEST_POINT, Degrees.of(30));
   }
 
   public CalculatedShot calculateShot(Distance targetDistance) {
     AngularVelocity shooterVelocity = m_shooterCurve.get(targetDistance);
     Angle hoodAngle = m_hoodCurve.get(targetDistance);
 
-    SmartDashboard.putNumber("Computed Shooter RPM", shooterVelocity.in(RPM));
+    SmartDashboard.putNumber(
+      "Computed Shooter RPS",
+      shooterVelocity.in(RotationsPerSecond)
+    );
     SmartDashboard.putNumber("Computed Hood Angle", hoodAngle.in(Degrees));
 
     return new CalculatedShot(shooterVelocity, hoodAngle);
