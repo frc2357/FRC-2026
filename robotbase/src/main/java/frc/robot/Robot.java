@@ -121,11 +121,11 @@ public class Robot extends TimedRobot {
     AprilTagFieldLayout layout = Constants.FieldConstants.FIELD_LAYOUT;
 
     SmartDashboard.putData("Robot Field", m_robotField);
-    Robot.shooter.setDefaultCommand(
-      Robot.shooter.axisSpeed(() -> {
-        return Value.of(SmartDashboard.getNumber("Shooter", 0.0));
-      })
-    );
+    // Robot.shooter.setDefaultCommand(
+    //   new ShooterAxis(() -> {
+    //     return Value.of(SmartDashboard.getNumber("Shooter", 0.0));
+    //   })
+    // );
 
     SmartDashboard.putNumber("Spindexer Speed", 30);
     SmartDashboard.putNumber("Feeder Speed", 30);
