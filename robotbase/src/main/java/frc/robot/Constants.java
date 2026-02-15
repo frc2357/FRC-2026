@@ -345,7 +345,7 @@ public class Constants {
     // Maximum speed of the shooter.
     public static final AngularVelocity MAX_VELOCITY = RPM.of(1000);
     // Telemetry name and verbosity for the arm.
-    public static final String NETWORK_KEY = "ShooterMech";
+    public static final String NETWORK_KEY = "HoodMech";
 
     public static final Current STALL_LIMIT = Amps.of(40);
 

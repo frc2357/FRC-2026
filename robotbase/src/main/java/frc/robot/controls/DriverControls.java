@@ -30,13 +30,13 @@ public class DriverControls implements RumbleInterface {
     m_controller.back().onTrue(new FlipPerspective());
     m_controller.start().onTrue(new ResetPerspective());
 
-    /*  m_controller
+    m_controller
       .leftTrigger()
       .whileTrue(
         Robot.shooter.axisSpeed(() ->
           Value.of(m_controller.getLeftTriggerAxis())
         )
-      );*/
+      );
 
     m_controller
       .rightTrigger()
@@ -44,8 +44,8 @@ public class DriverControls implements RumbleInterface {
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
       );
 
-    m_controller.y().whileTrue(Robot.intakePivot.setSpeed(Percent.of(75)));
-    m_controller.a().whileTrue(Robot.intakePivot.setSpeed(Percent.of(-75)));
+    m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(75)));
+    m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-75)));
     m_controller.x().whileTrue(Robot.intakePivot.axisSpeed(this::getREALLeftY));
   }
 

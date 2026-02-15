@@ -55,8 +55,8 @@ public class Robot extends TimedRobot {
   private AutoChooserManager m_autoChooserManager;
   public static Intake intake;
   public static IntakePivot intakePivot;
-  //public static Shooter shooter;
-  //public static Hood hood;
+  public static Shooter shooter;
+  public static Hood hood;
   public static Outtake outtake;
   public static Feeder feeder;
 
@@ -73,8 +73,8 @@ public class Robot extends TimedRobot {
 
     intake = new Intake();
     intakePivot = new IntakePivot();
-    //shooter = new Shooter();
-    //hood = new Hood();
+    shooter = new Shooter();
+    hood = new Hood();
     spindexer = new Spindexer();
     outtake = new Outtake();
     feeder = new Feeder();

@@ -133,7 +133,7 @@ public class Shooter extends SubsystemBase {
    * @param dutyCycle DutyCycle to set.
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
-  private Command set(double dutyCycle) {
+  public Command set(double dutyCycle) {
     return m_shooter
       .set(dutyCycle)
       //.alongWith(new InstantCommand(() -> System.out.println("Setting")))
