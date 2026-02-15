@@ -20,6 +20,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,7 +28,11 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -332,6 +337,17 @@ public class Constants {
       .smartCurrentLimit(20, 20)
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
+  }
+
+  public static final class SCORING {
+
+    // All distance units are in meters
+    // Currently opting to not use Units library to reduce complexity of having to create
+    // our own interpolation methods and uneccessary instantiation of objects
+
+    public public static static final final InterpolatingTreeMap<Distance, AngularVelocity> SHOOTER_CURVE =
+      new InterpolatingTreeMap<Distance, AngularVelocity>();
+      SHOOTER.GET
   }
 
   public class FieldConstants {
