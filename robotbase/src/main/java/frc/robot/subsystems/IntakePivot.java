@@ -47,11 +47,9 @@ public class IntakePivot extends SubsystemBase {
     m_encoder = m_motor.getAbsoluteEncoder();
     m_smartMotorControllerConfig = new SmartMotorControllerConfig(this)
       .withExternalEncoder(m_encoder)
-      .withExternalEncoderInverted(true)
+      .withExternalEncoderInverted(INTAKE_PIVOT.ENCODER_INVERTED)
       .withUseExternalFeedbackEncoder(true)
-      .withExternalEncoderZeroOffset(
-        Degrees.of(360 - 116.19265079498291 - 18.294811248779293)
-      )
+      .withExternalEncoderZeroOffset(INTAKE_PIVOT.EXTERNAL_ENCODER_OFFSET)
       .withControlMode(ControlMode.CLOSED_LOOP)
       .withVendorConfig(INTAKE_PIVOT.INTAKE_PIVOT_BASE_CONFIG)
       .withFeedforward(INTAKE_PIVOT.FEEDFORWARD)

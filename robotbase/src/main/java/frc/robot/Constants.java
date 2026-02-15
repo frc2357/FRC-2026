@@ -221,23 +221,23 @@ public class Constants {
 
     // TODO: Update to actual physical properties of the IntakePivot
     public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromReductionStages(3, 4)
+      GearBox.fromStages("12:52", "16:54")
     );
 
     // Diameter of the arm.
-    public static final Distance LENGTH = Inches.of(4);
+    public static final Distance LENGTH = Inches.of(12.5);
     // Mass of the arm.
-    public static final Mass MASS = Pounds.of(1);
+    public static final Mass MASS = Pounds.of(7);
     // Maximum speed of the shooter.
     public static final AngularVelocity MAX_VELOCITY = RPM.of(1000);
     // Telemetry name and verbosity for the arm.
     public static final String NETWORK_KEY = "IntakePivotMech";
 
     public static final Angle SOFT_LOWER_ANGLE = Degrees.of(0);
-    public static final Angle SOFT_UPPER_ANGLE = Degrees.of(45);
+    public static final Angle SOFT_UPPER_ANGLE = Degrees.of(120);
 
     public static final Angle HARD_LOWER_ANGLE = Degrees.of(0);
-    public static final Angle HARD_UPPER_ANGLE = Degrees.of(45);
+    public static final Angle HARD_UPPER_ANGLE = Degrees.of(123.3);
 
     public static final Angle STARTING_ANGLE = Degrees.of(0);
 
@@ -260,6 +260,9 @@ public class Constants {
       new SimpleMotorFeedforward(0, 0, 0);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+
+    public static final Angle EXTERNAL_ENCODER_OFFSET = Degrees.of(0);
+    public static final Boolean ENCODER_INVERTED = true;
   }
 
   public static final class OUTTAKE {
@@ -290,13 +293,13 @@ public class Constants {
 
     // TODO: Update to actual physical properties of the shooter
     public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromReductionStages(3, 4)
+      GearBox.fromReductionStages(1)
     );
 
     // Diameter of the flywheel.
     public static final Distance DIAMETER = Inches.of(4);
     // Mass of the flywheel.
-    public static final Mass MASS = Pounds.of(1);
+    public static final Mass MASS = Pounds.of(2.717);
     // Maximum speed of the shooter.
     public static final AngularVelocity MAX_VELOCITY = RPM.of(1000);
     // Telemetry name and verbosity for the arm.
@@ -327,14 +330,14 @@ public class Constants {
 
     // TODO: Update to actual physical properties of the shooter
     public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromReductionStages(3, 4)
+      GearBox.fromReductionStages(5, 9)
     );
 
     public static final Angle SOFT_LOWER_ANGLE = Degrees.of(0);
-    public static final Angle SOFT_UPPER_ANGLE = Degrees.of(0);
+    public static final Angle SOFT_UPPER_ANGLE = Degrees.of(40.3);
 
     public static final Angle HARD_LOWER_ANGLE = Degrees.of(0);
-    public static final Angle HARD_UPPER_ANGLE = Degrees.of(0);
+    public static final Angle HARD_UPPER_ANGLE = Degrees.of(40.343);
 
     public static final Angle STARTING_ANGLE = Degrees.of(0);
 
