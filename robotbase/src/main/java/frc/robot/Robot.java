@@ -5,11 +5,10 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Value;
-import static frc.robot.Constants.CHOREO.AUTO_FACTORY;
 
-import choreo.auto.AutoRoutine;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -17,7 +16,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
@@ -74,7 +72,7 @@ public class Robot extends TimedRobot {
     intake = new Intake();
     intakePivot = new IntakePivot();
     shooter = new Shooter();
-    //hood = new Hood();
+    hood = new Hood();
     spindexer = new Spindexer();
     outtake = new Outtake();
     feeder = new Feeder();

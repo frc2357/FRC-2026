@@ -7,6 +7,7 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -94,6 +95,11 @@ public class Shooter extends SubsystemBase {
 
   public boolean isAtTargetSpeed() {
     return isAtRPM(m_targetVelocity);
+  }
+
+  public SparkAbsoluteEncoder getSecondHoodEncoder() {
+    // TODO: Make sure `m_motorRight` is correct
+    return m_motorRight.getAbsoluteEncoder();
   }
 
   @Override

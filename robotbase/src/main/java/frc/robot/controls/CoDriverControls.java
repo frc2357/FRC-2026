@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.commands.intake.IntakeAxis;
-import frc.robot.commands.intakePivot.IntakePivotAxis;
+import frc.robot.commands.intakepivot.IntakePivotAxis;
 import frc.robot.controls.util.RumbleInterface;
 import frc.robot.subsystems.Intake;
 

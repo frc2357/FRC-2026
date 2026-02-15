@@ -14,7 +14,7 @@ import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.hood.HoodSetSpeed;
 import frc.robot.commands.intake.IntakeAxis;
-import frc.robot.commands.intakePivot.IntakePivotAxis;
+import frc.robot.commands.intakepivot.IntakePivotAxis;
 import frc.robot.commands.shooter.ShooterAxis;
 import frc.robot.controls.util.RumbleInterface;
 import frc.robot.subsystems.IntakePivot;

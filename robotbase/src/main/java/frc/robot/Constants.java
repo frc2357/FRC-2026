@@ -1,16 +1,18 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import choreo.auto.AutoFactory;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.FeedForwardConfig;
 import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+
+import choreo.auto.AutoFactory;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -29,10 +31,7 @@ import edu.wpi.first.units.measure.Time;
 import frc.robot.generated.TunerConstants;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
-import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.config.PivotConfig;
-import yams.motorcontrollers.SmartMotorController;
-import yams.motorcontrollers.SmartMotorControllerCommandRegistry;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
@@ -319,6 +318,7 @@ public class Constants {
   }
 
   public static final class HOOD {
+    public static final AngularVelocity CRT_STATIONARY_TOLERANCE = RPM.of(100);
 
     public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
 

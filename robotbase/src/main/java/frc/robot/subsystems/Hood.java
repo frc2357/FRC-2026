@@ -4,114 +4,165 @@
 
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Seconds;
-import static edu.wpi.first.units.Units.Value;
-import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.RPM;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.HOOD;
+import frc.robot.Robot;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
+import yams.mechanisms.config.ArmConfig;
 import yams.mechanisms.positional.Arm;
-import yams.mechanisms.positional.Pivot;
-import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
+import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
+import yams.units.EasyCRT;
+import yams.units.EasyCRTConfig;
 
 public class Hood extends SubsystemBase {
 
-  private SmartMotorControllerConfig smcConfig = HOOD.SMC_CONFIG.withSubsystem(
-    this
-  );
+  private final SparkMax m_hoodMotor = new SparkMax(CAN_ID.HOOD_MOTOR, MotorType.kBrushless);
 
-  // Vendor motor controller object
-  private SparkMax spark = new SparkMax(
-    CAN_ID.HOOD_MOTOR,
-    MotorType.kBrushless
-  );
+  private final SmartMotorControllerConfig m_hoodMotorConfig = new SmartMotorControllerConfig(this)
+            .withControlMode(ControlMode.CLOSED_LOOP)
+        .withClosedLoopController(
+          50,
+          0,
+          0,
+          Units.DegreesPerSecond.of(90),
+          Units.DegreesPerSecondPerSecond.of(45)
+        )
+        .withSimClosedLoopController(
+          50,
+          0,
+          0,
+          Units.DegreesPerSecond.of(90),
+          Units.DegreesPerSecondPerSecond.of(45)
+        )
+        .withFeedforward(new ArmFeedforward(0, 0, 0))
+        .withSimFeedforward(new ArmFeedforward(0, 0, 0))
+        .withTelemetry("ArmMotor", TelemetryVerbosity.HIGH)
+        // Gearing from the motor rotor to final shaft.
+        .withGearing(new MechanismGearing(GearBox.fromReductionStages(3, 4)))
+        .withMotorInverted(false)
+        .withIdleMode(MotorMode.BRAKE)
+        .withStatorCurrentLimit(Units.Amps.of(40))
+        .withClosedLoopRampRate(Units.Seconds.of(0.25))
+        .withOpenLoopRampRate(Units.Seconds.of(0.25));
 
-  // Create our SmartMotorController from our Spark and config with the NEO.
-  private SmartMotorController sparkSmartMotorController = new SparkWrapper(
-    spark,
-    DCMotor.getNEO(1),
-    smcConfig
-  );
+  private final SmartMotorController m_hoodSMC = new SparkWrapper(m_hoodMotor, DCMotor.getNeo550(1), m_hoodMotorConfig);
 
-  // Arm Mechanism
-  private Pivot pivot = new Pivot(
-    HOOD.PIVOT_CONFIG.withSmartMotorController(sparkSmartMotorController)
-  );
+  private final ArmConfig m_hoodConfig = new ArmConfig(m_hoodSMC)
+          // Soft limit is applied to the SmartMotorControllers PID
+      .withSoftLimits(Units.Degrees.of(-20), Units.Degrees.of(10))
+      // Hard limit is applied to the simulation.
+      .withHardLimit(Units.Degrees.of(-30), Units.Degrees.of(40))
+      // Starting position is where your arm starts
+      .withStartingPosition(Units.Degrees.of(-5))
+      // Length and mass of your arm for sim.
+      .withLength(Units.Inches.of(7)) // 7 is an estimate
+      .withMass(Units.Pounds.of(1.365))
+      // Telemetry name and verbosity for the arm.
+      .withTelemetry("Arm", TelemetryVerbosity.HIGH);
 
-  /**
-   * Set the angle of the arm, does not stop when the arm reaches the setpoint.
-   * @param angle Angle to go to.
-   * @return A command.
-   */
-  public Command setAngle(Angle angle) {
-    return pivot.run(angle);
+
+  private final Arm m_hood = new Arm(m_hoodConfig);
+
+  private final SparkAbsoluteEncoder m_encoder1 = m_hoodMotor.getAbsoluteEncoder();
+  private final SparkAbsoluteEncoder m_encoder2 = Robot.shooter.getSecondHoodEncoder();
+
+  private final EasyCRTConfig m_crtConfig = new EasyCRTConfig(() -> Units.Rotations.of(m_encoder1.getPosition()), () -> Units.Rotations.of(m_encoder2.getPosition()))
+    .withAbsoluteEncoder1GearingStages(20,19,16,266)
+    .withAbsoluteEncoder2GearingStages(16,266)
+    .withMechanismRange(Units.Degrees.of(0), Units.Degrees.of(30));
+
+  private final EasyCRT m_crtSolver = new EasyCRT(m_crtConfig);
+
+  public Hood() {
+
   }
 
-  /**
-   * Set the angle of the arm, ends the command but does not stop the arm when the arm reaches the setpoint.
-   * @param angle Angle to go to.
-   * @return A Command
-   */
-  public Command setAngleAndStop(Angle angle) {
-    return pivot.runTo(angle, HOOD.ANGULAR_TOLERANCE);
-  }
+      public Command setAngle(Supplier<Angle> angleSupplier) {
+        return m_hood.setAngle(angleSupplier);
+    }
 
-  /**
-   * Set arm closed loop controller to go to the specified mechanism position.
-   * @param angle Angle to go to.
-   */
-  public void setAngleSetpoint(Angle angle) {
-    pivot.setMechanismPositionSetpoint(angle);
-  }
+    public Angle getAngle() {
+        return m_hood.getAngle();
+    }
 
-  /**
-   * Move the arm up and down.
-   * @param dutycycle [-1, 1] speed to set the arm too.
-   */
-  public Command set(double dutycycle) {
-    return pivot.set(dutycycle);
-  }
+    public Command sysId() {
+        return m_hood.sysId(
+                Units.Volts.of(4.0), // maximumVoltage
+                Units.Volts.per(Units.Second).of(0.5), // step
+                Units.Seconds.of(8.0) // duration
+        );
+    }
 
-  public void stop() {
-    pivot.set(0);
+    public Command setDutyCycle(Supplier<Double> dutyCycleSupplier) {
+        return m_hood.set(dutyCycleSupplier);
+    }
+
+    public Command setDutyCycle(double dutyCycle) {
+        return m_hood.set(dutyCycle);
+    }
+
+      public void stop() {
+    m_hood.set(0);
   }
 
   public void setAxisSpeed(Dimensionless axisSpeed) {
     Dimensionless m_speed = axisSpeed.times(HOOD.AXIS_MAX_SPEED);
-    pivot.set(m_speed.in(Value));
+    m_hood.set(m_speed.in(Units.Value));
   }
 
   public void setSpeed(Dimensionless dutycycle) {
-    pivot.set(dutycycle.in(Value));
+    m_hood.set(dutycycle.in(Units.Value));
   }
 
   /**
-   * Run sysId on the {@link Arm}
+   * The main purpose of this method is so we can tell if the hood is stationary
+   * The CRT calculations can get messed up if the mechanism is moving
    */
-  public Command sysId() {
-    return pivot.sysId(Volts.of(7), Volts.of(2).per(Second), Seconds.of(4));
+  public AngularVelocity getMotorVelocity() {
+    return RPM.of(m_hoodMotor.getEncoder().getVelocity());
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    pivot.updateTelemetry();
+  public boolean zero() {
+    Optional<Angle> crtAngle = m_crtSolver.getAngleOptional();
+
+    if (crtAngle.isPresent()) {
+      m_hoodSMC.setEncoderPosition(crtAngle.get());
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-    pivot.simIterate();
-  }
+    @Override
+    public void periodic() {
+        m_hood.updateTelemetry();
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        m_hood.simIterate();
+    }
 }
