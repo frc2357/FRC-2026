@@ -74,20 +74,37 @@ public class CoDriverControls implements RumbleInterface {
     // change WaitCommad to ShooterHoodAxis once it is finshed
     onlyUp.whileTrue(new WaitCommand(0));
 
-    onlyUp.whileTrue(
-      Robot.shooter.axisSpeed(() ->
-        Value.of(m_controller.getRightTriggerAxis())
-      )
-    );
+    onlyUp
+      .and(m_controller.rightTrigger())
+      .whileTrue(
+        Robot.shooter.axisSpeed(() ->
+          Value.of(-m_controller.getRightTriggerAxis())
+        )
+      );
 
-    onlyLeft.whileTrue(new IntakeAxis(this::getLeftTrigger));
-    onlyLeft.whileTrue(new IntakeAxis(this::getRightTrigger));
+    onlyUp
+      .and(m_controller.leftTrigger())
+      .whileTrue(
+        Robot.shooter.axisSpeed(() ->
+          Value.of(m_controller.getLeftTriggerAxis())
+        )
+      );
 
-    noDpad.whileTrue(new IntakeSetSpeed(getLeftTrigger()));
+    onlyLeft
+      .and(m_controller.leftTrigger())
+      .whileTrue(
+        new IntakeAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
+      );
+
+    onlyLeft
+      .and(m_controller.rightTrigger())
+      .whileTrue(
+        new IntakeAxis(() -> Value.of(-m_controller.getRightTriggerAxis()))
+      );
   }
 
   private double modifyAxis(double value) {
-    value = deadband(value, CONTROLLER.DRIVER_CONTROLLER_DEADBAND);
+    value = deadband(value, CONTROLLER.CODRIVER_CONTROLLER_DEADBAND);
     value = Math.copySign(
       Math.pow(value, Constants.CONTROLLER.JOYSTICK_RAMP_EXPONENT),
       value
