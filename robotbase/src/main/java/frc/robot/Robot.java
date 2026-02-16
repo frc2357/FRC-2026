@@ -22,7 +22,6 @@ import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
-import frc.robot.commands.shooter.ShooterAxis;
 import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;

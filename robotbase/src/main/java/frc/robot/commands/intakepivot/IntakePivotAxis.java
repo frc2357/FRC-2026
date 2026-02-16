@@ -1,4 +1,4 @@
-package frc.robot.commands.intakePivot;
+package frc.robot.commands.intakepivot;
 
 import static edu.wpi.first.units.Units.Value;
 
