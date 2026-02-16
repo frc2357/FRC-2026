@@ -10,13 +10,11 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
-import choreo.auto.AutoFactory;
-import com.revrobotics.spark.config.ClosedLoopConfig;
-import com.revrobotics.spark.config.FeedForwardConfig;
-import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+
+import choreo.auto.AutoFactory;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
@@ -26,7 +24,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
@@ -327,10 +324,11 @@ public class Constants {
   }
 
   public static final class HOOD {
+    public static final AngularVelocity CRT_STATIONARY_TOLERANCE = RPM.of(100);
 
     // TODO: Update to actual physical properties of the shooter
     public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromReductionStages(5, 9)
+      GearBox.fromStages("5:1", "9:1", "20:19", "166:16")
     );
 
     public static final Angle SOFT_LOWER_ANGLE = Degrees.of(0);
@@ -339,7 +337,7 @@ public class Constants {
     public static final Angle HARD_LOWER_ANGLE = Degrees.of(0);
     public static final Angle HARD_UPPER_ANGLE = Degrees.of(40.343);
 
-    public static final Angle STARTING_ANGLE = Degrees.of(0);
+    public static final Angle STARTING_ANGLE = Degrees.of(10);
 
     // Mass of the flywheel.
     // Maximum speed of the shooter.

@@ -2,11 +2,15 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Value;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
@@ -14,8 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.HOOD;
-import frc.robot.Constants.HOOD;
-import java.util.function.Supplier;
+import frc.robot.Robot;
 import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Pivot;
 import yams.motorcontrollers.SmartMotorController;
@@ -23,18 +26,24 @@ import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
+import yams.units.EasyCRT;
+import yams.units.EasyCRTConfig;
 
 public class Hood extends SubsystemBase {
 
-  private SparkMax m_motor;
+  private final SparkMax m_motor;
 
-  private SmartMotorControllerConfig m_smartMotorControllerConfig;
-  // Create our SmartMotorController from our Spark and config with the NEO.
-  private SmartMotorController m_sparkSmartMotorController;
+  private final SmartMotorControllerConfig m_smartMotorControllerConfig;
+  private final SmartMotorController m_sparkSmartMotorController;
 
   private final PivotConfig m_hoodConfig;
-  // HOOD Mechanism
-  private Pivot m_hood;
+  private final Pivot m_hood;
+
+  private final SparkAbsoluteEncoder m_encoder1;
+  private final SparkAbsoluteEncoder m_encoder2;
+
+  private final EasyCRTConfig m_crtConfig;
+  private final EasyCRT m_crtSolver;
 
   public Hood() {
     m_motor = new SparkMax(CAN_ID.HOOD_MOTOR, MotorType.kBrushless);
@@ -87,6 +96,15 @@ public class Hood extends SubsystemBase {
       .withTelemetry(HOOD.NETWORK_KEY, TelemetryVerbosity.HIGH);
 
     m_hood = new Pivot(m_hoodConfig);
+
+    m_encoder1 = m_motor.getAbsoluteEncoder();
+    m_encoder2 = Robot.shooter.getSecondHoodEncoder();
+
+    m_crtConfig = new EasyCRTConfig(() -> Units.Rotations.of(m_encoder1.getPosition()), () -> Units.Rotations.of(m_encoder2.getPosition()))
+      .withAbsoluteEncoder1GearingStages(20,19,16,266)
+      .withAbsoluteEncoder2GearingStages(16,266)
+      .withMechanismRange(Units.Degrees.of(0), Units.Degrees.of(25));
+    m_crtSolver = new EasyCRT(m_crtConfig);
   }
 
   /**
@@ -146,6 +164,25 @@ public class Hood extends SubsystemBase {
 
   public void stopMotor() {
     m_hood.setDutyCycleSetpoint(0);
+  }
+
+  /**
+   * The main purpose of this method is so we can tell if the hood is stationary
+   * The CRT calculations can get messed up if the mechanism is moving
+   */
+  public AngularVelocity getMotorVelocity() {
+    return Units.RPM.of(m_motor.getEncoder().getVelocity());
+  }
+
+  public boolean zero() {
+    Optional<Angle> crtAngle = m_crtSolver.getAngleOptional();
+    if (crtAngle.isPresent()) {
+      System.out.println(crtAngle);
+      // m_sparkSmartMotorController.setEncoderPosition(crtAngle.get());
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @Override

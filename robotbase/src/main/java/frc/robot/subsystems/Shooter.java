@@ -2,20 +2,22 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Value;
 
+import java.util.function.Supplier;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkMax;
+
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.INTAKE_PIVOT;
 import frc.robot.Constants.SHOOTER;
-import java.util.function.Supplier;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
@@ -93,6 +95,7 @@ public class Shooter extends SubsystemBase {
       .withMass(SHOOTER.MASS)
       // Maximum speed of the shooter.
       .withUpperSoftLimit(SHOOTER.MAX_VELOCITY)
+      // .withSpeedometerSimulation()
       // Telemetry name and verbosity for the arm.
       .withTelemetry(SHOOTER.NETWORK_KEY, TelemetryVerbosity.HIGH);
 
@@ -156,6 +159,11 @@ public class Shooter extends SubsystemBase {
 
   public void stopMotor() {
     m_shooter.setDutyCycleSetpoint(0);
+  }
+
+  public SparkAbsoluteEncoder getSecondHoodEncoder() {
+    // TODO: Make sure `m_motorRight` is correct
+    return m_motorRight.getAbsoluteEncoder();
   }
 
   @Override

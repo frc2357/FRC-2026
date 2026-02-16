@@ -1,7 +1,6 @@
 package frc.robot.controls;
 
 import static edu.wpi.first.units.Units.Percent;
-import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
@@ -11,10 +10,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
-import frc.robot.commands.drive.DriveTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
-import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.hood.CRTZero;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
@@ -41,11 +39,16 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .rightTrigger()
       .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
+        Robot.shooter.axisSpeed(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
       );
 
-    m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(75)));
-    m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-75)));
+    //   System.out.println(1);
+    m_controller.b().onTrue(new CRTZero());
+    m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(30)));
+    m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-30)));
+
+    // m_controller.y().whileTrue(Robot.intakePivot.setSpeed(Percent.of(75)));
+    // m_controller.a().whileTrue(Robot.intakePivot.setSpeed(Percent.of(-75)));
     m_controller.x().whileTrue(Robot.intakePivot.axisSpeed(this::getREALLeftY));
   }
 
