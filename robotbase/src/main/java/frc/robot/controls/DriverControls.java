@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
@@ -16,7 +17,10 @@ import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.hood.HoodSetSpeed;
 import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.intakepivot.IntakePivotJiggle;
+import frc.robot.commands.scoring.FeedAndSpin;
 import frc.robot.commands.scoring.Score;
+import frc.robot.commands.spindexer.SpindexerSetSpeed;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
@@ -36,21 +40,23 @@ public class DriverControls implements RumbleInterface {
       .leftTrigger()
       .whileTrue(
         Robot.shooter.axisSpeed(() ->
-          Value.of(m_controller.getLeftTriggerAxis())
+          Value.of(SmartDashboard.getNumber("Shooter", 0.0))
         )
       );
 
     m_controller
       .rightTrigger()
       .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
+        new IntakeAxis(() ->
+          Value.of(-m_controller.getRightTriggerAxis() * -1)
+        ).alongWith(new SpindexerSetSpeed(Value.of(0.3)))
       );
 
     m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(30)));
     m_controller.a().whileTrue(new HoodSetSpeed(Percent.of(-30)));
 
     m_controller
-      .x()
+      .b()
       .whileTrue(new DrivePoseTargetingHub(this::getLeftX, this::getLeftY));
 
     m_controller
@@ -65,6 +71,14 @@ public class DriverControls implements RumbleInterface {
           }
         })
       );
+    m_controller.x().whileTrue(new FeedAndSpin());
+
+    SmartDashboard.putNumber("IntakePivotSpeed", .5);
+    SmartDashboard.putNumber("IntakeTimeOn", .5);
+    SmartDashboard.putNumber("IntakeTimeOff", .5);
+    SmartDashboard.putNumber("IntakeSpeed", .5);
+
+    m_controller.rightBumper().whileTrue((new IntakePivotJiggle()));
   }
 
   public Dimensionless getRightX() {

@@ -5,9 +5,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Value;
-import static frc.robot.Constants.CHOREO.AUTO_FACTORY;
 
-import choreo.auto.AutoRoutine;
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -26,6 +24,7 @@ import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.commands.util.InitRobotCommand;
+import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
 import frc.robot.generated.TunerConstants;
 import frc.robot.networkTables.AutoChooserManager;
@@ -44,6 +43,7 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
   private static DriverControls m_driverControls;
+  private static CoDriverControls m_CoDriverControls;
   private static Command m_defaultDrive;
 
   public static CommandSwerveDrivetrain swerve;
@@ -97,10 +97,14 @@ public class Robot extends TimedRobot {
       m_driverControls::getRightX
     );
 
+    m_CoDriverControls = new CoDriverControls();
+
     swerve.registerTelemetry(logger::telemeterize);
     swerve.setDefaultCommand(m_defaultDrive);
 
-    spindexer.setDefaultCommand(
+    SmartDashboard.putNumber("Spindexer", 0.0);
+    SmartDashboard.putNumber("Shooter", 0.0);
+    Robot.spindexer.setDefaultCommand(
       new SpindexerAxis(() -> {
         return Value.of(SmartDashboard.getNumber("Spindexer", 0.0));
       })
@@ -116,6 +120,14 @@ public class Robot extends TimedRobot {
     AprilTagFieldLayout layout = Constants.FieldConstants.FIELD_LAYOUT;
 
     SmartDashboard.putData("Robot Field", m_robotField);
+    // Robot.shooter.setDefaultCommand(
+    //   new ShooterAxis(() -> {
+    //     return Value.of(SmartDashboard.getNumber("Shooter", 0.0));
+    //   })
+    // );
+
+    SmartDashboard.putNumber("Spindexer Speed", 30);
+    SmartDashboard.putNumber("Feeder Speed", 30);
   }
 
   @Override

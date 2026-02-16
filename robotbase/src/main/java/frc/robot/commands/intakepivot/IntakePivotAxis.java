@@ -1,6 +1,9 @@
-package frc.robot.commands.intakePivot;
+package frc.robot.commands.intakepivot;
+
+import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import java.util.function.Supplier;
@@ -15,8 +18,14 @@ public class IntakePivotAxis extends Command {
   }
 
   @Override
+  public void initialize() {
+    SmartDashboard.putBoolean("pivoting", true);
+  }
+
+  @Override
   public void execute() {
     Dimensionless axisValue = m_axis.get();
+    SmartDashboard.putNumber("returned value", axisValue.in(Value));
     Robot.intakePivot.setAxisSpeed(axisValue);
   }
 
@@ -28,5 +37,6 @@ public class IntakePivotAxis extends Command {
   @Override
   public void end(boolean interrupted) {
     Robot.intakePivot.stop();
+    SmartDashboard.putBoolean("pivoting", false);
   }
 }

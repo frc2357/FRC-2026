@@ -69,13 +69,13 @@ public class Constants {
       RadiansPerSecond.of(2);
 
     public static final Dimensionless AXIS_MAX_ANGULAR_RATE = Units.Percent.of(
-      50
+      100
     );
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
 
     public static final double HEADING_CONTROLLER_P = 4.5;
     public static final double HEADING_CONTROLLER_I = 0;
     public static final double HEADING_CONTROLLER_D = 0;
+    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(100);
   }
 
   public static final class PHOTON_VISION {
@@ -227,7 +227,7 @@ public class Constants {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
+      .inverted(true)
       .smartCurrentLimit(40, 40)
       .openLoopRampRate(0.25); // TODO: double check these values
 
@@ -236,7 +236,7 @@ public class Constants {
 
   public static final class INTAKE {
 
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(75);
+    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(70);
 
     public static final SparkBaseConfig LEFT_MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
@@ -320,7 +320,7 @@ public class Constants {
     public static final SimpleMotorFeedforward FEEDFORWARD =
       new SimpleMotorFeedforward(0, 0.01, 0.01);
 
-    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(80);
 
     public static final Transform2d ROBOT_TO_SHOOTER = new Transform2d(
       Units.Inches.of(-1.566),
