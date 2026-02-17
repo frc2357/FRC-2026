@@ -13,12 +13,12 @@ import frc.robot.Constants.FEEDER;
 
 public class Feeder extends SubsystemBase {
 
-  private SparkMax m_Motor;
+  private SparkMax m_motor;
 
   public Feeder() {
     m_Motor = new SparkMax(CAN_ID.FEEDER_MOTOR, MotorType.kBrushless);
 
-    m_Motor.configure(
+    m_motor.configure(
       FEEDER.FEEDER_CONFIG,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
@@ -26,7 +26,7 @@ public class Feeder extends SubsystemBase {
   }
 
   public void setSpeed(Dimensionless percentOutput) {
-    m_Motor.set(percentOutput.in(Value));
+    m_motor.set(percentOutput.in(Value));
   }
 
   public void setAxisSpeed(Dimensionless axisSpeed) {
@@ -35,6 +35,6 @@ public class Feeder extends SubsystemBase {
   }
 
   public void stop() {
-    m_Motor.stopMotor();
+    m_motor.stopMotor();
   }
 }
