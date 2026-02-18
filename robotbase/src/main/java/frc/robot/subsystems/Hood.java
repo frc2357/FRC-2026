@@ -60,7 +60,6 @@ public class Hood extends SubsystemBase {
       // Telemetry name and verbosity level
       .withTelemetry(HOOD.MOTOR_NETWORK_KEY, TelemetryVerbosity.HIGH)
       // Gearing from the motor rotor to final shaft.
-      // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
       // You could also use .withGearing(12) which does the same thing.
       .withGearing(HOOD.GEARING)
       // Motor properties to prevent over currenting.
@@ -76,7 +75,6 @@ public class Hood extends SubsystemBase {
       //both mass and length in a single function, no other implemntation is currently avalible
       .withMOI(HOOD.LENGTH, HOOD.MASS)
       .withHardLimit(HOOD.HARD_LOWER_ANGLE, HOOD.HARD_UPPER_ANGLE)
-      .withStartingPosition(HOOD.STARTING_ANGLE)
       // Mass of the flywheel.
       // Telemetry name and verbosity for the arm.
       .withTelemetry(HOOD.MECHANISM_NETWORK_KEY, TelemetryVerbosity.HIGH);
@@ -119,10 +117,7 @@ public class Hood extends SubsystemBase {
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
   private Command set(double dutyCycle) {
-    return m_hood
-      .set(dutyCycle)
-      //.alongWith(new InstantCommand(() -> System.out.println("Setting")))
-      .finallyDo(() -> this.stopMotor());
+    return m_hood.set(dutyCycle).finallyDo(() -> this.stopMotor());
   }
 
   public Command setSpeed(Dimensionless speed) {

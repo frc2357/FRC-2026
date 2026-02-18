@@ -51,7 +51,6 @@ public class IntakePivot extends SubsystemBase {
       // Telemetry name and verbosity level
       .withTelemetry(INTAKE_PIVOT.MOTOR_NETWORK_KEY, TelemetryVerbosity.HIGH)
       // Gearing from the motor rotor to final shaft.
-      // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
       // You could also use .withGearing(12) which does the same thing.
       .withGearing(INTAKE_PIVOT.GEARING)
       // Motor properties to prevent over currenting.
@@ -85,7 +84,6 @@ public class IntakePivot extends SubsystemBase {
         INTAKE_PIVOT.HARD_LOWER_ANGLE,
         INTAKE_PIVOT.HARD_UPPER_ANGLE
       )
-      .withStartingPosition(INTAKE_PIVOT.STARTING_ANGLE)
       // Telemetry name and verbosity for the arm.
       .withTelemetry(
         INTAKE_PIVOT.MECHANISM_NETWORK_KEY,

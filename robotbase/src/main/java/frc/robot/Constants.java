@@ -272,8 +272,6 @@ public class Constants {
     public static final Angle HARD_LOWER_ANGLE = Degrees.of(0);
     public static final Angle HARD_UPPER_ANGLE = Degrees.of(123.3);
 
-    public static final Angle STARTING_ANGLE = Degrees.of(0);
-
     public static final double P = 0;
     public static final double I = 0;
     public static final double D = 0;
@@ -374,8 +372,6 @@ public class Constants {
 
     public static final Angle HARD_LOWER_ANGLE = Degrees.of(0);
     public static final Angle HARD_UPPER_ANGLE = Degrees.of(40.343);
-
-    public static final Angle STARTING_ANGLE = Degrees.of(0);
 
     // Mass of the flywheel.
     // Telemetry name and verbosity for the arm.
