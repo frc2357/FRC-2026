@@ -264,10 +264,10 @@ public class Constants {
     public static final Distance LENGTH = Inches.of(12.5);
     // Mass of the arm.
     public static final Mass MASS = Pounds.of(7);
-    // Maximum speed of the shooter.
-    public static final AngularVelocity MAX_VELOCITY = RPM.of(1000);
+
     // Telemetry name and verbosity for the arm.
-    public static final String NETWORK_KEY = "IntakePivotMech";
+    public static final String MECHANISM_NETWORK_KEY = "IntakePivotMotor";
+    public static final String MOTOR_NETWORK_KEY = "IntakePivotMech";
 
     public static final Angle HARD_LOWER_ANGLE = Degrees.of(0);
     public static final Angle HARD_UPPER_ANGLE = Degrees.of(123.3);
@@ -335,7 +335,9 @@ public class Constants {
     // Maximum speed of the shooter.
     public static final AngularVelocity MAX_VELOCITY = RPM.of(5676);
     // Telemetry name and verbosity for the arm.
-    public static final String NETWORK_KEY = "ShooterMech";
+
+    public static final String MECHANISM_NETWORK_KEY = "ShooterMotor";
+    public static final String MOTOR_NETWORK_KEY = "ShooterMech";
 
     public static final Current STALL_LIMIT = Amps.of(40);
 
@@ -367,7 +369,7 @@ public class Constants {
   public static final class HOOD {
 
     public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromReductionStages(5, 9)
+      GearBox.fromStages("5:1", "9:1", "20:19", "166:16")
     );
 
     public static final Angle HARD_LOWER_ANGLE = Degrees.of(0);
@@ -376,10 +378,9 @@ public class Constants {
     public static final Angle STARTING_ANGLE = Degrees.of(0);
 
     // Mass of the flywheel.
-    // Maximum speed of the shooter.
-    public static final AngularVelocity MAX_VELOCITY = RPM.of(1000);
     // Telemetry name and verbosity for the arm.
-    public static final String NETWORK_KEY = "HoodMech";
+    public static final String MECHANISM_NETWORK_KEY = "HoodMotor";
+    public static final String MOTOR_NETWORK_KEY = "HoodMech";
 
     public static final Current STALL_LIMIT = Amps.of(40);
 

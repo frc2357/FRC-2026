@@ -1,20 +1,14 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Degree;
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Value;
 
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Dimensionless;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.INTAKE_PIVOT;
@@ -55,7 +49,7 @@ public class IntakePivot extends SubsystemBase {
       .withFeedforward(INTAKE_PIVOT.FEEDFORWARD)
       .withSimFeedforward(INTAKE_PIVOT.FEEDFORWARD)
       // Telemetry name and verbosity level
-      .withTelemetry("IntakePivotMotor", TelemetryVerbosity.HIGH)
+      .withTelemetry(INTAKE_PIVOT.MOTOR_NETWORK_KEY, TelemetryVerbosity.HIGH)
       // Gearing from the motor rotor to final shaft.
       // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
       // You could also use .withGearing(12) which does the same thing.
@@ -93,7 +87,10 @@ public class IntakePivot extends SubsystemBase {
       )
       .withStartingPosition(INTAKE_PIVOT.STARTING_ANGLE)
       // Telemetry name and verbosity for the arm.
-      .withTelemetry(INTAKE_PIVOT.NETWORK_KEY, TelemetryVerbosity.HIGH);
+      .withTelemetry(
+        INTAKE_PIVOT.MECHANISM_NETWORK_KEY,
+        TelemetryVerbosity.HIGH
+      );
 
     m_arm = new Arm(m_armConfig);
   }
@@ -158,7 +155,6 @@ public class IntakePivot extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     m_arm.updateTelemetry();
-    SmartDashboard.putNumber("INTAKEPIVOTANGLE", getAngle().in(Degree));
   }
 
   @Override

@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Value;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -13,7 +11,6 @@ import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
-import frc.robot.Constants.HOOD;
 import frc.robot.Constants.HOOD;
 import java.util.function.Supplier;
 import yams.mechanisms.config.PivotConfig;
@@ -61,7 +58,7 @@ public class Hood extends SubsystemBase {
       .withFeedforward(HOOD.FEEDFORWARD)
       .withSimFeedforward(HOOD.FEEDFORWARD)
       // Telemetry name and verbosity level
-      .withTelemetry("HoodMotor", TelemetryVerbosity.HIGH)
+      .withTelemetry(HOOD.MOTOR_NETWORK_KEY, TelemetryVerbosity.HIGH)
       // Gearing from the motor rotor to final shaft.
       // In this example GearBox.fromReductionStages(3,4) is the same as GearBox.fromStages("3:1","4:1") which corresponds to the gearbox attached to your motor.
       // You could also use .withGearing(12) which does the same thing.
@@ -81,9 +78,8 @@ public class Hood extends SubsystemBase {
       .withHardLimit(HOOD.HARD_LOWER_ANGLE, HOOD.HARD_UPPER_ANGLE)
       .withStartingPosition(HOOD.STARTING_ANGLE)
       // Mass of the flywheel.
-      // Maximum speed of the hood.
       // Telemetry name and verbosity for the arm.
-      .withTelemetry(HOOD.NETWORK_KEY, TelemetryVerbosity.HIGH);
+      .withTelemetry(HOOD.MECHANISM_NETWORK_KEY, TelemetryVerbosity.HIGH);
 
     m_hood = new Pivot(m_hoodConfig);
   }
