@@ -126,7 +126,7 @@ public class CoDriverControls implements RumbleInterface {
   }
 
   public Dimensionless getRightTrigger() {
-    return Value.of(-m_controller.getRightTriggerAxis());
+    return Value.of(m_controller.getRightTriggerAxis());
   }
 
   public Dimensionless getLeftTrigger() {
