@@ -110,11 +110,11 @@ public class CoDriverControls implements RumbleInterface {
   }
 
   public Dimensionless getRightX() {
-    return Value.of(modifyAxis(-m_controller.getRightX()));
+    return Value.of(modifyAxis(m_controller.getRightX()));
   }
 
   public Dimensionless getLeftX() {
-    return Value.of(modifyAxis(-m_controller.getLeftX()));
+    return Value.of(modifyAxis(m_controller.getLeftX()));
   }
 
   public Dimensionless getRightY() {
@@ -122,7 +122,7 @@ public class CoDriverControls implements RumbleInterface {
   }
 
   public Dimensionless getLeftY() {
-    return Value.of(modifyAxis(m_controller.getLeftY()));
+    return Value.of(modifyAxis(-m_controller.getLeftY()));
   }
 
   public Dimensionless getRightTrigger() {
