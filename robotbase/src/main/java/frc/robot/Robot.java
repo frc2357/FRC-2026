@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
   private static DriverControls m_driverControls;
-  public static CoDriverControls m_CoDriverControls;
+  public static CoDriverControls m_coDriverControls;
   private static Command m_defaultDrive;
 
   public static CommandSwerveDrivetrain swerve;
@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
     scoreCalculator = new ScoreCalculator();
 
     m_driverControls = new DriverControls();
-    m_CoDriverControls = new CoDriverControls();
+    m_coDriverControls = new CoDriverControls();
     m_defaultDrive = new DefaultDrive(
       m_driverControls::getLeftX,
       m_driverControls::getLeftY,
