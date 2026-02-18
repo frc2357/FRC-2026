@@ -48,14 +48,6 @@ public class DriverControls implements RumbleInterface {
     m_controller.a().whileTrue(new HoodSetSpeed(Percent.of(-30)));
   }
 
-  public Dimensionless getRightTrigger() {
-    return Value.of(modifyAxis(-m_controller.getRightTriggerAxis()));
-  }
-
-  public Dimensionless getLeftTrigger() {
-    return Value.of(modifyAxis(-m_controller.getLeftTriggerAxis()));
-  }
-
   private double deadband(double value, double deadband) {
     if (Math.abs(value) > deadband) {
       if (value > 0.0) {
