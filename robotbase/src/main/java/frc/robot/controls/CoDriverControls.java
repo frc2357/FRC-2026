@@ -83,23 +83,23 @@ public class CoDriverControls implements RumbleInterface {
       );
 
     onlyUp
-      .and(m_controller.leftTrigger())
+      .and(m_controller.rightTrigger())
       .whileTrue(
         Robot.shooter.axisSpeed(() ->
-          Value.of(m_controller.getLeftTriggerAxis())
+          Value.of(m_controller.getRightTriggerAxis())
         )
-      );
-
-    onlyLeft
-      .and(m_controller.leftTrigger())
-      .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
       );
 
     onlyLeft
       .and(m_controller.rightTrigger())
       .whileTrue(
-        new IntakeAxis(() -> Value.of(-m_controller.getRightTriggerAxis()))
+        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+      );
+
+    onlyLeft
+      .and(m_controller.leftTrigger())
+      .whileTrue(
+        new IntakeAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
       );
   }
 
