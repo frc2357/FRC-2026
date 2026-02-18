@@ -46,7 +46,6 @@ public class DriverControls implements RumbleInterface {
 
     m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(75)));
     m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-75)));
-    m_controller.x().whileTrue(Robot.intakePivot.axisSpeed(this::getREALLeftY));
   }
 
   public Dimensionless getRightX() {
@@ -54,14 +53,10 @@ public class DriverControls implements RumbleInterface {
   }
 
   public Dimensionless getLeftX() {
-    return Value.of(0 * modifyAxis(-m_controller.getLeftX()));
+    return Value.of(modifyAxis(-m_controller.getLeftX()));
   }
 
   public Dimensionless getLeftY() {
-    return Value.of(0 * modifyAxis(-m_controller.getLeftY()));
-  }
-
-  public Dimensionless getREALLeftY() {
     return Value.of(modifyAxis(-m_controller.getLeftY()));
   }
 
