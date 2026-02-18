@@ -90,10 +90,18 @@ public class CoDriverControls implements RumbleInterface {
         )
       );
 
-    onlyLeft
-      .and(m_controller.rightTrigger())
+    onlyUp
+      .and(m_controller.leftTrigger())
       .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+        Robot.shooter.axisSpeed(() ->
+          Value.of(-m_controller.getLeftTriggerAxis())
+        )
+      );
+
+    onlyLeft
+      .and(m_controller.leftTrigger())
+      .whileTrue(
+        new IntakeAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
       );
 
     onlyLeft
@@ -125,11 +133,11 @@ public class CoDriverControls implements RumbleInterface {
   }
 
   public Dimensionless getLeftY() {
-    return Value.of(modifyAxis(-m_controller.getLeftY()));
+    return Value.of(modifyAxis(m_controller.getLeftY()));
   }
 
   public Dimensionless getRightTrigger() {
-    return Value.of(m_controller.getRightTriggerAxis());
+    return Value.of(-m_controller.getRightTriggerAxis());
   }
 
   public Dimensionless getLeftTrigger() {
