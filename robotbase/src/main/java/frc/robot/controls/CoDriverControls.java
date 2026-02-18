@@ -11,10 +11,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
-import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.intake.IntakeAxis;
-import frc.robot.commands.intake.IntakeSetSpeed;
-import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.controls.util.RumbleInterface;
 
 public class CoDriverControls implements RumbleInterface {
