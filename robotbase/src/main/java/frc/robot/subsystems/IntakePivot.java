@@ -80,10 +80,7 @@ public class IntakePivot extends SubsystemBase {
       // Mass of the arm.
       .withMass(INTAKE_PIVOT.MASS)
       .withLength(INTAKE_PIVOT.LENGTH)
-      .withHardLimit(
-        INTAKE_PIVOT.HARD_LOWER_ANGLE,
-        INTAKE_PIVOT.HARD_UPPER_ANGLE
-      )
+      .withHardLimit(INTAKE_PIVOT.SIM_LOWER_ANGLE, INTAKE_PIVOT.SIM_UPPER_ANGLE)
       // Telemetry name and verbosity for the arm.
       .withTelemetry(
         INTAKE_PIVOT.MECHANISM_NETWORK_KEY,
