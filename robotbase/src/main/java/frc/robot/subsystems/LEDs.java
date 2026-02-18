@@ -22,7 +22,7 @@ public class LEDs extends SubsystemBase {
   public LEDs() {
     m_LEDs = new AddressableLED(LED.kPort);
 
-    m_LEDBuffer = new AddressableLEDBuffer(Constants.LED.kLength);
+    m_LEDBuffer = new AddressableLEDBuffer(LED.kLength);
     m_LEDs.setLength(m_LEDBuffer.getLength());
     m_LEDs.setData(m_LEDBuffer);
     m_LEDs.start();
@@ -31,6 +31,11 @@ public class LEDs extends SubsystemBase {
   // Robot.led.setLEDPattern(pattern)
   public void setLEDPattern(LEDPattern newPattern) {
     newPattern.applyTo(m_LEDBuffer);
+    m_LEDs.setData(m_LEDBuffer);
+    m_LEDs.start();
+  }
+
+  public void ProgressBar() {
     m_LEDs.setData(m_LEDBuffer);
     m_LEDs.start();
   }
