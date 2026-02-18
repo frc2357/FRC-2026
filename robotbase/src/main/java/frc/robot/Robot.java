@@ -94,6 +94,11 @@ public class Robot extends TimedRobot {
 
     m_driverControls = new DriverControls();
     m_CoDriverControls = new CoDriverControls();
+    m_defaultDrive = new DefaultDrive(
+      m_driverControls::getLeftX,
+      m_driverControls::getLeftY,
+      m_driverControls::getRightX
+    );
 
     swerve.registerTelemetry(logger::telemeterize);
     swerve.setDefaultCommand(m_defaultDrive);
