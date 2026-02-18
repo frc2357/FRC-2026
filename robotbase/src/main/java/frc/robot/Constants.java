@@ -255,7 +255,6 @@ public class Constants {
 
   public static final class INTAKE_PIVOT {
 
-    // TODO: Update to actual physical properties of the IntakePivot
     public static final MechanismGearing GEARING = new MechanismGearing(
       GearBox.fromStages("12:52", "16:54")
     );
