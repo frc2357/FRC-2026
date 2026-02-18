@@ -10,12 +10,27 @@ import java.util.function.Consumer;
 
 public class CameraManager extends SubsystemBase {
 
+  // TODO: Switch to actual shooter camera
   public PhotonVisionCamera m_shooter = new PhotonVisionCamera(
-    Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
-    Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM,
-    Constants.PHOTON_VISION.BACK_LEFT_CAM.kSingleTagStdDevs,
-    Constants.PHOTON_VISION.BACK_LEFT_CAM.kMultiTagStdDevs
+    Constants.PHOTON_VISION.KELPY_BACK_LEFT_CAM.NAME,
+    Constants.PHOTON_VISION.KELPY_BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM,
+    Constants.PHOTON_VISION.KELPY_BACK_LEFT_CAM.kSingleTagStdDevs,
+    Constants.PHOTON_VISION.KELPY_BACK_LEFT_CAM.kMultiTagStdDevs
   );
+
+  // TODO: Enable these and add to m_cameras when we are on the robot
+  // public PhotonVisionCamera m_backLeft = new PhotonVisionCamera(
+  //   Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
+  //   Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM,
+  //   Constants.PHOTON_VISION.BACK_LEFT_CAM.kSingleTagStdDevs,
+  //   Constants.PHOTON_VISION.BACK_LEFT_CAM.kMultiTagStdDevs
+  // );
+  // public PhotonVisionCamera m_backRight = new PhotonVisionCamera(
+  //   Constants.PHOTON_VISION.BACK_RIGHT_CAM.NAME,
+  //   Constants.PHOTON_VISION.BACK_RIGHT_CAM.ROBOT_TO_CAM_TRANSFORM,
+  //   Constants.PHOTON_VISION.BACK_RIGHT_CAM.kSingleTagStdDevs,
+  //   Constants.PHOTON_VISION.BACK_RIGHT_CAM.kMultiTagStdDevs
+  // );
 
   PhotonVisionCamera[] m_cameras = { m_shooter };
 
