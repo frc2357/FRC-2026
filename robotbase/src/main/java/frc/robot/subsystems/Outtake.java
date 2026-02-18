@@ -13,12 +13,12 @@ import frc.robot.Constants.OUTTAKE;
 
 public class Outtake extends SubsystemBase {
 
-  private SparkMax m_Motor;
+  private SparkMax m_motor;
 
   public Outtake() {
-    m_Motor = new SparkMax(CAN_ID.OUTAKE_MOTOR, MotorType.kBrushless);
+    m_motor = new SparkMax(CAN_ID.OUTAKE_MOTOR, MotorType.kBrushless);
 
-    m_Motor.configure(
+    m_motor.configure(
       OUTTAKE.OUTTAKE_CONFIG,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
@@ -26,7 +26,7 @@ public class Outtake extends SubsystemBase {
   }
 
   public void setSpeed(Dimensionless percentOutput) {
-    m_Motor.set(percentOutput.in(Value));
+    m_motor.set(percentOutput.in(Value));
   }
 
   public void setAxisSpeed(Dimensionless axisSpeed) {
@@ -35,6 +35,6 @@ public class Outtake extends SubsystemBase {
   }
 
   public void stop() {
-    m_Motor.stopMotor();
+    m_motor.stopMotor();
   }
 }
