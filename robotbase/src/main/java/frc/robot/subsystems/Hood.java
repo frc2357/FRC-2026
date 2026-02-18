@@ -78,7 +78,6 @@ public class Hood extends SubsystemBase {
     m_hoodConfig = new PivotConfig(m_sparkSmartMotorController)
       //both mass and length in a single function, no other implemntation is currently avalible
       .withMOI(HOOD.LENGTH, HOOD.MASS)
-      .withSoftLimits(HOOD.SOFT_LOWER_ANGLE, HOOD.SOFT_UPPER_ANGLE)
       .withHardLimit(HOOD.HARD_LOWER_ANGLE, HOOD.HARD_UPPER_ANGLE)
       .withStartingPosition(HOOD.STARTING_ANGLE)
       // Mass of the flywheel.

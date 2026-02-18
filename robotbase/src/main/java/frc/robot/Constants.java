@@ -233,9 +233,6 @@ public class Constants {
     // Telemetry name and verbosity for the arm.
     public static final String NETWORK_KEY = "IntakePivotMech";
 
-    public static final Angle SOFT_LOWER_ANGLE = Degrees.of(0);
-    public static final Angle SOFT_UPPER_ANGLE = Degrees.of(120);
-
     public static final Angle HARD_LOWER_ANGLE = Degrees.of(0);
     public static final Angle HARD_UPPER_ANGLE = Degrees.of(123.3);
 
@@ -328,13 +325,9 @@ public class Constants {
 
   public static final class HOOD {
 
-    // TODO: Update to actual physical properties of the shooter
     public static final MechanismGearing GEARING = new MechanismGearing(
       GearBox.fromReductionStages(5, 9)
     );
-
-    public static final Angle SOFT_LOWER_ANGLE = Degrees.of(0);
-    public static final Angle SOFT_UPPER_ANGLE = Degrees.of(40.3);
 
     public static final Angle HARD_LOWER_ANGLE = Degrees.of(0);
     public static final Angle HARD_UPPER_ANGLE = Degrees.of(40.343);

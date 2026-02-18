@@ -87,11 +87,6 @@ public class IntakePivot extends SubsystemBase {
       // Mass of the arm.
       .withMass(INTAKE_PIVOT.MASS)
       .withLength(INTAKE_PIVOT.LENGTH)
-      // Maximum speed of the intake_pivot.
-      .withSoftLimits(
-        INTAKE_PIVOT.SOFT_LOWER_ANGLE,
-        INTAKE_PIVOT.SOFT_UPPER_ANGLE
-      )
       .withHardLimit(
         INTAKE_PIVOT.HARD_LOWER_ANGLE,
         INTAKE_PIVOT.HARD_UPPER_ANGLE
