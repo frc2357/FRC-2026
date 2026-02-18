@@ -199,17 +199,18 @@ public class PhotonVisionCamera {
   public boolean passesRobotFilter(EstimatedRobotPose estimate) {
     ChassisSpeeds speeds = Robot.swerve.getCurrentChassisSpeeds();
 
-    // Check if we are rotating too fast
+    // Check if we are translating too fast
     if (
-      speeds.vxMetersPerSecond >=
-        PHOTON_VISION.FILTER_PARAM.MAX_ROBOT_TRANSLATION.in(MetersPerSecond) ||
-      speeds.vyMetersPerSecond >=
+      Math.sqrt(
+        Math.pow(speeds.vxMetersPerSecond, 2) +
+          Math.pow(speeds.vyMetersPerSecond, 2)
+      ) >=
       PHOTON_VISION.FILTER_PARAM.MAX_ROBOT_TRANSLATION.in(MetersPerSecond)
     ) {
       return false;
     }
 
-    // Check if we are translating too fast
+    // Check if we are rotating too fast
     if (
       speeds.omegaRadiansPerSecond >=
       PHOTON_VISION.FILTER_PARAM.MAX_ROBOT_ROTATION.in(RadiansPerSecond)
