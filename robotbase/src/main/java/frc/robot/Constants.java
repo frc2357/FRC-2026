@@ -269,8 +269,8 @@ public class Constants {
     public static final String MECHANISM_NETWORK_KEY = "IntakePivotMotor";
     public static final String MOTOR_NETWORK_KEY = "IntakePivotMech";
 
-    public static final Angle HARD_LOWER_ANGLE = Degrees.of(0);
-    public static final Angle HARD_UPPER_ANGLE = Degrees.of(123.3);
+    public static final Angle SIM_LOWER_ANGLE = Degrees.of(0);
+    public static final Angle SIM_UPPER_ANGLE = Degrees.of(123.3);
 
     public static final double P = 0;
     public static final double I = 0;
@@ -370,8 +370,8 @@ public class Constants {
       GearBox.fromStages("5:1", "9:1", "20:19", "166:16")
     );
 
-    public static final Angle HARD_LOWER_ANGLE = Degrees.of(0);
-    public static final Angle HARD_UPPER_ANGLE = Degrees.of(40.343);
+    public static final Angle SIM_LOWER_ANGLE = Degrees.of(0);
+    public static final Angle SIM_UPPER_ANGLE = Degrees.of(40.343);
 
     // Mass of the flywheel.
     // Telemetry name and verbosity for the arm.
