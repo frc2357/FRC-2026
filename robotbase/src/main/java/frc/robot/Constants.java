@@ -11,22 +11,24 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import choreo.auto.AutoFactory;
-import com.revrobotics.spark.config.ClosedLoopConfig;
-import com.revrobotics.spark.config.FeedForwardConfig;
-import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
@@ -89,6 +91,8 @@ public class Constants {
 
     public static final int NAIVE_APRIL_TAG_PIPELINE = 0;
 
+    public static final int MULTI_TAG_PIPELINE = 1;
+
     public static final long NAIVE_APRIL_TAG_TARGET_TIMEOUT = 50;
 
     public static final class BACK_RIGHT_CAM {
@@ -117,6 +121,22 @@ public class Constants {
           Units.Degrees.of(180)
         )
       );
+
+      // The standard deviations of our vision estimated poses, which affect correction rate
+      // (Fake values. Experiment and determine estimation noise on an actual robot.)
+      // These are the default values from PhotonVision docs. They can be tuned per camera
+      // by placing the robot at several points, recording the pose estimate and recording
+      // the standard deviations
+      public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(
+        4,
+        4,
+        Double.MAX_VALUE
+      );
+      public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(
+        0.5,
+        0.5,
+        Double.MAX_VALUE
+      );
     }
 
     public static final class BACK_LEFT_CAM {
@@ -144,6 +164,22 @@ public class Constants {
           Units.Degrees.of(-10),
           Units.Degrees.of(180)
         )
+      );
+
+      // The standard deviations of our vision estimated poses, which affect correction rate
+      // (Fake values. Experiment and determine estimation noise on an actual robot.)
+      // These are the default values from PhotonVision docs. They can be tuned per camera
+      // by placing the robot at several points, recording the pose estimate and recording
+      // the standard deviations
+      public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(
+        4,
+        4,
+        Double.MAX_VALUE
+      );
+      public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(
+        0.5,
+        0.5,
+        Double.MAX_VALUE
       );
     }
   }
@@ -288,9 +324,8 @@ public class Constants {
 
   public static final class SHOOTER {
 
-    // TODO: Update to actual physical properties of the shooter
     public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromReductionStages(1)
+      GearBox.fromStages("1:1")
     );
 
     // Diameter of the flywheel.
@@ -298,7 +333,7 @@ public class Constants {
     // Mass of the flywheel.
     public static final Mass MASS = Pounds.of(2.717);
     // Maximum speed of the shooter.
-    public static final AngularVelocity MAX_VELOCITY = RPM.of(1000);
+    public static final AngularVelocity MAX_VELOCITY = RPM.of(5676);
     // Telemetry name and verbosity for the arm.
     public static final String NETWORK_KEY = "ShooterMech";
 
@@ -318,9 +353,15 @@ public class Constants {
       RotationsPerSecondPerSecond.of(120);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(0, 0, 0);
+      new SimpleMotorFeedforward(0, 0.01, 0.01);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+
+    public static final Transform2d ROBOT_TO_SHOOTER = new Transform2d(
+      Units.Inches.of(-1.566),
+      Units.Inches.of(-9.199),
+      new Rotation2d(Units.Degrees.of(-50))
+    );
   }
 
   public static final class HOOD {

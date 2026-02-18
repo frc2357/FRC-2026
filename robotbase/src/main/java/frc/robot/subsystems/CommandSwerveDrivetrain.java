@@ -37,6 +37,7 @@ import frc.robot.Constants.CHOREO;
 import frc.robot.Constants.SWERVE;
 import frc.robot.Robot;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.vision.PhotonVisionCamera.SwervePoseEstimate;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -357,6 +358,15 @@ public class CommandSwerveDrivetrain
       visionRobotPoseMeters,
       Utils.fpgaToCurrentTime(timestampSeconds),
       visionMeasurementStdDevs
+    );
+  }
+
+  public void addVisionMeasurement(SwervePoseEstimate estimate) {
+    SmartDashboard.putBoolean("adding estimate", true);
+    this.addVisionMeasurement(
+      estimate.pose(),
+      estimate.timestamp(),
+      estimate.stdDevs()
     );
   }
 
