@@ -16,7 +16,7 @@ public class Feeder extends SubsystemBase {
   private SparkMax m_motor;
 
   public Feeder() {
-    m_Motor = new SparkMax(CAN_ID.FEEDER_MOTOR, MotorType.kBrushless);
+    m_motor = new SparkMax(CAN_ID.FEEDER_MOTOR, MotorType.kBrushless);
 
     m_motor.configure(
       FEEDER.FEEDER_CONFIG,
