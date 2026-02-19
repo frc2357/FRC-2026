@@ -1,50 +1,52 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.MutAngularVelocity;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.SHOOTER;
 
-public class ShooterTuningSubsystem extends SubsystemBase {
+public class ShooterTuningSubsystem implements Sendable {
 
   private SparkMax m_motorLeft;
   private SparkMax m_motorRight;
   private SparkClosedLoopController m_PIDController;
   private RelativeEncoder m_encoder;
 
-  public double LEFT_MOTOR_kP = 0;
-  public double LEFT_MOTOR_kI = 0;
-  public double LEFT_MOTOR_kD = 0;
-  public double LEFT_MOTOR_kS = 0;
-  public double LEFT_MOTOR_kV = 0;
-  public double LEFT_MOTOR_kA = 0;
-  public double MAX_VEL = 0;
-  public double MAX_ACCEL = 0; //TODO: find actual values
-  public double RPM_TOLERANCE = 100; //
+  public double P = 0;
+  public double I = 0;
+  public double D = 0;
+  public double staticFF = 0;
+  public double velocityFF = 0;
+  public double accelerationFF = 0;
+  public AngularVelocity maxVelocity = RotationsPerSecond.of(50); // Max at free speed is ~95
+  public AngularAcceleration maxAcceleration = RotationsPerSecondPerSecond.of(
+    20
+  );
+  public double rpsTolerance = 0.1;
 
   private SparkBaseConfig m_motorconfig = SHOOTER.MOTOR_CONFIG_LEFT;
   // private ShooterCurveTuner m_curveTuner; TODO: implement later
 
-  private MutAngularVelocity m_targetVelocity = Units.RPM.mutable(Double.NaN);
-  private MutAngularVelocity m_currentAngularVelocityHolder = Units.RPM.mutable(
-    Double.NaN
-  );
+  private AngularVelocity m_targetVelocity = Units.RotationsPerSecond.of(0);
 
   public ShooterTuningSubsystem() {
     m_motorLeft = new SparkMax(CAN_ID.LEFT_SHOOTER_MOTOR, MotorType.kBrushless);
@@ -67,36 +69,90 @@ public class ShooterTuningSubsystem extends SubsystemBase {
     m_PIDController = m_motorLeft.getClosedLoopController();
     m_encoder = m_motorLeft.getEncoder();
 
+    Preferences.initDouble("shooterP", P);
+    Preferences.initDouble("shooterI", I);
+    Preferences.initDouble("shooterD", D);
+    Preferences.initDouble("shooterStaticFF", staticFF);
+    Preferences.initDouble("shooterVelocityFF", velocityFF);
+    Preferences.initDouble("shooterAccelerationFF", accelerationFF);
+    Preferences.initDouble(
+      "shooterMaxVelocity",
+      maxVelocity.in(RotationsPerSecond)
+    );
+    Preferences.initDouble(
+      "shooterMaxAcceleration",
+      maxAcceleration.in(RotationsPerSecondPerSecond)
+    );
+    Preferences.initDouble("shooterRpsTolerance", rpsTolerance);
+
+    P = Preferences.getDouble("shooterP", P);
+    I = Preferences.getDouble("shooterI", I);
+    D = Preferences.getDouble("shooterD", D);
+    staticFF = Preferences.getDouble("shooterStaticFF", staticFF);
+    velocityFF = Preferences.getDouble("shooterVelocityFF", velocityFF);
+    accelerationFF = Preferences.getDouble(
+      "shooterAccelerationFF",
+      accelerationFF
+    );
+    maxVelocity = RotationsPerSecond.of(
+      Preferences.getDouble(
+        "shooterMaxVelocity",
+        maxVelocity.in(RotationsPerSecond)
+      )
+    );
+    maxAcceleration = RotationsPerSecondPerSecond.of(
+      Preferences.getDouble(
+        "shooterMaxAcceleration",
+        maxAcceleration.in(RotationsPerSecondPerSecond)
+      )
+    );
+    rpsTolerance = Preferences.getDouble("shooterRpsTolerance", rpsTolerance);
+
     displayDashboard();
     updatePIDs();
   }
 
   public void displayDashboard() {
-    SmartDashboard.putNumber("Shooter P", LEFT_MOTOR_kP);
-    SmartDashboard.putNumber("Shooter I", LEFT_MOTOR_kI);
-    SmartDashboard.putNumber("Shooter D", LEFT_MOTOR_kD);
-    SmartDashboard.putNumber("Shooter kV", LEFT_MOTOR_kV);
-    SmartDashboard.putNumber("Shooter kS", LEFT_MOTOR_kS);
-    SmartDashboard.putNumber("Shooter kA", LEFT_MOTOR_kA);
+    SmartDashboard.putNumber("Shooter P", P);
+    SmartDashboard.putNumber("Shooter I", I);
+    SmartDashboard.putNumber("Shooter D", D);
+    SmartDashboard.putNumber("Shooter Static FF", staticFF);
+    SmartDashboard.putNumber("Shooter Velocity FF", velocityFF);
+    SmartDashboard.putNumber("Shooter Acceleration FF", accelerationFF);
 
-    SmartDashboard.putNumber("Shooter MaxVel", MAX_VEL);
-    SmartDashboard.putNumber("Shooter MaxAccel", MAX_ACCEL);
-    SmartDashboard.putNumber("RPM Tolerence", RPM_TOLERANCE);
-    SmartDashboard.putNumber("Target RPM", 0);
+    SmartDashboard.putNumber(
+      "Shooter MaxVel RPS",
+      maxVelocity.in(RotationsPerSecond)
+    );
+    SmartDashboard.putNumber(
+      "Shooter MaxAccel RPS",
+      maxAcceleration.in(RotationsPerSecondPerSecond)
+    );
+    SmartDashboard.putNumber("RPS Tolerence", rpsTolerance);
+    SmartDashboard.putNumber("Motor Velocity RPS", m_encoder.getVelocity());
+    SmartDashboard.putNumber("Shooter Target RPS", 0);
+
+    SmartDashboard.putBoolean("Is At Target", isAtTargetSpeed());
+    SmartDashboard.putNumber("Voltage", m_motorLeft.getBusVoltage());
+    SmartDashboard.putBoolean(
+      "Shooter Running",
+      !getVelocity().isNear(RotationsPerSecond.zero(), rpsTolerance)
+    );
+    SmartDashboard.putData("Save shooter Config", this);
   }
 
   public void updatePIDs() {
-    m_motorconfig.closedLoop.pid(LEFT_MOTOR_kP, LEFT_MOTOR_kI, LEFT_MOTOR_kD);
+    m_motorconfig.closedLoop.pid(P, I, D);
     m_motorconfig.closedLoop.feedForward.sva(
-      LEFT_MOTOR_kS,
-      LEFT_MOTOR_kV,
-      LEFT_MOTOR_kA
+      staticFF,
+      velocityFF,
+      accelerationFF
     );
 
     m_motorconfig.closedLoop.maxMotion
-      .maxAcceleration(MAX_ACCEL)
-      .cruiseVelocity(MAX_VEL)
-      .allowedProfileError(RPM_TOLERANCE);
+      .maxAcceleration(maxAcceleration.in(RotationsPerSecondPerSecond))
+      .cruiseVelocity(maxVelocity.in(RotationsPerSecond))
+      .allowedProfileError(rpsTolerance);
 
     m_motorLeft.configure(
       m_motorconfig,
@@ -106,73 +162,122 @@ public class ShooterTuningSubsystem extends SubsystemBase {
   }
 
   public void updateDashboard() {
-    LEFT_MOTOR_kP = SmartDashboard.getNumber("Shooter P", 0);
-    LEFT_MOTOR_kI = SmartDashboard.getNumber("Shooter I", 0);
-    LEFT_MOTOR_kD = SmartDashboard.getNumber("Shooter D", 0);
-    LEFT_MOTOR_kS = SmartDashboard.getNumber("Shooter kS", 0);
-    LEFT_MOTOR_kV = SmartDashboard.getNumber("Shooter kV", 0);
-    LEFT_MOTOR_kA = SmartDashboard.getNumber("Shooter kA", 0);
-    MAX_VEL = SmartDashboard.getNumber("Shooter MaxVel", 0);
-    MAX_ACCEL = SmartDashboard.getNumber("Shooter MaxAccel", 0);
-    RPM_TOLERANCE = SmartDashboard.getNumber("RPM Tolerance", RPM_TOLERANCE);
-    SmartDashboard.putNumber("RPM", getVelocity().in(RPM));
-    SmartDashboard.putNumber("setpoint", m_PIDController.getSetpoint());
+    double newP = SmartDashboard.getNumber("Shooter P", 0);
+    double newI = SmartDashboard.getNumber("Shooter I", 0);
+    double newD = SmartDashboard.getNumber("Shooter D", 0);
+    double newStaticFF = SmartDashboard.getNumber("Shooter Static FF", 0);
+    double newVelocityFF = SmartDashboard.getNumber("Shooter Velocity FF", 0);
+    double newAccelerationFF = SmartDashboard.getNumber(
+      "Shooter Acceleration FF",
+      0
+    );
+
+    double newMaxVelocity = SmartDashboard.getNumber("Shooter MaxVel RPS", 0);
+    double newMaxAcceleration = SmartDashboard.getNumber(
+      "Shooter MaxAccel RPS",
+      0
+    );
+    double newRpsTolerance = SmartDashboard.getNumber(
+      "RPS Tolerance",
+      rpsTolerance
+    );
+
+    SmartDashboard.putNumber(
+      "Motor Velocity RPS",
+      getVelocity().in(RotationsPerSecond)
+    );
+
     SmartDashboard.putNumber("Voltage", m_motorLeft.getBusVoltage());
     SmartDashboard.putBoolean(
       "Shooter Running",
-      !getVelocity().isNear(RPM.zero(), RPM_TOLERANCE)
+      !getVelocity().isNear(RotationsPerSecond.zero(), rpsTolerance)
     );
     SmartDashboard.putBoolean("Is At Target", isAtTargetSpeed());
+
+    if (
+      newP != P ||
+      newI != I ||
+      newD != D ||
+      newStaticFF != staticFF ||
+      newVelocityFF != velocityFF ||
+      newAccelerationFF != accelerationFF ||
+      newMaxVelocity != maxVelocity.in(RotationsPerSecond) ||
+      newMaxAcceleration != maxAcceleration.in(RotationsPerSecondPerSecond) ||
+      newRpsTolerance != rpsTolerance
+    ) {
+      P = newP;
+      I = newI;
+      D = newD;
+      staticFF = newStaticFF;
+      velocityFF = newVelocityFF;
+      accelerationFF = newAccelerationFF;
+      maxVelocity = RotationsPerSecond.of(newMaxVelocity);
+      maxAcceleration = RotationsPerSecondPerSecond.of(newMaxAcceleration);
+      rpsTolerance = newRpsTolerance;
+      updatePIDs();
+    }
   }
 
   public void setSpeed(Dimensionless percentOutput) {
     m_motorLeft.set(percentOutput.in(Value));
-    m_targetVelocity.mut_replace(Double.NaN, Units.RPM);
   }
 
   public void setAxisSpeed(Dimensionless speed) {
     double m_speed = speed.times(SHOOTER.AXIS_MAX_SPEED).in(Value);
     m_motorLeft.set(m_speed);
-    m_targetVelocity.mut_replace(Double.NaN, Units.RPM);
   }
 
   public void stop() {
     m_motorLeft.stopMotor();
-    m_targetVelocity.mut_replace(Double.NaN, Units.RPM);
   }
 
   public AngularVelocity getVelocity() {
-    m_currentAngularVelocityHolder.mut_replace(
-      m_encoder.getVelocity(),
-      Units.RPM
-    );
-    return m_currentAngularVelocityHolder;
+    return RotationsPerSecond.of(m_encoder.getVelocity());
   }
 
   public void setTargetVelocity(AngularVelocity targetVelocity) {
-    m_targetVelocity.mut_replace(targetVelocity);
     m_PIDController.setSetpoint(
-      m_targetVelocity.in(RPM),
+      targetVelocity.in(RotationsPerSecond),
       ControlType.kMAXMotionVelocityControl
     );
   }
 
-  public boolean isAtRPM(AngularVelocity rpm) {
-    return rpm.isNear(getVelocity(), RPM_TOLERANCE);
+  public boolean isAtVel(AngularVelocity vel) {
+    return vel.isNear(getVelocity(), rpsTolerance);
   }
 
   public boolean isAtTargetSpeed() {
-    return isAtRPM(m_targetVelocity);
+    return isAtVel(m_targetVelocity);
   }
 
-  public void periodic() {
-    updateDashboard();
-    updatePIDs();
-    setTargetVelocity(
-      RPM.of(SmartDashboard.getNumber("Target RPM", m_targetVelocity.in(RPM)))
+  public void teleopPeriodic() {
+    setTargetVelocity(m_targetVelocity);
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("shooter");
+
+    builder.addBooleanProperty(
+      "Save Config",
+      () -> false,
+      value -> {
+        Preferences.setDouble("shooterP", P);
+        Preferences.setDouble("shooterI", I);
+        Preferences.setDouble("shooterD", D);
+        Preferences.setDouble("shooterStaticFF", staticFF);
+        Preferences.setDouble("shooterVelocityFF", velocityFF);
+        Preferences.setDouble("shooterAccelerationFF", accelerationFF);
+        Preferences.setDouble(
+          "shooterMaxVelocity",
+          maxVelocity.in(RotationsPerSecond)
+        );
+        Preferences.setDouble(
+          "shooterMaxAcceleration",
+          maxAcceleration.in(RotationsPerSecondPerSecond)
+        );
+        Preferences.setDouble("shooterRpsTolerance", rpsTolerance);
+      }
     );
   }
-  // public double[] getShooterCurveRow() {
-  //  return m_curveTuner.getSelectedRow();
-  //} TODO: implement later
 }
