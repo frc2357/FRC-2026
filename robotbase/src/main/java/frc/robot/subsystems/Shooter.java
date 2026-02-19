@@ -56,14 +56,14 @@ public class Shooter extends SubsystemBase {
         SHOOTER.P,
         SHOOTER.I,
         SHOOTER.D,
-        SHOOTER.MAX_VELOCITY,
+        SHOOTER.MAX_ANGULAR_VELOCITY,
         SHOOTER.MAX_ANGULAR_ACCELERATION
       )
       .withSimClosedLoopController(
         SHOOTER.P,
         SHOOTER.I,
         SHOOTER.D,
-        SHOOTER.MAX_VELOCITY,
+        SHOOTER.MAX_ANGULAR_VELOCITY,
         SHOOTER.MAX_ANGULAR_ACCELERATION
       )
       // Feedforward Constants
@@ -88,7 +88,7 @@ public class Shooter extends SubsystemBase {
       // Mass of the flywheel.
       .withMass(SHOOTER.MASS)
       // Maximum speed of the shooter.
-      .withUpperSoftLimit(SHOOTER.MAX_VELOCITY)
+      .withUpperSoftLimit(SHOOTER.MAX_ANGULAR_VELOCITY)
       .withSpeedometerSimulation()
       // Telemetry name and verbosity for the arm.
       .withTelemetry(SHOOTER.MECHANISM_NETWORK_KEY, TelemetryVerbosity.HIGH);
