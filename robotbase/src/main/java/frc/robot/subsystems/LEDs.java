@@ -35,7 +35,8 @@ public class LEDs extends SubsystemBase {
     m_LEDs.start();
   }
 
-  public void ProgressBar() {
+  public void ProgressBar(LEDPattern newPattern) {
+    newPattern.applyTo(m_LEDBuffer);
     m_LEDs.setData(m_LEDBuffer);
     m_LEDs.start();
   }
@@ -58,6 +59,7 @@ public class LEDs extends SubsystemBase {
   //m_lastColor = color;
   //}
 }
+
 // new SetLEDCommand(Color.kRed)
 //chart for different colors
 //Color 	Red (0-255)	Green (0-255)	Blue (0-255)	Hex Code

@@ -20,15 +20,18 @@ public class ProgressBar extends Command {
   private double cullLength;
 
   public ProgressBar(Time loopTime) {
+    addRequirements(Robot.led);
     m_progressSpeed = (86 / loopTime.in(Seconds)) / 50;
     cullLength = 0;
   }
 
   public void execute() {
     cullLength += m_progressSpeed;
+
     if (cullLength > LED.kLength) {
       cullLength = 0;
     }
+
     for (int i = 0; i < LED.kLength; i++) {
       if (i < cullLength) {
         new Color(255, 0, 0);
