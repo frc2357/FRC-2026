@@ -106,8 +106,8 @@ public class Hood extends SubsystemBase {
    *
    * @param speed Speed to set
    */
-  public void setAngularVelocitySetpoint(AngularVelocity speed) {
-    m_hood.setMechanismVelocitySetpoint(speed);
+  public void setAngleSetpoint(Angle angle) {
+    m_hood.setMechanismPositionSetpoint(angle);
   }
 
   /**

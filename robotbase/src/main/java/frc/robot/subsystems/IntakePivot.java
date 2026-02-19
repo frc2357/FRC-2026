@@ -43,6 +43,7 @@ public class IntakePivot extends SubsystemBase {
       .withExternalEncoder(m_encoder)
       .withExternalEncoderInverted(INTAKE_PIVOT.ENCODER_INVERTED)
       .withUseExternalFeedbackEncoder(true)
+      .withExternalEncoderGearing(INTAKE_PIVOT.EXTERNAL_ENCODER_GEARING)
       .withExternalEncoderZeroOffset(INTAKE_PIVOT.EXTERNAL_ENCODER_OFFSET)
       .withControlMode(ControlMode.CLOSED_LOOP)
       .withVendorConfig(INTAKE_PIVOT.INTAKE_PIVOT_BASE_CONFIG)

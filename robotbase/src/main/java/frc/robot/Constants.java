@@ -265,11 +265,13 @@ public class Constants {
     public static final Mass MASS = Pounds.of(7);
 
     // Telemetry name and verbosity for the arm.
-    public static final String MECHANISM_NETWORK_KEY = "IntakePivotMotor";
-    public static final String MOTOR_NETWORK_KEY = "IntakePivotMech";
+    public static final String MECHANISM_NETWORK_KEY = "IntakePivotMech";
+    public static final String MOTOR_NETWORK_KEY = "IntakePivotMotor";
 
     public static final Angle SIM_LOWER_ANGLE = Degrees.of(0);
     public static final Angle SIM_UPPER_ANGLE = Degrees.of(123.3);
+
+    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
 
     public static final double P = 0;
     public static final double I = 0;
@@ -292,6 +294,8 @@ public class Constants {
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
     public static final Angle EXTERNAL_ENCODER_OFFSET = Degrees.of(0);
+    public static final MechanismGearing EXTERNAL_ENCODER_GEARING =
+      new MechanismGearing(GearBox.fromStages("1:1"));
     public static final Boolean ENCODER_INVERTED = true;
   }
 
@@ -330,11 +334,9 @@ public class Constants {
     // Mass of the flywheel.
     public static final Mass MASS = Pounds.of(2.717);
     // Maximum speed of the shooter.
-    public static final AngularVelocity MAX_VELOCITY = RPM.of(5676);
-    // Telemetry name and verbosity for the arm.
 
-    public static final String MECHANISM_NETWORK_KEY = "ShooterMotor";
-    public static final String MOTOR_NETWORK_KEY = "ShooterMech";
+    public static final String MECHANISM_NETWORK_KEY = "ShooterMech";
+    public static final String MOTOR_NETWORK_KEY = "ShooterMotor";
 
     public static final Current STALL_LIMIT = Amps.of(40);
 
@@ -344,6 +346,7 @@ public class Constants {
         .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
         .voltageCompensation(12);
 
+    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
     public static final double P = 0;
     public static final double I = 0;
     public static final double D = 0;
@@ -374,8 +377,8 @@ public class Constants {
 
     // Mass of the flywheel.
     // Telemetry name and verbosity for the arm.
-    public static final String MECHANISM_NETWORK_KEY = "HoodMotor";
-    public static final String MOTOR_NETWORK_KEY = "HoodMech";
+    public static final String MECHANISM_NETWORK_KEY = "HoodMech";
+    public static final String MOTOR_NETWORK_KEY = "HoodMotor";
 
     public static final Current STALL_LIMIT = Amps.of(40);
 
@@ -383,6 +386,8 @@ public class Constants {
       .idleMode(IdleMode.kCoast)
       .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
       .voltageCompensation(12);
+
+    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
 
     public static final double P = 0;
     public static final double I = 0;
@@ -394,7 +399,7 @@ public class Constants {
     public static final SimpleMotorFeedforward FEEDFORWARD =
       new SimpleMotorFeedforward(0, 0, 0);
 
-    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(30);
     public static final Distance LENGTH = Inches.of(8);
     public static final Mass MASS = Pounds.of(1.365);
   }
