@@ -16,7 +16,6 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
-import edu.wpi.first.units.measure.MutAngularVelocity;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Preferences;
@@ -37,7 +36,7 @@ public class ShooterTuningSubsystem implements Sendable {
   public double staticFF = 0.12;
   public double velocityFF = 0.1225;
   public double accelerationFF = 0.1225;
-  public AngularVelocity maxVelocity = RotationsPerSecond.of(76); // Max at free speed is ~95, 80% is 76
+  public AngularVelocity maxVelocity = RotationsPerSecond.of(77); // Max at free speed is ~96, 80% is 77
   public AngularAcceleration maxAcceleration = RotationsPerSecondPerSecond.of(
     150
   );

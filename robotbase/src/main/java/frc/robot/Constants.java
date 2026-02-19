@@ -405,15 +405,15 @@ public class Constants {
         .voltageCompensation(12);
 
     // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
-    public static final double P = 0;
+    public static final double P = 0.01;
     public static final double I = 0;
     public static final double D = 0;
     public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(3600);
     public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
-      RotationsPerSecondPerSecond.of(120);
+      RotationsPerSecondPerSecond.of(150);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(0, 0.01, 0.01);
+      new SimpleMotorFeedforward(0.12, 0.1225, 0.1225);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
