@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.HootAutoReplay;
@@ -23,10 +24,14 @@ import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
 import frc.robot.commands.floor.FloorAxis;
 =======
+=======
+import frc.robot.commands.led.ProgressBar;
+>>>>>>> e211997 (Working on ProgressBar)
 import frc.robot.commands.led.SetLEDPatternCommand;
 import frc.robot.commands.spindexer.SpindexerAxis;
 >>>>>>> 7ad775b (Added Rainbow and orange so far.)
