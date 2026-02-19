@@ -31,15 +31,15 @@ public class ShooterTuningSubsystem implements Sendable {
   private SparkClosedLoopController m_PIDController;
   private RelativeEncoder m_encoder;
 
-  public double P = 0;
+  public double P = 0.01;
   public double I = 0;
   public double D = 0;
-  public double staticFF = 0;
-  public double velocityFF = 0;
-  public double accelerationFF = 0;
-  public AngularVelocity maxVelocity = RotationsPerSecond.of(50); // Max at free speed is ~95
+  public double staticFF = 0.12;
+  public double velocityFF = 0.1225;
+  public double accelerationFF = 0.1225;
+  public AngularVelocity maxVelocity = RotationsPerSecond.of(76); // Max at free speed is ~95, 80% is 76
   public AngularAcceleration maxAcceleration = RotationsPerSecondPerSecond.of(
-    20
+    150
   );
   public double rpsTolerance = 0.1;
 
@@ -128,7 +128,7 @@ public class ShooterTuningSubsystem implements Sendable {
       "Shooter MaxAccel RPS",
       maxAcceleration.in(RotationsPerSecondPerSecond)
     );
-    SmartDashboard.putNumber("RPS Tolerence", rpsTolerance);
+    SmartDashboard.putNumber("RPS Tolerance", rpsTolerance);
     SmartDashboard.putNumber("Motor Velocity RPS", m_encoder.getVelocity());
     SmartDashboard.putNumber("Shooter Target RPS", 0);
 
@@ -193,6 +193,13 @@ public class ShooterTuningSubsystem implements Sendable {
       !getVelocity().isNear(RotationsPerSecond.zero(), rpsTolerance)
     );
     SmartDashboard.putBoolean("Is At Target", isAtTargetSpeed());
+
+    m_targetVelocity = RotationsPerSecond.of(
+      SmartDashboard.getNumber(
+        "Shooter Target RPS",
+        m_targetVelocity.in(RotationsPerSecond)
+      )
+    );
 
     if (
       newP != P ||
