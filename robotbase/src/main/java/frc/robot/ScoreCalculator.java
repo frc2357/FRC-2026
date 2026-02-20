@@ -7,12 +7,12 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.networkTables.CurveTuner;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.InterpolationUtil;
 
@@ -23,17 +23,21 @@ public class ScoreCalculator {
     Angle hoodPosition
   ) {}
 
-  private final InterpolatingTreeMap<Distance, AngularVelocity> m_shooterCurve =
-    new InterpolatingTreeMap<Distance, AngularVelocity>(
+  private final CurveTuner<Distance, AngularVelocity> m_shooterCurve =
+    new CurveTuner<Distance, AngularVelocity>(
+      "Shooter Curve",
       InterpolationUtil::InverseInterpolate,
       InterpolationUtil::Interpolate
     );
 
-  private final InterpolatingTreeMap<Distance, Angle> m_hoodCurve =
-    new InterpolatingTreeMap<Distance, Angle>(
-      InterpolationUtil::InverseInterpolate,
-      InterpolationUtil::Interpolate
-    );
+  private final CurveTuner<Distance, Angle> m_hoodCurve = new CurveTuner<
+    Distance,
+    Angle
+  >(
+    "Hood Curve",
+    InterpolationUtil::InverseInterpolate,
+    InterpolationUtil::Interpolate
+  );
 
   public static final class SHOT_POINTS {
 
@@ -115,5 +119,15 @@ public class ScoreCalculator {
    */
   public Distance shotDistanceFromShooterCamera() {
     return Meters.of(0);
+  }
+
+  public void updateCurveTuners() {
+    m_shooterCurve.updateCurveValues();
+    m_hoodCurve.updateCurveValues();
+  }
+
+  public void logCurveValues() {
+    m_shooterCurve.logCurrentValues();
+    m_hoodCurve.logCurrentValues();
   }
 }
