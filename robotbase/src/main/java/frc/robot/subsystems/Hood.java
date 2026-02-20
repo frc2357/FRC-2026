@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.HOOD;
+import frc.robot.Constants.INTAKE_PIVOT;
 import java.util.function.Supplier;
 import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Pivot;
@@ -75,6 +76,7 @@ public class Hood extends SubsystemBase {
       //both mass and length in a single function, no other implemntation is currently avalible
       .withMOI(HOOD.LENGTH, HOOD.MASS)
       .withHardLimit(HOOD.SIM_LOWER_ANGLE, HOOD.SIM_UPPER_ANGLE)
+      .withStartingPosition(HOOD.SIM_STARTING_POSITION)
       // Mass of the flywheel.
       // Telemetry name and verbosity for the arm.
       .withTelemetry(HOOD.MECHANISM_NETWORK_KEY, TelemetryVerbosity.HIGH);

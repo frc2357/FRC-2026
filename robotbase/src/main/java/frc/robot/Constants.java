@@ -270,6 +270,7 @@ public class Constants {
 
     public static final Angle SIM_LOWER_ANGLE = Degrees.of(0);
     public static final Angle SIM_UPPER_ANGLE = Degrees.of(123.3);
+    public static final Angle SIM_STARTING_POSITION = Degrees.zero();
 
     // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
 
@@ -374,6 +375,7 @@ public class Constants {
 
     public static final Angle SIM_LOWER_ANGLE = Degrees.of(0);
     public static final Angle SIM_UPPER_ANGLE = Degrees.of(40.343);
+    public static final Angle SIM_STARTING_POSITION = Degrees.zero();
 
     // Mass of the flywheel.
     // Telemetry name and verbosity for the arm.
