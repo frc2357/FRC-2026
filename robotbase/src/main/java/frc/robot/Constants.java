@@ -1,6 +1,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Pounds;
@@ -29,6 +30,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -253,14 +255,49 @@ public class Constants {
 
   public static final class INTAKE_PIVOT {
 
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(75);
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("12:52", "16:54")
+    );
 
-    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kBrake)
-      .inverted(false)
-      .smartCurrentLimit(30, 30)
-      .openLoopRampRate(0.25)
-      .voltageCompensation(12);
+    // Diameter of the arm.
+    public static final Distance LENGTH = Inches.of(12.5);
+    // Mass of the arm.
+    public static final Mass MASS = Pounds.of(7);
+
+    // Telemetry name and verbosity for the arm.
+    public static final String MECHANISM_NETWORK_KEY = "IntakePivotMech";
+    public static final String MOTOR_NETWORK_KEY = "IntakePivotMotor";
+
+    public static final Angle SIM_LOWER_ANGLE = Degrees.of(0);
+    public static final Angle SIM_UPPER_ANGLE = Degrees.of(123.3);
+    public static final Angle SIM_STARTING_POSITION = Degrees.zero();
+
+    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
+
+    public static final double P = 0;
+    public static final double I = 0;
+    public static final double D = 0;
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(3600);
+    public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
+      RotationsPerSecondPerSecond.of(120);
+
+    public static final Current STALL_LIMIT = Amps.of(40);
+
+    public static final SparkBaseConfig INTAKE_PIVOT_BASE_CONFIG =
+      new SparkMaxConfig()
+        .idleMode(IdleMode.kCoast)
+        .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
+        .voltageCompensation(12);
+
+    public static final SimpleMotorFeedforward FEEDFORWARD =
+      new SimpleMotorFeedforward(0, 0, 0);
+
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+
+    public static final Angle EXTERNAL_ENCODER_OFFSET = Degrees.of(0);
+    public static final MechanismGearing EXTERNAL_ENCODER_GEARING =
+      new MechanismGearing(GearBox.fromStages("1:1"));
+    public static final Boolean ENCODER_INVERTED = true;
   }
 
   public static final class OUTTAKE {
@@ -298,9 +335,9 @@ public class Constants {
     // Mass of the flywheel.
     public static final Mass MASS = Pounds.of(2.717);
     // Maximum speed of the shooter.
-    public static final AngularVelocity MAX_VELOCITY = RPM.of(5676);
-    // Telemetry name and verbosity for the arm.
-    public static final String NETWORK_KEY = "ShooterMech";
+
+    public static final String MECHANISM_NETWORK_KEY = "ShooterMech";
+    public static final String MOTOR_NETWORK_KEY = "ShooterMotor";
 
     public static final Current STALL_LIMIT = Amps.of(40);
 
@@ -311,11 +348,12 @@ public class Constants {
         .voltageCompensation(12);
 
     // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
-    public static final double P = 0.1;
+    public static final double P = 0;
     public static final double I = 0;
     public static final double D = 0;
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(3600);
     public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
-      RotationsPerSecondPerSecond.of(50);
+      RotationsPerSecondPerSecond.of(120);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
       new SimpleMotorFeedforward(0, 0.01, 0.01);
@@ -331,14 +369,41 @@ public class Constants {
 
   public static final class HOOD {
 
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("5:1", "9:1", "20:19", "166:16")
+    );
 
-    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
+    public static final Angle SIM_LOWER_ANGLE = Degrees.of(0);
+    public static final Angle SIM_UPPER_ANGLE = Degrees.of(40.343);
+    public static final Angle SIM_STARTING_POSITION = Degrees.zero();
+
+    // Mass of the flywheel.
+    // Telemetry name and verbosity for the arm.
+    public static final String MECHANISM_NETWORK_KEY = "HoodMech";
+    public static final String MOTOR_NETWORK_KEY = "HoodMotor";
+
+    public static final Current STALL_LIMIT = Amps.of(40);
+
+    public static final SparkBaseConfig HOOD_BASE_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
-      .smartCurrentLimit(20, 20)
-      .openLoopRampRate(0.25)
+      .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
       .voltageCompensation(12);
+
+    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
+
+    public static final double P = 0;
+    public static final double I = 0;
+    public static final double D = 0;
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(3600);
+    public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
+      RotationsPerSecondPerSecond.of(120);
+
+    public static final SimpleMotorFeedforward FEEDFORWARD =
+      new SimpleMotorFeedforward(0, 0, 0);
+
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(30);
+    public static final Distance LENGTH = Inches.of(8);
+    public static final Mass MASS = Pounds.of(1.365);
   }
 
   public class FieldConstants {

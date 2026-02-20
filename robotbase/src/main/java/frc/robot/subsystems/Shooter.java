@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
 import com.revrobotics.PersistMode;
@@ -10,11 +9,10 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
+import frc.robot.Constants.HOOD;
 import frc.robot.Constants.SHOOTER;
 import java.util.function.Supplier;
 import yams.mechanisms.config.FlyWheelConfig;
@@ -59,21 +57,21 @@ public class Shooter extends SubsystemBase {
         SHOOTER.P,
         SHOOTER.I,
         SHOOTER.D,
-        SHOOTER.MAX_VELOCITY,
+        SHOOTER.MAX_ANGULAR_VELOCITY,
         SHOOTER.MAX_ANGULAR_ACCELERATION
       )
       .withSimClosedLoopController(
         SHOOTER.P,
         SHOOTER.I,
         SHOOTER.D,
-        SHOOTER.MAX_VELOCITY,
+        SHOOTER.MAX_ANGULAR_VELOCITY,
         SHOOTER.MAX_ANGULAR_ACCELERATION
       )
       // Feedforward Constants
       .withFeedforward(SHOOTER.FEEDFORWARD)
       .withSimFeedforward(SHOOTER.FEEDFORWARD)
       // Telemetry name and verbosity level
-      .withTelemetry("ShooterMotor", TelemetryVerbosity.HIGH)
+      .withTelemetry(SHOOTER.MOTOR_NETWORK_KEY, TelemetryVerbosity.HIGH)
       // Gearing from the motor rotor to final shaft.
       .withGearing(SHOOTER.GEARING)
       // Motor properties to prevent over currenting.
@@ -91,10 +89,10 @@ public class Shooter extends SubsystemBase {
       // Mass of the flywheel.
       .withMass(SHOOTER.MASS)
       // Maximum speed of the shooter.
-      .withUpperSoftLimit(SHOOTER.MAX_VELOCITY)
+      .withUpperSoftLimit(SHOOTER.MAX_ANGULAR_VELOCITY)
       .withSpeedometerSimulation()
       // Telemetry name and verbosity for the arm.
-      .withTelemetry(SHOOTER.NETWORK_KEY, TelemetryVerbosity.HIGH);
+      .withTelemetry(SHOOTER.MECHANISM_NETWORK_KEY, TelemetryVerbosity.HIGH);
 
     m_shooter = new FlyWheel(m_shooterConfig);
   }
@@ -133,11 +131,12 @@ public class Shooter extends SubsystemBase {
    * @param dutyCycle DutyCycle to set.
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
-  public Command set(double dutyCycle) {
-    return m_shooter
-      .set(dutyCycle)
-      .alongWith(new InstantCommand(() -> System.out.println("Setting")))
-      .finallyDo(() -> this.stopMotor());
+  private Command set(double dutyCycle) {
+    return m_shooter.set(dutyCycle).finallyDo(() -> this.stopMotor());
+  }
+
+  public Command setSpeed(Dimensionless speed) {
+    return set(speed.in(Value));
   }
 
   public Command axisSpeed(Supplier<Dimensionless> axis) {
