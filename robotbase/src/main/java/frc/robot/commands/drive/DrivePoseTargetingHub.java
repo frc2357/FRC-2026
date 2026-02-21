@@ -63,6 +63,10 @@ public class DrivePoseTargetingHub extends Command {
       )
     );
 
-    return angleToHub;
+    Rotation2d targetAngle = angleToHub.plus(
+      Constants.SHOOTER.ROBOT_TO_SHOOTER.getRotation().unaryMinus()
+    );
+
+    return targetAngle;
   }
 }

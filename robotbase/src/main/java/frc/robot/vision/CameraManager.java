@@ -12,10 +12,10 @@ public class CameraManager extends SubsystemBase {
 
   // TODO: Switch to actual shooter camera
   public PhotonVisionCamera m_shooter = new PhotonVisionCamera(
-    Constants.PHOTON_VISION.KELPY_BACK_LEFT_CAM.NAME,
-    Constants.PHOTON_VISION.KELPY_BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM,
-    Constants.PHOTON_VISION.KELPY_BACK_LEFT_CAM.kSingleTagStdDevs,
-    Constants.PHOTON_VISION.KELPY_BACK_LEFT_CAM.kMultiTagStdDevs
+    Constants.PHOTON_VISION.SHOOTER_CAM.NAME,
+    Constants.PHOTON_VISION.SHOOTER_CAM.ROBOT_TO_CAM_TRANSFORM,
+    Constants.PHOTON_VISION.SHOOTER_CAM.kSingleTagStdDevs,
+    Constants.PHOTON_VISION.SHOOTER_CAM.kMultiTagStdDevs
   );
 
   // TODO: Enable these and add to m_cameras when we are on the robot
