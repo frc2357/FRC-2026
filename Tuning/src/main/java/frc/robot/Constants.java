@@ -12,7 +12,14 @@ import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Mass;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -95,6 +102,40 @@ public final class Constants {
 
     public static final MAXMotionConfig MAX_MOTION_CONFIG =
       CLOSED_LOOP_CONFIG_LEFT.maxMotion
+        .allowedProfileError(RPM_TOLERANCE)
+        .maxAcceleration(MAX_ACCEL)
+        .cruiseVelocity(MAX_VEL);
+  }
+
+  public static final class HOOD {
+
+    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
+      .openLoopRampRate(0.25)
+      .smartCurrentLimit(40, 40)
+      .voltageCompensation(12); //
+
+    public static final double MOTOR_kP = 0;
+    public static final double MOTOR_kI = 0;
+    public static final double MOTOR_kD = 0;
+    public static final double MOTOR_kS = 0;
+    public static final double MOTOR_kV = 0;
+    public static final double MOTOR_kA = 0;
+    public static final double MAX_VEL = 0;
+    public static final double MAX_ACCEL = 0; //TODO: find actual values
+    public static final double RPM_TOLERANCE = 100; //
+
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+
+    public static final ClosedLoopConfig CLOSED_LOOP_CONFIG =
+      MOTOR_CONFIG.closedLoop
+        .outputRange(-1, 1)
+        .pid(MOTOR_kP, MOTOR_kI, MOTOR_kD);
+
+    public static final FeedForwardConfig FEED_FORWARD_CONFIG =
+      CLOSED_LOOP_CONFIG.feedForward.sva(MOTOR_kS, MOTOR_kV, MOTOR_kA);
+
+    public static final MAXMotionConfig MAX_MOTION_CONFIG =
+      CLOSED_LOOP_CONFIG.maxMotion
         .allowedProfileError(RPM_TOLERANCE)
         .maxAcceleration(MAX_ACCEL)
         .cruiseVelocity(MAX_VEL);
