@@ -90,9 +90,9 @@ public class Constants {
 
     public static final double MAX_ANGLE = 45;
 
-    public static final int NAIVE_APRIL_TAG_PIPELINE = 0;
+    public static final int NAIVE_APRIL_TAG_PIPELINE = 1;
 
-    public static final int MULTI_TAG_PIPELINE = 1;
+    public static final int MULTI_TAG_PIPELINE = 0;
 
     public static final long NAIVE_APRIL_TAG_TARGET_TIMEOUT = 50;
 
