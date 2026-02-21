@@ -6,7 +6,10 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Percent;
 
+import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig;
+import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.FeedForwardConfig;
 import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -126,10 +129,15 @@ public final class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
+    public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER_CONFIG =
+      MOTOR_CONFIG.absoluteEncoder;
+    //.positionConversionFactor(16 / 166);
+
     public static final ClosedLoopConfig CLOSED_LOOP_CONFIG =
       MOTOR_CONFIG.closedLoop
         .outputRange(-1, 1)
-        .pid(MOTOR_kP, MOTOR_kI, MOTOR_kD);
+        .pid(MOTOR_kP, MOTOR_kI, MOTOR_kD)
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
     public static final FeedForwardConfig FEED_FORWARD_CONFIG =
       CLOSED_LOOP_CONFIG.feedForward.sva(MOTOR_kS, MOTOR_kV, MOTOR_kA);
@@ -148,6 +156,9 @@ public final class Constants {
       .smartCurrentLimit(40, 40)
       .voltageCompensation(12); //
 
+    //public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER_CONFIG =
+    //MOTOR_CONFIG.absoluteEncoder.positionConversionFactor(16 / 166);
+
     public static final double MOTOR_kP = 0;
     public static final double MOTOR_kI = 0;
     public static final double MOTOR_kD = 0;
@@ -163,7 +174,8 @@ public final class Constants {
     public static final ClosedLoopConfig CLOSED_LOOP_CONFIG =
       MOTOR_CONFIG.closedLoop
         .outputRange(-1, 1)
-        .pid(MOTOR_kP, MOTOR_kI, MOTOR_kD);
+        .pid(MOTOR_kP, MOTOR_kI, MOTOR_kD)
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
     public static final FeedForwardConfig FEED_FORWARD_CONFIG =
       CLOSED_LOOP_CONFIG.feedForward.sva(MOTOR_kS, MOTOR_kV, MOTOR_kA);

@@ -1,8 +1,11 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Value;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
@@ -24,8 +27,7 @@ public class HoodTuningSubsystem extends SubsystemBase {
 
   private SparkMax m_motor;
   private SparkClosedLoopController m_PIDController;
-  private RelativeEncoder m_encoder;
-
+  private AbsoluteEncoder m_encoder;
   public double MOTOR_kP = 0;
   public double MOTOR_kI = 0;
   public double MOTOR_kD = 0;
@@ -43,9 +45,6 @@ public class HoodTuningSubsystem extends SubsystemBase {
 
   public HoodTuningSubsystem() {
     m_motor = new SparkMax(CAN_ID.HOOD_MOTOR, MotorType.kBrushless);
-
-    m_motor = new SparkMax(CAN_ID.HOOD_MOTOR, MotorType.kBrushless);
-
     m_motor.configure(
       m_motorconfig,
       ResetMode.kNoResetSafeParameters,
@@ -53,7 +52,7 @@ public class HoodTuningSubsystem extends SubsystemBase {
     );
 
     m_PIDController = m_motor.getClosedLoopController();
-    m_encoder = m_motor.getEncoder();
+    m_encoder = m_motor.getAbsoluteEncoder();
 
     displayDashboard();
     updatePIDs();
@@ -70,7 +69,7 @@ public class HoodTuningSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Hood MaxVel", MAX_VEL);
     SmartDashboard.putNumber("Hood MaxAccel", MAX_ACCEL);
     SmartDashboard.putNumber("Angle Tolerence", ANGLE_TOLERANCE);
-    SmartDashboard.putNumber("Target Degrees", 0);
+    SmartDashboard.putNumber("Target Angle", 0);
   }
 
   public void updatePIDs() {
@@ -102,12 +101,13 @@ public class HoodTuningSubsystem extends SubsystemBase {
       "Angle Tolerance",
       ANGLE_TOLERANCE
     );
+    SmartDashboard.putNumber("Rotations", getAngle().in(Rotations));
     SmartDashboard.putNumber("Degrees", getAngle().in(Degrees));
     SmartDashboard.putNumber("setpoint", m_PIDController.getSetpoint());
     SmartDashboard.putNumber("Voltage", m_motor.getBusVoltage());
     SmartDashboard.putBoolean(
       "Hood Running",
-      !getAngle().isNear(Degrees.zero(), ANGLE_TOLERANCE)
+      !getAngle().isNear(RPM.zero(), 1)
     );
     SmartDashboard.putBoolean("Is At Target", isAtTargetSpeed());
   }
@@ -129,15 +129,15 @@ public class HoodTuningSubsystem extends SubsystemBase {
   }
 
   public Angle getAngle() {
-    m_currentAngleHolder.mut_replace(m_encoder.getVelocity(), Units.Degrees);
+    m_currentAngleHolder.mut_replace(m_encoder.getPosition(), Units.Rotations);
     return m_currentAngleHolder;
   }
 
-  public void setTargetAngle(Angle targetVelocity) {
-    m_targetAngle.mut_replace(targetVelocity);
+  public void setTargetAngle(Angle targetAngle) {
+    m_targetAngle.mut_replace(targetAngle);
     m_PIDController.setSetpoint(
-      m_targetAngle.in(Degrees),
-      ControlType.kMAXMotionVelocityControl
+      m_targetAngle.in(Rotations),
+      ControlType.kMAXMotionPositionControl
     );
   }
 
@@ -153,8 +153,8 @@ public class HoodTuningSubsystem extends SubsystemBase {
     updateDashboard();
     updatePIDs();
     setTargetAngle(
-      Degrees.of(
-        SmartDashboard.getNumber("Target Degrees", m_targetAngle.in(Degrees))
+      Rotations.of(
+        SmartDashboard.getNumber("Target Angle", m_targetAngle.in(Rotations))
       )
     );
   }

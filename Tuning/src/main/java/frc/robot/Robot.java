@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.HoodTuningSubsystem;
 import frc.robot.subsystems.ShooterTuningSubsystem;
 
 /**
@@ -24,13 +25,16 @@ public class Robot extends TimedRobot {
 
   ShooterTuningSubsystem m_shooter;
 
+  HoodTuningSubsystem m_hood;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
    * initialization code.
    */
   public Robot() {
-    m_shooter = new ShooterTuningSubsystem();
+    //m_shooter = new ShooterTuningSubsystem();
+    m_hood = new HoodTuningSubsystem();
     // m_controller = new XboxController(0);
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
@@ -86,7 +90,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    m_shooter.periodic();
+    //m_shooter.periodic();
+    m_hood.periodic();
   }
 
   @Override
