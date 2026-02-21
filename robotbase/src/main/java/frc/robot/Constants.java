@@ -3,9 +3,12 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Radian;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
@@ -89,32 +92,31 @@ public class Constants {
 
     public static final double MAX_ANGLE = 45;
 
-    public static final int NAIVE_APRIL_TAG_PIPELINE = 0;
+    public static final int NAIVE_APRIL_TAG_PIPELINE = 1;
 
-    public static final int MULTI_TAG_PIPELINE = 1;
+    public static final int MULTI_TAG_PIPELINE = 0;
 
     public static final long NAIVE_APRIL_TAG_TARGET_TIMEOUT = 50;
 
-    public static final class BACK_RIGHT_CAM {
+    // TODO: These values could be fine tuned for the robot
+    public static final class FILTER_PARAM {
 
-      public static final String NAME = "backRight";
-      // real transform
-      // public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-      //   Units.Inches.of(-4.624),
-      //   Units.Inches.of(7.799),
-      //   Units.Inches.of(22.055),
-      //   new Rotation3d(
-      //     Units.Degrees.of(0),
-      //     Units.Degrees.of(10),
-      //     Units.Degrees.of(180)
-      //   )
-      // );
+      public static final LinearVelocity MAX_ROBOT_TRANSLATION =
+        MetersPerSecond.of(2);
+      public static final AngularVelocity MAX_ROBOT_ROTATION =
+        RadiansPerSecond.of(3);
+      public static final Distance MAX_DISTANCE_FROM_ROBOT = Meters.of(0.5);
+    }
 
-      // Transform of camera flipped
+    public static final class KELPY_BACK_LEFT_CAM {
+
+      public static final String NAME = "backLeft";
+
+      // Camera flipped
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-        Units.Inches.of(-4.624),
-        Units.Inches.of(7.299),
-        Units.Inches.of(22.055),
+        Units.Inches.of(-9.516),
+        Units.Inches.of(-5.028),
+        Units.Inches.of(21.137),
         new Rotation3d(
           Units.Degrees.of(0),
           Units.Degrees.of(-10),
@@ -139,30 +141,85 @@ public class Constants {
       );
     }
 
-    public static final class BACK_LEFT_CAM {
+    public static final class SHOOTER_CAM {
 
-      public static final String NAME = "backLeft";
-      // true transform
-      // public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-      //   Units.Inches.of(-6.516),
-      //   Units.Inches.of(-5.028),
-      //   Units.Inches.of(21.137),
-      //   new Rotation3d(
-      //     Units.Degrees.of(0),
-      //     Units.Degrees.of(10),
-      //     Units.Degrees.of(180)
-      //   )
-      // );
+      public static final String NAME = "shooter";
 
       // Camera flipped
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-        Units.Inches.of(-9.516),
-        Units.Inches.of(-5.028),
-        Units.Inches.of(21.137),
+        Units.Inches.of(-8.262),
+        Units.Inches.of(-9.386),
+        Units.Inches.of(16.249),
         new Rotation3d(
-          Units.Degrees.of(0),
-          Units.Degrees.of(-10),
-          Units.Degrees.of(180)
+          Units.Degrees.of(7.698),
+          Units.Degrees.of(-6.383),
+          Units.Degrees.of(309.637)
+        )
+      );
+
+      // The standard deviations of our vision estimated poses, which affect correction rate
+      // (Fake values. Experiment and determine estimation noise on an actual robot.)
+      // These are the default values from PhotonVision docs. They can be tuned per camera
+      // by placing the robot at several points, recording the pose estimate and recording
+      // the standard deviations
+      public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(
+        4,
+        4,
+        Double.MAX_VALUE
+      );
+      public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(
+        0.5,
+        0.5,
+        Double.MAX_VALUE
+      );
+    }
+
+    public static final class BACK_LEFT_CAM {
+
+      public static final String NAME = "backLeft";
+
+      // Camera flipped
+      public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
+        Units.Inches.of(11.184),
+        Units.Inches.of(-12.893),
+        Units.Inches.of(8.587),
+        new Rotation3d(
+          Units.Degrees.of(6.964),
+          Units.Degrees.of(7.177),
+          Units.Degrees.of(135.864)
+        )
+      );
+
+      // The standard deviations of our vision estimated poses, which affect correction rate
+      // (Fake values. Experiment and determine estimation noise on an actual robot.)
+      // These are the default values from PhotonVision docs. They can be tuned per camera
+      // by placing the robot at several points, recording the pose estimate and recording
+      // the standard deviations
+      public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(
+        4,
+        4,
+        Double.MAX_VALUE
+      );
+      public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(
+        0.5,
+        0.5,
+        Double.MAX_VALUE
+      );
+    }
+
+    public static final class BACK_RIGHT_CAM {
+
+      public static final String NAME = "backRight";
+
+      // Camera flipped
+      public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
+        Units.Inches.of(-11.184),
+        Units.Inches.of(-12.893),
+        Units.Inches.of(8.587),
+        new Rotation3d(
+          Units.Degrees.of(-6.964),
+          Units.Degrees.of(7.177),
+          Units.Degrees.of(225.864)
         )
       );
 

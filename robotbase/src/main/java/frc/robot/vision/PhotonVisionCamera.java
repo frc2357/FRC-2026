@@ -1,19 +1,26 @@
 package frc.robot.vision;
 
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 import frc.robot.Constants.PHOTON_VISION;
+import frc.robot.Robot;
 import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -160,6 +167,11 @@ public class PhotonVisionCamera {
       if (visionEst.isEmpty()) {
         continue;
       }
+
+      if (!passesRobotFilter(visionEst.get())) {
+        continue;
+      }
+
       m_poseEstimate = visionEst;
       m_currentStdDevs = updateEstimationStdDevs(
         visionEst.get(),
@@ -177,6 +189,48 @@ public class PhotonVisionCamera {
         false
       );
     }
+  }
+
+  /**
+   *
+   * @param estimate The camera's pose estimate
+   * @return true if the vision estimate is within reasonable constraints to the robot
+   */
+  public boolean passesRobotFilter(EstimatedRobotPose estimate) {
+    ChassisSpeeds speeds = Robot.swerve.getCurrentChassisSpeeds();
+
+    // Check if we are translating too fast
+    if (
+      Math.sqrt(
+        Math.pow(speeds.vxMetersPerSecond, 2) +
+          Math.pow(speeds.vyMetersPerSecond, 2)
+      ) >=
+      PHOTON_VISION.FILTER_PARAM.MAX_ROBOT_TRANSLATION.in(MetersPerSecond)
+    ) {
+      return false;
+    }
+
+    // Check if we are rotating too fast
+    if (
+      speeds.omegaRadiansPerSecond >=
+      PHOTON_VISION.FILTER_PARAM.MAX_ROBOT_ROTATION.in(RadiansPerSecond)
+    ) {
+      return false;
+    }
+
+    // Check if the estimate is too far away
+    Pose2d robotPose = Robot.swerve.getFieldRelativePose2d();
+    if (
+      estimate.estimatedPose
+        .getTranslation()
+        .toTranslation2d()
+        .getDistance(robotPose.getTranslation()) >=
+      PHOTON_VISION.FILTER_PARAM.MAX_DISTANCE_FROM_ROBOT.in(Meters)
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   /**
