@@ -132,6 +132,8 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     m_robotField.setRobotPose(swerve.getFieldRelativePose2d());
+
+    scoreCalculator.updateCurveTuners();
   }
 
   @Override
@@ -141,6 +143,9 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().schedule(
       new WaitCommand(SWERVE.TIME_TO_COAST).andThen(new DriveSetCoast())
     );
+
+    // Log curve values when robot is disabled (like when match ends)
+    scoreCalculator.logCurveValues();
   }
 
   @Override
