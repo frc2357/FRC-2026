@@ -6,13 +6,13 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Percent;
 
-import com.revrobotics.spark.config.ClosedLoopConfig;
-import com.revrobotics.spark.config.FeedForwardConfig;
-import com.revrobotics.spark.config.MAXMotionConfig;
+import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.units.measure.Dimensionless;
+import yams.gearing.GearBox;
+import yams.gearing.MechanismGearing;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -69,34 +69,14 @@ public final class Constants {
         .apply(MOTOR_CONFIG_LEFT)
         .follow(CAN_ID.LEFT_SHOOTER_MOTOR, true);
 
-    public static final double LEFT_MOTOR_kP = 0;
-    public static final double LEFT_MOTOR_kI = 0;
-    public static final double LEFT_MOTOR_kD = 0;
-    public static final double LEFT_MOTOR_kS = 0;
-    public static final double LEFT_MOTOR_kV = 0;
-    public static final double LEFT_MOTOR_kA = 0;
-    public static final double MAX_VEL = 0;
-    public static final double MAX_ACCEL = 0; //TODO: find actual values
-    public static final double RPM_TOLERANCE = 100; //
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("1:1")
+    );
+
+    public static final EncoderConfig ENCODER_CONFIG = MOTOR_CONFIG_LEFT.encoder
+      .positionConversionFactor(GEARING.getRotorToMechanismRatio())
+      .velocityConversionFactor(GEARING.getRotorToMechanismRatio() / 60.0);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
-
-    public static final ClosedLoopConfig CLOSED_LOOP_CONFIG_LEFT =
-      MOTOR_CONFIG_LEFT.closedLoop
-        .outputRange(-1, 1)
-        .pid(LEFT_MOTOR_kP, LEFT_MOTOR_kI, LEFT_MOTOR_kD);
-
-    public static final FeedForwardConfig FEED_FORWARD_CONFIG =
-      CLOSED_LOOP_CONFIG_LEFT.feedForward.sva(
-        LEFT_MOTOR_kS,
-        LEFT_MOTOR_kV,
-        LEFT_MOTOR_kA
-      );
-
-    public static final MAXMotionConfig MAX_MOTION_CONFIG =
-      CLOSED_LOOP_CONFIG_LEFT.maxMotion
-        .allowedProfileError(RPM_TOLERANCE)
-        .maxAcceleration(MAX_ACCEL)
-        .cruiseVelocity(MAX_VEL);
   }
 }

@@ -2,6 +2,7 @@ package frc.robot.controls;
 
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
@@ -51,6 +52,10 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .x()
       .whileTrue(new DrivePoseTargetingHub(this::getLeftX, this::getLeftY));
+
+    m_controller
+      .b()
+      .whileTrue(Robot.shooter.setVelocity(RotationsPerSecond.of(70)));
 
     m_controller
       .povLeft()
