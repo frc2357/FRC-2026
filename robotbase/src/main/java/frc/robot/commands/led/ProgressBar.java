@@ -18,8 +18,9 @@ public class ProgressBar extends Command {
 
   private double m_progressSpeed;
   private double cullLength;
+  private Time loopTime;
 
-  public ProgressBar(Time loopTime) {
+  public ProgressBar() {
     addRequirements(Robot.led);
     m_progressSpeed = (86 / loopTime.in(Seconds)) / 50;
     cullLength = 0;
@@ -37,7 +38,6 @@ public class ProgressBar extends Command {
         new Color(255, 0, 0);
       } else {
         new Color(0, 0, 0);
-        //set black
       }
     }
   }
