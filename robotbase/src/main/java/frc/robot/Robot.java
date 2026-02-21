@@ -11,6 +11,7 @@ import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -168,6 +169,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     // CommandScheduler.getInstance().schedule(m_InitRobotCommand);
+    CommandScheduler.getInstance().schedule(new ProgressBar());
   }
 
   @Override
