@@ -17,10 +17,11 @@ import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.hood.HoodSetSpeed;
 import frc.robot.commands.intake.IntakeAxis;
-import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.scoring.FeedAndSpin;
 import frc.robot.commands.scoring.Score;
 import frc.robot.commands.spindexer.SpindexerSetSpeed;
+import frc.robot.commands.stuff.IntakePivotJiggle;
+import frc.robot.commands.stuff.IntakePivotSetSpeed;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
@@ -47,9 +48,9 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .rightTrigger()
       .whileTrue(
-        new IntakeAxis(() ->
-          Value.of(-m_controller.getRightTriggerAxis() * -1)
-        ).alongWith(new SpindexerSetSpeed(Value.of(0.3)))
+        new IntakeAxis(() -> Value.of(-m_controller.getRightTriggerAxis() * -1))
+          .alongWith(new SpindexerSetSpeed(Value.of(0.3)))
+          .alongWith(new IntakePivotSetSpeed(Value.of(0.05)))
       );
 
     m_controller.y().whileTrue(new HoodSetSpeed(Percent.of(30)));

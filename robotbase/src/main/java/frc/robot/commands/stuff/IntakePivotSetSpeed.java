@@ -1,4 +1,4 @@
-package frc.robot.commands.intakepivot;
+package frc.robot.commands.stuff;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;

@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
-import frc.robot.commands.intakepivot.IntakePivotAxis;
-import frc.robot.commands.intakepivot.IntakePivotSetSpeed;
+import frc.robot.commands.stuff.IntakePivotAxis;
+import frc.robot.commands.stuff.IntakePivotSetSpeed;
 import frc.robot.controls.util.RumbleInterface;
 
 public class CoDriverControls implements RumbleInterface {
