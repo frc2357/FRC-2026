@@ -8,11 +8,9 @@ import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -33,6 +31,7 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakePivot;
 import frc.robot.subsystems.Outtake;
+import frc.robot.subsystems.PhotonVisionCamera;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.vision.CameraManager;
@@ -40,12 +39,15 @@ import frc.robot.vision.CameraManager;
 public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
+  private SequentialCommandGroup m_setCoastOnDisable;
+
   private static DriverControls m_driverControls;
   public static CoDriverControls m_coDriverControls;
   private static Command m_defaultDrive;
 
   public static CommandSwerveDrivetrain swerve;
 
+  public static PhotonVisionCamera backLeftCam;
   public static Spindexer spindexer;
   public static Alliance alliance = null;
 
@@ -58,11 +60,6 @@ public class Robot extends TimedRobot {
   public static Hood hood;
   public static Outtake outtake;
   public static Feeder feeder;
-
-  public static CameraManager cameraManager;
-  public static ScoreCalculator scoreCalculator;
-
-  private static final Field2d m_robotField = new Field2d();
 
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
@@ -83,10 +80,10 @@ public class Robot extends TimedRobot {
     outtake = new Outtake();
     feeder = new Feeder();
 
-    cameraManager = new CameraManager();
-
-    swerve.registerTelemetry(logger::telemeterize);
-    scoreCalculator = new ScoreCalculator();
+    // backLeftCam = new PhotonVisionCamera(
+    //   Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
+    //   Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
+    // );
 
     m_driverControls = new DriverControls();
     m_coDriverControls = new CoDriverControls();
@@ -104,17 +101,19 @@ public class Robot extends TimedRobot {
         return Value.of(SmartDashboard.getNumber("Spindexer", 0.0));
       })
     );
+    m_setCoastOnDisable = new WaitCommand(SWERVE.TIME_TO_COAST).andThen(
+      new DriveSetCoast()
+    );
 
     m_autoChooserManager = new AutoChooserManager();
     m_InitRobotCommand = new InitRobotCommand();
 
+    backLeftCam = new PhotonVisionCamera(
+      Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
+      Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM
+    );
+
     SmartDashboard.putNumber("Spindexer", 0.0);
-
-    // DON'T DELETE - Load the april tag field
-    // This prevents a loop overrun when we first access the constants
-    AprilTagFieldLayout layout = Constants.FieldConstants.FIELD_LAYOUT;
-
-    SmartDashboard.putData("Robot Field", m_robotField);
   }
 
   @Override
@@ -124,23 +123,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    Robot.cameraManager.updateResult();
-    Robot.cameraManager.addSwerveEstimates(Robot.swerve::addVisionMeasurement);
-
+    // backLeftCam.updateResult();
     m_timeAndJoystickReplay.update();
 
     CommandScheduler.getInstance().run();
-
-    m_robotField.setRobotPose(swerve.getFieldRelativePose2d());
   }
 
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().schedule(new StopAllMotors());
-
-    CommandScheduler.getInstance().schedule(
-      new WaitCommand(SWERVE.TIME_TO_COAST).andThen(new DriveSetCoast())
-    );
+    m_setCoastOnDisable.schedule();
   }
 
   @Override
@@ -168,6 +160,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_setCoastOnDisable.cancel();
     swerve.configNeutralMode(NeutralModeValue.Brake);
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().cancel(m_autonomousCommand);

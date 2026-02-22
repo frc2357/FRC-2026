@@ -291,6 +291,8 @@ public class Constants {
       .openLoopRampRate(0.25); // TODO: double check these values
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+
+    public static final Dimensionless SPINDEXER_SPEED = Percent.of(50);
   }
 
   public static final class INTAKE {
@@ -379,6 +381,8 @@ public class Constants {
       .smartCurrentLimit(20, 20)
       .openLoopRampRate(0.5)
       .voltageCompensation(12);
+
+    public static final Dimensionless FEED_SPEED = Percent.of(50);
   }
 
   public static final class SHOOTER {
