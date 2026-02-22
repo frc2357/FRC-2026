@@ -149,6 +149,10 @@ public class PhotonVisionCamera {
    * outside of it. </h1>
    */
   protected void updateResult() {
+    // Clear out member estimates every loop
+    m_poseEstimate = Optional.empty();
+    m_seedEstimate = Optional.empty();
+
     if (!m_camera.isConnected() && !m_connectionLost) {
       m_connectionLost = true;
       DriverStation.reportError(
@@ -163,6 +167,10 @@ public class PhotonVisionCamera {
     m_results = m_camera.getAllUnreadResults();
     Optional<EstimatedRobotPose> visionEst = Optional.empty();
 
+    // Technically an array here, but in practicality we don't
+    // process estimates fast enough for use to get multiple updates
+    // within 20ms, so that's why we just have single
+    // m_poseEstimate and m_seedEstimate variables
     for (PhotonPipelineResult result : m_results) {
       if (result == null || !result.hasTargets()) {
         continue;
@@ -187,9 +195,14 @@ public class PhotonVisionCamera {
 
       m_seedEstimate = visionEst;
 
-      if (!passesRobotPoseFilter(visionEst.get())) {
-        continue;
-      }
+      // Commenting this filter out
+      // We only want to use this filter if we plan to hard-set the robot pose
+      // to a vision estimate frequently (like at the start of a drive to pose command)
+      // Otherwise, our natural drift will lead this filter to never allow a vision estimate
+      // into our swerve pose estimator
+      // if (!passesRobotPoseFilter(visionEst.get())) {
+      //   continue;
+      // }
 
       m_poseEstimate = visionEst;
       m_currentStdDevs = updateEstimationStdDevs(
