@@ -8,7 +8,6 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Radian;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
@@ -81,6 +80,11 @@ public class Constants {
     public static final double HEADING_CONTROLLER_P = 4.5;
     public static final double HEADING_CONTROLLER_I = 0;
     public static final double HEADING_CONTROLLER_D = 0;
+
+    public static final Dimensionless INTAKE_TRANSLATION_MODIFIER = Percent.of(
+      50
+    );
+    public static final Dimensionless INTAKE_ROTATION_MODIFIER = Percent.of(50);
   }
 
   public static final class PHOTON_VISION {
@@ -310,6 +314,8 @@ public class Constants {
       new SparkMaxConfig()
         .apply(LEFT_MOTOR_CONFIG)
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
+
+    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(75);
   }
 
   public static final class INTAKE_PIVOT {
@@ -357,6 +363,11 @@ public class Constants {
     public static final MechanismGearing EXTERNAL_ENCODER_GEARING =
       new MechanismGearing(GearBox.fromStages("1:1"));
     public static final Boolean ENCODER_INVERTED = true;
+
+    // TODO: Make sure these are right
+    public static final Angle DEPLOYED_ANGLE = Degrees.of(0);
+    // Intaking/general movement is going to cause pivot to bounce
+    public static final Angle DEPLOYED_TOLERANCE = Degrees.of(10);
   }
 
   public static final class OUTTAKE {
