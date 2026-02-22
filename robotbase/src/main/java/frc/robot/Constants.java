@@ -12,6 +12,7 @@ import static edu.wpi.first.units.Units.Radian;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import choreo.auto.AutoFactory;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -74,9 +75,9 @@ public class Constants {
       RadiansPerSecond.of(2);
 
     public static final Dimensionless AXIS_MAX_ANGULAR_RATE = Units.Percent.of(
-      50
+      100
     );
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
+    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(100);
 
     public static final double HEADING_CONTROLLER_P = 4.5;
     public static final double HEADING_CONTROLLER_I = 0;
@@ -145,7 +146,6 @@ public class Constants {
 
       public static final String NAME = "shooter";
 
-      // Camera flipped
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
         Units.Inches.of(-8.262),
         Units.Inches.of(-9.386),
@@ -377,12 +377,12 @@ public class Constants {
 
     public static final SparkBaseConfig FEEDER_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
+      .inverted(true)
       .smartCurrentLimit(20, 20)
       .openLoopRampRate(0.5)
       .voltageCompensation(12);
 
-    public static final Dimensionless FEED_SPEED = Percent.of(50);
+    public static final Dimensionless FEED_SPEED = Percent.of(80);
   }
 
   public static final class SHOOTER {
@@ -420,6 +420,9 @@ public class Constants {
       new SimpleMotorFeedforward(0.12, 0.1225, 0.1225);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+
+    public static final Dimensionless SCORE_TOLERANCE = Percent.of(5);
+    public static final Time STABLE_VELOCITY = Seconds.of(0.1);
 
     public static final Transform2d ROBOT_TO_SHOOTER = new Transform2d(
       Units.Inches.of(-1.566),
