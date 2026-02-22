@@ -17,6 +17,8 @@ import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.intake.IntakeAxis;
 import frc.robot.commands.scoring.Score;
+import frc.robot.commands.scoring.VisionScore;
+import frc.robot.commands.scoring.VisionTargeting;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
@@ -32,13 +34,7 @@ public class DriverControls implements RumbleInterface {
     m_controller.back().onTrue(new FlipPerspective());
     m_controller.start().onTrue(new ResetPerspective());
 
-    m_controller
-      .leftTrigger()
-      .whileTrue(
-        Robot.shooter.axisSpeed(() ->
-          Value.of(m_controller.getLeftTriggerAxis())
-        )
-      );
+    m_controller.leftTrigger().whileTrue(new VisionTargeting());
 
     m_controller
       .rightTrigger()
@@ -46,25 +42,24 @@ public class DriverControls implements RumbleInterface {
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
       );
 
-    m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(75)));
-    m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-75)));
+    m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(15)));
+    m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-15)));
 
     m_controller
       .x()
       .whileTrue(new DrivePoseTargetingHub(this::getLeftX, this::getLeftY));
 
-    m_controller
-      .b()
-      .whileTrue(Robot.shooter.setVelocity(RotationsPerSecond.of(70)));
+    m_controller.b().whileTrue(new VisionScore(this::getLeftX, this::getLeftY));
 
     m_controller
       .povLeft()
       .onTrue(
         new InstantCommand(() -> {
-          var estimate = Robot.cameraManager.m_shooter.getEstimateForSwerve();
+          var estimate =
+            Robot.cameraManager.m_shooter.getSeedEstimateForSwerve();
           if (estimate.isPresent()) {
             Robot.swerve.setFieldRelativeTranslation2d(
-              estimate.get().pose().getTranslation()
+              estimate.get().estimatedPose.toPose2d().getTranslation()
             );
           }
         })
