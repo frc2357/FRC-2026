@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Percent;
 
+import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -62,7 +63,7 @@ public final class Constants {
       .inverted(false)
       .openLoopRampRate(0.25)
       .smartCurrentLimit(40, 40)
-      .voltageCompensation(12); //
+      .voltageCompensation(12);
 
     public static final SparkBaseConfig MOTOR_CONFIG_RIGHT =
       new SparkMaxConfig()
@@ -76,6 +77,27 @@ public final class Constants {
     public static final EncoderConfig ENCODER_CONFIG = MOTOR_CONFIG_LEFT.encoder
       .positionConversionFactor(GEARING.getRotorToMechanismRatio())
       .velocityConversionFactor(GEARING.getRotorToMechanismRatio() / 60.0);
+
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+  }
+
+  public static final class HOOD {
+
+    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
+      .idleMode(IdleMode.kCoast)
+      .inverted(false)
+      .openLoopRampRate(0.25)
+      .smartCurrentLimit(40, 40)
+      .voltageCompensation(12); //
+
+    public static final MechanismGearing ENCODER_GEARING = new MechanismGearing(
+      GearBox.fromStages("166:20")
+    );
+
+    public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER_CONFIG =
+      MOTOR_CONFIG.absoluteEncoder
+        .positionConversionFactor(ENCODER_GEARING.getRotorToMechanismRatio())
+        .velocityConversionFactor(1.0 / 60.0);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
   }
