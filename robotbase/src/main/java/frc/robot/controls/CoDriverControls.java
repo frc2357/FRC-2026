@@ -1,5 +1,6 @@
 package frc.robot.controls;
 
+import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
@@ -11,8 +12,11 @@ import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
+import frc.robot.commands.feeder.FeederAxis;
 import frc.robot.commands.intake.IntakeAxis;
 import frc.robot.controls.util.RumbleInterface;
+import frc.robot.subsystems.IntakePivot;
+import java.util.function.Supplier;
 
 public class CoDriverControls implements RumbleInterface {
 
@@ -87,6 +91,12 @@ public class CoDriverControls implements RumbleInterface {
         )
       );
 
+    onlyUp
+      .and(m_controller.rightStick())
+      .whileTrue(
+        Robot.hood.axisSpeed(() -> Value.of(m_controller.getRightY()))
+      );
+
     onlyLeft
       .and(m_controller.leftTrigger())
       .whileTrue(
@@ -98,6 +108,15 @@ public class CoDriverControls implements RumbleInterface {
       .whileTrue(
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
       );
+
+    //onlyLeft
+    //  .and(m_controller.rightStick())
+    //    .whileTrue(
+    // new IntakePivotAxis(() -> Value.of(m_controller.getRightY))
+    // );
+
+    m_controller.rightBumper().whileTrue(new FeederAxis(() -> (Value.of(70))));
+    m_controller.leftBumper().whileTrue(new FeederAxis(() -> (Value.of(-70))));
   }
 
   private double modifyAxis(double value) {
