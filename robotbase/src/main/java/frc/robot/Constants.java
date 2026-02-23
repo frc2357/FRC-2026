@@ -454,7 +454,7 @@ public class Constants {
     public static final AngularVelocity MAX_ANGULAR_VELOCITY =
       RotationsPerSecond.of(15000);
     public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
-      RotationsPerSecondPerSecond.of(190 / 60);
+      RotationsPerSecondPerSecond.of(190);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
       new SimpleMotorFeedforward(.18, 2, .01);

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.HootAutoReplay;
@@ -120,6 +121,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     CommandScheduler.getInstance().schedule(m_InitRobotCommand);
+    SmartDashboard.putNumber("Degree", 0);
   }
 
   @Override
@@ -180,7 +182,11 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    CommandScheduler.getInstance().schedule(
+      hood.setAngle(Degrees.of(SmartDashboard.getNumber("Degree", 20)))
+    );
+  }
 
   @Override
   public void teleopExit() {}
