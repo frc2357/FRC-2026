@@ -24,6 +24,7 @@ import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
+import frc.robot.commands.intake.DefaultIntakePivot;
 import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
@@ -101,6 +102,8 @@ public class Robot extends TimedRobot {
 
     swerve.registerTelemetry(logger::telemeterize);
     swerve.setDefaultCommand(m_defaultDrive);
+
+    intakePivot.setDefaultCommand(new DefaultIntakePivot());
 
     spindexer.setDefaultCommand(
       new SpindexerAxis(() -> {

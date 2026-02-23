@@ -4,22 +4,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.INTAKE_PIVOT;
 import frc.robot.Robot;
 
-public class IntakeDeploy extends Command {
+public class DefaultIntakePivot extends Command {
 
-  public IntakeDeploy() {
+  public DefaultIntakePivot() {
     addRequirements(Robot.intakePivot);
   }
 
   @Override
   public void initialize() {
-    Robot.intakePivot.setAngleSetpoint(INTAKE_PIVOT.DEPLOYED_ANGLE);
+    Robot.intakePivot.setSpeed(INTAKE_PIVOT.HOLD_DOWN_SPEED);
   }
 
   @Override
   public boolean isFinished() {
-    return Robot.intakePivot
-      .getAngle()
-      .isNear(INTAKE_PIVOT.DEPLOYED_ANGLE, INTAKE_PIVOT.DEPLOYED_TOLERANCE);
+    return false;
   }
 
   @Override

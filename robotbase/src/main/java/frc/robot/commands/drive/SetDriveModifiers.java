@@ -27,7 +27,7 @@ public class SetDriveModifiers extends Command {
   }
 
   @Override
-  public void end(boolean isInterrupted) {
+  public void end(boolean interrupted) {
     Robot.swerve.setTranslationModifier(m_previousTranslationModifier);
     Robot.swerve.setRotationModifier(m_previousRotationModifier);
   }

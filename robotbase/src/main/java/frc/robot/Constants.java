@@ -368,6 +368,8 @@ public class Constants {
     public static final Angle DEPLOYED_ANGLE = Degrees.of(0);
     // Intaking/general movement is going to cause pivot to bounce
     public static final Angle DEPLOYED_TOLERANCE = Degrees.of(10);
+
+    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(10);
   }
 
   public static final class OUTTAKE {
