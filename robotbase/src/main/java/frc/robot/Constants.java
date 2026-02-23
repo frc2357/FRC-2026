@@ -430,8 +430,12 @@ public class Constants {
       GearBox.fromStages("5:1", "9:1", "20:19", "166:16")
     );
 
-    public static final Angle SIM_LOWER_ANGLE = Degrees.of(0);
-    public static final Angle SIM_UPPER_ANGLE = Degrees.of(40.343);
+    public static final MechanismGearing ENCODER_GEARING = new MechanismGearing(
+      GearBox.fromStages("166:16") // TODO: Reminder to update this to 166:20 when new shooter goes on
+    );
+
+    public static final Angle LOWER_ANGLE_LIMIT = Degrees.of(0);
+    public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(20);
     public static final Angle SIM_STARTING_POSITION = Degrees.zero();
 
     // Mass of the flywheel.
@@ -439,11 +443,11 @@ public class Constants {
     public static final String MECHANISM_NETWORK_KEY = "HoodMech";
     public static final String MOTOR_NETWORK_KEY = "HoodMotor";
 
-    public static final Current STALL_LIMIT = Amps.of(40);
+    public static final Current STALL_LIMIT = Amps.of(20);
 
     public static final SparkBaseConfig HOOD_BASE_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
+      .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 20)
       .voltageCompensation(12);
 
     // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
@@ -452,12 +456,13 @@ public class Constants {
     public static final double I = 0;
     public static final double D = 0;
     public static final AngularVelocity MAX_ANGULAR_VELOCITY =
-      RotationsPerSecond.of(15000);
+      // Max rpm of neo 550 multiplied by gear ratio and set to 80%
+      RotationsPerSecond.of(GEARING.getMechanismToRotorRatio() * 11000 * 0.8);
     public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
-      RotationsPerSecondPerSecond.of(190);
+      RotationsPerSecondPerSecond.of(3);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(.18, 2, .01);
+      new SimpleMotorFeedforward(.18, 0.01, .6);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(30);
     public static final Distance LENGTH = Inches.of(8);

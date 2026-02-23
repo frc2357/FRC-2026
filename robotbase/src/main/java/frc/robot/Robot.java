@@ -182,11 +182,7 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {
-    CommandScheduler.getInstance().schedule(
-      hood.setAngle(Degrees.of(SmartDashboard.getNumber("Degree", 20)))
-    );
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void teleopExit() {}

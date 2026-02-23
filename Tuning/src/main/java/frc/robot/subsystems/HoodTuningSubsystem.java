@@ -12,6 +12,7 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -33,17 +34,17 @@ public class HoodTuningSubsystem implements Sendable {
 
   private SparkMax m_motorLeft;
   private SparkClosedLoopController m_PIDController;
-  private AbsoluteEncoder m_encoder;
+  private SparkAbsoluteEncoder m_encoder;
 
-  public double P = 0.01;
+  public double P = 45;
   public double I = 0;
   public double D = 0;
-  public double staticFF = 0.12;
-  public double velocityFF = 0.1225;
-  public double accelerationFF = 0.1225;
-  public AngularVelocity maxVelocity = RotationsPerSecond.of(77); // Max at free speed is ~96, 80% is 77
+  public double staticFF = 0.18;
+  public double velocityFF = 0.01;
+  public double accelerationFF = 0.6;
+  public AngularVelocity maxVelocity = HOOD.MAX_POSSIBLE_VELOCITY.times(1);
   public AngularAcceleration maxAcceleration = RotationsPerSecondPerSecond.of(
-    150
+    3
   );
   public double RotationsTolerance = 0.1;
 
@@ -137,7 +138,6 @@ public class HoodTuningSubsystem implements Sendable {
 
   public void updatePIDs() {
     m_motorconfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-    m_motorconfig.closedLoop.positionWrappingEnabled(true);
     m_motorconfig.closedLoop.pid(P, I, D);
     m_motorconfig.closedLoop.feedForward.sva(
       staticFF,
@@ -183,10 +183,18 @@ public class HoodTuningSubsystem implements Sendable {
     SmartDashboard.putBoolean("Is At Target", isAtTargetAngle());
 
     SmartDashboard.putNumber("Rotations", getAngle().in(Rotations));
-    SmartDashboard.putNumber("Degrees", getAngle().in(Degrees));
-    SmartDashboard.putNumber("VELOCITY RPM", getVelocity().in(RPM));
+    SmartDashboard.putNumber("Hood Current Degrees", getAngle().in(Degrees));
+    SmartDashboard.putNumber(
+      "Hood Velocity RPS",
+      getVelocity().in(RotationsPerSecond)
+    );
 
     SmartDashboard.putNumber("PID Setpoint", m_PIDController.getSetpoint());
+
+    SmartDashboard.putNumber(
+      "computed max rps",
+      HOOD.MAX_POSSIBLE_VELOCITY.in(RotationsPerSecond)
+    );
 
     m_targetAngle = Degrees.of(
       SmartDashboard.getNumber("Hood Target Degrees", m_targetAngle.in(Degrees))
@@ -234,7 +242,7 @@ public class HoodTuningSubsystem implements Sendable {
   }
 
   public AngularVelocity getVelocity() {
-    return RPM.of(m_encoder.getVelocity());
+    return RotationsPerSecond.of(m_encoder.getVelocity());
   }
 
   public void setTargetAngle(Angle targetAngle) {
