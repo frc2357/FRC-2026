@@ -8,14 +8,12 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.HOOD;
-import frc.robot.Constants.INTAKE_PIVOT;
 import java.util.function.Supplier;
 import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Pivot;
@@ -158,7 +156,7 @@ public class Hood extends SubsystemBase {
     // This method will be called once per scheduler run
     m_hood.updateTelemetry();
 
-    SmartDashboard.putNumber("Hood Curr Deg", getAngle().in(Degrees));
+    SmartDashboard.putNumber("Hood Current Degrees", getAngle().in(Degrees));
   }
 
   @Override

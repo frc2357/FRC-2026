@@ -63,7 +63,7 @@ public class DriverControls implements RumbleInterface {
       .povRight()
       .whileTrue(
         Robot.hood.setAngle(() ->
-          Degrees.of(SmartDashboard.getNumber("Degree", 1))
+          Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 1))
         )
       );
 

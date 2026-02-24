@@ -426,6 +426,8 @@ public class Constants {
 
   public static final class HOOD {
 
+    // TODO: Most of the hood's mechanical properties will need updated when we switch to the herring bone gear
+
     public static final MechanismGearing GEARING = new MechanismGearing(
       GearBox.fromStages("5:1", "9:1", "20:19", "166:16")
     );

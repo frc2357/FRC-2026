@@ -110,6 +110,7 @@ public class Robot extends TimedRobot {
     m_InitRobotCommand = new InitRobotCommand();
 
     SmartDashboard.putNumber("Spindexer", 0.0);
+    SmartDashboard.putNumber("Hood Target Degree", 0);
 
     // DON'T DELETE - Load the april tag field
     // This prevents a loop overrun when we first access the constants
@@ -121,7 +122,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     CommandScheduler.getInstance().schedule(m_InitRobotCommand);
-    SmartDashboard.putNumber("Degree", 0);
   }
 
   @Override
