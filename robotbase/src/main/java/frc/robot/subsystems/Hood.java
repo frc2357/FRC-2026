@@ -1,18 +1,19 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Value;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.HOOD;
-import frc.robot.Constants.INTAKE_PIVOT;
 import java.util.function.Supplier;
 import yams.mechanisms.config.PivotConfig;
 import yams.mechanisms.positional.Pivot;
@@ -25,6 +26,7 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class Hood extends SubsystemBase {
 
   private SparkMax m_motor;
+  private SparkAbsoluteEncoder m_encoder;
 
   private SmartMotorControllerConfig m_smartMotorControllerConfig;
   // Create our SmartMotorController from our Spark and config with the NEO.
@@ -36,6 +38,7 @@ public class Hood extends SubsystemBase {
 
   public Hood() {
     m_motor = new SparkMax(CAN_ID.HOOD_MOTOR, MotorType.kBrushless);
+    m_encoder = m_motor.getAbsoluteEncoder();
 
     m_smartMotorControllerConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.CLOSED_LOOP)
@@ -64,7 +67,11 @@ public class Hood extends SubsystemBase {
       // You could also use .withGearing(12) which does the same thing.
       .withGearing(HOOD.GEARING)
       // Motor properties to prevent over currenting.
-      .withStatorCurrentLimit(HOOD.STALL_LIMIT);
+      .withStatorCurrentLimit(HOOD.STALL_LIMIT)
+      .withExternalEncoder(m_encoder)
+      .withUseExternalFeedbackEncoder(true)
+      .withExternalEncoderGearing(HOOD.ENCODER_GEARING)
+      .withSoftLimit(HOOD.LOWER_ANGLE_LIMIT, HOOD.UPPER_ANGLE_LIMIT);
 
     m_sparkSmartMotorController = new SparkWrapper(
       m_motor,
@@ -75,7 +82,7 @@ public class Hood extends SubsystemBase {
     m_hoodConfig = new PivotConfig(m_sparkSmartMotorController)
       //both mass and length in a single function, no other implemntation is currently avalible
       .withMOI(HOOD.LENGTH, HOOD.MASS)
-      .withHardLimit(HOOD.SIM_LOWER_ANGLE, HOOD.SIM_UPPER_ANGLE)
+      .withHardLimit(HOOD.LOWER_ANGLE_LIMIT, HOOD.UPPER_ANGLE_LIMIT)
       .withStartingPosition(HOOD.SIM_STARTING_POSITION)
       // Mass of the flywheel.
       // Telemetry name and verbosity for the arm.
@@ -100,6 +107,10 @@ public class Hood extends SubsystemBase {
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
   public Command setAngle(Angle angle) {
+    return m_hood.run(angle).finallyDo(() -> this.stopMotor());
+  }
+
+  public Command setAngle(Supplier<Angle> angle) {
     return m_hood.run(angle).finallyDo(() -> this.stopMotor());
   }
 
@@ -144,6 +155,8 @@ public class Hood extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     m_hood.updateTelemetry();
+
+    SmartDashboard.putNumber("Hood Current Degrees", getAngle().in(Degrees));
   }
 
   @Override

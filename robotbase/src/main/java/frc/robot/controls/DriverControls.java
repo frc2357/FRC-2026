@@ -1,5 +1,6 @@
 package frc.robot.controls;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
@@ -7,6 +8,7 @@ import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
@@ -46,8 +48,8 @@ public class DriverControls implements RumbleInterface {
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
       );
 
-    m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(75)));
-    m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-75)));
+    m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(10)));
+    m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-10)));
 
     m_controller
       .x()
@@ -56,6 +58,14 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .b()
       .whileTrue(Robot.shooter.setVelocity(RotationsPerSecond.of(70)));
+
+    m_controller
+      .povRight()
+      .whileTrue(
+        Robot.hood.setAngle(() ->
+          Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 1))
+        )
+      );
 
     m_controller
       .povLeft()
