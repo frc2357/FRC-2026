@@ -22,7 +22,7 @@ public class VisionTargeting extends Command {
     CalculatedShot shot = Robot.scoreCalculator.calculateFromPose();
 
     Robot.shooter.setVelocitySetpoint(shot.shooterVelocity());
-    //Robot.hood.setAngle(shot.hoodPosition());
+    Robot.hood.setAngleSetpoint(shot.hoodPosition());
   }
 
   @Override
