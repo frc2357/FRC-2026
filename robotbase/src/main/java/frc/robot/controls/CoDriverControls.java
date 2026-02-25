@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -14,6 +15,8 @@ import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.feeder.FeederAxis;
 import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.spindexer.SpindexerAxis;
+import frc.robot.commands.spindexer.SpindexerSetSpeed;
 import frc.robot.controls.util.RumbleInterface;
 import frc.robot.subsystems.IntakePivot;
 import java.util.function.Supplier;
@@ -91,16 +94,15 @@ public class CoDriverControls implements RumbleInterface {
         )
       );
 
-    onlyUp
-      .and(m_controller.rightStick())
-      .whileTrue(
-        Robot.hood.axisSpeed(() -> Value.of(m_controller.getRightY()))
-      );
+    onlyUp.whileTrue(
+      Robot.hood.axisSpeed(() -> Value.of(m_controller.getRightY()))
+    );
 
     onlyLeft
       .and(m_controller.leftTrigger())
       .whileTrue(
         new IntakeAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
+        //   ).andThen(() -> System.out.println(""))
       );
 
     onlyLeft
@@ -109,11 +111,13 @@ public class CoDriverControls implements RumbleInterface {
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
       );
 
-    //onlyLeft
-    //  .and(m_controller.rightStick())
-    //    .whileTrue(
-    // new IntakePivotAxis(() -> Value.of(m_controller.getRightY))
-    // );
+    onlyLeft.whileTrue(
+      Robot.intakePivot.axisSpeed(() -> Value.of(m_controller.getRightY()))
+    );
+
+    onlyRight.whileTrue(
+      new SpindexerSetSpeed(Value.of(m_controller.getRightTriggerAxis()))
+    );
 
     m_controller.rightBumper().whileTrue(new FeederAxis(() -> (Value.of(70))));
     m_controller.leftBumper().whileTrue(new FeederAxis(() -> (Value.of(-70))));
