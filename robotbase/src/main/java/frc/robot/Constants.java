@@ -412,7 +412,7 @@ public class Constants {
     public static final double P = 0.01;
     public static final double I = 0;
     public static final double D = 0;
-    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(3600);
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(5767);
     public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
       RotationsPerSecondPerSecond.of(150);
 
@@ -455,7 +455,7 @@ public class Constants {
     public static final Current STALL_LIMIT = Amps.of(20);
 
     public static final SparkBaseConfig HOOD_BASE_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kCoast)
+      .idleMode(IdleMode.kBrake)
       .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 20)
       .voltageCompensation(12);
 

@@ -51,17 +51,17 @@ public class ScoreCalculator {
   }
 
   public ScoreCalculator() {
-    m_shooterCurve.put(SHOT_POINTS.CLOSEST_POINT, RotationsPerSecond.of(20));
-    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(40));
-    m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(60));
-    m_shooterCurve.put(SHOT_POINTS.POINT_4, RotationsPerSecond.of(75));
-    m_shooterCurve.put(SHOT_POINTS.FARTHEST_POINT, RotationsPerSecond.of(90));
+    m_shooterCurve.put(SHOT_POINTS.CLOSEST_POINT, RotationsPerSecond.of(48.5));
+    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(48.5));
+    m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(53));
+    m_shooterCurve.put(SHOT_POINTS.POINT_4, RotationsPerSecond.of(64));
+    m_shooterCurve.put(SHOT_POINTS.FARTHEST_POINT, RotationsPerSecond.of(64));
 
-    m_hoodCurve.put(SHOT_POINTS.CLOSEST_POINT, Degrees.of(5));
-    m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(10));
-    m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(12));
-    m_hoodCurve.put(SHOT_POINTS.POINT_4, Degrees.of(15));
-    m_hoodCurve.put(SHOT_POINTS.FARTHEST_POINT, Degrees.of(20));
+    m_hoodCurve.put(SHOT_POINTS.CLOSEST_POINT, Degrees.of(0));
+    m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(0));
+    m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(2));
+    m_hoodCurve.put(SHOT_POINTS.POINT_4, Degrees.of(14));
+    m_hoodCurve.put(SHOT_POINTS.FARTHEST_POINT, Degrees.of(14));
   }
 
   public CalculatedShot calculateShot(Distance targetDistance) {

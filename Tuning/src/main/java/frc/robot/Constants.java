@@ -90,7 +90,7 @@ public final class Constants {
   public static final class HOOD {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kCoast)
+      .idleMode(IdleMode.kBrake)
       .inverted(false)
       .openLoopRampRate(0.25)
       .smartCurrentLimit(20, 10)
