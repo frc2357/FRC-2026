@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.HootAutoReplay;
@@ -17,14 +16,12 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
-import frc.robot.commands.intake.DefaultIntakePivot;
 import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
@@ -103,7 +100,8 @@ public class Robot extends TimedRobot {
     swerve.registerTelemetry(logger::telemeterize);
     swerve.setDefaultCommand(m_defaultDrive);
 
-    intakePivot.setDefaultCommand(new DefaultIntakePivot());
+    // TODO: Uncomment once intake pivot and the default command is tested
+    // intakePivot.setDefaultCommand(new DefaultIntakePivotHoldAngle());
 
     spindexer.setDefaultCommand(
       new SpindexerAxis(() -> {
