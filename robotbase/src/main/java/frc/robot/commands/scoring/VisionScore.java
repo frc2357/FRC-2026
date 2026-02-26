@@ -17,7 +17,7 @@ public class VisionScore extends ParallelCommandGroup {
       new DrivePoseTargetingHub(x, y),
       new SequentialCommandGroup(
         Robot.shooter.waitUntilTargetVelocity(),
-        new FeederSetSpeed(Constants.FEEDER.FEEDER_FEED_SPEED)
+        new FeederSetSpeed(Constants.FEEDER.FEED_SPEED)
         // TODO: Add floor
       )
     );
