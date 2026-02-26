@@ -9,11 +9,18 @@ public class SpindexerStop extends Command {
     addRequirements(Robot.spindexer);
   }
 
+  @Override
   public boolean isFinished() {
     return true;
   }
 
+  @Override
   public void end(boolean interrupted) {
     Robot.spindexer.stop();
+  }
+
+  @Override
+  public boolean runsWhenDisabled() {
+    return true;
   }
 }
