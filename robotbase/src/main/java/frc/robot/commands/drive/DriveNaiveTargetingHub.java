@@ -50,13 +50,6 @@ public class DriveNaiveTargetingHub extends Command {
   }
 
   @Override
-  public void initialize() {
-    Robot.cameraManager.m_shooter.setPipeline(
-      PHOTON_VISION.NAIVE_APRIL_TAG_PIPELINE
-    );
-  }
-
-  @Override
   public void execute() {
     Optional<Rotation2d> target = computeTargetAngle();
     if (target.isEmpty()) {

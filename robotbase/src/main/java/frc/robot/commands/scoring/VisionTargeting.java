@@ -13,11 +13,6 @@ public class VisionTargeting extends Command {
   }
 
   @Override
-  public void initialize() {
-    Robot.cameraManager.setPipeline(Constants.PHOTON_VISION.MULTI_TAG_PIPELINE);
-  }
-
-  @Override
   public void execute() {
     CalculatedShot shot = Robot.scoreCalculator.calculateFromPose();
 

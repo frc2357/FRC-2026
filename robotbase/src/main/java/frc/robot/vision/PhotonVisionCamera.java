@@ -368,7 +368,7 @@ public class PhotonVisionCamera {
    *
    * @param index The index to make it be set to.
    */
-  public void setPipeline(int index) {
+  protected void setPipeline(int index) {
     if (m_camera.getPipelineIndex() != index) {
       m_camera.setPipelineIndex(index);
     }

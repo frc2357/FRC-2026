@@ -29,11 +29,6 @@ public class DrivePoseTargetingHub extends Command {
   }
 
   @Override
-  public void initialize() {
-    Robot.cameraManager.setPipeline(PHOTON_VISION.MULTI_TAG_PIPELINE);
-  }
-
-  @Override
   public void execute() {
     Rotation2d target = computeTargetAngle();
     SmartDashboard.putNumber("Target angle", target.getDegrees());
