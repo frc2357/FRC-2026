@@ -45,7 +45,7 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .rightTrigger()
       .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
+        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
       );
 
     m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(10)));
