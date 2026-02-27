@@ -142,9 +142,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    CommandScheduler.getInstance().schedule(
-      Commands.parallel(new StopAllMotors())
-    );
+    CommandScheduler.getInstance().schedule(new StopAllMotors());
 
     CommandScheduler.getInstance().schedule(
       new DriveStop()
