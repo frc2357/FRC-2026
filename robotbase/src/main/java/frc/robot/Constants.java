@@ -8,7 +8,6 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Radian;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
@@ -262,7 +261,7 @@ public class Constants {
 
   public static final class CAN_ID {
 
-    public static final int SPINDEXER_MOTOR = 23;
+    public static final int FLOOR_MOTOR = 23; //TODO: make sure that the old spindexter motor is the same for the floor (or just change the CAN ID)
 
     public static final int LEFT_INTAKE_MOTOR = 24;
     public static final int RIGHT_INTAKE_MOTOR = 25;
@@ -272,17 +271,13 @@ public class Constants {
     public static final int FEEDER_MOTOR = 32;
     //Feeder motor can ID
 
-    public static final int OUTAKE_MOTOR = 27;
-
     public static final int HOOD_MOTOR = 28;
-
-    public static final int OUTTAKE_MOTOR = 31;
 
     public static final int LEFT_SHOOTER_MOTOR = 29;
     public static final int RIGHT_SHOOTER_MOTOR = 30;
   }
 
-  public static final class SPINDEXER {
+  public static final class FLOOR {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
@@ -292,7 +287,7 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
-    public static final Dimensionless SPINDEXER_SPEED = Percent.of(50);
+    public static final Dimensionless FLOOR_SPEED = Percent.of(50);
   }
 
   public static final class INTAKE {
@@ -357,18 +352,6 @@ public class Constants {
     public static final MechanismGearing EXTERNAL_ENCODER_GEARING =
       new MechanismGearing(GearBox.fromStages("1:1"));
     public static final Boolean ENCODER_INVERTED = true;
-  }
-
-  public static final class OUTTAKE {
-
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(100);
-
-    public static final SparkBaseConfig OUTTAKE_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kCoast)
-      .inverted(false)
-      .smartCurrentLimit(30, 30)
-      .openLoopRampRate(0.5)
-      .voltageCompensation(12);
   }
 
   public static final class FEEDER {

@@ -9,13 +9,13 @@ public class SpindexerSetSpeed extends Command {
   private Dimensionless m_speed;
 
   public SpindexerSetSpeed(Dimensionless speed) {
-    addRequirements(Robot.spindexer);
+    addRequirements(Robot.floor);
     m_speed = speed;
   }
 
   @Override
   public void initialize() {
-    Robot.spindexer.setSpeed(m_speed);
+    Robot.floor.setSpeed(m_speed);
   }
 
   @Override
@@ -25,6 +25,6 @@ public class SpindexerSetSpeed extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    Robot.spindexer.stop();
+    Robot.floor.stop();
   }
 }

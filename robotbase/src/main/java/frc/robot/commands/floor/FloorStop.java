@@ -6,7 +6,7 @@ import frc.robot.Robot;
 public class SpindexerStop extends Command {
 
   public SpindexerStop() {
-    addRequirements(Robot.spindexer);
+    addRequirements(Robot.floor);
   }
 
   public boolean isFinished() {
@@ -14,6 +14,6 @@ public class SpindexerStop extends Command {
   }
 
   public void end(boolean interrupted) {
-    Robot.spindexer.stop();
+    Robot.floor.stop();
   }
 }

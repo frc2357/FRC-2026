@@ -9,29 +9,28 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
-import frc.robot.Constants.OUTTAKE;
+import frc.robot.Constants.FLOOR;
 
-public class Outtake extends SubsystemBase {
+public class Floor extends SubsystemBase {
 
   private SparkMax m_motor;
 
-  public Outtake() {
-    m_motor = new SparkMax(CAN_ID.OUTAKE_MOTOR, MotorType.kBrushless);
-
+  public Floor() {
+    m_motor = new SparkMax(CAN_ID.FLOOR_MOTOR, MotorType.kBrushless);
     m_motor.configure(
-      OUTTAKE.OUTTAKE_CONFIG,
+      FLOOR.MOTOR_CONFIG,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
     );
   }
 
-  public void setSpeed(Dimensionless percentOutput) {
-    m_motor.set(percentOutput.in(Value));
+  public void setAxisSpeed(Dimensionless axisSpeed) {
+    axisSpeed.times(FLOOR.AXIS_MAX_SPEED);
+    setSpeed(axisSpeed);
   }
 
-  public void setAxisSpeed(Dimensionless axisSpeed) {
-    Dimensionless m_speed = axisSpeed.times(OUTTAKE.AXIS_MAX_SPEED);
-    setSpeed(m_speed);
+  public void setSpeed(Dimensionless percentOutput) {
+    m_motor.set(percentOutput.in(Value));
   }
 
   public void stop() {
