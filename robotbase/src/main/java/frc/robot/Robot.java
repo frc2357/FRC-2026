@@ -17,11 +17,13 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
+import frc.robot.commands.drive.DriveStop;
 import frc.robot.commands.spindexer.SpindexerAxis;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
@@ -143,7 +145,9 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().schedule(new StopAllMotors());
 
     CommandScheduler.getInstance().schedule(
-      new WaitCommand(SWERVE.TIME_TO_COAST).andThen(new DriveSetCoast())
+      new DriveStop()
+        .andThen(new WaitCommand(SWERVE.TIME_TO_COAST))
+        .andThen(new DriveSetCoast())
     );
 
     // Log curve values when robot is disabled (like when match ends)
