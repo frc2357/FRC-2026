@@ -267,9 +267,7 @@ public class Constants {
     public static final int RIGHT_INTAKE_MOTOR = 25;
     public static final int INTAKE_PIVOT_MOTOR = 33;
 
-    public static final int KICKER_MOTOR = 26;
     public static final int FEEDER_MOTOR = 32;
-    //Feeder motor can ID
 
     public static final int HOOD_MOTOR = 28;
 
