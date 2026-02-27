@@ -6,7 +6,7 @@ import frc.robot.Robot;
 public class SpindexerStop extends Command {
 
   public SpindexerStop() {
-    addRequirements(Robot.spindexer);
+    addRequirements(Robot.floor);
   }
 
   @Override
@@ -16,7 +16,7 @@ public class SpindexerStop extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    Robot.spindexer.stop();
+    Robot.floor.stop();
   }
 
   @Override
