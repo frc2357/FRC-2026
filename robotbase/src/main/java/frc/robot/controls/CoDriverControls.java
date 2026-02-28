@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
+import frc.robot.Constants.INTAKE_PIVOT;
 import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.feeder.FeederAxis;
@@ -102,7 +103,6 @@ public class CoDriverControls implements RumbleInterface {
       .and(m_controller.leftTrigger())
       .whileTrue(
         new IntakeAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
-        //   ).andThen(() -> System.out.println(""))
       );
 
     onlyLeft
@@ -112,7 +112,9 @@ public class CoDriverControls implements RumbleInterface {
       );
 
     onlyLeft.whileTrue(
-      Robot.intakePivot.axisSpeed(() -> Value.of(m_controller.getRightY()))
+      new InstantCommand(() -> System.out.println(getRightY())).andThen(
+        Robot.intakePivot.axisSpeed(() -> Value.of(m_controller.getRightY()))
+      )
     );
 
     onlyRight.whileTrue(
