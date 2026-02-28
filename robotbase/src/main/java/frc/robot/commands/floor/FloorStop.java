@@ -1,12 +1,12 @@
-package frc.robot.commands.spindexer;
+package frc.robot.commands.floor;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
-public class SpindexerStop extends Command {
+public class FloorStop extends Command {
 
-  public SpindexerStop() {
-    addRequirements(Robot.spindexer);
+  public FloorStop() {
+    addRequirements(Robot.floor);
   }
 
   @Override
@@ -16,7 +16,7 @@ public class SpindexerStop extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    Robot.spindexer.stop();
+    Robot.floor.stop();
   }
 
   @Override

@@ -1,21 +1,21 @@
-package frc.robot.commands.spindexer;
+package frc.robot.commands.floor;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
-public class SpindexerSetSpeed extends Command {
+public class FloorSetSpeed extends Command {
 
   private Dimensionless m_speed;
 
-  public SpindexerSetSpeed(Dimensionless speed) {
-    addRequirements(Robot.spindexer);
+  public FloorSetSpeed(Dimensionless speed) {
+    addRequirements(Robot.floor);
     m_speed = speed;
   }
 
   @Override
   public void initialize() {
-    Robot.spindexer.setSpeed(m_speed);
+    Robot.floor.setSpeed(m_speed);
   }
 
   @Override
@@ -25,6 +25,6 @@ public class SpindexerSetSpeed extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    Robot.spindexer.stop();
+    Robot.floor.stop();
   }
 }
