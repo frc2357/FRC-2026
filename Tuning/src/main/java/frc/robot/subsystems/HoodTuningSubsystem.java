@@ -228,8 +228,7 @@ public class HoodTuningSubsystem implements Sendable {
   }
 
   public void setAxisSpeed(Dimensionless speed) {
-    double m_speed = speed.times(HOOD.AXIS_MAX_SPEED).in(Value);
-    m_motor.set(m_speed);
+    m_motor.set(speed.times(HOOD.AXIS_MAX_SPEED).in(Value));
   }
 
   public void stop() {

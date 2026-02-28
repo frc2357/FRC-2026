@@ -253,8 +253,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
   }
 
   public void setAxisSpeed(Dimensionless speed) {
-    double m_speed = speed.times(INTAKE_PIVOT.AXIS_MAX_SPEED).in(Value);
-    m_motor.set(m_speed);
+    m_motor.set(speed.times(INTAKE_PIVOT.AXIS_MAX_SPEED).in(Value));
   }
 
   public void stop() {
@@ -276,8 +275,8 @@ public class IntakePivotTuningSubsystem implements Sendable {
     );
   }
 
-  public boolean isAtAngle(Angle vel) {
-    return vel.isNear(getAngle(), rotationsTolerance);
+  public boolean isAtAngle(Angle angle) {
+    return angle.isNear(getAngle(), rotationsTolerance);
   }
 
   public boolean isAtTargetAngle() {

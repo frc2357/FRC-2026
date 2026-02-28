@@ -229,8 +229,7 @@ public class ShooterTuningSubsystem implements Sendable {
   }
 
   public void setAxisSpeed(Dimensionless speed) {
-    double m_speed = speed.times(SHOOTER.AXIS_MAX_SPEED).in(Value);
-    m_motorLeft.set(m_speed);
+    m_motorLeft.set(speed.times(SHOOTER.AXIS_MAX_SPEED).in(Value));
   }
 
   public void stop() {
