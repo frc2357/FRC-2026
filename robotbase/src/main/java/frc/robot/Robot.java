@@ -125,6 +125,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     Robot.cameraManager.updateResult();
     Robot.cameraManager.addSwerveEstimates(Robot.swerve::addVisionMeasurement);
+    Robot.scoreCalculator.updateCalculatedShot();
 
     m_timeAndJoystickReplay.update();
 

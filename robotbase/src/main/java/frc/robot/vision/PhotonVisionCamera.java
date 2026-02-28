@@ -229,7 +229,7 @@ public class PhotonVisionCamera {
    * @return true if the vision estimate is within reasonable constraints to the robot
    */
   public boolean passesRobotSpeedFilter(EstimatedRobotPose estimate) {
-    ChassisSpeeds speeds = Robot.swerve.getCurrentChassisSpeeds();
+    ChassisSpeeds speeds = Robot.swerve.getCurrentRobotRelativeSpeeds();
 
     // Check if we are translating too fast
     if (

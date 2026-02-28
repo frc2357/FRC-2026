@@ -408,37 +408,14 @@ public class CommandSwerveDrivetrain
     super.resetTranslation(translation);
   }
 
-  public ChassisSpeeds getCurrentChassisSpeeds() {
+  public ChassisSpeeds getCurrentRobotRelativeSpeeds() {
     return super.getState().Speeds;
   }
 
-  private Twist2d m_fieldRelativeRobotVelocity = new Twist2d();
-
-  public LinearVelocity getXVelocity() {
-    return Units.MetersPerSecond.of(
-      getCurrentChassisSpeeds().vxMetersPerSecond
-    );
-  }
-
-  public LinearVelocity getYVelocity() {
-    return Units.MetersPerSecond.of(
-      getCurrentChassisSpeeds().vyMetersPerSecond
-    );
-  }
-
-  private void updateFieldVelocity() {
-    Translation2d linearFieldVelocity = new Translation2d(
-      getXVelocity().in(Units.MetersPerSecond),
-      getYVelocity().in(Units.MetersPerSecond)
-    ).rotateBy(getFieldRelativePose2d().getRotation());
-
-    m_fieldRelativeRobotVelocity = new Twist2d(
-      linearFieldVelocity.getX(),
-      linearFieldVelocity.getY(),
-      getPigeon2()
-        .getAngularVelocityZWorld()
-        .getValue()
-        .in(Units.RadiansPerSecond)
+  public ChassisSpeeds getCurrentFieldRelativeSpeeds() {
+    return ChassisSpeeds.fromRobotRelativeSpeeds(
+      getCurrentFieldRelativeSpeeds(),
+      super.getOperatorForwardDirection()
     );
   }
 
