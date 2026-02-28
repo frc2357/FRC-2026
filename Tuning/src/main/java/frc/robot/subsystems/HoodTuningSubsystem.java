@@ -137,7 +137,6 @@ public class HoodTuningSubsystem implements Sendable {
   }
 
   public void updatePIDs() {
-    m_motorconfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
     m_motorconfig.closedLoop.pid(P, I, D);
     m_motorconfig.closedLoop.feedForward.sva(
       staticFF,

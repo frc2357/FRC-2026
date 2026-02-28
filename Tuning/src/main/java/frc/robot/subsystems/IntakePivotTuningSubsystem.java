@@ -49,7 +49,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
   public AngularAcceleration maxAcceleration = RotationsPerSecondPerSecond.of(
     0
   );
-  public double RotationsTolerance = 0.1;
+  public double rotationsTolerance = 0.1;
 
   private SparkBaseConfig m_motorconfig = INTAKE_PIVOT.MOTOR_CONFIG;
 
@@ -82,7 +82,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
       "intakePivotMaxAcceleration",
       maxAcceleration.in(RotationsPerSecondPerSecond)
     );
-    Preferences.initDouble("intakePivotRotationsTolerance", RotationsTolerance);
+    Preferences.initDouble("intakePivotRotationsTolerance", rotationsTolerance);
 
     P = Preferences.getDouble("intakePivotP", P);
     I = Preferences.getDouble("intakePivotI", I);
@@ -109,9 +109,9 @@ public class IntakePivotTuningSubsystem implements Sendable {
         maxAcceleration.in(RotationsPerSecondPerSecond)
       )
     );
-    RotationsTolerance = Preferences.getDouble(
+    rotationsTolerance = Preferences.getDouble(
       "intakePivotRotationsTolerance",
-      RotationsTolerance
+      rotationsTolerance
     );
 
     displayDashboard();
@@ -135,7 +135,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
       "Intake Pivot MaxAccel RPS",
       maxAcceleration.in(RotationsPerSecondPerSecond)
     );
-    SmartDashboard.putNumber("Rotations Tolerance", RotationsTolerance);
+    SmartDashboard.putNumber("Rotations Tolerance", rotationsTolerance);
     SmartDashboard.putNumber("Intake Pivot Target Degrees", 0);
     SmartDashboard.putNumber("Rotations", getAngle().in(Rotations));
 
@@ -146,7 +146,6 @@ public class IntakePivotTuningSubsystem implements Sendable {
   }
 
   public void updatePIDs() {
-    m_motorconfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
     m_motorconfig.closedLoop.pid(P, I, D);
     m_motorconfig.closedLoop.feedForward
       .sva(staticFF, velocityFF, accelerationFF)
@@ -155,7 +154,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
     m_motorconfig.closedLoop.maxMotion
       .maxAcceleration(maxAcceleration.in(RotationsPerSecondPerSecond))
       .cruiseVelocity(maxVelocity.in(RotationsPerSecond))
-      .allowedProfileError(RotationsTolerance);
+      .allowedProfileError(rotationsTolerance);
 
     m_motor.configure(
       m_motorconfig,
@@ -192,7 +191,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
     );
     double newRotationsTolerance = SmartDashboard.getNumber(
       "Rotations Tolerance",
-      RotationsTolerance
+      rotationsTolerance
     );
 
     SmartDashboard.putNumber("Voltage", m_motor.getBusVoltage());
@@ -233,7 +232,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
       newGravityCosFF != gravityCosFF ||
       newMaxVelocity != maxVelocity.in(RotationsPerSecond) ||
       newMaxAcceleration != maxAcceleration.in(RotationsPerSecondPerSecond) ||
-      newRotationsTolerance != RotationsTolerance
+      newRotationsTolerance != rotationsTolerance
     ) {
       P = newP;
       I = newI;
@@ -244,7 +243,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
       gravityCosFF = newGravityCosFF;
       maxVelocity = RotationsPerSecond.of(newMaxVelocity);
       maxAcceleration = RotationsPerSecondPerSecond.of(newMaxAcceleration);
-      RotationsTolerance = newRotationsTolerance;
+      rotationsTolerance = newRotationsTolerance;
       updatePIDs();
     }
   }
@@ -278,7 +277,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
   }
 
   public boolean isAtAngle(Angle vel) {
-    return vel.isNear(getAngle(), RotationsTolerance);
+    return vel.isNear(getAngle(), rotationsTolerance);
   }
 
   public boolean isAtTargetAngle() {
@@ -314,7 +313,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
         );
         Preferences.setDouble(
           "intakePivotRotationsTolerance",
-          RotationsTolerance
+          rotationsTolerance
         );
       }
     );
