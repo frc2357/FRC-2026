@@ -112,9 +112,7 @@ public class CoDriverControls implements RumbleInterface {
       );
 
     onlyLeft.whileTrue(
-      new InstantCommand(() -> System.out.println(getRightY())).andThen(
-        Robot.intakePivot.axisSpeed(() -> Value.of(m_controller.getRightY()))
-      )
+      Robot.intakePivot.axisSpeed(() -> Value.of(m_controller.getRightY()))
     );
 
     onlyRight.whileTrue(
