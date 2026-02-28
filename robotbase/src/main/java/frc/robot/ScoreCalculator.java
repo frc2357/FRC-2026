@@ -4,18 +4,26 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.networkTables.CurveTuner;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.InterpolationUtil;
 
+/**
+ * Performs various computations to calculate parameters for scoring into the hub
+ *
+ * This file has a lot of object instantiation, if we start seeing occasional
+ * loop overruns, this is a point of optimization.
+ */
 public class ScoreCalculator {
 
   public record CalculatedShot(
@@ -35,6 +43,15 @@ public class ScoreCalculator {
     Angle
   >(
     "Hood Curve",
+    InterpolationUtil::InverseInterpolate,
+    InterpolationUtil::Interpolate
+  );
+
+  private final CurveTuner<Distance, Time> m_timeOfFlightCurve = new CurveTuner<
+    Distance,
+    Time
+  >(
+    "ToF Curve",
     InterpolationUtil::InverseInterpolate,
     InterpolationUtil::Interpolate
   );
@@ -62,6 +79,12 @@ public class ScoreCalculator {
     m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(2));
     m_hoodCurve.put(SHOT_POINTS.POINT_4, Degrees.of(14));
     m_hoodCurve.put(SHOT_POINTS.FARTHEST_POINT, Degrees.of(14));
+
+    m_timeOfFlightCurve.put(SHOT_POINTS.CLOSEST_POINT, Seconds.of(0));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_2, Seconds.of(0));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_3, Seconds.of(2));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_4, Seconds.of(14));
+    m_timeOfFlightCurve.put(SHOT_POINTS.FARTHEST_POINT, Seconds.of(14));
   }
 
   public CalculatedShot calculateShot(Distance targetDistance) {
