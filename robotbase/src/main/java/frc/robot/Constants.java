@@ -8,10 +8,10 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Radian;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import choreo.auto.AutoFactory;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -74,13 +74,18 @@ public class Constants {
       RadiansPerSecond.of(2);
 
     public static final Dimensionless AXIS_MAX_ANGULAR_RATE = Units.Percent.of(
-      50
+      100
     );
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(50);
+    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(100);
 
     public static final double HEADING_CONTROLLER_P = 4.5;
     public static final double HEADING_CONTROLLER_I = 0;
     public static final double HEADING_CONTROLLER_D = 0;
+
+    public static final Dimensionless INTAKE_TRANSLATION_MODIFIER = Percent.of(
+      50
+    );
+    public static final Dimensionless INTAKE_ROTATION_MODIFIER = Percent.of(50);
   }
 
   public static final class PHOTON_VISION {
@@ -145,7 +150,6 @@ public class Constants {
 
       public static final String NAME = "shooter";
 
-      // Camera flipped
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
         Units.Inches.of(-8.262),
         Units.Inches.of(-9.386),
@@ -262,27 +266,21 @@ public class Constants {
 
   public static final class CAN_ID {
 
-    public static final int SPINDEXER_MOTOR = 23;
+    public static final int FLOOR_MOTOR = 23; //TODO: make sure that the old spindexter motor is the same for the floor (or just change the CAN ID)
 
     public static final int LEFT_INTAKE_MOTOR = 24;
     public static final int RIGHT_INTAKE_MOTOR = 25;
     public static final int INTAKE_PIVOT_MOTOR = 33;
 
-    public static final int KICKER_MOTOR = 26;
     public static final int FEEDER_MOTOR = 32;
-    //Feeder motor can ID
-
-    public static final int OUTAKE_MOTOR = 27;
 
     public static final int HOOD_MOTOR = 28;
-
-    public static final int OUTTAKE_MOTOR = 31;
 
     public static final int LEFT_SHOOTER_MOTOR = 29;
     public static final int RIGHT_SHOOTER_MOTOR = 30;
   }
 
-  public static final class SPINDEXER {
+  public static final class FLOOR {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
@@ -292,7 +290,7 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
-    public static final Dimensionless SPINDEXER_SPEED = Percent.of(50);
+    public static final Dimensionless FLOOR_SPEED = Percent.of(50);
   }
 
   public static final class INTAKE {
@@ -310,6 +308,8 @@ public class Constants {
       new SparkMaxConfig()
         .apply(LEFT_MOTOR_CONFIG)
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
+
+    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(75);
   }
 
   public static final class INTAKE_PIVOT {
@@ -357,18 +357,13 @@ public class Constants {
     public static final MechanismGearing EXTERNAL_ENCODER_GEARING =
       new MechanismGearing(GearBox.fromStages("1:1"));
     public static final Boolean ENCODER_INVERTED = true;
-  }
 
-  public static final class OUTTAKE {
+    // TODO: Make sure these are right
+    public static final Angle DEPLOYED_ANGLE = Degrees.of(0);
+    // Intaking/general movement is going to cause pivot to bounce
+    public static final Angle DEPLOYED_TOLERANCE = Degrees.of(10);
 
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(100);
-
-    public static final SparkBaseConfig OUTTAKE_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kCoast)
-      .inverted(false)
-      .smartCurrentLimit(30, 30)
-      .openLoopRampRate(0.5)
-      .voltageCompensation(12);
+    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(10);
   }
 
   public static final class FEEDER {
@@ -377,12 +372,12 @@ public class Constants {
 
     public static final SparkBaseConfig FEEDER_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
+      .inverted(true)
       .smartCurrentLimit(20, 20)
       .openLoopRampRate(0.5)
       .voltageCompensation(12);
 
-    public static final Dimensionless FEED_SPEED = Percent.of(50);
+    public static final Dimensionless FEED_SPEED = Percent.of(80);
   }
 
   public static final class SHOOTER {
@@ -412,7 +407,7 @@ public class Constants {
     public static final double P = 0.01;
     public static final double I = 0;
     public static final double D = 0;
-    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(3600);
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(5767);
     public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
       RotationsPerSecondPerSecond.of(150);
 
@@ -420,6 +415,9 @@ public class Constants {
       new SimpleMotorFeedforward(0.12, 0.1225, 0.1225);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+
+    public static final Dimensionless SCORE_TOLERANCE = Percent.of(5);
+    public static final Time STABLE_VELOCITY = Seconds.of(0.1);
 
     public static final Transform2d ROBOT_TO_SHOOTER = new Transform2d(
       Units.Inches.of(-1.566),
@@ -452,7 +450,7 @@ public class Constants {
     public static final Current STALL_LIMIT = Amps.of(20);
 
     public static final SparkBaseConfig HOOD_BASE_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kCoast)
+      .idleMode(IdleMode.kBrake)
       .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 20)
       .voltageCompensation(12);
 

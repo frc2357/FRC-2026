@@ -1,12 +1,12 @@
-package frc.robot.commands.intake;
+package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
-public class IntakeStop extends Command {
+public class DriveStop extends Command {
 
-  public IntakeStop() {
-    addRequirements(Robot.intake);
+  public DriveStop() {
+    addRequirements(Robot.swerve);
   }
 
   @Override
@@ -16,7 +16,7 @@ public class IntakeStop extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    Robot.intake.stop();
+    Robot.swerve.stopMotors();
   }
 
   @Override
