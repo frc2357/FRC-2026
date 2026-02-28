@@ -110,6 +110,7 @@ public class Robot extends TimedRobot {
     m_InitRobotCommand = new InitRobotCommand();
 
     SmartDashboard.putNumber("Floor", 0.0);
+    SmartDashboard.putNumber("Floor", 0.0);
     SmartDashboard.putNumber("Hood Target Degree", 0);
 
     // DON'T DELETE - Load the april tag field
