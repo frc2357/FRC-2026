@@ -12,6 +12,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.PHOTON_VISION;
 import frc.robot.Robot;
@@ -20,7 +22,6 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -69,6 +70,12 @@ public class PhotonVisionCamera {
    */
   protected Optional<EstimatedRobotPose> m_poseEstimate = Optional.empty();
 
+  /**
+   * The latest seed pose for this camera
+   * This is the filtered pose that can be used to hard set the robot's position
+   */
+  protected Optional<EstimatedRobotPose> m_seedEstimate = Optional.empty();
+
   /** The robot origin to camera lens transform 3D that we use to make the pose estimator. */
   protected final Transform3d ROBOT_TO_CAMERA_TRANSFORM; // if this changes, we have bigger issues.
 
@@ -87,6 +94,8 @@ public class PhotonVisionCamera {
   private Matrix<N3, N1> m_multiTagStdDevs;
   private Matrix<N3, N1> m_singleTagStdDevs;
   private Matrix<N3, N1> m_currentStdDevs;
+
+  private static final Field2d m_unfiltered = new Field2d();
 
   /**
    * Represents a camera from PhotonVision.
@@ -127,6 +136,8 @@ public class PhotonVisionCamera {
       Double.MAX_VALUE,
       Double.MAX_VALUE
     );
+
+    SmartDashboard.putData(cameraName + " unfiltered", m_unfiltered);
   }
 
   /**
@@ -138,6 +149,10 @@ public class PhotonVisionCamera {
    * outside of it. </h1>
    */
   protected void updateResult() {
+    // Clear out member estimates every loop
+    m_poseEstimate = Optional.empty();
+    m_seedEstimate = Optional.empty();
+
     if (!m_camera.isConnected() && !m_connectionLost) {
       m_connectionLost = true;
       DriverStation.reportError(
@@ -152,6 +167,10 @@ public class PhotonVisionCamera {
     m_results = m_camera.getAllUnreadResults();
     Optional<EstimatedRobotPose> visionEst = Optional.empty();
 
+    // Technically an array here, but in practicality we don't
+    // process estimates fast enough for use to get multiple updates
+    // within 20ms, so that's why we just have single
+    // m_poseEstimate and m_seedEstimate variables
     for (PhotonPipelineResult result : m_results) {
       if (result == null || !result.hasTargets()) {
         continue;
@@ -168,9 +187,22 @@ public class PhotonVisionCamera {
         continue;
       }
 
-      if (!passesRobotFilter(visionEst.get())) {
+      m_unfiltered.setRobotPose(visionEst.get().estimatedPose.toPose2d());
+
+      if (!passesRobotSpeedFilter(visionEst.get())) {
         continue;
       }
+
+      m_seedEstimate = visionEst;
+
+      // Commenting this filter out
+      // We only want to use this filter if we plan to hard-set the robot pose
+      // to a vision estimate frequently (like at the start of a drive to pose command)
+      // Otherwise, our natural drift will lead this filter to never allow a vision estimate
+      // into our swerve pose estimator
+      // if (!passesRobotPoseFilter(visionEst.get())) {
+      //   continue;
+      // }
 
       m_poseEstimate = visionEst;
       m_currentStdDevs = updateEstimationStdDevs(
@@ -196,7 +228,7 @@ public class PhotonVisionCamera {
    * @param estimate The camera's pose estimate
    * @return true if the vision estimate is within reasonable constraints to the robot
    */
-  public boolean passesRobotFilter(EstimatedRobotPose estimate) {
+  public boolean passesRobotSpeedFilter(EstimatedRobotPose estimate) {
     ChassisSpeeds speeds = Robot.swerve.getCurrentChassisSpeeds();
 
     // Check if we are translating too fast
@@ -218,6 +250,10 @@ public class PhotonVisionCamera {
       return false;
     }
 
+    return true;
+  }
+
+  public boolean passesRobotPoseFilter(EstimatedRobotPose estimate) {
     // Check if the estimate is too far away
     Pose2d robotPose = Robot.swerve.getFieldRelativePose2d();
     if (
@@ -332,7 +368,7 @@ public class PhotonVisionCamera {
    *
    * @param index The index to make it be set to.
    */
-  public void setPipeline(int index) {
+  protected void setPipeline(int index) {
     if (m_camera.getPipelineIndex() != index) {
       m_camera.setPipelineIndex(index);
     }
@@ -413,5 +449,14 @@ public class PhotonVisionCamera {
         est.timestampSeconds
       )
     );
+  }
+
+  /**
+   * Purpose of this estimate is to seed the robot's current position
+   * Do not add this measurement to the odometry using addVisionMeasurement
+   * @return The pose to be seeded as the robot's current position
+   */
+  public Optional<EstimatedRobotPose> getSeedEstimateForSwerve() {
+    return m_seedEstimate;
   }
 }

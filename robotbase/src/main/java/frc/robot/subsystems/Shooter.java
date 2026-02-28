@@ -1,18 +1,23 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.units.measure.MutAngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CAN_ID;
-import frc.robot.Constants.HOOD;
 import frc.robot.Constants.SHOOTER;
 import java.util.function.Supplier;
 import yams.mechanisms.config.FlyWheelConfig;
@@ -151,6 +156,22 @@ public class Shooter extends SubsystemBase {
 
   public void stopMotor() {
     m_shooter.setDutyCycleSetpoint(0);
+  }
+
+  public Command waitUntilTargetVelocity() {
+    var trigger = new Trigger(
+      () ->
+        m_sparkSmartMotorController
+          .getMechanismSetpointVelocity()
+          .isPresent() &&
+        m_sparkSmartMotorController
+          .getMechanismVelocity()
+          .isNear(
+            m_sparkSmartMotorController.getMechanismSetpointVelocity().get(),
+            SHOOTER.SCORE_TOLERANCE.in(Value)
+          )
+    ).debounce(SHOOTER.STABLE_VELOCITY.in(Seconds), DebounceType.kRising);
+    return Commands.waitUntil(trigger);
   }
 
   @Override
