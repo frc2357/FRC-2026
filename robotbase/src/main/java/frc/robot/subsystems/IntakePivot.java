@@ -93,30 +93,30 @@ public class IntakePivot extends SubsystemBase {
   }
 
   /**
-   * Gets the current velocity of the intake_pivot.
+   * Gets the current angle of the intake_pivot.
    *
-   * @return INTAKE_PIVOT velocity.
+   * @return intake_pivot angle.
    */
   public Angle getAngle() {
     return m_arm.getAngle();
   }
 
   /**
-   * Set the intake_pivot velocity.
+   * Set the intake_pivot angle setpoint (command)
    *
-   * @param speed Speed to set.
-   * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
+   * @param angle angle setpoint to use
+   * @return {@link edu.wpi.first.wpilibj2.command.Command}
    */
   public Command setAngle(Angle angle) {
     return m_arm.run(angle).finallyDo(() -> this.stopMotor());
   }
 
   /**
-   * Set the intake_pivot velocity setpoint.
+   * Set the intake_pivot angle setpoint (not command)
    *
-   * @param speed Speed to set
+   * @param angle angle setpoint to use
    */
-  public void setAngularSetpoint(Angle angle) {
+  public void setAngleSetpoint(Angle angle) {
     m_arm.setMechanismPositionSetpoint(angle);
   }
 
@@ -124,7 +124,7 @@ public class IntakePivot extends SubsystemBase {
    * Set the dutycycle of the intake_pivot.
    *
    * @param dutyCycle DutyCycle to set.
-   * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
+   * @return {@link edu.wpi.first.wpilibj2.command.Command}
    */
   private Command set(double dutyCycle) {
     return m_arm.set(dutyCycle).finallyDo(() -> this.stopMotor());
