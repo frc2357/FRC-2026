@@ -473,6 +473,20 @@ public class Constants {
     public static final Mass MASS = Pounds.of(1.365);
   }
 
+  public class SCORING {
+
+    /**
+     * The latency compensation to account for the time a ball is feeding, in the shooter,
+     * or signals being sent to the motors for shoot on the fly algorithm
+     *  */
+    public static final Time SOTF_LATENCY_COMPENSATION = Seconds.of(0.03);
+
+    public static final String IS_SOTF_KEY = "Enable SOTF";
+
+    public static final int SOTF_CONVERGE_ITERATIONS = 5;
+    public static final int DRIVE_ANGLE_CONVERGE_ITERATIONS = 2;
+  }
+
   public class FieldConstants {
 
     public static final AprilTagFieldLayout FIELD_LAYOUT =
