@@ -150,6 +150,18 @@ public class Shooter extends SubsystemBase {
       .finallyDo(() -> this.stopMotor());
   }
 
+  public Command stepAxisSpeed(Supplier<Dimensionless> axis) {
+    return m_shooter
+      .set(() ->
+        (Math.floor(
+            axis.get().times(SHOOTER.AXIS_MAX_SPEED).in(Value) /
+              SHOOTER.STEP_AXIS_STEP
+          ) *
+          SHOOTER.STEP_AXIS_STEP)
+      )
+      .finallyDo(() -> this.stopMotor());
+  }
+
   public Command stopCommand() {
     return m_shooter.set(0);
   }

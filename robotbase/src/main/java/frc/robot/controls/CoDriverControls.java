@@ -1,18 +1,26 @@
 package frc.robot.controls;
 
+import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Value;
 
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
+import frc.robot.Constants.INTAKE_PIVOT;
 import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
+import frc.robot.commands.feeder.FeederAxis;
+import frc.robot.commands.floor.FloorAxis;
 import frc.robot.commands.intake.IntakeAxis;
 import frc.robot.controls.util.RumbleInterface;
+import frc.robot.subsystems.IntakePivot;
+import java.util.function.Supplier;
 
 public class CoDriverControls implements RumbleInterface {
 
@@ -74,7 +82,7 @@ public class CoDriverControls implements RumbleInterface {
     onlyUp
       .and(m_controller.rightTrigger())
       .whileTrue(
-        Robot.shooter.axisSpeed(() ->
+        Robot.shooter.stepAxisSpeed(() ->
           Value.of(m_controller.getRightTriggerAxis())
         )
       );
@@ -87,6 +95,10 @@ public class CoDriverControls implements RumbleInterface {
         )
       );
 
+    onlyUp.whileTrue(
+      Robot.hood.axisSpeed(() -> Value.of(m_controller.getRightY()))
+    );
+
     onlyLeft
       .and(m_controller.leftTrigger())
       .whileTrue(
@@ -97,6 +109,23 @@ public class CoDriverControls implements RumbleInterface {
       .and(m_controller.rightTrigger())
       .whileTrue(
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+      );
+
+    onlyLeft.whileTrue(
+      Robot.intakePivot.axisSpeed(() -> Value.of(m_controller.getRightY()))
+    );
+
+    onlyRight.whileTrue(
+      new FloorAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+    );
+
+    m_controller
+      .rightBumper()
+      .whileTrue(new FeederAxis(() -> (Constants.FEEDER.AXIS_MAX_SPEED)));
+    m_controller
+      .leftBumper()
+      .whileTrue(
+        new FeederAxis(() -> (Constants.FEEDER.AXIS_MAX_SPEED.times(-1)))
       );
   }
 
