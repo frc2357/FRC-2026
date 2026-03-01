@@ -100,7 +100,7 @@ public final class Constants {
     public static final AngularVelocity NEO_550_MAX_VEL = RPM.of(11000);
 
     public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromStages("5:1", "9:1", "20:19", "166:16") // TODO: Reminder to update this to 166:20 when new shooter goes on
+      GearBox.fromStages("5:1", "9:1", "1:1", "166:20")
     );
 
     public static final AngularVelocity MAX_POSSIBLE_VELOCITY =
@@ -108,18 +108,16 @@ public final class Constants {
 
     public static final EncoderConfig CLOSED_LOOP_CONFIG = MOTOR_CONFIG.encoder
       .positionConversionFactor(GEARING.getRotorToMechanismRatio())
-      .velocityConversionFactor(GEARING.getRotorToMechanismRatio() / 60.0);
+      .velocityConversionFactor(GEARING.getRotorToMechanismRatio() / 60);
 
     public static final MechanismGearing ENCODER_GEARING = new MechanismGearing(
-      GearBox.fromStages("166:16") // TODO: Remember to update when new hood put on
+      GearBox.fromStages("166:20")
     );
 
     public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER_CONFIG =
       MOTOR_CONFIG.absoluteEncoder
         .positionConversionFactor(ENCODER_GEARING.getRotorToMechanismRatio())
-        .velocityConversionFactor(
-          ENCODER_GEARING.getRotorToMechanismRatio() / 60.0
-        );
+        .velocityConversionFactor(ENCODER_GEARING.getRotorToMechanismRatio());
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
   }
