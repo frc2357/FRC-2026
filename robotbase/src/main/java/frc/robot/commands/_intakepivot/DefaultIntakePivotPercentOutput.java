@@ -1,20 +1,18 @@
-package frc.robot.commands._intakeivot;
+package frc.robot.commands._intakepivot;
 
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.INTAKE_PIVOT;
 import frc.robot.Robot;
 
-public class DefaultIntakePivotHoldAngle extends Command {
+public class DefaultIntakePivotPercentOutput extends Command {
 
-  public DefaultIntakePivotHoldAngle() {
+  public DefaultIntakePivotPercentOutput() {
     addRequirements(Robot.intakePivot);
   }
 
   @Override
   public void initialize() {
-    Angle currentAngle = Robot.intakePivot.getAngle();
-
-    Robot.intakePivot.setAngleSetpoint(currentAngle);
+    Robot.intakePivot.setSpeed(INTAKE_PIVOT.HOLD_DOWN_SPEED);
   }
 
   @Override
