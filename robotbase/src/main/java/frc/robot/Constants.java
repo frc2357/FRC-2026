@@ -373,7 +373,7 @@ public class Constants {
     public static final SparkBaseConfig FEEDER_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
       .inverted(true)
-      .smartCurrentLimit(20, 20)
+      .smartCurrentLimit(40, 40)
       .openLoopRampRate(0.5)
       .voltageCompensation(12);
 
