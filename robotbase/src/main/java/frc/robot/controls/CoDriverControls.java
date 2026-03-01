@@ -16,9 +16,8 @@ import frc.robot.Constants.INTAKE_PIVOT;
 import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.feeder.FeederAxis;
+import frc.robot.commands.floor.FloorAxis;
 import frc.robot.commands.intake.IntakeAxis;
-import frc.robot.commands.spindexer.SpindexerAxis;
-import frc.robot.commands.spindexer.SpindexerSetSpeed;
 import frc.robot.controls.util.RumbleInterface;
 import frc.robot.subsystems.IntakePivot;
 import java.util.function.Supplier;
@@ -117,7 +116,7 @@ public class CoDriverControls implements RumbleInterface {
     );
 
     onlyRight.whileTrue(
-      new SpindexerAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+      new FloorAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
     );
 
     m_controller
