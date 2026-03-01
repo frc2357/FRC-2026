@@ -251,7 +251,7 @@ public class ScoreCalculator {
       .minus(robotPose.getTranslation())
       .getAngle();
 
-    // Run 2 iterations to account for the launcher 'swinging' as the robot rotates
+    // Run iterations to account for the launcher 'swinging' as the robot rotates
     for (int i = 0; i < SCORING.DRIVE_ANGLE_CONVERGE_ITERATIONS; i++) {
       // 1. Find where the launcher would be on the field if the robot faces our guess
       Translation2d projectedLauncherPose = robotPose
