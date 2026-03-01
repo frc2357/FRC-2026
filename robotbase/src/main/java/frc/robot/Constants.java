@@ -382,6 +382,8 @@ public class Constants {
 
   public static final class SHOOTER {
 
+    public static final double STEP_AXIS_STEP = 0.10;
+
     public static final MechanismGearing GEARING = new MechanismGearing(
       GearBox.fromStages("1:1")
     );

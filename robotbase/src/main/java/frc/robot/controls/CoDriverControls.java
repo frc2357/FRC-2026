@@ -3,6 +3,7 @@ package frc.robot.controls;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Value;
 
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -82,7 +83,7 @@ public class CoDriverControls implements RumbleInterface {
     onlyUp
       .and(m_controller.rightTrigger())
       .whileTrue(
-        Robot.shooter.axisSpeed(() ->
+        Robot.shooter.stepAxisSpeed(() ->
           Value.of(m_controller.getRightTriggerAxis())
         )
       );
@@ -116,11 +117,17 @@ public class CoDriverControls implements RumbleInterface {
     );
 
     onlyRight.whileTrue(
-      new SpindexerSetSpeed(Value.of(m_controller.getRightTriggerAxis()))
+      new SpindexerAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
     );
 
-    m_controller.rightBumper().whileTrue(new FeederAxis(() -> (Value.of(70))));
-    m_controller.leftBumper().whileTrue(new FeederAxis(() -> (Value.of(-70))));
+    m_controller
+      .rightBumper()
+      .whileTrue(new FeederAxis(() -> (Constants.FEEDER.AXIS_MAX_SPEED)));
+    m_controller
+      .leftBumper()
+      .whileTrue(
+        new FeederAxis(() -> (Constants.FEEDER.AXIS_MAX_SPEED.times(-1)))
+      );
   }
 
   private double modifyAxis(double value) {
