@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.INTAKE;
 import frc.robot.commands.drive.SetDriveModifiers;
+import frc.robot.commands.intakepivot.IntakeDeploy;
 
 public class TeleopIntake extends ParallelCommandGroup {
 
