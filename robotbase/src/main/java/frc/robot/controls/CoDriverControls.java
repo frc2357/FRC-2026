@@ -98,6 +98,10 @@ public class CoDriverControls implements RumbleInterface {
       .whileTrue(
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
       );
+
+    onlyRight
+      .and(noLetterButtons)
+      .whileTrue(Robot.intakePivot.axisSpeed(() -> getRightX()));
   }
 
   private double modifyAxis(double value) {

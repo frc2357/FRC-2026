@@ -122,6 +122,16 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
+   * Set the shooter velocity.
+   *
+   * @param supplier Speed supplier to set.
+   * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
+   */
+  public Command setVelocity(Supplier<AngularVelocity> supplier) {
+    return m_shooter.run(supplier).finallyDo(() -> this.stopMotor());
+  }
+
+  /**
    * Set the shooter velocity setpoint.
    *
    * @param speed Speed to set

@@ -108,6 +108,8 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Floor", 0.0);
     SmartDashboard.putNumber("Hood Target Degree", 0);
+    SmartDashboard.putNumber("shooter speed", 0);
+    SmartDashboard.putNumber("Shooter RPS", 0.0);
 
     // DON'T DELETE - Load the april tag field
     // This prevents a loop overrun when we first access the constants

@@ -70,8 +70,8 @@ public class Hood extends SubsystemBase {
       .withStatorCurrentLimit(HOOD.STALL_LIMIT)
       .withExternalEncoder(m_encoder)
       .withUseExternalFeedbackEncoder(true)
-      .withExternalEncoderGearing(HOOD.ENCODER_GEARING)
-      .withSoftLimit(HOOD.LOWER_ANGLE_LIMIT, HOOD.UPPER_ANGLE_LIMIT);
+      .withExternalEncoderGearing(HOOD.ENCODER_GEARING);
+    //.withSoftLimit(HOOD.LOWER_ANGLE_LIMIT, HOOD.UPPER_ANGLE_LIMIT);
 
     m_sparkSmartMotorController = new SparkWrapper(
       m_motor,

@@ -59,7 +59,7 @@ public class DriverControls implements RumbleInterface {
       .leftTrigger()
       .whileTrue(
         Robot.shooter.axisSpeed(() ->
-          Value.of(m_controller.getLeftTriggerAxis())
+          Value.of(SmartDashboard.getNumber("shooter speed", 0.0))
         )
       );
 
