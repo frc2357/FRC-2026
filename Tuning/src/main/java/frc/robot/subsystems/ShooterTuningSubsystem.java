@@ -147,6 +147,7 @@ public class ShooterTuningSubsystem implements Sendable {
       velocityFF,
       accelerationFF
     );
+    m_motorconfig.closedLoop.positionWrappingEnabled(true);
 
     m_motorconfig.closedLoop.maxMotion
       .maxAcceleration(maxAcceleration.in(RotationsPerSecondPerSecond))
