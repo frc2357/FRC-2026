@@ -17,10 +17,13 @@ import frc.robot.Robot;
 import frc.robot.commands.drive.DrivePoseTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
+import frc.robot.commands.feeder.FeederSetSpeed;
+import frc.robot.commands.floor.FloorSetSpeed;
 import frc.robot.commands.intake.IntakeAxis;
 import frc.robot.commands.scoring.Score;
 import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.scoring.VisionTargeting;
+import frc.robot.commands.shooter.Firing;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
@@ -36,7 +39,7 @@ public class DriverControls implements RumbleInterface {
     m_controller.back().onTrue(new FlipPerspective());
     m_controller.start().onTrue(new ResetPerspective());
 
-    m_controller.leftTrigger().whileTrue(new VisionTargeting());
+    // m_controller.leftTrigger().whileTrue(new VisionTargeting());
 
     m_controller
       .rightTrigger()
@@ -47,11 +50,28 @@ public class DriverControls implements RumbleInterface {
     m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(10)));
     m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-10)));
 
-    m_controller
-      .x()
-      .whileTrue(new DrivePoseTargetingHub(this::getLeftX, this::getLeftY));
+    // m_controller
+    //   .x()
+    //   .whileTrue(new DrivePoseTargetingHub(this::getLeftX, this::getLeftY));
 
-    m_controller.b().whileTrue(new VisionScore(this::getLeftX, this::getLeftY));
+    // m_controller.b().whileTrue(new VisionScore(this::getLeftX, this::getLeftY));
+    m_controller
+      .leftTrigger()
+      .whileTrue(
+        Robot.shooter.axisSpeed(() ->
+          Value.of(m_controller.getLeftTriggerAxis())
+        )
+      );
+
+    m_controller
+      .b()
+      .whileTrue(
+        new FloorSetSpeed(Constants.FLOOR.FLOOR_SPEED).alongWith(
+          new FeederSetSpeed(Constants.FEEDER.FEED_SPEED)
+        )
+      );
+
+    m_controller.x().whileTrue(new Firing(RotationsPerSecond.of(60)));
 
     m_controller
       .povRight()

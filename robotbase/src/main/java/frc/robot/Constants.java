@@ -284,13 +284,13 @@ public class Constants {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
+      .inverted(true)
       .smartCurrentLimit(40, 40)
       .openLoopRampRate(0.25); // TODO: double check these values
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
-    public static final Dimensionless FLOOR_SPEED = Percent.of(50);
+    public static final Dimensionless FLOOR_SPEED = Percent.of(60);
   }
 
   public static final class INTAKE {

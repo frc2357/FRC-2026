@@ -15,7 +15,7 @@ public class Intake extends SubsystemBase {
 
   private SparkMax m_leftMotor;
 
-  //private SparkMax m_rightMotor;
+  private SparkMax m_rightMotor;
 
   public Intake() {
     m_leftMotor = new SparkMax(CAN_ID.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
@@ -26,16 +26,16 @@ public class Intake extends SubsystemBase {
       PersistMode.kNoPersistParameters
     );
 
-    // m_rightMotor = new SparkMax(
-    //   CAN_ID.RIGHT_INTAKE_MOTOR,
-    //   MotorType.kBrushless
-    // );
+    m_rightMotor = new SparkMax(
+      CAN_ID.RIGHT_INTAKE_MOTOR,
+      MotorType.kBrushless
+    );
 
-    // m_rightMotor.configure(
-    //   INTAKE.RIGHT_MOTOR_CONFIG,
-    //   ResetMode.kNoResetSafeParameters,
-    //   PersistMode.kNoPersistParameters
-    // );
+    m_rightMotor.configure(
+      INTAKE.RIGHT_MOTOR_CONFIG,
+      ResetMode.kNoResetSafeParameters,
+      PersistMode.kNoPersistParameters
+    );
   }
 
   public void setSpeed(Dimensionless percentOutput) {
