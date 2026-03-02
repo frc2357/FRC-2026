@@ -12,6 +12,7 @@ import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
+import com.revrobotics.spark.config.FeedForwardConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -106,7 +107,7 @@ public final class Constants {
     public static final AngularVelocity MAX_POSSIBLE_VELOCITY =
       NEO_550_MAX_VEL.times(GEARING.getRotorToMechanismRatio());
 
-    public static final EncoderConfig CLOSED_LOOP_CONFIG = MOTOR_CONFIG.encoder
+    public static final EncoderConfig ENCODER_CONFIG = MOTOR_CONFIG.encoder
       .positionConversionFactor(GEARING.getRotorToMechanismRatio())
       .velocityConversionFactor(GEARING.getRotorToMechanismRatio() / 60);
 

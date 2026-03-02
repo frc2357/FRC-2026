@@ -36,10 +36,11 @@ public class HoodTuningSubsystem implements Sendable {
   private SparkClosedLoopController m_PIDController;
   private SparkAbsoluteEncoder m_encoder;
 
-  public double P = 45;
+  public double P = 00;
   public double I = 0;
   public double D = 0;
-  public double staticFF = 0.18;
+  public double staticFF = 0.2;
+  public double gravityFF = 0.05;
   public double velocityFF = 0.01;
   public double accelerationFF = 0.6;
   public AngularVelocity maxVelocity = HOOD.MAX_POSSIBLE_VELOCITY.times(1);
@@ -68,6 +69,7 @@ public class HoodTuningSubsystem implements Sendable {
     Preferences.initDouble("hoodI", I);
     Preferences.initDouble("hoodD", D);
     Preferences.initDouble("hoodStaticFF", staticFF);
+    Preferences.initDouble("hoodGravityFF", gravityFF);
     Preferences.initDouble("hoodVelocityFF", velocityFF);
     Preferences.initDouble("hoodAccelerationFF", accelerationFF);
     Preferences.initDouble(
@@ -84,6 +86,7 @@ public class HoodTuningSubsystem implements Sendable {
     I = Preferences.getDouble("hoodI", I);
     D = Preferences.getDouble("hoodD", D);
     staticFF = Preferences.getDouble("hoodStaticFF", staticFF);
+    gravityFF = Preferences.getDouble("hoodGravityFF", gravityFF);
     velocityFF = Preferences.getDouble("hoodVelocityFF", velocityFF);
     accelerationFF = Preferences.getDouble(
       "hoodAccelerationFF",
@@ -115,6 +118,7 @@ public class HoodTuningSubsystem implements Sendable {
     SmartDashboard.putNumber("Hood I", I);
     SmartDashboard.putNumber("Hood D", D);
     SmartDashboard.putNumber("Hood Static FF", staticFF);
+    SmartDashboard.putNumber("Hood Gravity FF", gravityFF);
     SmartDashboard.putNumber("Hood Velocity FF", velocityFF);
     SmartDashboard.putNumber("Hood Acceleration FF", accelerationFF);
 
@@ -138,10 +142,11 @@ public class HoodTuningSubsystem implements Sendable {
 
   public void updatePIDs() {
     m_motorconfig.closedLoop.pid(P, I, D);
-    m_motorconfig.closedLoop.feedForward.sva(
+    m_motorconfig.closedLoop.feedForward.svag(
       staticFF,
       velocityFF,
-      accelerationFF
+      accelerationFF,
+      gravityFF
     );
 
     m_motorconfig.closedLoop.maxMotion
@@ -152,7 +157,7 @@ public class HoodTuningSubsystem implements Sendable {
     m_motor.configure(
       m_motorconfig,
       ResetMode.kNoResetSafeParameters,
-      PersistMode.kPersistParameters
+      PersistMode.kNoPersistParameters
     );
   }
 
@@ -161,6 +166,7 @@ public class HoodTuningSubsystem implements Sendable {
     double newI = SmartDashboard.getNumber("Hood I", 0);
     double newD = SmartDashboard.getNumber("Hood D", 0);
     double newStaticFF = SmartDashboard.getNumber("Hood Static FF", 0);
+    double newGravityFF = SmartDashboard.getNumber("Hood Gravity FF", 0);
     double newVelocityFF = SmartDashboard.getNumber("Hood Velocity FF", 0);
     double newAccelerationFF = SmartDashboard.getNumber(
       "Hood Acceleration FF",
@@ -204,6 +210,7 @@ public class HoodTuningSubsystem implements Sendable {
       newI != I ||
       newD != D ||
       newStaticFF != staticFF ||
+      newGravityFF != gravityFF ||
       newVelocityFF != velocityFF ||
       newAccelerationFF != accelerationFF ||
       newMaxVelocity != maxVelocity.in(RotationsPerSecond) ||
@@ -214,6 +221,7 @@ public class HoodTuningSubsystem implements Sendable {
       I = newI;
       D = newD;
       staticFF = newStaticFF;
+      gravityFF = newGravityFF;
       velocityFF = newVelocityFF;
       accelerationFF = newAccelerationFF;
       maxVelocity = RotationsPerSecond.of(newMaxVelocity);
@@ -274,6 +282,7 @@ public class HoodTuningSubsystem implements Sendable {
         Preferences.setDouble("hoodI", I);
         Preferences.setDouble("hoodD", D);
         Preferences.setDouble("hoodStaticFF", staticFF);
+        Preferences.setDouble("hoodGravityFF", gravityFF);
         Preferences.setDouble("hoodVelocityFF", velocityFF);
         Preferences.setDouble("hoodAccelerationFF", accelerationFF);
         Preferences.setDouble(
