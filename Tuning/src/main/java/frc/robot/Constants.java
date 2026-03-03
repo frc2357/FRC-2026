@@ -101,25 +101,11 @@ public final class Constants {
 
     public static final AngularVelocity NEO_550_MAX_VEL = RPM.of(11000);
 
-    public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromStages("5:1", "9:1", "1:1", "166:20")
-    );
-
-    public static final AngularVelocity MAX_POSSIBLE_VELOCITY =
-      NEO_550_MAX_VEL.times(GEARING.getRotorToMechanismRatio());
-
-    public static final AngularVelocity REASONABLE_MAX_VELOCITY =
-      RotationsPerSecond.of(0.25);
-
-    public static final EncoderConfig ENCODER_CONFIG = MOTOR_CONFIG.encoder
-      .positionConversionFactor(GEARING.getRotorToMechanismRatio())
-      .velocityConversionFactor(GEARING.getRotorToMechanismRatio() / 60);
-
     public static final MechanismGearing ENCODER_GEARING = new MechanismGearing(
       GearBox.fromStages("166:20")
     );
 
-    public static final SignalsConfig SIGNALE_CONFIG = MOTOR_CONFIG.signals
+    public static final SignalsConfig SIGNAL_CONFIG = MOTOR_CONFIG.signals
       .absoluteEncoderPositionPeriodMs(20)
       .absoluteEncoderVelocityPeriodMs(20);
 
