@@ -31,11 +31,11 @@ public class HoodTuningSubsystem implements Sendable {
   private SparkClosedLoopController m_PIDController;
   private SparkAbsoluteEncoder m_encoder;
 
-  public double P = 00;
+  public double P = 50;
   public double I = 0;
   public double D = 0;
-  public double staticFF = 0.2;
-  public double gravityFF = 0.05;
+  public double staticFF = 0.1;
+  public double gravityFF = 0.0;
 
   public Angle tolerance = Degrees.of(0.1);
 
