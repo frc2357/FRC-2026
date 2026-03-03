@@ -90,7 +90,7 @@ public class CoDriverControls implements RumbleInterface {
     onlyUp
       .and(m_controller.leftTrigger())
       .whileTrue(
-        Robot.shooter.axisSpeed(() ->
+        Robot.shooter.stepAxisSpeed(() ->
           Value.of(-m_controller.getLeftTriggerAxis())
         )
       );
