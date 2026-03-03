@@ -105,6 +105,9 @@ public final class Constants {
       GearBox.fromStages("166:20")
     );
 
+    public static final ClosedLoopConfig CLOSED_LOOP_CONFIG =
+      MOTOR_CONFIG.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+
     public static final SignalsConfig SIGNAL_CONFIG = MOTOR_CONFIG.signals
       .absoluteEncoderPositionPeriodMs(20)
       .absoluteEncoderVelocityPeriodMs(20);
