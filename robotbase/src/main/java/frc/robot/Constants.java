@@ -430,17 +430,15 @@ public class Constants {
 
   public static final class HOOD {
 
-    // TODO: Most of the hood's mechanical properties will need updated when we switch to the herring bone gear
-
     public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromStages("5:1", "9:1", "20:19", "166:16")
+      GearBox.fromStages("5:1", "9:1", "1:1", "166:20")
     );
 
     public static final MechanismGearing ENCODER_GEARING = new MechanismGearing(
-      GearBox.fromStages("166:16") // TODO: Reminder to update this to 166:20 when new shooter goes on
+      GearBox.fromStages("166:20", "60:1") // Extra 60:1 stage to cancel out SparkWrapper conversion factor / 60 since encoder is alread in RPS
     );
 
-    public static final Angle LOWER_ANGLE_LIMIT = Degrees.of(0);
+    public static final Angle LOWER_ANGLE_LIMIT = Degrees.of(0.1);
     public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(20);
     public static final Angle SIM_STARTING_POSITION = Degrees.zero();
 

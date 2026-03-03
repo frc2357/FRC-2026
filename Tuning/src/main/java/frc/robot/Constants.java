@@ -87,8 +87,8 @@ public final class Constants {
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
   }
 
-  // The hood's max RPS is ~0.37
-  // The encoder shaft max RPS is ~3.87 or ~232 RPM
+  // The hood's max RPS is ~0.49
+  // The encoder shaft max RPS is ~4.06
   public static final class HOOD {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
