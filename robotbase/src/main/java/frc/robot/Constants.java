@@ -14,6 +14,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 import choreo.auto.AutoFactory;
+import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -453,6 +454,10 @@ public class Constants {
       .idleMode(IdleMode.kBrake)
       .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 20)
       .voltageCompensation(12);
+
+    public static final SignalsConfig SIGNAL_CONFIG = HOOD_BASE_CONFIG.signals
+      .absoluteEncoderPositionPeriodMs(20)
+      .absoluteEncoderVelocityPeriodMs(20);
 
     // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
 

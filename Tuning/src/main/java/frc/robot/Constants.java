@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.FeedForwardConfig;
+import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -95,7 +96,7 @@ public final class Constants {
       .idleMode(IdleMode.kBrake)
       .inverted(false)
       .openLoopRampRate(0.25)
-      .smartCurrentLimit(20, 10)
+      .smartCurrentLimit(10, 10)
       .voltageCompensation(12); //
 
     public static final AngularVelocity NEO_550_MAX_VEL = RPM.of(11000);
@@ -107,6 +108,9 @@ public final class Constants {
     public static final AngularVelocity MAX_POSSIBLE_VELOCITY =
       NEO_550_MAX_VEL.times(GEARING.getRotorToMechanismRatio());
 
+    public static final AngularVelocity REASONABLE_MAX_VELOCITY =
+      RotationsPerSecond.of(0.25);
+
     public static final EncoderConfig ENCODER_CONFIG = MOTOR_CONFIG.encoder
       .positionConversionFactor(GEARING.getRotorToMechanismRatio())
       .velocityConversionFactor(GEARING.getRotorToMechanismRatio() / 60);
@@ -114,6 +118,10 @@ public final class Constants {
     public static final MechanismGearing ENCODER_GEARING = new MechanismGearing(
       GearBox.fromStages("166:20")
     );
+
+    public static final SignalsConfig SIGNALE_CONFIG = MOTOR_CONFIG.signals
+      .absoluteEncoderPositionPeriodMs(20)
+      .absoluteEncoderVelocityPeriodMs(20);
 
     public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER_CONFIG =
       MOTOR_CONFIG.absoluteEncoder
