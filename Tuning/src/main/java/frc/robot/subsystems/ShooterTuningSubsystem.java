@@ -30,17 +30,17 @@ public class ShooterTuningSubsystem implements Sendable {
   private SparkClosedLoopController m_PIDController;
   private RelativeEncoder m_encoder;
 
-  public double P = 0.01;
+  public double P = 0.005;
   public double I = 0;
   public double D = 0;
   public double staticFF = 0.12;
-  public double velocityFF = 0.1225;
-  public double accelerationFF = 0.1225;
+  public double velocityFF = 0.125;
+  public double accelerationFF = 0.01;
   public AngularVelocity maxVelocity = RotationsPerSecond.of(77); // Max at free speed is ~96, 80% is 77
   public AngularAcceleration maxAcceleration = RotationsPerSecondPerSecond.of(
     150
   );
-  public double rpsTolerance = 0.1;
+  public double rpsTolerance = 0.01;
 
   private SparkBaseConfig m_motorconfig = SHOOTER.MOTOR_CONFIG_LEFT;
   // private ShooterCurveTuner m_curveTuner; TODO: implement later
