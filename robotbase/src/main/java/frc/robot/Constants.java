@@ -436,11 +436,11 @@ public class Constants {
     );
 
     public static final MechanismGearing ENCODER_GEARING = new MechanismGearing(
-      GearBox.fromStages("166:20", "60:1") // Extra 60:1 stage to cancel out SparkWrapper conversion factor / 60 since encoder is alread in RPS
+      GearBox.fromStages("166:20")
     );
 
     public static final Angle LOWER_ANGLE_LIMIT = Degrees.of(0.1);
-    public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(20);
+    public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(28);
     public static final Angle SIM_STARTING_POSITION = Degrees.zero();
 
     // Mass of the flywheel.
@@ -448,30 +448,23 @@ public class Constants {
     public static final String MECHANISM_NETWORK_KEY = "HoodMech";
     public static final String MOTOR_NETWORK_KEY = "HoodMotor";
 
-    public static final Current STALL_LIMIT = Amps.of(20);
+    public static final Current STALL_LIMIT = Amps.of(10);
 
     public static final SparkBaseConfig HOOD_BASE_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kBrake)
-      .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 20)
+      .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 10)
       .voltageCompensation(12);
 
     public static final SignalsConfig SIGNAL_CONFIG = HOOD_BASE_CONFIG.signals
       .absoluteEncoderPositionPeriodMs(20)
       .absoluteEncoderVelocityPeriodMs(20);
 
-    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
-
-    public static final double P = 45;
+    public static final double P = 50;
     public static final double I = 0;
     public static final double D = 0;
-    public static final AngularVelocity MAX_ANGULAR_VELOCITY =
-      // Max rpm of neo 550 multiplied by gear ratio and set to 80%
-      RotationsPerSecond.of(GEARING.getMechanismToRotorRatio() * 11000 * 0.8);
-    public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
-      RotationsPerSecondPerSecond.of(3);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(.18, 0.01, .6);
+      new SimpleMotorFeedforward(0.1, 0.0, 0.0);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(30);
     public static final Distance LENGTH = Inches.of(8);

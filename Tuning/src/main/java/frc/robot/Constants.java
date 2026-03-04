@@ -6,13 +6,11 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
-import com.revrobotics.spark.config.FeedForwardConfig;
 import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -49,7 +47,6 @@ public final class Constants {
     public static final int RIGHT_INTAKE_MOTOR = 25;
     public static final int INTAKE_PIVOT_MOTOR = 33;
 
-    public static final int KICKER_MOTOR = 26;
     public static final int FEEDER_MOTOR = 32;
     //Feeder motor can ID
 

@@ -3,9 +3,12 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Value;
 
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Dimensionless;
@@ -44,20 +47,8 @@ public class Hood extends SubsystemBase {
       .withControlMode(ControlMode.CLOSED_LOOP)
       .withVendorConfig(HOOD.HOOD_BASE_CONFIG)
       // Feedback Constants (PID Constants)
-      .withClosedLoopController(
-        HOOD.P,
-        HOOD.I,
-        HOOD.D,
-        HOOD.MAX_ANGULAR_VELOCITY,
-        HOOD.MAX_ANGULAR_ACCELERATION
-      )
-      .withSimClosedLoopController(
-        HOOD.P,
-        HOOD.I,
-        HOOD.D,
-        HOOD.MAX_ANGULAR_VELOCITY,
-        HOOD.MAX_ANGULAR_ACCELERATION
-      )
+      .withClosedLoopController(HOOD.P, HOOD.I, HOOD.D)
+      .withSimClosedLoopController(HOOD.P, HOOD.I, HOOD.D)
       // Feedforward Constants
       .withFeedforward(HOOD.FEEDFORWARD)
       .withSimFeedforward(HOOD.FEEDFORWARD)
@@ -89,6 +80,21 @@ public class Hood extends SubsystemBase {
       .withTelemetry(HOOD.MECHANISM_NETWORK_KEY, TelemetryVerbosity.HIGH);
 
     m_hood = new Pivot(m_hoodConfig);
+
+    // Account for YAMS assuming the feedback sensor returns velocity nativley in RPM
+    // The CANANDMAG Helium Encoder 0.2 natively returns rotations per second
+    // so the conversion factor should not be divided by 60 like YAMS is doing.
+    // TODO: revisit once we get the thrifty encoders, if they return nativley in RPM this is not necessary
+    SparkBaseConfig baseConfig =
+      (SparkBaseConfig) m_sparkSmartMotorController.getMotorControllerConfig();
+    baseConfig.absoluteEncoder.velocityConversionFactor(
+      HOOD.ENCODER_GEARING.getRotorToMechanismRatio()
+    );
+    m_motor.configure(
+      baseConfig,
+      ResetMode.kNoResetSafeParameters,
+      PersistMode.kPersistParameters
+    );
   }
 
   /**
