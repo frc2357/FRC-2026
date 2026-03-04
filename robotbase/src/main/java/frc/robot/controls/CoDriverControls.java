@@ -1,18 +1,26 @@
 package frc.robot.controls;
 
+import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Value;
 
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
+import frc.robot.Constants.INTAKE_PIVOT;
 import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
+import frc.robot.commands.feeder.FeederAxis;
+import frc.robot.commands.floor.FloorAxis;
 import frc.robot.commands.intake.IntakeAxis;
 import frc.robot.controls.util.RumbleInterface;
+import frc.robot.subsystems.IntakePivot;
+import java.util.function.Supplier;
 
 public class CoDriverControls implements RumbleInterface {
 
@@ -72,31 +80,84 @@ public class CoDriverControls implements RumbleInterface {
     onlyUp.whileTrue(new WaitCommand(0));
 
     onlyUp
-      .and(m_controller.rightTrigger())
+      .and(
+        () ->
+          m_controller.getRightTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
       .whileTrue(
-        Robot.shooter.axisSpeed(() ->
+        Robot.shooter.stepAxisSpeed(() ->
           Value.of(m_controller.getRightTriggerAxis())
         )
       );
 
     onlyUp
-      .and(m_controller.leftTrigger())
+      .and(
+        () ->
+          m_controller.getLeftTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
       .whileTrue(
-        Robot.shooter.axisSpeed(() ->
+        Robot.shooter.stepAxisSpeed(() ->
           Value.of(-m_controller.getLeftTriggerAxis())
         )
       );
 
+    onlyUp.whileTrue(
+      Robot.hood.axisSpeed(() -> Value.of(m_controller.getRightY()))
+    );
+
     onlyLeft
-      .and(m_controller.leftTrigger())
+      .and(
+        () ->
+          m_controller.getLeftTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
       .whileTrue(
         new IntakeAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
       );
 
     onlyLeft
-      .and(m_controller.rightTrigger())
+      .and(
+        () ->
+          m_controller.getRightTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
       .whileTrue(
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+      );
+
+    onlyLeft.whileTrue(
+      Robot.intakePivot.axisSpeed(() -> Value.of(m_controller.getRightY()))
+    );
+
+    onlyRight
+      .and(
+        () ->
+          m_controller.getRightTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
+      .whileTrue(
+        new FloorAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
+      );
+
+    onlyRight
+      .and(
+        () ->
+          m_controller.getLeftTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
+      .whileTrue(
+        new FloorAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
+      );
+
+    m_controller
+      .rightBumper()
+      .whileTrue(new FeederAxis(() -> (Constants.FEEDER.AXIS_MAX_SPEED)));
+    m_controller
+      .leftBumper()
+      .whileTrue(
+        new FeederAxis(() -> (Constants.FEEDER.AXIS_MAX_SPEED.times(-1)))
       );
   }
 
