@@ -131,9 +131,25 @@ public class CoDriverControls implements RumbleInterface {
       Robot.intakePivot.axisSpeed(() -> Value.of(m_controller.getRightY()))
     );
 
-    onlyRight.whileTrue(
-      new FloorAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
-    );
+    onlyRight
+      .and(
+        () ->
+          m_controller.getRightTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
+      .whileTrue(
+        new FloorAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
+      );
+
+    onlyRight
+      .and(
+        () ->
+          m_controller.getLeftTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
+      .whileTrue(
+        new FloorAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
+      );
 
     m_controller
       .rightBumper()
