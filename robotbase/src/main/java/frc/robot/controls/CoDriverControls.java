@@ -80,7 +80,11 @@ public class CoDriverControls implements RumbleInterface {
     onlyUp.whileTrue(new WaitCommand(0));
 
     onlyUp
-      .and(m_controller.rightTrigger())
+      .and(
+        () ->
+          m_controller.getRightTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
       .whileTrue(
         Robot.shooter.stepAxisSpeed(() ->
           Value.of(m_controller.getRightTriggerAxis())
@@ -88,7 +92,11 @@ public class CoDriverControls implements RumbleInterface {
       );
 
     onlyUp
-      .and(m_controller.leftTrigger())
+      .and(
+        () ->
+          m_controller.getLeftTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
       .whileTrue(
         Robot.shooter.stepAxisSpeed(() ->
           Value.of(-m_controller.getLeftTriggerAxis())
@@ -100,13 +108,21 @@ public class CoDriverControls implements RumbleInterface {
     );
 
     onlyLeft
-      .and(m_controller.leftTrigger())
+      .and(
+        () ->
+          m_controller.getLeftTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
       .whileTrue(
         new IntakeAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
       );
 
     onlyLeft
-      .and(m_controller.rightTrigger())
+      .and(
+        () ->
+          m_controller.getRightTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
       .whileTrue(
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
       );
