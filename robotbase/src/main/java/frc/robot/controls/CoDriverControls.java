@@ -116,7 +116,7 @@ public class CoDriverControls implements RumbleInterface {
     );
 
     onlyRight.whileTrue(
-      new FloorAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+      new FloorAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
     );
 
     m_controller
