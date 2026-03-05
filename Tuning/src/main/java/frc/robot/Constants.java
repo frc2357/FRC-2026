@@ -6,12 +6,12 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
+import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -47,7 +47,6 @@ public final class Constants {
     public static final int RIGHT_INTAKE_MOTOR = 25;
     public static final int INTAKE_PIVOT_MOTOR = 33;
 
-    public static final int KICKER_MOTOR = 26;
     public static final int FEEDER_MOTOR = 32;
     //Feeder motor can ID
 
@@ -86,40 +85,34 @@ public final class Constants {
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
   }
 
-  // The hood's max RPS is ~0.37
-  // The encoder shaft max RPS is ~3.87 or ~232 RPM
+  // The hood's max RPS is ~0.49
+  // The encoder shaft max RPS is ~4.06
   public static final class HOOD {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kBrake)
       .inverted(false)
       .openLoopRampRate(0.25)
-      .smartCurrentLimit(20, 10)
+      .smartCurrentLimit(10, 10)
       .voltageCompensation(12); //
 
     public static final AngularVelocity NEO_550_MAX_VEL = RPM.of(11000);
 
-    public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromStages("5:1", "9:1", "20:19", "166:16") // TODO: Reminder to update this to 166:20 when new shooter goes on
-    );
-
-    public static final AngularVelocity MAX_POSSIBLE_VELOCITY =
-      NEO_550_MAX_VEL.times(GEARING.getRotorToMechanismRatio());
-
-    public static final EncoderConfig CLOSED_LOOP_CONFIG = MOTOR_CONFIG.encoder
-      .positionConversionFactor(GEARING.getRotorToMechanismRatio())
-      .velocityConversionFactor(GEARING.getRotorToMechanismRatio() / 60.0);
-
     public static final MechanismGearing ENCODER_GEARING = new MechanismGearing(
-      GearBox.fromStages("166:16") // TODO: Remember to update when new hood put on
+      GearBox.fromStages("166:20")
     );
+
+    public static final ClosedLoopConfig CLOSED_LOOP_CONFIG =
+      MOTOR_CONFIG.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+
+    public static final SignalsConfig SIGNAL_CONFIG = MOTOR_CONFIG.signals
+      .absoluteEncoderPositionPeriodMs(20)
+      .absoluteEncoderVelocityPeriodMs(20);
 
     public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER_CONFIG =
       MOTOR_CONFIG.absoluteEncoder
         .positionConversionFactor(ENCODER_GEARING.getRotorToMechanismRatio())
-        .velocityConversionFactor(
-          ENCODER_GEARING.getRotorToMechanismRatio() / 60.0
-        );
+        .velocityConversionFactor(ENCODER_GEARING.getRotorToMechanismRatio());
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
   }

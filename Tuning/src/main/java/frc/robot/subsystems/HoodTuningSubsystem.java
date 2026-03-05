@@ -1,17 +1,13 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.PersistMode;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -20,7 +16,6 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.util.sendable.Sendable;
@@ -36,17 +31,13 @@ public class HoodTuningSubsystem implements Sendable {
   private SparkClosedLoopController m_PIDController;
   private SparkAbsoluteEncoder m_encoder;
 
-  public double P = 45;
+  public double P = 50;
   public double I = 0;
   public double D = 0;
-  public double staticFF = 0.18;
-  public double velocityFF = 0.01;
-  public double accelerationFF = 0.6;
-  public AngularVelocity maxVelocity = HOOD.MAX_POSSIBLE_VELOCITY.times(1);
-  public AngularAcceleration maxAcceleration = RotationsPerSecondPerSecond.of(
-    3
-  );
-  public double RotationsTolerance = 0.1;
+  public double staticFF = 0.1;
+  public double gravityFF = 0.0;
+
+  public Angle tolerance = Degrees.of(0.1);
 
   private SparkBaseConfig m_motorconfig = HOOD.MOTOR_CONFIG;
 
@@ -68,42 +59,16 @@ public class HoodTuningSubsystem implements Sendable {
     Preferences.initDouble("hoodI", I);
     Preferences.initDouble("hoodD", D);
     Preferences.initDouble("hoodStaticFF", staticFF);
-    Preferences.initDouble("hoodVelocityFF", velocityFF);
-    Preferences.initDouble("hoodAccelerationFF", accelerationFF);
-    Preferences.initDouble(
-      "hoodMaxVelocity",
-      maxVelocity.in(RotationsPerSecond)
-    );
-    Preferences.initDouble(
-      "hoodMaxAcceleration",
-      maxAcceleration.in(RotationsPerSecondPerSecond)
-    );
-    Preferences.initDouble("hoodRotationsTolerance", RotationsTolerance);
+    Preferences.initDouble("hoodGravityFF", gravityFF);
+    Preferences.initDouble("hoodTolerance", tolerance.in(Degrees));
 
     P = Preferences.getDouble("hoodP", P);
     I = Preferences.getDouble("hoodI", I);
     D = Preferences.getDouble("hoodD", D);
     staticFF = Preferences.getDouble("hoodStaticFF", staticFF);
-    velocityFF = Preferences.getDouble("hoodVelocityFF", velocityFF);
-    accelerationFF = Preferences.getDouble(
-      "hoodAccelerationFF",
-      accelerationFF
-    );
-    maxVelocity = RotationsPerSecond.of(
-      Preferences.getDouble(
-        "hoodMaxVelocity",
-        maxVelocity.in(RotationsPerSecond)
-      )
-    );
-    maxAcceleration = RotationsPerSecondPerSecond.of(
-      Preferences.getDouble(
-        "hoodMaxAcceleration",
-        maxAcceleration.in(RotationsPerSecondPerSecond)
-      )
-    );
-    RotationsTolerance = Preferences.getDouble(
-      "hoodRotationsTolerance",
-      RotationsTolerance
+    gravityFF = Preferences.getDouble("hoodGravityFF", gravityFF);
+    tolerance = Degrees.of(
+      Preferences.getDouble("hoodTolerance", tolerance.in(Degrees))
     );
 
     displayDashboard();
@@ -115,18 +80,9 @@ public class HoodTuningSubsystem implements Sendable {
     SmartDashboard.putNumber("Hood I", I);
     SmartDashboard.putNumber("Hood D", D);
     SmartDashboard.putNumber("Hood Static FF", staticFF);
-    SmartDashboard.putNumber("Hood Velocity FF", velocityFF);
-    SmartDashboard.putNumber("Hood Acceleration FF", accelerationFF);
+    SmartDashboard.putNumber("Hood Gravity FF", gravityFF);
 
-    SmartDashboard.putNumber(
-      "Hood MaxVel RPS",
-      maxVelocity.in(RotationsPerSecond)
-    );
-    SmartDashboard.putNumber(
-      "Hood MaxAccel RPS",
-      maxAcceleration.in(RotationsPerSecondPerSecond)
-    );
-    SmartDashboard.putNumber("Rotations Tolerance", RotationsTolerance);
+    SmartDashboard.putNumber("Hood Degrees Tolerance", tolerance.in(Degrees));
     SmartDashboard.putNumber("Hood Target Degrees", 0);
     SmartDashboard.putNumber("Rotations", getAngle().in(Rotations));
 
@@ -138,21 +94,16 @@ public class HoodTuningSubsystem implements Sendable {
 
   public void updatePIDs() {
     m_motorconfig.closedLoop.pid(P, I, D);
-    m_motorconfig.closedLoop.feedForward.sva(
-      staticFF,
-      velocityFF,
-      accelerationFF
+    m_motorconfig.closedLoop.feedForward.sg(staticFF, gravityFF);
+    m_motorconfig.closedLoop.allowedClosedLoopError(
+      tolerance.in(Rotations),
+      ClosedLoopSlot.kSlot0
     );
-
-    m_motorconfig.closedLoop.maxMotion
-      .maxAcceleration(maxAcceleration.in(RotationsPerSecondPerSecond))
-      .cruiseVelocity(maxVelocity.in(RotationsPerSecond))
-      .allowedProfileError(RotationsTolerance);
 
     m_motor.configure(
       m_motorconfig,
       ResetMode.kNoResetSafeParameters,
-      PersistMode.kPersistParameters
+      PersistMode.kNoPersistParameters
     );
   }
 
@@ -161,21 +112,8 @@ public class HoodTuningSubsystem implements Sendable {
     double newI = SmartDashboard.getNumber("Hood I", 0);
     double newD = SmartDashboard.getNumber("Hood D", 0);
     double newStaticFF = SmartDashboard.getNumber("Hood Static FF", 0);
-    double newVelocityFF = SmartDashboard.getNumber("Hood Velocity FF", 0);
-    double newAccelerationFF = SmartDashboard.getNumber(
-      "Hood Acceleration FF",
-      0
-    );
-
-    double newMaxVelocity = SmartDashboard.getNumber("Hood MaxVel RPS", 0);
-    double newMaxAcceleration = SmartDashboard.getNumber(
-      "Hood MaxAccel RPS",
-      0
-    );
-    double newRotationsTolerance = SmartDashboard.getNumber(
-      "Rotations Tolerance",
-      RotationsTolerance
-    );
+    double newGravityFF = SmartDashboard.getNumber("Hood Gravity FF", 0);
+    double newTolerance = SmartDashboard.getNumber("Hood Degrees Tolerance", 0);
 
     SmartDashboard.putNumber("Voltage", m_motor.getBusVoltage());
 
@@ -190,11 +128,6 @@ public class HoodTuningSubsystem implements Sendable {
 
     SmartDashboard.putNumber("PID Setpoint", m_PIDController.getSetpoint());
 
-    SmartDashboard.putNumber(
-      "computed max rps",
-      HOOD.MAX_POSSIBLE_VELOCITY.in(RotationsPerSecond)
-    );
-
     m_targetAngle = Degrees.of(
       SmartDashboard.getNumber("Hood Target Degrees", m_targetAngle.in(Degrees))
     );
@@ -204,21 +137,16 @@ public class HoodTuningSubsystem implements Sendable {
       newI != I ||
       newD != D ||
       newStaticFF != staticFF ||
-      newVelocityFF != velocityFF ||
-      newAccelerationFF != accelerationFF ||
-      newMaxVelocity != maxVelocity.in(RotationsPerSecond) ||
-      newMaxAcceleration != maxAcceleration.in(RotationsPerSecondPerSecond) ||
-      newRotationsTolerance != RotationsTolerance
+      newGravityFF != gravityFF ||
+      newTolerance != tolerance.in(Degrees)
     ) {
       P = newP;
       I = newI;
       D = newD;
       staticFF = newStaticFF;
-      velocityFF = newVelocityFF;
-      accelerationFF = newAccelerationFF;
-      maxVelocity = RotationsPerSecond.of(newMaxVelocity);
-      maxAcceleration = RotationsPerSecondPerSecond.of(newMaxAcceleration);
-      RotationsTolerance = newRotationsTolerance;
+      gravityFF = newGravityFF;
+      tolerance = Degrees.of(newTolerance);
+      System.out.println("Setting pids");
       updatePIDs();
     }
   }
@@ -246,12 +174,12 @@ public class HoodTuningSubsystem implements Sendable {
   public void setTargetAngle(Angle targetAngle) {
     m_PIDController.setSetpoint(
       targetAngle.in(Rotations),
-      ControlType.kMAXMotionPositionControl
+      ControlType.kPosition
     );
   }
 
   public boolean isAtAngle(Angle vel) {
-    return vel.isNear(getAngle(), RotationsTolerance);
+    return vel.isNear(getAngle(), tolerance);
   }
 
   public boolean isAtTargetAngle() {
@@ -274,17 +202,8 @@ public class HoodTuningSubsystem implements Sendable {
         Preferences.setDouble("hoodI", I);
         Preferences.setDouble("hoodD", D);
         Preferences.setDouble("hoodStaticFF", staticFF);
-        Preferences.setDouble("hoodVelocityFF", velocityFF);
-        Preferences.setDouble("hoodAccelerationFF", accelerationFF);
-        Preferences.setDouble(
-          "hoodMaxVelocity",
-          maxVelocity.in(RotationsPerSecond)
-        );
-        Preferences.setDouble(
-          "hoodMaxAcceleration",
-          maxAcceleration.in(RotationsPerSecondPerSecond)
-        );
-        Preferences.setDouble("hoodRotationsTolerance", RotationsTolerance);
+        Preferences.setDouble("hoodGravityFF", gravityFF);
+        Preferences.setDouble("hoodTolerance", tolerance.in(Degrees));
       }
     );
   }
