@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.HootAutoReplay;
@@ -110,6 +112,8 @@ public class Robot extends TimedRobot {
     m_InitRobotCommand = new InitRobotCommand();
 
     SmartDashboard.putNumber("Floor", 0.0);
+    SmartDashboard.putNumber("Shooter Target RPS", 0);
+
     SmartDashboard.putNumber("Hood Target Degree", 0);
 
     // DON'T DELETE - Load the april tag field

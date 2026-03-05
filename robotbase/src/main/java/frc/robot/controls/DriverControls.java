@@ -2,7 +2,6 @@ package frc.robot.controls;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Percent;
-import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
@@ -36,7 +35,10 @@ public class DriverControls implements RumbleInterface {
     m_controller.back().onTrue(new FlipPerspective());
     m_controller.start().onTrue(new ResetPerspective());
 
-    m_controller.leftTrigger().whileTrue(new VisionTargeting());
+    //m_controller.leftTrigger().whileTrue(new VisionTargeting());
+    m_controller
+      .leftTrigger()
+      .whileTrue(Robot.shooter.setVelocity(RotationsPerSecond.of(48)));
 
     m_controller
       .rightTrigger()
@@ -56,9 +58,17 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .povRight()
       .whileTrue(
-        Robot.hood.setAngle(() ->
-          Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 1))
-        )
+        Robot.hood
+          .setAngle(() ->
+            Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 1))
+          )
+          .alongWith(
+            Robot.shooter.setVelocity(() ->
+              RotationsPerSecond.of(
+                SmartDashboard.getNumber("Shooter Target RPS", 0)
+              )
+            )
+          )
       );
 
     m_controller
