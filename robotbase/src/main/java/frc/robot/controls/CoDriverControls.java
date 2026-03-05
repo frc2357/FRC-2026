@@ -104,7 +104,7 @@ public class CoDriverControls implements RumbleInterface {
       );
 
     onlyUp.whileTrue(
-      Robot.hood.axisSpeed(() -> Value.of(m_controller.getRightY()))
+      Robot.hood.axisSpeed(() -> Value.of(-m_controller.getRightY()))
     );
 
     onlyLeft
@@ -114,7 +114,7 @@ public class CoDriverControls implements RumbleInterface {
           Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
       )
       .whileTrue(
-        new IntakeAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
+        new IntakeAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
       );
 
     onlyLeft
@@ -124,11 +124,11 @@ public class CoDriverControls implements RumbleInterface {
           Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
       )
       .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+        new IntakeAxis(() -> Value.of(-m_controller.getRightTriggerAxis()))
       );
 
     onlyLeft.whileTrue(
-      Robot.intakePivot.axisSpeed(() -> Value.of(m_controller.getRightY()))
+      Robot.intakePivot.axisSpeed(() -> Value.of(-m_controller.getRightY()))
     );
 
     onlyRight
