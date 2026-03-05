@@ -301,8 +301,7 @@ public class Constants {
     public static LEDPattern orange = LEDPattern.solid(new Color(255, 0, 40));
     public static LEDPattern green = LEDPattern.solid(new Color(0, 0, 255));
     public static final int kLength = 86;
-
-    }
+  }
 
   public static final class FLOOR {
 

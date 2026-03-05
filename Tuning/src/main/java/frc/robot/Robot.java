@@ -24,46 +24,18 @@ public class Robot extends TimedRobot {
 
   XboxController m_controller;
 
-  AddressableLED m_LED;
-  AddressableLEDBuffer m_ledBuffer;
-  LEDPattern m_rainbow = LEDPattern.rainbow(255, 50);
-
-  LEDPattern m_scrollingRainbow;
-  public boolean camera = true;
-
-<<<<<<< HEAD
   ShooterTuningSubsystem m_shooter;
   HoodTuningSubsystem m_hood;
 
-=======
->>>>>>> 7ad775b (Added Rainbow and orange so far.)
   public Robot() {
-    //m_shooter = new ShooterTuningSubsystem();
+    m_shooter = new ShooterTuningSubsystem();
     m_hood = new HoodTuningSubsystem();
     m_controller = new XboxController(0);
-<<<<<<< HEAD
-=======
-    // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our
-    // autonomous chooser on the dashboard.
-    m_LED = new AddressableLED(7);
-    Distance kLedSpacing = Meters.of(1 / 64.0);
-
-    m_ledBuffer = new AddressableLEDBuffer(1);
-
-    m_LED.setLength(m_ledBuffer.getLength());
-    m_LED.start();
-
-    m_scrollingRainbow = m_rainbow.scrollAtAbsoluteSpeed(
-      MetersPerSecond.of(0.5),
-      kLedSpacing
-    );
->>>>>>> 7ad775b (Added Rainbow and orange so far.)
   }
 
   @Override
   public void robotPeriodic() {
-    //m_shooter.updateDashboard();
+    m_shooter.updateDashboard();
     m_hood.updateDashboard();
   }
 
@@ -78,7 +50,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    //m_shooter.teleopPeriodic();
+    m_shooter.teleopPeriodic();
     m_hood.teleopPeriodic();
   }
 
@@ -87,7 +59,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-    //m_shooter.setAxisSpeed(Value.of(-m_controller.getRightY()));
+    m_shooter.setAxisSpeed(Value.of(-m_controller.getRightY()));
     m_hood.setAxisSpeed(Value.of(-m_controller.getRightY()));
   }
 }
