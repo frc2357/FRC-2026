@@ -190,7 +190,7 @@ public class Robot extends TimedRobot {
     }
 
     CommandScheduler.getInstance().schedule(
-      new SetLEDPatternCommand(Constants.LED.orange)
+      new SetLEDPatternCommand(Constants.LED.meltdown_orange)
     );
   }
 

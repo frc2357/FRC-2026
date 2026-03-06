@@ -28,7 +28,6 @@ public class LEDs extends SubsystemBase {
     m_LEDs.start();
   }
 
-  // Robot.led.setLEDPattern(pattern)
   public void setLEDPattern(LEDPattern newPattern) {
     newPattern.applyTo(m_LEDBuffer);
     m_LEDs.setData(m_LEDBuffer);
@@ -46,32 +45,9 @@ public class LEDs extends SubsystemBase {
     m_LEDs.start();
   }
 
-  // private void setColor(Color color) {
-  // if (color == m_lastColor) {
-  // return;
-  // }
-
   // for (int i = 0; i < m_LEDBuffer.getLength(); i++) {
   // m_LEDBuffer.setLED(i, color);
-  //}
 
   //m_LEDs.setData(m_LEDBuffer);
   //m_lastColor = color;
-  //}
 }
-
-// new SetLEDCommand(Color.kRed)
-//chart for different colors
-//Color 	Red (0-255)	Green (0-255)	Blue (0-255)	Hex Code
-//Red	255	0	0	#FF0000
-//Green	0	255	0	#00FF00
-//Blue	0	0	255	#0000FF
-//White	255	255	255	#FFFFFF
-//Yellow	255	255	0	#FFFF00
-//Cyan	0	255	255	#00FFFF
-//Magenta	255	0	255	#FF00FF
-//Orange	255	165	0	#FFA500
-//Purple	128	0	128	#800080
-//Pink	255	192	203	#FFC0CB
-//Teal	0	128	128	#008080
-//Amber	255	191	0	#FFBF00

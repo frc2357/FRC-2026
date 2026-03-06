@@ -298,9 +298,25 @@ public class Constants {
     public static Distance kLedSpacing = Meters.of(1 / 64.0);
     public static final LEDPattern m_scrollingRainbow =
       m_rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.25), kLedSpacing);
-    public static LEDPattern orange = LEDPattern.solid(new Color(255, 0, 40));
+    public static LEDPattern meltdown_orange = LEDPattern.solid(
+      new Color(255, 0, 40)
+    );
     public static LEDPattern green = LEDPattern.solid(new Color(0, 0, 255));
     public static final int kLength = 86;
+
+    //chart for different colors
+    //Red	255	0	0	#FF0000
+    //Green	0	255	0	#00FF00
+    //Blue	0	0	255	#0000FF
+    //White	255	255	255	#FFFFFF
+    //Yellow	255	255	0	#FFFF00
+    //Cyan	0	255	255	#00FFFF
+    //Magenta	255	0	255	#FF00FF
+    //Orange	255	165	0	#FFA500
+    //Purple	128	0	128	#800080
+    //Pink	255	192	203	#FFC0CB
+    //Teal	0	128	128	#008080
+    //Amber	255	191	0	#FFBF00
   }
 
   public static final class FLOOR {
