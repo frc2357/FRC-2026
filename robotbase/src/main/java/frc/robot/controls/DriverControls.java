@@ -59,7 +59,7 @@ public class DriverControls implements RumbleInterface {
       .whileTrue(
         new ParallelCommandGroup(
           new FeederSetSpeed(FEEDER.FEED_SPEED),
-          new FloorSetSpeed(FLOOR.FLOOR_SPEED.times(-1))
+          new FloorSetSpeed(FLOOR.FLOOR_SPEED)
         )
       );
 
