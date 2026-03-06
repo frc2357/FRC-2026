@@ -72,24 +72,24 @@ public class ScoreCalculator {
 
     // TODO: Rename to be more indicative of the point
     // Distances should be relative to top center point of the hub
-    public static final Distance CLOSEST_POINT = Inches.of(24); // Up against the hub
-    public static final Distance POINT_2 = Inches.of(50);
+    public static final Distance CLOSEST_POINT = Inches.of(47); // Up against the hub
+    public static final Distance POINT_2 = Inches.of(75);
     public static final Distance POINT_3 = Inches.of(100);
-    public static final Distance POINT_4 = Inches.of(200);
+    public static final Distance POINT_4 = Inches.of(125);
     public static final Distance FARTHEST_POINT = Inches.of(265); // Far corner of the outpost
   }
 
   public ScoreCalculator() {
-    m_shooterCurve.put(SHOT_POINTS.CLOSEST_POINT, RotationsPerSecond.of(48.5));
-    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(48.5));
+    m_shooterCurve.put(SHOT_POINTS.CLOSEST_POINT, RotationsPerSecond.of(47.33));
+    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(51.27));
     m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(53));
-    m_shooterCurve.put(SHOT_POINTS.POINT_4, RotationsPerSecond.of(64));
+    m_shooterCurve.put(SHOT_POINTS.POINT_4, RotationsPerSecond.of(55));
     m_shooterCurve.put(SHOT_POINTS.FARTHEST_POINT, RotationsPerSecond.of(64));
 
-    m_hoodCurve.put(SHOT_POINTS.CLOSEST_POINT, Degrees.of(0));
-    m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(0));
-    m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(2));
-    m_hoodCurve.put(SHOT_POINTS.POINT_4, Degrees.of(14));
+    m_hoodCurve.put(SHOT_POINTS.CLOSEST_POINT, Degrees.of(1));
+    m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(3.44));
+    m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(5.75));
+    m_hoodCurve.put(SHOT_POINTS.POINT_4, Degrees.of(11.5));
     m_hoodCurve.put(SHOT_POINTS.FARTHEST_POINT, Degrees.of(14));
 
     m_timeOfFlightCurve.put(SHOT_POINTS.CLOSEST_POINT, Seconds.of(0));

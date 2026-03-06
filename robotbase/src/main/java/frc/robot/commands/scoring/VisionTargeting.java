@@ -15,7 +15,7 @@ public class VisionTargeting extends Command {
     CalculatedShot shot = Robot.scoreCalculator.getCalculatedShot();
 
     Robot.shooter.setVelocitySetpoint(shot.shooterVelocity());
-    //Robot.hood.setAngleSetpoint(shot.hoodPosition());
+    Robot.hood.setAngleSetpoint(shot.hoodPosition());
   }
 
   @Override
