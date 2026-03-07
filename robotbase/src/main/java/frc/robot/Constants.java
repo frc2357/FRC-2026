@@ -269,7 +269,6 @@ public class Constants {
 
     public static final int FLOOR_MOTOR = 23; //TODO: make sure that the old spindexter motor is the same for the floor (or just change the CAN ID)
     public static final int TUNNEL_MOTOR = 34;
-    //TODO: add CAN_ID
 
     public static final int LEFT_INTAKE_MOTOR = 24;
     public static final int RIGHT_INTAKE_MOTOR = 25;
@@ -287,12 +286,11 @@ public class Constants {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(true)
+      .inverted(false)
       .smartCurrentLimit(40, 40)
       .openLoopRampRate(0.25); // TODO: double check these values
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
-    //Just an idea but add a max speed so it doesn't rip itself to shreds
 
     public static final Dimensionless FLOOR_SPEED = Percent.of(50);
   }
@@ -301,7 +299,9 @@ public class Constants {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false);
+      .inverted(false)
+      .openLoopRampRate(0.5)
+      .voltageCompensation(12);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless TUNNEL_SPEED = Percent.of(80);
@@ -313,7 +313,7 @@ public class Constants {
 
     public static final SparkBaseConfig LEFT_MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(true)
+      .inverted(false)
       .smartCurrentLimit(30, 30)
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
