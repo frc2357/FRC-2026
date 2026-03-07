@@ -13,6 +13,7 @@ import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.feeder.FeederAxis;
 import frc.robot.commands.floor.FloorAxis;
 import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.tunnel.TunnelAxis;
 import frc.robot.controls.util.RumbleInterface;
 
 public class CoDriverControls implements RumbleInterface {
@@ -143,11 +144,19 @@ public class CoDriverControls implements RumbleInterface {
 
     m_controller
       .rightBumper()
-      .whileTrue(new FeederAxis(() -> (Constants.FEEDER.AXIS_MAX_SPEED)));
+      .whileTrue(
+        new FeederAxis(() -> (Constants.FEEDER.AXIS_MAX_SPEED)).andThen(
+          new TunnelAxis(() -> (Constants.TUNNEL.AXIS_MAX_SPEED))
+        )
+      );
     m_controller
       .leftBumper()
       .whileTrue(
-        new FeederAxis(() -> (Constants.FEEDER.AXIS_MAX_SPEED.times(-1)))
+        new FeederAxis(() ->
+          (Constants.FEEDER.AXIS_MAX_SPEED.times(-1))
+        ).andThen(
+          new TunnelAxis(() -> (Constants.TUNNEL.AXIS_MAX_SPEED.times(-1)))
+        )
       );
   }
 
