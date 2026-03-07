@@ -53,12 +53,16 @@ public class Constants {
 
     public static final int DRIVER_CONTROLLER_PORT = 1;
     public static final double DRIVER_CONTROLLER_DEADBAND = 0.01;
+
     public static final int CODRIVER_CONTROLLER_PORT = 0;
     public static final double CODRIVER_CONTROLLER_DEADBAND = 0.025;
+
     public static final double DRIVER_RUMBLE_INTENSITY = .5;
     public static final double CODRIVER_RUMBLE_INTENSITY = .5;
+
     public static final double DRIVER_RUMBLE_SECONDS = 2;
     public static final double CODRIVER_RUMBLE_SECONDS = 2;
+
     public static final double JOYSTICK_RAMP_EXPONENT = 1;
   }
 
@@ -496,6 +500,51 @@ public class Constants {
 
     public static final int SOTF_CONVERGE_ITERATIONS = 20;
     public static final int DRIVE_ANGLE_CONVERGE_ITERATIONS = 2;
+
+    public static final Time TIME_TO_WARN_FOR_ACTIVE_HUB = Seconds.of(10);
+  }
+
+  public class SHIFT {
+
+    public static final Time AUTO_LENGTH = Seconds.of(20);
+    public static final Time TELEOP_LENGTH = Seconds.of(140);
+
+    // Times relative to teleop (start of teleop = 0)
+    public static final Time[] TELEOP_SHIFT_START_TIMES = {
+      Seconds.of(0),
+      Seconds.of(10.0),
+      Seconds.of(35.0),
+      Seconds.of(60.0),
+      Seconds.of(85.0),
+      Seconds.of(110.0),
+    };
+    public static final Time[] TELEOP_SHIFT_END_TIMES = {
+      Seconds.of(10.0),
+      Seconds.of(35.0),
+      Seconds.of(60.0),
+      Seconds.of(85.0),
+      Seconds.of(110.0),
+      Seconds.of(140.0),
+    };
+
+    // Order of when hub is active when we lose auto
+    public static final boolean[] AUTO_LOSE_SCHEDULE = {
+      true,
+      true,
+      false,
+      true,
+      false,
+      true,
+    };
+    // Order of when hub is active when we win auto
+    public static final boolean[] AUTO_WIN_SCHEDULE = {
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+    };
   }
 
   public class FieldConstants {
