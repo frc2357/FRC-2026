@@ -1,6 +1,7 @@
 package frc.robot.commands.auto;
 
-import static frc.robot.Constants.CHOREO.*;
+import static frc.robot.Constants.CHOREO.DEFAULT_AUTO_FACTORY;
+import static frc.robot.Constants.CHOREO.TARGET_LOCK_AUTO_FACTORY;
 
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
@@ -10,55 +11,63 @@ import frc.robot.commands.util.VariableWaitCommand;
 
 public class AutoBase {
 
-  //TODO: Rewrite this (possibly from scratch) to join autos according to our plans for this year
+  // TODO: Rewrite this (possibly from scratch) to join autos according to our plans for this year
 
-  protected AutoRoutine m_routine;
-  protected AutoTrajectory m_startTraj;
-  private String m_name;
+  protected final AutoRoutine m_defaultRoutine;
+  protected final AutoRoutine m_targetLockRoutine;
+  private final String m_name;
 
   /**
-   * This will initialize an auto routine
-   * Will create the first trajectory, and set the routine to wait, reset odometry, and run the first trajectory
+   * Initialize an auto routine pair.
+   * Default and TargetLock routines are always created; child classes decide which trajectories to use.
    * @param name Name of the auto routine
    */
   public AutoBase(String name) {
-    this(name, name);
-  } /**
-   * This will initialize an auto routine
-   * Will create the first trajectory, and set the routine to wait, reset odometry, and run the first trajectory
-   * @param name Name of the auto routine
-   * @param startTraj Trajectory to start with
-   */
-
-  public AutoBase(String name, String startTraj) {
     m_name = name;
-    // This is how you make an auto routine. The name should be essentially the same as the name of the function it is in.
-    m_routine = AUTO_FACTORY.newRoutine(m_name);
+    m_defaultRoutine = DEFAULT_AUTO_FACTORY.newRoutine(m_name + " - (Default)");
+    m_targetLockRoutine = TARGET_LOCK_AUTO_FACTORY.newRoutine(
+      m_name + " - (Target Lock)"
+    );
+  }
 
-    // This is how you make a trajectory to put into the AutoRoutine. The trajectoryName is the name of the file in Choreo.
-    // Any deviation from that name will result in the file not being found.
-    m_startTraj = m_routine.trajectory(startTraj);
-    // This is how you reset the odometry and make the routine use a trajectory. This is a veyr regular thing that you will have to do.
-    m_routine
-      // .active() returns a trigger that is true while the AutoRoutine is running
+  /**
+   * Create a trajectory from the default routine.
+   */
+  protected AutoTrajectory defaultTrajectory(String trajectoryName) {
+    return m_defaultRoutine.trajectory(trajectoryName);
+  }
+
+  /**
+   * Create a trajectory from the target-lock routine.
+   */
+  protected AutoTrajectory targetLockTrajectory(String trajectoryName) {
+    return m_targetLockRoutine.trajectory(trajectoryName);
+  }
+
+  protected AutoTrajectory setStartTrajectory(AutoTrajectory startTraj) {
+    m_defaultRoutine.observe(m_targetLockRoutine.active());
+    m_defaultRoutine
       .active()
-      // .onTrue() lets us run commands once that trigger becomes true.
+      .and(m_targetLockRoutine.active())
       .onTrue(
-        // Commands.sequence() lets us sequence commands to run, letting us run multiple commands per trigger.
         Commands.sequence(
           new VariableWaitCommand(() ->
             SmartDashboard.getNumber("wait seconds", 0)
           ),
-          // This command resets the odometry, and it MUST be run on the starting traj, or very bad things will happen.
-          m_startTraj.resetOdometry(),
-          // This runs the trajectory that was loaded earlier. This is needed to make the AutoRoutine actually run the trajectory, instead of doing nothing.
-          m_startTraj.cmd()
+          startTraj.resetOdometry(),
+          startTraj.cmd()
         )
       );
+
+    return startTraj;
   }
 
-  public AutoRoutine getRoutine() {
-    return m_routine;
+  public AutoRoutine getDefaultRoutine() {
+    return m_defaultRoutine;
+  }
+
+  public AutoRoutine getTargetLockRoutine() {
+    return m_targetLockRoutine;
   }
 
   @Override

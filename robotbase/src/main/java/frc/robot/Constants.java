@@ -256,10 +256,18 @@ public class Constants {
       0
     );
 
-    public static final AutoFactory AUTO_FACTORY = new AutoFactory(
+    public static final AutoFactory DEFAULT_AUTO_FACTORY = new AutoFactory(
       Robot.swerve::getFieldRelativePose2d,
       Robot.swerve::setFieldRelativePose2d,
-      Robot.swerve::followChoreoPath,
+      Robot.swerve::defaultFollowChoreoPath,
+      true,
+      Robot.swerve
+    );
+
+    public static final AutoFactory TARGET_LOCK_AUTO_FACTORY = new AutoFactory(
+      Robot.swerve::getFieldRelativePose2d,
+      Robot.swerve::setFieldRelativePose2d,
+      Robot.swerve::targetLockFollowChoreoPath,
       true,
       Robot.swerve
     );
