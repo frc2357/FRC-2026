@@ -53,12 +53,16 @@ public class Constants {
 
     public static final int DRIVER_CONTROLLER_PORT = 1;
     public static final double DRIVER_CONTROLLER_DEADBAND = 0.01;
+
     public static final int CODRIVER_CONTROLLER_PORT = 0;
     public static final double CODRIVER_CONTROLLER_DEADBAND = 0.025;
+
     public static final double DRIVER_RUMBLE_INTENSITY = .5;
     public static final double CODRIVER_RUMBLE_INTENSITY = .5;
+
     public static final double DRIVER_RUMBLE_SECONDS = 2;
     public static final double CODRIVER_RUMBLE_SECONDS = 2;
+
     public static final double JOYSTICK_RAMP_EXPONENT = 1;
   }
 
@@ -496,6 +500,10 @@ public class Constants {
 
     public static final int SOTF_CONVERGE_ITERATIONS = 20;
     public static final int DRIVE_ANGLE_CONVERGE_ITERATIONS = 2;
+
+    public static final Time TIME_TO_WARN_FOR_ACTIVE_HUB = Seconds.of(10);
+    public static final Time AUTO_LENGTH = Seconds.of(20);
+    public static final Time TELEOP_LENGTH = Seconds.of(140);
   }
 
   public class FieldConstants {
