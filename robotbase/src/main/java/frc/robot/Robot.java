@@ -35,6 +35,7 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakePivot;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Tunnel;
 import frc.robot.vision.CameraManager;
 
 public class Robot extends TimedRobot {
@@ -57,6 +58,7 @@ public class Robot extends TimedRobot {
   public static Shooter shooter;
   public static Hood hood;
   public static Feeder feeder;
+  public static Tunnel tunnel;
 
   public static CameraManager cameraManager;
   public static ScoreCalculator scoreCalculator;
@@ -80,6 +82,7 @@ public class Robot extends TimedRobot {
     hood = new Hood();
     floor = new Floor();
     feeder = new Feeder();
+    tunnel = new Tunnel();
 
     cameraManager = new CameraManager();
 
