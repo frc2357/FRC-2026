@@ -490,8 +490,37 @@ public class CommandSwerveDrivetrain
     );
   }
 
-  public void followChoreoPath(SwerveSample sample) {
-    System.out.println("choreo following path" + sample.toString());
+  public void targetLockFollowChoreoPath(SwerveSample sample) {
+    System.out.println(
+      String.format(
+        "Choreo following path '%s' while targeting the hub",
+        sample.toString()
+      )
+    );
+    Pose2d pose = getFieldRelativePose2d();
+
+    ChassisSpeeds targetSpeeds = sample.getChassisSpeeds();
+
+    targetSpeeds.vxMetersPerSecond += CHOREO.X_CONTROLLER.calculate(
+      pose.getX(),
+      sample.x
+    );
+    targetSpeeds.vyMetersPerSecond += CHOREO.Y_CONTROLLER.calculate(
+      pose.getY(),
+      sample.y
+    );
+
+    driveAtAngle(
+      MetersPerSecond.of(targetSpeeds.vxMetersPerSecond),
+      MetersPerSecond.of(targetSpeeds.vyMetersPerSecond),
+      Robot.scoreCalculator.getCalculatedDriveAngle()
+    );
+  }
+
+  public void defaultFollowChoreoPath(SwerveSample sample) {
+    System.out.println(
+      String.format("Choreo following path '%s'", sample.toString())
+    );
     Pose2d pose = getFieldRelativePose2d();
     CHOREO.ROTATION_CONTROLLER.enableContinuousInput(-Math.PI, Math.PI);
 

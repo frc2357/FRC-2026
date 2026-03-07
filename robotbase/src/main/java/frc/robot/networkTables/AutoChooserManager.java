@@ -39,7 +39,14 @@ public class AutoChooserManager {
     });
 
     for (AutoBase auto : m_autos) {
-      m_autoChooser.addRoutine(auto.toString(), auto::getRoutine);
+      m_autoChooser.addRoutine(
+        auto.toString() + " - (Default)",
+        auto::getDefaultRoutine
+      );
+      m_autoChooser.addRoutine(
+        auto.toString() + " - (Target Lock)",
+        auto::getTargetLockRoutine
+      );
     }
 
     SmartDashboard.putData("Auto chooser", m_autoChooser);
