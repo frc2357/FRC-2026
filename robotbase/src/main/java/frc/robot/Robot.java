@@ -77,7 +77,7 @@ public class Robot extends TimedRobot {
     .withJoystickReplay();
 
   public Robot() {
-    // swerve = TunerConstants.createDrivetrain();
+    swerve = TunerConstants.createDrivetrain();
 
     intake = new Intake();
     intakePivot = new IntakePivot();

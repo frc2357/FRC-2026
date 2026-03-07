@@ -4,8 +4,6 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Pounds;
@@ -16,6 +14,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 import choreo.auto.AutoFactory;
+import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -44,8 +43,6 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.Time;
-import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.generated.TunerConstants;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -271,6 +268,8 @@ public class Constants {
   public static final class CAN_ID {
 
     public static final int FLOOR_MOTOR = 23; //TODO: make sure that the old spindexter motor is the same for the floor (or just change the CAN ID)
+    public static final int TUNNEL_MOTOR = 34;
+    //TODO: add CAN_ID
 
     public static final int LEFT_INTAKE_MOTOR = 24;
     public static final int RIGHT_INTAKE_MOTOR = 25;
@@ -284,52 +283,28 @@ public class Constants {
     public static final int RIGHT_SHOOTER_MOTOR = 30;
   }
 
-  public static final class LED {
-
-    public static final int kPort = 7;
-
-    public static final Color MELTDOWN_ORANGE = new Color(50, 255, 0);
-    public static final Color GREEN = new Color(0, 255, 0);
-    public static final Color BLUE = new Color(0, 0, 225);
-    public static final Color RED = new Color(255, 0, 0);
-    public static final Color PURPLE = new Color(255, 0, 255);
-
-    public static LEDPattern m_rainbow = LEDPattern.rainbow(255, 50);
-    public static Distance kLedSpacing = Meters.of(1 / 64.0);
-    public static final LEDPattern m_scrollingRainbow =
-      m_rainbow.scrollAtAbsoluteSpeed(MetersPerSecond.of(0.25), kLedSpacing);
-    public static LEDPattern meltdown_orange = LEDPattern.solid(
-      new Color(255, 0, 40)
-    );
-    public static LEDPattern green = LEDPattern.solid(new Color(0, 0, 255));
-    public static final int kLength = 86;
-
-    //chart for different colors
-    //Red	255	0	0	#FF0000
-    //Green	0	255	0	#00FF00
-    //Blue	0	0	255	#0000FF
-    //White	255	255	255	#FFFFFF
-    //Yellow	255	255	0	#FFFF00
-    //Cyan	0	255	255	#00FFFF
-    //Magenta	255	0	255	#FF00FF
-    //Orange	255	165	0	#FFA500
-    //Purple	128	0	128	#800080
-    //Pink	255	192	203	#FFC0CB
-    //Teal	0	128	128	#008080
-    //Amber	255	191	0	#FFBF00
-  }
-
   public static final class FLOOR {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
+      .inverted(true)
       .smartCurrentLimit(40, 40)
       .openLoopRampRate(0.25); // TODO: double check these values
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+    //Just an idea but add a max speed so it doesn't rip itself to shreds
 
     public static final Dimensionless FLOOR_SPEED = Percent.of(50);
+  }
+
+  public static final class TUNNEL {
+
+    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
+      .idleMode(IdleMode.kCoast)
+      .inverted(false);
+
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+    public static final Dimensionless TUNNEL_SPEED = Percent.of(80);
   }
 
   public static final class INTAKE {
@@ -338,7 +313,7 @@ public class Constants {
 
     public static final SparkBaseConfig LEFT_MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
+      .inverted(true)
       .smartCurrentLimit(30, 30)
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
@@ -445,7 +420,7 @@ public class Constants {
         .voltageCompensation(12);
 
     // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
-    public static final double P = 0.01;
+    public static final double P = 0.005;
     public static final double I = 0;
     public static final double D = 0;
     public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(5767);
@@ -453,7 +428,7 @@ public class Constants {
       RotationsPerSecondPerSecond.of(150);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(0.12, 0.1225, 0.1225);
+      new SimpleMotorFeedforward(0.12, 0.125, 0.01);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
@@ -469,18 +444,16 @@ public class Constants {
 
   public static final class HOOD {
 
-    // TODO: Most of the hood's mechanical properties will need updated when we switch to the herring bone gear
-
     public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromStages("5:1", "9:1", "20:19", "166:16")
+      GearBox.fromStages("5:1", "9:1", "1:1", "166:20")
     );
 
     public static final MechanismGearing ENCODER_GEARING = new MechanismGearing(
-      GearBox.fromStages("166:16") // TODO: Reminder to update this to 166:20 when new shooter goes on
+      GearBox.fromStages("166:20")
     );
 
-    public static final Angle LOWER_ANGLE_LIMIT = Degrees.of(0);
-    public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(20);
+    public static final Angle LOWER_ANGLE_LIMIT = Degrees.of(0.1);
+    public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(28);
     public static final Angle SIM_STARTING_POSITION = Degrees.zero();
 
     // Mass of the flywheel.
@@ -488,30 +461,41 @@ public class Constants {
     public static final String MECHANISM_NETWORK_KEY = "HoodMech";
     public static final String MOTOR_NETWORK_KEY = "HoodMotor";
 
-    public static final Current STALL_LIMIT = Amps.of(20);
+    public static final Current STALL_LIMIT = Amps.of(10);
 
     public static final SparkBaseConfig HOOD_BASE_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kBrake)
-      .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 20)
+      .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 10)
       .voltageCompensation(12);
 
-    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
+    public static final SignalsConfig SIGNAL_CONFIG = HOOD_BASE_CONFIG.signals
+      .absoluteEncoderPositionPeriodMs(20)
+      .absoluteEncoderVelocityPeriodMs(20);
 
-    public static final double P = 45;
+    public static final double P = 50;
     public static final double I = 0;
     public static final double D = 0;
-    public static final AngularVelocity MAX_ANGULAR_VELOCITY =
-      // Max rpm of neo 550 multiplied by gear ratio and set to 80%
-      RotationsPerSecond.of(GEARING.getMechanismToRotorRatio() * 11000 * 0.8);
-    public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
-      RotationsPerSecondPerSecond.of(3);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(.18, 0.01, .6);
+      new SimpleMotorFeedforward(0.1, 0.0, 0.0);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(30);
     public static final Distance LENGTH = Inches.of(8);
     public static final Mass MASS = Pounds.of(1.365);
+  }
+
+  public class SCORING {
+
+    /**
+     * The latency compensation to account for the time a ball is feeding, in the shooter,
+     * or signals being sent to the motors for shoot on the fly algorithm
+     *  */
+    public static final Time SOTF_LATENCY_COMPENSATION = Seconds.of(0.03);
+
+    public static final String IS_SOTF_KEY = "Enable SOTF";
+
+    public static final int SOTF_CONVERGE_ITERATIONS = 5;
+    public static final int DRIVE_ANGLE_CONVERGE_ITERATIONS = 2;
   }
 
   public class FieldConstants {
