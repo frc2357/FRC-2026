@@ -60,6 +60,7 @@ public class Hood extends SubsystemBase {
       // Motor properties to prevent over currenting.
       .withStatorCurrentLimit(HOOD.STALL_LIMIT)
       .withExternalEncoder(m_encoder)
+      .withExternalEncoderInverted(true)
       .withUseExternalFeedbackEncoder(true)
       .withExternalEncoderGearing(HOOD.ENCODER_GEARING)
       .withSoftLimit(HOOD.LOWER_ANGLE_LIMIT, HOOD.UPPER_ANGLE_LIMIT);
@@ -84,7 +85,6 @@ public class Hood extends SubsystemBase {
     // Account for YAMS assuming the feedback sensor returns velocity nativley in RPM
     // The CANANDMAG Helium Encoder 0.2 natively returns rotations per second
     // so the conversion factor should not be divided by 60 like YAMS is doing.
-    // TODO: revisit once we get the thrifty encoders, if they return nativley in RPM this is not necessary
     SparkBaseConfig baseConfig =
       (SparkBaseConfig) m_sparkSmartMotorController.getMotorControllerConfig();
     baseConfig.absoluteEncoder.velocityConversionFactor(
