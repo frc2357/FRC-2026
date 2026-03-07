@@ -24,6 +24,7 @@ public class VisionScore extends ParallelCommandGroup {
         new FloorSetSpeed(Constants.FLOOR.FLOOR_SPEED),
         new ParallelCommandGroup(
           new FeederSetSpeed(Constants.FEEDER.FEED_SPEED),
+          new TunnelSetSpeed(Constants.TUNNEL.TUNNEL_SPEED),
           new FloorSetSpeed(Constants.FLOOR.FLOOR_SPEED)
         )
       )
