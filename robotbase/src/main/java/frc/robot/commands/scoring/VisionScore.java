@@ -8,6 +8,7 @@ import frc.robot.Robot;
 import frc.robot.commands.drive.DrivePoseTargetingHub;
 import frc.robot.commands.feeder.FeederSetSpeed;
 import frc.robot.commands.floor.FloorSetSpeed;
+import frc.robot.commands.tunnel.TunnelSetSpeed;
 import java.util.function.Supplier;
 
 public class VisionScore extends ParallelCommandGroup {
@@ -20,6 +21,7 @@ public class VisionScore extends ParallelCommandGroup {
         Robot.shooter.waitUntilTargetVelocity(),
         new ParallelCommandGroup(
           new FeederSetSpeed(Constants.FEEDER.FEED_SPEED),
+          new TunnelSetSpeed(Constants.TUNNEL.TUNNEL_SPEED),
           new FloorSetSpeed(Constants.FLOOR.FLOOR_SPEED)
         )
       )
