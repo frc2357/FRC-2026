@@ -425,11 +425,13 @@ public class CommandSwerveDrivetrain
     );
 
   private final SwerveRequest.FieldCentricFacingAngle m_driveAtAngle =
-    new SwerveRequest.FieldCentricFacingAngle().withHeadingPID(
-      SWERVE.HEADING_CONTROLLER_P,
-      SWERVE.HEADING_CONTROLLER_I,
-      SWERVE.HEADING_CONTROLLER_D
-    );
+    new SwerveRequest.FieldCentricFacingAngle()
+      .withHeadingPID(
+        SWERVE.HEADING_CONTROLLER_P,
+        SWERVE.HEADING_CONTROLLER_I,
+        SWERVE.HEADING_CONTROLLER_D
+      )
+      .withDriveRequestType(DriveRequestType.Velocity);
 
   public void driveFieldRelative(
     LinearVelocity x,
