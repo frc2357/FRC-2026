@@ -121,6 +121,10 @@ public class Shooter extends SubsystemBase {
     return m_shooter.run(speed).finallyDo(() -> this.stopMotor());
   }
 
+  public Command setVelocity(Supplier<AngularVelocity> speed) {
+    return m_shooter.run(speed).finallyDo(() -> this.stopMotor());
+  }
+
   /**
    * Set the shooter velocity setpoint.
    *

@@ -152,13 +152,13 @@ public class Constants {
       public static final String NAME = "shooter";
 
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-        Units.Inches.of(-8.262),
-        Units.Inches.of(-9.386),
-        Units.Inches.of(16.249),
+        Units.Inches.of(-9.004),
+        Units.Inches.of(12.554),
+        Units.Inches.of(15.993),
         new Rotation3d(
-          Units.Degrees.of(7.698),
-          Units.Degrees.of(-6.383),
-          Units.Degrees.of(309.637)
+          Units.Degrees.of(10),
+          Units.Degrees.of(0),
+          Units.Degrees.of(90)
         )
       );
 
@@ -436,9 +436,9 @@ public class Constants {
     public static final Time STABLE_VELOCITY = Seconds.of(0.1);
 
     public static final Transform2d ROBOT_TO_SHOOTER = new Transform2d(
-      Units.Inches.of(-1.566),
-      Units.Inches.of(-9.199),
-      new Rotation2d(Units.Degrees.of(-50))
+      Units.Inches.of(-6.781),
+      Units.Inches.of(-2.833),
+      new Rotation2d(Units.Degrees.of(90))
     );
   }
 
@@ -494,7 +494,7 @@ public class Constants {
 
     public static final String IS_SOTF_KEY = "Enable SOTF";
 
-    public static final int SOTF_CONVERGE_ITERATIONS = 5;
+    public static final int SOTF_CONVERGE_ITERATIONS = 20;
     public static final int DRIVE_ANGLE_CONVERGE_ITERATIONS = 2;
   }
 

@@ -2,7 +2,6 @@ package frc.robot.controls;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Percent;
-import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
@@ -10,17 +9,23 @@ import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
+import frc.robot.Constants.FEEDER;
+import frc.robot.Constants.FLOOR;
 import frc.robot.Robot;
 import frc.robot.commands.drive.DrivePoseTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
+import frc.robot.commands.feeder.FeederSetSpeed;
+import frc.robot.commands.floor.FloorSetSpeed;
 import frc.robot.commands.intake.IntakeAxis;
 import frc.robot.commands.scoring.Score;
 import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.scoring.VisionTargeting;
+import frc.robot.commands.shooter.Firing;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
@@ -37,6 +42,9 @@ public class DriverControls implements RumbleInterface {
     m_controller.start().onTrue(new ResetPerspective());
 
     m_controller.leftTrigger().whileTrue(new VisionTargeting());
+    //m_controller
+    //  .leftTrigger()
+    //  .whileTrue(Robot.shooter.setVelocity(RotationsPerSecond.of(48)));
 
     m_controller
       .rightTrigger()
@@ -44,8 +52,16 @@ public class DriverControls implements RumbleInterface {
         new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
       );
 
-    m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(10)));
-    m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-10)));
+    //m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(10)));
+    //m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-10)));
+    m_controller
+      .a()
+      .whileTrue(
+        new ParallelCommandGroup(
+          new FeederSetSpeed(FEEDER.FEED_SPEED),
+          new FloorSetSpeed(FLOOR.FLOOR_SPEED)
+        )
+      );
 
     m_controller
       .x()
@@ -56,9 +72,17 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .povRight()
       .whileTrue(
-        Robot.hood.setAngle(() ->
-          Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 1))
-        )
+        Robot.hood
+          .setAngle(() ->
+            Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 1))
+          )
+          .alongWith(
+            Robot.shooter.setVelocity(() ->
+              RotationsPerSecond.of(
+                SmartDashboard.getNumber("Shooter Target RPS", 0)
+              )
+            )
+          )
       );
 
     m_controller

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.HootAutoReplay;
@@ -23,6 +25,7 @@ import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
 import frc.robot.commands.floor.FloorAxis;
+import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
@@ -110,6 +113,8 @@ public class Robot extends TimedRobot {
     m_InitRobotCommand = new InitRobotCommand();
 
     SmartDashboard.putNumber("Floor", 0.0);
+    SmartDashboard.putNumber("Shooter Target RPS", 0);
+
     SmartDashboard.putNumber("Hood Target Degree", 0);
 
     // DON'T DELETE - Load the april tag field
@@ -117,6 +122,10 @@ public class Robot extends TimedRobot {
     AprilTagFieldLayout layout = Constants.FieldConstants.FIELD_LAYOUT;
 
     SmartDashboard.putData("Robot Field", m_robotField);
+    SmartDashboard.putData(
+      "Start",
+      new VisionScore(m_driverControls::getLeftX, m_driverControls::getLeftY)
+    );
   }
 
   @Override
