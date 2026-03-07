@@ -11,9 +11,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -23,6 +25,7 @@ import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
 import frc.robot.commands.floor.FloorAxis;
+import frc.robot.commands.led.SetLEDPatternCommand;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
@@ -34,6 +37,7 @@ import frc.robot.subsystems.Floor;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakePivot;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
 import frc.robot.vision.CameraManager;
 
@@ -62,6 +66,7 @@ public class Robot extends TimedRobot {
   public static ScoreCalculator scoreCalculator;
 
   private static final Field2d m_robotField = new Field2d();
+  public static LEDs led;
 
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
@@ -80,6 +85,7 @@ public class Robot extends TimedRobot {
     hood = new Hood();
     floor = new Floor();
     feeder = new Feeder();
+    led = new LEDs();
 
     cameraManager = new CameraManager();
 
@@ -94,8 +100,8 @@ public class Robot extends TimedRobot {
       m_driverControls::getRightX
     );
 
-    swerve.registerTelemetry(logger::telemeterize);
-    swerve.setDefaultCommand(m_defaultDrive);
+    // swerve.registerTelemetry(logger::telemeterize);
+    // swerve.setDefaultCommand(m_defaultDrive);
 
     floor.setDefaultCommand(
       new FloorAxis(() -> {
@@ -103,8 +109,8 @@ public class Robot extends TimedRobot {
       })
     );
 
-    m_autoChooserManager = new AutoChooserManager();
-    m_InitRobotCommand = new InitRobotCommand();
+    // m_autoChooserManager = new AutoChooserManager();
+    // m_InitRobotCommand = new InitRobotCommand();
 
     SmartDashboard.putNumber("Floor", 0.0);
     SmartDashboard.putNumber("Hood Target Degree", 0);
@@ -118,7 +124,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    CommandScheduler.getInstance().schedule(m_InitRobotCommand);
+    // CommandScheduler.getInstance().schedule(m_InitRobotCommand);
   }
 
   @Override
@@ -148,6 +154,10 @@ public class Robot extends TimedRobot {
 
     // Log curve values when robot is disabled (like when match ends)
     scoreCalculator.logCurveValues();
+    // CommandScheduler.getInstance().schedule(new StopAllMotors());
+    CommandScheduler.getInstance().schedule(
+      new SetLEDPatternCommand(Constants.LED.m_scrollingRainbow)
+    );
   }
 
   @Override
@@ -179,6 +189,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().cancel(m_autonomousCommand);
     }
+
+    CommandScheduler.getInstance().schedule(
+      new SetLEDPatternCommand(Constants.LED.meltdown_orange)
+    );
   }
 
   @Override
