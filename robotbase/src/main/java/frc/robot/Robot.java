@@ -4,14 +4,13 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -19,8 +18,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
+import frc.robot.commands.controller.RumbleDriverController;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
@@ -39,13 +40,14 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakePivot;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tunnel;
+import frc.robot.triggers.ShiftWarning;
 import frc.robot.vision.CameraManager;
 
 public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
-  private static DriverControls m_driverControls;
-  public static CoDriverControls m_coDriverControls;
+  public static DriverControls driverControls;
+  public static CoDriverControls coDriverControls;
   private static Command m_defaultDrive;
 
   public static CommandSwerveDrivetrain swerve;
@@ -65,6 +67,8 @@ public class Robot extends TimedRobot {
 
   public static CameraManager cameraManager;
   public static ScoreCalculator scoreCalculator;
+
+  public static ShiftTimer shiftTimer;
 
   private static final Field2d m_robotField = new Field2d();
 
@@ -92,12 +96,12 @@ public class Robot extends TimedRobot {
     swerve.registerTelemetry(logger::telemeterize);
     scoreCalculator = new ScoreCalculator();
 
-    m_driverControls = new DriverControls();
-    m_coDriverControls = new CoDriverControls();
+    driverControls = new DriverControls();
+    coDriverControls = new CoDriverControls();
     m_defaultDrive = new DefaultDrive(
-      m_driverControls::getLeftX,
-      m_driverControls::getLeftY,
-      m_driverControls::getRightX
+      driverControls::getLeftX,
+      driverControls::getLeftY,
+      driverControls::getRightX
     );
 
     swerve.registerTelemetry(logger::telemeterize);
@@ -112,6 +116,18 @@ public class Robot extends TimedRobot {
     m_autoChooserManager = new AutoChooserManager();
     m_InitRobotCommand = new InitRobotCommand();
 
+    shiftTimer = new ShiftTimer();
+
+    Trigger shiftWarning = new ShiftWarning().warn();
+    /** Making this trigger require being attached to the FMS to
+     * avoid us getting annoyed with it rumbling
+     *
+     * Should remove the fms attachment requirement for drive practice
+     */
+    shiftWarning
+      .and(DriverStation::isFMSAttached)
+      .onTrue(new RumbleDriverController());
+
     SmartDashboard.putNumber("Floor", 0.0);
     SmartDashboard.putNumber("Shooter Target RPS", 0);
 
@@ -124,7 +140,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Robot Field", m_robotField);
     SmartDashboard.putData(
       "Start",
-      new VisionScore(m_driverControls::getLeftX, m_driverControls::getLeftY)
+      new VisionScore(driverControls::getLeftX, driverControls::getLeftY)
     );
   }
 
