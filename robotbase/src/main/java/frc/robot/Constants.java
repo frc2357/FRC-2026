@@ -286,7 +286,7 @@ public class Constants {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
+      .inverted(true)
       .smartCurrentLimit(40, 40)
       .openLoopRampRate(0.25); // TODO: double check these values
 

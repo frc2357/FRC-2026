@@ -19,8 +19,8 @@ public class Tunnel extends SubsystemBase {
     m_motor = new SparkMax(CAN_ID.TUNNEL_MOTOR, MotorType.kBrushless);
     m_motor.configure(
       TUNNEL.MOTOR_CONFIG,
-      ResetMode.kNoResetSafeParameters,
-      PersistMode.kNoPersistParameters
+      ResetMode.kResetSafeParameters,
+      PersistMode.kPersistParameters
     );
   }
 
