@@ -22,15 +22,15 @@ public class Robot extends TimedRobot {
   HoodTuningSubsystem m_hood;
 
   public Robot() {
-    //m_shooter = new ShooterTuningSubsystem();
-    m_hood = new HoodTuningSubsystem();
+    m_shooter = new ShooterTuningSubsystem();
+    //m_hood = new HoodTuningSubsystem();
     m_controller = new XboxController(0);
   }
 
   @Override
   public void robotPeriodic() {
-    //m_shooter.updateDashboard();
-    m_hood.updateDashboard();
+    m_shooter.updateDashboard();
+    //m_hood.updateDashboard();
   }
 
   @Override
@@ -44,8 +44,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    //m_shooter.teleopPeriodic();
-    m_hood.teleopPeriodic();
+    m_shooter.teleopPeriodic();
+    //m_hood.teleopPeriodic();
   }
 
   @Override
@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-    //m_shooter.setAxisSpeed(Value.of(-m_controller.getRightY()));
-    m_hood.setAxisSpeed(Value.of(-m_controller.getRightY()));
+    m_shooter.setAxisSpeed(Value.of(-m_controller.getRightY()));
+    //m_hood.setAxisSpeed(Value.of(-m_controller.getRightY()));
   }
 }

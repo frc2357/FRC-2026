@@ -415,7 +415,7 @@ public class CommandSwerveDrivetrain
   public ChassisSpeeds getCurrentFieldRelativeSpeeds() {
     return ChassisSpeeds.fromRobotRelativeSpeeds(
       getCurrentRobotRelativeSpeeds(),
-      super.getOperatorForwardDirection()
+      getFieldRelativePose2d().getRotation()
     );
   }
 
