@@ -16,4 +16,9 @@ public class FlipTest extends AutoBase {
   public FlipTest() {
     super("FlipTest");
   }
+
+  @Override
+  public AutoRoutine getRoutine() {
+    return AutoMaker.newAuto(m_name).routine();
+  }
 }

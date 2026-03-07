@@ -16,4 +16,9 @@ public class SpinnyCircle extends AutoBase {
   public SpinnyCircle() {
     super("SpinnyCircle");
   }
+
+  @Override
+  public AutoRoutine getRoutine() {
+    return AutoMaker.newAuto(m_name).routine();
+  }
 }
