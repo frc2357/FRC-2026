@@ -25,6 +25,7 @@ import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
 import frc.robot.commands.floor.FloorAxis;
+import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
@@ -121,6 +122,10 @@ public class Robot extends TimedRobot {
     AprilTagFieldLayout layout = Constants.FieldConstants.FIELD_LAYOUT;
 
     SmartDashboard.putData("Robot Field", m_robotField);
+    SmartDashboard.putData(
+      "Start",
+      new VisionScore(m_driverControls::getLeftX, m_driverControls::getLeftY)
+    );
   }
 
   @Override

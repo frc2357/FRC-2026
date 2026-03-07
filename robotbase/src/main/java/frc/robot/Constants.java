@@ -494,7 +494,7 @@ public class Constants {
 
     public static final String IS_SOTF_KEY = "Enable SOTF";
 
-    public static final int SOTF_CONVERGE_ITERATIONS = 5;
+    public static final int SOTF_CONVERGE_ITERATIONS = 20;
     public static final int DRIVE_ANGLE_CONVERGE_ITERATIONS = 2;
   }
 

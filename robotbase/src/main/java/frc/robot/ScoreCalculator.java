@@ -76,6 +76,7 @@ public class ScoreCalculator {
     public static final Distance POINT_2 = Inches.of(75);
     public static final Distance POINT_3 = Inches.of(100);
     public static final Distance POINT_4 = Inches.of(125);
+    public static final Distance POINT_5 = Inches.of(200);
     public static final Distance FARTHEST_POINT = Inches.of(265); // Far corner of the outpost
   }
 
@@ -84,19 +85,22 @@ public class ScoreCalculator {
     m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(51.27));
     m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(53));
     m_shooterCurve.put(SHOT_POINTS.POINT_4, RotationsPerSecond.of(55));
+    m_shooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(63));
     m_shooterCurve.put(SHOT_POINTS.FARTHEST_POINT, RotationsPerSecond.of(64));
 
     m_hoodCurve.put(SHOT_POINTS.CLOSEST_POINT, Degrees.of(1));
     m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(3.44));
     m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(5.75));
     m_hoodCurve.put(SHOT_POINTS.POINT_4, Degrees.of(11.5));
+    m_hoodCurve.put(SHOT_POINTS.POINT_5, Degrees.of(14));
     m_hoodCurve.put(SHOT_POINTS.FARTHEST_POINT, Degrees.of(14));
 
-    m_timeOfFlightCurve.put(SHOT_POINTS.CLOSEST_POINT, Seconds.of(0));
-    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_2, Seconds.of(0));
-    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_3, Seconds.of(0));
-    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_4, Seconds.of(0));
-    m_timeOfFlightCurve.put(SHOT_POINTS.FARTHEST_POINT, Seconds.of(0));
+    m_timeOfFlightCurve.put(SHOT_POINTS.CLOSEST_POINT, Seconds.of(1));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_2, Seconds.of(1.05));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_3, Seconds.of(1.1));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_4, Seconds.of(1.2));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_5, Seconds.of(2));
+    m_timeOfFlightCurve.put(SHOT_POINTS.FARTHEST_POINT, Seconds.of(2.1));
 
     SmartDashboard.putBoolean(SCORING.IS_SOTF_KEY, false);
   }
@@ -145,7 +149,7 @@ public class ScoreCalculator {
   public CalculatedShot calculateShotFromShootOnTheFly() {
     // Get current robot pose
     Pose2d initialRobotPose = Robot.swerve.getFieldRelativePose2d();
-    ChassisSpeeds robotSpeeds = Robot.swerve.getCurrentFieldRelativeSpeeds();
+    ChassisSpeeds robotSpeeds = Robot.swerve.getCurrentFieldRelativeSpeeds(); // try field velocities instead
 
     // Account for the robot's velocity and latency compensation
     // to compute a guess to where the robot actually is
