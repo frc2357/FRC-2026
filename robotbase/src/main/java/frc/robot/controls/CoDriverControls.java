@@ -1,26 +1,19 @@
 package frc.robot.controls;
 
-import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Value;
 
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
-import frc.robot.Constants.INTAKE_PIVOT;
 import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.feeder.FeederAxis;
 import frc.robot.commands.floor.FloorAxis;
 import frc.robot.commands.intake.IntakeAxis;
 import frc.robot.controls.util.RumbleInterface;
-import frc.robot.subsystems.IntakePivot;
-import java.util.function.Supplier;
 
 public class CoDriverControls implements RumbleInterface {
 
@@ -76,9 +69,6 @@ public class CoDriverControls implements RumbleInterface {
 
     m_controller.start().onTrue(new StopAllMotors());
 
-    // change WaitCommad to ShooterHoodAxis once it is finshed
-    onlyUp.whileTrue(new WaitCommand(0));
-
     onlyUp
       .and(
         () ->
@@ -114,7 +104,7 @@ public class CoDriverControls implements RumbleInterface {
           Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
       )
       .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
+        new IntakeAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
       );
 
     onlyLeft
@@ -124,7 +114,7 @@ public class CoDriverControls implements RumbleInterface {
           Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
       )
       .whileTrue(
-        new IntakeAxis(() -> Value.of(-m_controller.getRightTriggerAxis()))
+        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
       );
 
     onlyLeft.whileTrue(
@@ -138,7 +128,7 @@ public class CoDriverControls implements RumbleInterface {
           Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
       )
       .whileTrue(
-        new FloorAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
+        new FloorAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
       );
 
     onlyRight
@@ -148,7 +138,7 @@ public class CoDriverControls implements RumbleInterface {
           Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
       )
       .whileTrue(
-        new FloorAxis(() -> Value.of(m_controller.getLeftTriggerAxis()))
+        new FloorAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
       );
 
     m_controller
