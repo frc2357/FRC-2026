@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.SHIFT;
 
 public class ShiftTimer {
 
@@ -31,55 +32,20 @@ public class ShiftTimer {
 
   private static Timer shiftTimer = new Timer();
 
-  // Times relative to teleop (start of teleop = 0)
-  private static final Time[] teleopShiftStartTimes = {
-    Seconds.of(0),
-    Seconds.of(10.0),
-    Seconds.of(35.0),
-    Seconds.of(60.0),
-    Seconds.of(85.0),
-    Seconds.of(110.0),
-  };
-  private static final Time[] teleopShiftEndTimes = {
-    Seconds.of(10.0),
-    Seconds.of(35.0),
-    Seconds.of(60.0),
-    Seconds.of(85.0),
-    Seconds.of(110.0),
-    Seconds.of(140.0),
-  };
-
   private static final Shift[] shifts = Shift.values();
-  private static final boolean[] autoLoseSchedule = {
-    true,
-    true,
-    false,
-    true,
-    false,
-    true,
-  };
-  private static final boolean[] autoWinSchedule = {
-    true,
-    false,
-    true,
-    false,
-    true,
-    true,
-  };
 
   public ShiftTimer() {
     // Reset on auto start so we calculate remaining shift time for auto
     RobotModeTriggers.autonomous().onTrue(Commands.runOnce(this::startTimer));
     // Reset on teleop start so we calculate remaining shift time from teleop start
     RobotModeTriggers.teleop().onTrue(Commands.runOnce(this::startTimer));
-
     // Reset every 140 seconds
     new Trigger(DriverStation::isTeleop)
-      .and(() -> shiftTimer.hasElapsed(Constants.SCORING.TELEOP_LENGTH))
+      .and(() -> shiftTimer.hasElapsed(SHIFT.TELEOP_LENGTH))
       .onTrue(Commands.runOnce(this::startTimer));
   }
 
-  public void startTimer() {
+  private void startTimer() {
     shiftTimer.restart();
   }
 
@@ -101,9 +67,9 @@ public class ShiftTimer {
     Alliance alliance = getWinningAlliance();
 
     if (alliance == Robot.alliance) {
-      return autoWinSchedule;
+      return SHIFT.AUTO_WIN_SCHEDULE;
     } else {
-      return autoLoseSchedule;
+      return SHIFT.AUTO_LOSE_SCHEDULE;
     }
   }
 
@@ -116,33 +82,24 @@ public class ShiftTimer {
     if (DriverStation.isAutonomous()) {
       shift = Shift.AUTO;
       isHubActive = true;
-      timeRemaining = Constants.SCORING.AUTO_LENGTH.minus(currentTime);
+      timeRemaining = SHIFT.AUTO_LENGTH.minus(currentTime);
     }
 
-    if (DriverStation.isTeleop()) {
+    if (DriverStation.isTeleopEnabled()) {
       boolean[] schedule = getSchedule();
 
-      for (int i = 0; i < teleopShiftStartTimes.length; i++) {
+      for (int i = 0; i < SHIFT.TELEOP_SHIFT_START_TIMES.length; i++) {
         if (
-          currentTime.gte(teleopShiftStartTimes[i]) &&
-          currentTime.lt(teleopShiftEndTimes[i])
+          currentTime.gte(SHIFT.TELEOP_SHIFT_START_TIMES[i]) &&
+          currentTime.lt(SHIFT.TELEOP_SHIFT_END_TIMES[i])
         ) {
           shift = shifts[i];
           isHubActive = schedule[i];
-          timeRemaining = teleopShiftEndTimes[i].minus(currentTime);
+          timeRemaining = SHIFT.TELEOP_SHIFT_END_TIMES[i].minus(currentTime);
         }
       }
     }
 
     return new ShiftInfo(shift, isHubActive, timeRemaining);
-  }
-
-  public boolean isHubAboutToActivate() {
-    ShiftInfo shiftInfo = getShiftInfo();
-
-    return (
-      !shiftInfo.isHubActive &&
-      shiftInfo.timeRemaining.lt(Constants.SCORING.TIME_TO_WARN_FOR_ACTIVE_HUB)
-    );
   }
 }
