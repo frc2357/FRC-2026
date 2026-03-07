@@ -6,7 +6,7 @@ import frc.robot.Robot;
 public class TunnelStop extends Command {
 
   public TunnelStop() {
-    addRequirements(Robot.floor);
+    addRequirements(Robot.tunnel);
   }
 
   @Override

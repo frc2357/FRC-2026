@@ -9,13 +9,13 @@ public class TunnelSetSpeed extends Command {
   private Dimensionless m_speed;
 
   public TunnelSetSpeed(Dimensionless speed) {
-    addRequirements(Robot.floor);
+    addRequirements(Robot.tunnel);
     m_speed = speed;
   }
 
   @Override
   public void initialize() {
-    Robot.floor.setSpeed(m_speed);
+    Robot.tunnel.setSpeed(m_speed);
   }
 
   @Override

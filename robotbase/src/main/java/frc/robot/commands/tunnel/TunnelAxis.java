@@ -17,7 +17,7 @@ public class TunnelAxis extends Command {
   @Override
   public void execute() {
     Dimensionless axisValue = m_axis.get();
-    Robot.floor.setAxisSpeed(axisValue);
+    Robot.tunnel.setAxisSpeed(axisValue);
   }
 
   @Override
@@ -27,6 +27,6 @@ public class TunnelAxis extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    Robot.floor.stop();
+    Robot.tunnel.stop();
   }
 }

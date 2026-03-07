@@ -5,6 +5,7 @@ import frc.robot.Robot;
 import frc.robot.commands.feeder.FeederStop;
 import frc.robot.commands.floor.FloorStop;
 import frc.robot.commands.intake.IntakeStop;
+import frc.robot.commands.tunnel.TunnelStop;
 
 //import frc.robot.commands.shooter.ShooterStop
 //For when updating with Shooter subsystem.
@@ -15,6 +16,7 @@ public class StopAllMotors extends ParallelCommandGroup {
       new IntakeStop(),
       new FloorStop(),
       new FeederStop(),
+      new TunnelStop(),
       Robot.hood.stopCommand(),
       Robot.intakePivot.stopCommand(),
       Robot.shooter.stopCommand()
