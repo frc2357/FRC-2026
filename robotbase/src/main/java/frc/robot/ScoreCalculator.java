@@ -31,6 +31,8 @@ import frc.robot.util.MathUtil;
  */
 public class ScoreCalculator {
 
+  private Translation2d m_currentShotTarget = FieldConstants.Hub.centerPoint;
+
   public record CalculatedShot(
     AngularVelocity shooterVelocity,
     Angle hoodPosition,
@@ -120,12 +122,10 @@ public class ScoreCalculator {
       Constants.SHOOTER.ROBOT_TO_SHOOTER
     );
 
-    Translation2d targetHub = AllianceFlipUtil.apply(
-      FieldConstants.Hub.topCenterPoint.toTranslation2d()
-    );
+    Translation2d target = AllianceFlipUtil.apply(m_currentShotTarget);
 
     Distance targetDistance = Meters.of(
-      shooterPose.getTranslation().getDistance(targetHub)
+      shooterPose.getTranslation().getDistance(target)
     );
     SmartDashboard.putNumber(
       "Pose Computed Distance Inches",
@@ -134,7 +134,7 @@ public class ScoreCalculator {
 
     AngularVelocity shooterVelocity = m_shooterCurve.get(targetDistance);
     Angle hoodAngle = m_hoodCurve.get(targetDistance);
-    Rotation2d driveAngle = computeTargetDriveAngle(robotPose, targetHub);
+    Rotation2d driveAngle = computeTargetDriveAngle(robotPose, target);
 
     SmartDashboard.putNumber(
       "Computed Shooter RPS",
@@ -180,13 +180,11 @@ public class ScoreCalculator {
       Constants.SHOOTER.ROBOT_TO_SHOOTER
     );
 
-    Translation2d targetHub = AllianceFlipUtil.apply(
-      FieldConstants.Hub.topCenterPoint.toTranslation2d()
-    );
+    Translation2d target = AllianceFlipUtil.apply(m_currentShotTarget);
 
     // Initial target distance
     Distance shooterToTargetDistance = Meters.of(
-      targetHub.getDistance(shooterPose.getTranslation())
+      target.getDistance(shooterPose.getTranslation())
     );
 
     // The field-relative speed of the shooter moving on the field
@@ -216,7 +214,7 @@ public class ScoreCalculator {
         shooterPose.getRotation()
       );
       futureShootertoTargetDistance = Meters.of(
-        targetHub.getDistance(futureShooterPose.getTranslation())
+        target.getDistance(futureShooterPose.getTranslation())
       );
     }
 
@@ -230,7 +228,7 @@ public class ScoreCalculator {
     Pose2d futureRobotPose = futureShooterPose.transformBy(
       Constants.SHOOTER.ROBOT_TO_SHOOTER.inverse()
     );
-    Rotation2d driveAngle = computeTargetDriveAngle(futureRobotPose, targetHub);
+    Rotation2d driveAngle = computeTargetDriveAngle(futureRobotPose, target);
 
     SmartDashboard.putNumber(
       "SOTF Direct Distance Inches",
@@ -338,5 +336,13 @@ public class ScoreCalculator {
   public void logCurveValues() {
     m_shooterCurve.logCurrentValues();
     m_hoodCurve.logCurrentValues();
+  }
+
+  public Translation2d getShotTarget() {
+    return m_currentShotTarget;
+  }
+
+  public void setShotTarget(Translation2d target) {
+    m_currentShotTarget = target;
   }
 }
