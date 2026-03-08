@@ -16,4 +16,9 @@ public class Crab extends AutoBase {
   public Crab() {
     super("Crab");
   }
+
+  @Override
+  public AutoRoutine getRoutine() {
+    return AutoMaker.newAuto(m_name).routine();
+  }
 }
