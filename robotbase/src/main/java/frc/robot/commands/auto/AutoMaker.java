@@ -1,12 +1,13 @@
 package frc.robot.commands.auto;
 
-import static frc.robot.Constants.CHOREO.*;
+import static frc.robot.Constants.CHOREO.AUTO_FACTORY;
 
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.util.VariableWaitCommand;
+import frc.robot.subsystems.CommandSwerveDrivetrain.AutoDriveMode;
 
 public final class AutoMaker {
 
@@ -62,5 +63,23 @@ public final class AutoMaker {
    */
   public static AutoRoutine simpleAutoRoutine(String name) {
     return AutoMaker.newAuto(name).routine;
+  }
+
+  public static AutoTrajectory newDefaultTrajectory(
+    AutoRoutine routine,
+    String trajName
+  ) {
+    AutoTrajectory traj = routine.trajectory(trajName);
+    traj.active().whileTrue(new SetAutoDriveMode(AutoDriveMode.DEFAULT));
+    return traj;
+  }
+
+  public static AutoTrajectory newTargetLockTrajectory(
+    AutoRoutine routine,
+    String trajName
+  ) {
+    AutoTrajectory traj = routine.trajectory(trajName);
+    traj.active().whileTrue(new SetAutoDriveMode(AutoDriveMode.TARGET_LOCK));
+    return traj;
   }
 }
