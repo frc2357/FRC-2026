@@ -47,15 +47,11 @@ public class AutoChooserManager {
   }
 
   public Command getSelectedCommandScheduler() {
-    return m_autoChooser
-      .selectedCommandScheduler()
-      .finallyDo(() -> Robot.swerve.stopMotors()); // no touchy.
+    return m_autoChooser.selectedCommandScheduler();
   }
 
   public Command getSelectedCommand() {
-    return m_autoChooser
-      .selectedCommand()
-      .finallyDo(() -> Robot.swerve.stopMotors()); // also no touchy.
+    return m_autoChooser.selectedCommand();
   }
 
   public String selectAuto(String autoToSelect) {
