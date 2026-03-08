@@ -620,14 +620,18 @@ public class Constants {
         edu.wpi.first.math.util.Units.inchesToMeters(56.5);
 
       // Relevant reference points on alliance side
-      public static final Translation3d topCenterPoint = new Translation3d(
+      public static final Translation2d centerPoint = new Translation2d(
         FIELD_LAYOUT.getTagPose(26).get().getX() + width / 2.0,
-        fieldWidth / 2.0,
+        fieldWidth / 2.0
+      );
+      public static final Translation3d topCenterPoint = new Translation3d(
+        centerPoint.getX(),
+        centerPoint.getY(),
         height
       );
       public static final Translation3d innerCenterPoint = new Translation3d(
-        FIELD_LAYOUT.getTagPose(26).get().getX() + width / 2.0,
-        fieldWidth / 2.0,
+        centerPoint.getX(),
+        centerPoint.getY(),
         innerHeight
       );
 
@@ -684,6 +688,28 @@ public class Constants {
       public static final Pose2d leftFace = FIELD_LAYOUT.getTagPose(21)
         .get()
         .toPose2d();
+    }
+
+    public static class Bump {
+
+      public static final double width =
+        edu.wpi.first.math.util.Units.inchesToMeters(73.0);
+
+      public static class Left {
+
+        public static final Translation2d centerPoint = new Translation2d(
+          FIELD_LAYOUT.getTagPose(21).get().getX(),
+          FIELD_LAYOUT.getTagPose(21).get().getY() + width / 2.0
+        );
+      }
+
+      public static class Right {
+
+        public static final Translation2d centerPoint = new Translation2d(
+          FIELD_LAYOUT.getTagPose(18).get().getX(),
+          FIELD_LAYOUT.getTagPose(18).get().getY() - width / 2.0
+        );
+      }
     }
   }
 }
