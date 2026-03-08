@@ -113,11 +113,15 @@ public class Hood extends SubsystemBase {
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
   public Command setAngle(Angle angle) {
-    return m_hood.run(angle).finallyDo(() -> this.stopMotor());
+    return m_hood.run(angle);
   }
 
   public Command setAngle(Supplier<Angle> angle) {
-    return m_hood.run(angle).finallyDo(() -> this.stopMotor());
+    return m_hood.run(angle);
+  }
+
+  public Command goHome() {
+    return this.setAngle(HOOD.SETPOINTS.HOME);
   }
 
   /**
@@ -136,7 +140,7 @@ public class Hood extends SubsystemBase {
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
   private Command set(double dutyCycle) {
-    return m_hood.set(dutyCycle).finallyDo(() -> this.stopMotor());
+    return m_hood.set(dutyCycle);
   }
 
   public Command setSpeed(Dimensionless speed) {
