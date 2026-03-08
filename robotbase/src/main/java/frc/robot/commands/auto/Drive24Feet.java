@@ -13,8 +13,8 @@ public class Crab extends AutoBase {
    * Will create the first trajectory, and set the routine to wait, reset odometry, and run the first trajectory
    * @param name Name of the auto routine
    */
-  public Crab() {
-    super("Crab");
+  public Drive24Feet() {
+    super("drive24Feet");
   }
 
   @Override
