@@ -38,11 +38,19 @@ public class VisionPass extends ParallelCommandGroup {
     );
   }
 
+  /**
+   * Checks if the robot is positioned to pass
+   * If the robot is too close to the hub, the fuel will most likely collide with it.
+   * This makes sure the robot is far enough away so that this does not happen.
+   *
+   * @return true if the robot is not too close to the hub to pass
+   */
   private boolean isPositionedToPass() {
     Pose2d shooterPose = Robot.swerve
       .getAllianceRelativePose2d()
       .transformBy(Constants.SHOOTER.ROBOT_TO_SHOOTER);
 
+    // Current implementation: Makes sure robot is not within a 47" x 47" square directly in front of the hub
     return MathUtil.isWithinRect(
       FieldConstants.Hub.centerPoint,
       FieldConstants.Hub.width,
