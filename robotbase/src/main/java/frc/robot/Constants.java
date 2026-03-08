@@ -331,6 +331,9 @@ public class Constants {
     public static final Angle SIM_UPPER_ANGLE = Degrees.of(123.3);
     public static final Angle SIM_STARTING_POSITION = Degrees.zero();
 
+    public static final Angle topAngle = Degrees.of(10);
+    public static final Angle bottomAngle = Degrees.of(5);
+
     // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
 
     public static final double P = 0;
