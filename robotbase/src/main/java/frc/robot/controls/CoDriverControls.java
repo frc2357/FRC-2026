@@ -12,6 +12,7 @@ import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.feeder.FeederAxis;
 import frc.robot.commands.floor.FloorAxis;
+import frc.robot.commands.hood.ToggleDefaultHood;
 import frc.robot.commands.intake.IntakeAxis;
 import frc.robot.controls.util.RumbleInterface;
 
@@ -149,6 +150,8 @@ public class CoDriverControls implements RumbleInterface {
       .whileTrue(
         new FeederAxis(() -> (Constants.FEEDER.AXIS_MAX_SPEED.times(-1)))
       );
+
+    m_controller.a().and(noDpad).onTrue(new ToggleDefaultHood());
   }
 
   private double modifyAxis(double value) {

@@ -108,6 +108,7 @@ public class Robot extends TimedRobot {
         return Value.of(SmartDashboard.getNumber("Floor", 0.0));
       })
     );
+    hood.setDefaultCommand(hood.goHome());
 
     m_autoChooserManager = new AutoChooserManager();
     m_InitRobotCommand = new InitRobotCommand();
