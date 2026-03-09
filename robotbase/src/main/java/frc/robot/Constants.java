@@ -384,6 +384,10 @@ public class Constants {
     public static final Angle DEPLOYED_TOLERANCE = Degrees.of(10);
 
     public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(10);
+
+    public static final Dimensionless DEPLOY_SPEED = Percent.of(10);
+    public static final Current DEPLOY_AMP_THRESHOLD = Amps.of(40);
+    public static final Time DEPLOY_NORMALIZE_DELAY = Seconds.of(0.1);
   }
 
   public static final class FEEDER {
