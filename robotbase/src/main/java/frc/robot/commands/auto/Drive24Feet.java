@@ -3,7 +3,7 @@ package frc.robot.commands.auto;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 
-public class Crab extends AutoBase {
+public class Drive24Feet extends AutoBase {
 
   protected AutoRoutine m_routine;
   protected AutoTrajectory m_startTraj;
