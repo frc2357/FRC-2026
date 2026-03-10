@@ -12,9 +12,9 @@ import frc.robot.Robot;
  * This command is not representative of our actual scoring sequence
  * It was primarily created to validate the shooter curve
  */
-public class Score extends Command {
+public class TestScore extends Command {
 
-  public Score() {
+  public TestScore() {
     SmartDashboard.putNumber("Fire Distance Inches", 0.0);
   }
 

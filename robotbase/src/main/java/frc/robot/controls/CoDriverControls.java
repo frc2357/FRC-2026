@@ -10,11 +10,12 @@ import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
+import frc.robot.commands.debug.TunnelFeed;
+import frc.robot.commands.debug.TunnelFeedReverse;
 import frc.robot.commands.feeder.FeederAxis;
 import frc.robot.commands.floor.FloorAxis;
 import frc.robot.commands.intake.IntakeAxis;
-import frc.robot.commands.scoring.TunnelFeed;
-import frc.robot.commands.scoring.TunnelFeedReverse;
+import frc.robot.commands.scoring.ScoreFeed;
 import frc.robot.commands.tunnel.TunnelAxis;
 import frc.robot.controls.util.RumbleInterface;
 
