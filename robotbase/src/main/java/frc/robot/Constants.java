@@ -312,7 +312,7 @@ public class Constants {
     public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-80);
   }
 
-  public static final class INTAKE {
+  public static final class INTAKERUNNER {
 
     public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(75);
 

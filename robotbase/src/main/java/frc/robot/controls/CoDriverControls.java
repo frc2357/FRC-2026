@@ -13,7 +13,7 @@ import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.debug.TunnelFeed;
 import frc.robot.commands.debug.TunnelFeedReverse;
 import frc.robot.commands.floor.FloorAxis;
-import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.intakeRunner.IntakeRunnerAxis;
 import frc.robot.controls.util.RumbleInterface;
 
 public class CoDriverControls implements RumbleInterface {
@@ -105,7 +105,7 @@ public class CoDriverControls implements RumbleInterface {
           Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
       )
       .whileTrue(
-        new IntakeAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
+        new IntakeRunnerAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
       );
 
     onlyLeft
@@ -115,7 +115,7 @@ public class CoDriverControls implements RumbleInterface {
           Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
       )
       .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+        new IntakeRunnerAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
       );
 
     onlyLeft.whileTrue(

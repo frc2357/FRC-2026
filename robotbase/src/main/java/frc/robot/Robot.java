@@ -36,8 +36,8 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Floor;
 import frc.robot.subsystems.Hood;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakePivot;
+import frc.robot.subsystems.IntakeRunner;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tunnel;
 import frc.robot.triggers.ShiftWarning;
@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
   public static InitRobotCommand m_InitRobotCommand;
 
   private AutoChooserManager m_autoChooserManager;
-  public static Intake intake;
+  public static IntakeRunner intake;
   public static IntakePivot intakePivot;
   public static Shooter shooter;
   public static Hood hood;
@@ -83,7 +83,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     swerve = TunerConstants.createDrivetrain();
 
-    intake = new Intake();
+    intake = new IntakeRunner();
     intakePivot = new IntakePivot();
     shooter = new Shooter();
     hood = new Hood();
