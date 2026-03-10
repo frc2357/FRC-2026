@@ -291,8 +291,9 @@ public class Constants {
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
       .inverted(true)
-      .smartCurrentLimit(40, 40)
-      .openLoopRampRate(0.25); // TODO: double check these values
+      .smartCurrentLimit(40, 20)
+      .openLoopRampRate(0.25)
+      .voltageCompensation(10);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
@@ -304,8 +305,9 @@ public class Constants {
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
       .inverted(false)
-      .openLoopRampRate(0.5)
-      .voltageCompensation(12);
+      .openLoopRampRate(0.25)
+      .smartCurrentLimit(30, 20)
+      .voltageCompensation(10);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless TUNNEL_SPEED = Percent.of(80);
@@ -393,7 +395,7 @@ public class Constants {
       .idleMode(IdleMode.kCoast)
       .inverted(true)
       .smartCurrentLimit(20, 20)
-      .openLoopRampRate(0.5)
+      .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
     public static final Dimensionless FEED_SPEED = Percent.of(80);
