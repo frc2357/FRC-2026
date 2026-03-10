@@ -309,6 +309,7 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless TUNNEL_SPEED = Percent.of(80);
+    public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-80);
   }
 
   public static final class INTAKE {
@@ -396,6 +397,7 @@ public class Constants {
       .voltageCompensation(12);
 
     public static final Dimensionless FEED_SPEED = Percent.of(80);
+    public static final Dimensionless REVERSE_FEED_SPEED = Percent.of(-80);
   }
 
   public static final class SHOOTER {

@@ -10,7 +10,8 @@ import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
-import frc.robot.commands.feeder.FeederAxis;
+import frc.robot.commands.debug.TunnelFeed;
+import frc.robot.commands.debug.TunnelFeedReverse;
 import frc.robot.commands.floor.FloorAxis;
 import frc.robot.commands.intake.IntakeAxis;
 import frc.robot.controls.util.RumbleInterface;
@@ -141,14 +142,8 @@ public class CoDriverControls implements RumbleInterface {
         new FloorAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
       );
 
-    m_controller
-      .rightBumper()
-      .whileTrue(new FeederAxis(() -> (Constants.FEEDER.AXIS_MAX_SPEED)));
-    m_controller
-      .leftBumper()
-      .whileTrue(
-        new FeederAxis(() -> (Constants.FEEDER.AXIS_MAX_SPEED.times(-1)))
-      );
+    m_controller.rightBumper().whileTrue(new TunnelFeed());
+    m_controller.leftBumper().whileTrue(new TunnelFeedReverse());
   }
 
   private double modifyAxis(double value) {
