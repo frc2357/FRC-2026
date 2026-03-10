@@ -1,7 +1,6 @@
 package frc.robot.controls;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
@@ -22,10 +21,8 @@ import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.feeder.FeederSetSpeed;
 import frc.robot.commands.floor.FloorSetSpeed;
 import frc.robot.commands.intake.IntakeAxis;
-import frc.robot.commands.scoring.Score;
 import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.scoring.VisionTargeting;
-import frc.robot.commands.shooter.Firing;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
