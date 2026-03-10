@@ -3,12 +3,8 @@ package frc.robot.commands.scoring;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.drive.DrivePoseTargetingHub;
-import frc.robot.commands.feeder.FeederSetSpeed;
-import frc.robot.commands.floor.FloorSetSpeed;
-import frc.robot.commands.tunnel.TunnelSetSpeed;
 import java.util.function.Supplier;
 
 public class VisionScore extends ParallelCommandGroup {
