@@ -60,7 +60,6 @@ public class Hood extends SubsystemBase {
       // Motor properties to prevent over currenting.
       .withStatorCurrentLimit(HOOD.STALL_LIMIT)
       .withExternalEncoder(m_encoder)
-      .withExternalEncoderInverted(true)
       .withUseExternalFeedbackEncoder(true)
       .withExternalEncoderGearing(HOOD.ENCODER_GEARING)
       .withSoftLimit(HOOD.LOWER_ANGLE_LIMIT, HOOD.UPPER_ANGLE_LIMIT);
