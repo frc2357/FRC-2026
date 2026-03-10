@@ -1,14 +1,14 @@
-package frc.robot.commands.intake;
+package frc.robot.commands.intakeRunner;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
-public class IntakeSetSpeed extends Command {
+public class IntakeRunnerSetSpeed extends Command {
 
   private Dimensionless m_speed;
 
-  public IntakeSetSpeed(Dimensionless speed) {
+  public IntakeRunnerSetSpeed(Dimensionless speed) {
     m_speed = speed;
     addRequirements(Robot.intake);
   }

@@ -1,15 +1,15 @@
-package frc.robot.commands.intake;
+package frc.robot.commands.intakeRunner;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import java.util.function.Supplier;
 
-public class IntakeAxis extends Command {
+public class IntakeRunnerAxis extends Command {
 
   private Supplier<Dimensionless> m_axis;
 
-  public IntakeAxis(Supplier<Dimensionless> axis) {
+  public IntakeRunnerAxis(Supplier<Dimensionless> axis) {
     m_axis = axis;
     addRequirements(Robot.intake);
   }

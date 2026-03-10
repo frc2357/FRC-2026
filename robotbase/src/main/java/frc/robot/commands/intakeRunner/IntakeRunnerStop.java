@@ -1,11 +1,11 @@
-package frc.robot.commands.intake;
+package frc.robot.commands.intakeRunner;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
-public class IntakeStop extends Command {
+public class IntakeRunnerStop extends Command {
 
-  public IntakeStop() {
+  public IntakeRunnerStop() {
     addRequirements(Robot.intake);
   }
 

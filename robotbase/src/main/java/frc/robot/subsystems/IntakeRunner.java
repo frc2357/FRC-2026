@@ -9,19 +9,19 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
-import frc.robot.Constants.INTAKE;
+import frc.robot.Constants.INTAKERUNNER;
 
-public class Intake extends SubsystemBase {
+public class IntakeRunner extends SubsystemBase {
 
   private SparkMax m_leftMotor;
 
   //private SparkMax m_rightMotor;
 
-  public Intake() {
+  public IntakeRunner() {
     m_leftMotor = new SparkMax(CAN_ID.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
 
     m_leftMotor.configure(
-      INTAKE.LEFT_MOTOR_CONFIG,
+      INTAKERUNNER.LEFT_MOTOR_CONFIG,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
     );
@@ -43,7 +43,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void setAxisSpeed(Dimensionless axisSpeed) {
-    Dimensionless m_speed = axisSpeed.times(INTAKE.AXIS_MAX_SPEED);
+    Dimensionless m_speed = axisSpeed.times(INTAKERUNNER.AXIS_MAX_SPEED);
     setSpeed(m_speed);
   }
 

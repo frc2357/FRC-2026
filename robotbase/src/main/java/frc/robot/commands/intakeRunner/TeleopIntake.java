@@ -1,8 +1,8 @@
-package frc.robot.commands.intake;
+package frc.robot.commands.intakeRunner;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.INTAKE;
+import frc.robot.Constants.INTAKERUNNER;
 import frc.robot.commands.drive.SetDriveModifiers;
 
 public class TeleopIntake extends ParallelCommandGroup {
@@ -12,7 +12,7 @@ public class TeleopIntake extends ParallelCommandGroup {
       new SetDriveModifiers(),
       new SequentialCommandGroup(
         new IntakeDeploy(),
-        new IntakeSetSpeed(INTAKE.TELEOP_INTAKING_SPEED)
+        new IntakeRunnerSetSpeed(INTAKERUNNER.TELEOP_INTAKING_SPEED)
       )
     );
   }
