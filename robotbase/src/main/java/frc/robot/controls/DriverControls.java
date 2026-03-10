@@ -1,6 +1,7 @@
 package frc.robot.controls;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
@@ -58,16 +59,26 @@ public class DriverControls implements RumbleInterface {
       .rightTrigger()
       .whileTrue(new ManualScore(RotationsPerSecond.of(50)));
 
-    //m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(10)));
-    //m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-10)));
     m_controller
-      .a()
+      .rightTrigger()
       .whileTrue(
-        new ParallelCommandGroup(
-          new FeederSetSpeed(FEEDER.FEED_SPEED),
-          new FloorSetSpeed(FLOOR.FLOOR_SPEED)
+        new ManualScore(() ->
+          RotationsPerSecond.of(
+            SmartDashboard.getNumber("Shooter Target RPS", 0)
+          )
         )
       );
+
+    m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(10)));
+    m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-10)));
+    // m_controller
+    //   .a()
+    //   .whileTrue(
+    //     new ParallelCommandGroup(
+    //       new FeederSetSpeed(FEEDER.FEED_SPEED),
+    //       new FloorSetSpeed(FLOOR.FLOOR_SPEED)
+    //     )
+    //   );
 
     m_controller
       .x()
