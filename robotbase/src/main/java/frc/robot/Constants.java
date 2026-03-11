@@ -479,6 +479,11 @@ public class Constants {
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(30);
     public static final Distance LENGTH = Inches.of(8);
     public static final Mass MASS = Pounds.of(1.365);
+
+    public static final class SETPOINTS {
+
+      public static final Angle HOME = Degrees.of(2);
+    }
   }
 
   public class SCORING {

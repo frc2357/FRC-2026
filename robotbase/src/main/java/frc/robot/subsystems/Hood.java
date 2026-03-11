@@ -84,7 +84,6 @@ public class Hood extends SubsystemBase {
     // Account for YAMS assuming the feedback sensor returns velocity nativley in RPM
     // The CANANDMAG Helium Encoder 0.2 natively returns rotations per second
     // so the conversion factor should not be divided by 60 like YAMS is doing.
-    // TODO: revisit once we get the thrifty encoders, if they return nativley in RPM this is not necessary
     SparkBaseConfig baseConfig =
       (SparkBaseConfig) m_sparkSmartMotorController.getMotorControllerConfig();
     baseConfig.absoluteEncoder.velocityConversionFactor(
@@ -113,11 +112,15 @@ public class Hood extends SubsystemBase {
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
   public Command setAngle(Angle angle) {
-    return m_hood.run(angle).finallyDo(() -> this.stopMotor());
+    return m_hood.run(angle);
   }
 
   public Command setAngle(Supplier<Angle> angle) {
-    return m_hood.run(angle).finallyDo(() -> this.stopMotor());
+    return m_hood.run(angle);
+  }
+
+  public Command goHome() {
+    return this.setAngle(HOOD.SETPOINTS.HOME);
   }
 
   /**
@@ -136,7 +139,7 @@ public class Hood extends SubsystemBase {
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
   private Command set(double dutyCycle) {
-    return m_hood.set(dutyCycle).finallyDo(() -> this.stopMotor());
+    return m_hood.set(dutyCycle);
   }
 
   public Command setSpeed(Dimensionless speed) {
