@@ -152,9 +152,6 @@ public class CoDriverControls implements RumbleInterface {
 
     m_controller.rightBumper().whileTrue(new TunnelFeed());
     m_controller.leftBumper().whileTrue(new TunnelFeedReverse());
-
-    m_controller.a().whileTrue(new IntakePivotDeploy());
-    m_controller.b().whileTrue(new IntakePivotRetract());
   }
 
   private double modifyAxis(double value) {
