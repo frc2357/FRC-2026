@@ -9,25 +9,18 @@ import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
-import frc.robot.Constants.FEEDER;
-import frc.robot.Constants.FLOOR;
 import frc.robot.Robot;
 import frc.robot.commands.drive.DrivePoseTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
-import frc.robot.commands.feeder.FeederSetSpeed;
-import frc.robot.commands.floor.FloorSetSpeed;
 import frc.robot.commands.intakepivot.IntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intaking.TeleopIntake;
 import frc.robot.commands.scoring.ManualScore;
-import frc.robot.commands.scoring.VisionScore;
-import frc.robot.commands.scoring.VisionTargeting;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
@@ -57,7 +50,13 @@ public class DriverControls implements RumbleInterface {
     //m_controller.rightTrigger().whileTrue(new VisionScore(this::getLeftX, this::getLeftY));
     m_controller
       .rightTrigger()
-      .whileTrue(new ManualScore(RotationsPerSecond.of(50)));
+      .whileTrue(
+        new ManualScore(() ->
+          RotationsPerSecond.of(
+            SmartDashboard.getNumber("Shooter Target RPS", 0)
+          )
+        )
+      );
 
     m_controller
       .rightTrigger()
