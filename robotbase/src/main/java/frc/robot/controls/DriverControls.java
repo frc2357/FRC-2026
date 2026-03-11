@@ -21,6 +21,8 @@ import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.feeder.FeederSetSpeed;
 import frc.robot.commands.floor.FloorSetSpeed;
+import frc.robot.commands.intakepivot.IntakePivotDeploy;
+import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intaking.TeleopIntake;
 import frc.robot.commands.scoring.ManualScore;
 import frc.robot.commands.scoring.VisionScore;
@@ -37,12 +39,19 @@ public class DriverControls implements RumbleInterface {
   }
 
   public void mapControls() {
+    // Button chord for all buttons that cause intaking
+    Trigger isIntaking = m_controller.leftTrigger();
+
+    // Button chord for all buttons that cause scoring
     Trigger isScoring = m_controller.rightTrigger();
 
     m_controller.back().onTrue(new FlipPerspective());
     m_controller.start().onTrue(new ResetPerspective());
 
     m_controller.leftTrigger().whileTrue(new TeleopIntake());
+
+    isScoring.and(isIntaking.negate()).whileTrue(new IntakePivotJiggle());
+    isScoring.negate().onTrue(new IntakePivotDeploy());
 
     //m_controller.rightTrigger().whileTrue(new VisionScore(this::getLeftX, this::getLeftY));
     m_controller

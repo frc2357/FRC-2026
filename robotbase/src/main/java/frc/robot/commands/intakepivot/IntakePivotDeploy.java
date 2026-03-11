@@ -14,11 +14,7 @@ public class IntakePivotDeploy extends ParallelDeadlineGroup {
         // Only say we have deployed intake if this command finishes
         Robot.intakePivot.setDeployed(!interrupted)
       ),
-      Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.DEPLOY_SPEED),
-      Commands.runEnd(
-        () -> SmartDashboard.putBoolean("Deploying", true),
-        () -> SmartDashboard.putBoolean("Deploying", false)
-      )
+      Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.DEPLOY_SPEED)
     );
   }
 }

@@ -329,7 +329,7 @@ public class Constants {
         .apply(LEFT_MOTOR_CONFIG)
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
 
-    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(75);
+    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(50);
   }
 
   public static final class INTAKE_PIVOT {
@@ -366,6 +366,11 @@ public class Constants {
     public static final Dimensionless RETRACT_SPEED = Percent.of(30);
 
     public static final Dimensionless DEPLOY_SPEED = Percent.of(-30);
+
+    public static final Dimensionless JIGGLE_UP_SPEED = Percent.of(10);
+    public static final Dimensionless JIGGLE_DOWN_SPEED = Percent.of(-10);
+
+    public static final Time JIGGLE_UP_TIME = Seconds.of(2);
 
     public static final Current AMP_STALL_THRESHOLD = Amps.of(35);
     public static final Time TIME_TO_STALL = Seconds.of(0.1);
