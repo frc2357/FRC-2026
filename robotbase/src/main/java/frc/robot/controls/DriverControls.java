@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Constants.FEEDER;
@@ -20,7 +21,10 @@ import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.feeder.FeederSetSpeed;
 import frc.robot.commands.floor.FloorSetSpeed;
-import frc.robot.commands.intakerunner.IntakeRunnerAxis;
+import frc.robot.commands.intakepivot.IntakePivotDeploy;
+import frc.robot.commands.intakepivot.IntakePivotJiggle;
+import frc.robot.commands.intaking.TeleopIntake;
+import frc.robot.commands.scoring.ManualScore;
 import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.scoring.VisionTargeting;
 import frc.robot.controls.util.RumbleInterface;
@@ -35,19 +39,24 @@ public class DriverControls implements RumbleInterface {
   }
 
   public void mapControls() {
+    // Button chord for all buttons that cause intaking
+    Trigger isIntaking = m_controller.leftTrigger();
+
+    // Button chord for all buttons that cause scoring
+    Trigger isScoring = m_controller.rightTrigger();
+
     m_controller.back().onTrue(new FlipPerspective());
     m_controller.start().onTrue(new ResetPerspective());
 
-    m_controller.leftTrigger().whileTrue(new VisionTargeting());
-    //m_controller
-    //  .leftTrigger()
-    //  .whileTrue(Robot.shooter.setVelocity(RotationsPerSecond.of(48)));
+    m_controller.leftTrigger().whileTrue(new TeleopIntake());
 
+    isScoring.and(isIntaking.negate()).whileTrue(new IntakePivotJiggle());
+    isScoring.negate().onTrue(new IntakePivotDeploy());
+
+    //m_controller.rightTrigger().whileTrue(new VisionScore(this::getLeftX, this::getLeftY));
     m_controller
       .rightTrigger()
-      .whileTrue(
-        new IntakeRunnerAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
-      );
+      .whileTrue(new ManualScore(RotationsPerSecond.of(50)));
 
     //m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(10)));
     //m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-10)));
@@ -63,8 +72,6 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .x()
       .whileTrue(new DrivePoseTargetingHub(this::getLeftX, this::getLeftY));
-
-    m_controller.b().whileTrue(new VisionScore(this::getLeftX, this::getLeftY));
 
     m_controller
       .povRight()

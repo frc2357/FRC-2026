@@ -329,7 +329,7 @@ public class Constants {
         .apply(LEFT_MOTOR_CONFIG)
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
 
-    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(75);
+    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(50);
   }
 
   public static final class INTAKE_PIVOT {
@@ -351,39 +351,29 @@ public class Constants {
     public static final Angle SIM_UPPER_ANGLE = Degrees.of(123.3);
     public static final Angle SIM_STARTING_POSITION = Degrees.of(20);
 
-    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
-
-    public static final double P = 0;
-    public static final double I = 0;
-    public static final double D = 0;
-    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(3600);
-    public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
-      RotationsPerSecondPerSecond.of(120);
-
     public static final Current STALL_LIMIT = Amps.of(40);
 
     public static final SparkBaseConfig INTAKE_PIVOT_BASE_CONFIG =
       new SparkMaxConfig()
-        .idleMode(IdleMode.kCoast)
+        .idleMode(IdleMode.kBrake)
         .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
         .voltageCompensation(12);
 
-    public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(0, 0, 0);
-
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
-    public static final Angle EXTERNAL_ENCODER_OFFSET = Degrees.of(0);
-    public static final MechanismGearing EXTERNAL_ENCODER_GEARING =
-      new MechanismGearing(GearBox.fromStages("1:1"));
-    public static final Boolean ENCODER_INVERTED = true;
+    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(-5);
 
-    // TODO: Make sure these are right
-    public static final Angle DEPLOYED_ANGLE = Degrees.of(0);
-    // Intaking/general movement is going to cause pivot to bounce
-    public static final Angle DEPLOYED_TOLERANCE = Degrees.of(10);
+    public static final Dimensionless RETRACT_SPEED = Percent.of(30);
 
-    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(10);
+    public static final Dimensionless DEPLOY_SPEED = Percent.of(-30);
+
+    public static final Dimensionless JIGGLE_UP_SPEED = Percent.of(10);
+    public static final Dimensionless JIGGLE_DOWN_SPEED = Percent.of(-10);
+
+    public static final Time JIGGLE_UP_TIME = Seconds.of(2);
+
+    public static final Current AMP_STALL_THRESHOLD = Amps.of(35);
+    public static final Time TIME_TO_STALL = Seconds.of(0.1);
   }
 
   public static final class FEEDER {
