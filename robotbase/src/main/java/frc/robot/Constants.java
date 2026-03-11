@@ -355,7 +355,7 @@ public class Constants {
 
     public static final SparkBaseConfig INTAKE_PIVOT_BASE_CONFIG =
       new SparkMaxConfig()
-        .idleMode(IdleMode.kCoast)
+        .idleMode(IdleMode.kBrake)
         .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
         .voltageCompensation(12);
 
