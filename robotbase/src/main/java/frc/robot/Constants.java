@@ -62,7 +62,6 @@ public class Constants {
 
     public static final double DRIVER_RUMBLE_SECONDS = 2;
     public static final double CODRIVER_RUMBLE_SECONDS = 2;
-
     public static final double JOYSTICK_RAMP_EXPONENT = 1;
   }
 
@@ -506,6 +505,22 @@ public class Constants {
     public static final int DRIVE_ANGLE_CONVERGE_ITERATIONS = 2;
 
     public static final Time TIME_TO_WARN_FOR_ACTIVE_HUB = Seconds.of(10);
+
+    public class STATIC_LOCATIONS {
+
+      public static final Angle HUB_ANGLE = Degrees.of(1);
+      public static final AngularVelocity HUB_RPS = RotationsPerSecond.of(
+        47.33
+      );
+
+      public static final Angle OUTPOST_ANGLE = Degrees.of(0);
+      public static final AngularVelocity OUTPOST_RPS = RotationsPerSecond.of(
+        0
+      );
+
+      public static final Angle TRENCH_ANGLE = Degrees.of(0);
+      public static final AngularVelocity TRENCH_RPS = RotationsPerSecond.of(0);
+    }
   }
 
   public class SHIFT {

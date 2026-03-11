@@ -14,6 +14,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Constants.FEEDER;
 import frc.robot.Constants.FLOOR;
+import frc.robot.Constants.SCORING.STATIC_LOCATIONS;
 import frc.robot.Robot;
 import frc.robot.commands.drive.DrivePoseTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
@@ -21,6 +22,7 @@ import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.feeder.FeederSetSpeed;
 import frc.robot.commands.floor.FloorSetSpeed;
 import frc.robot.commands.intakerunner.IntakeRunnerAxis;
+import frc.robot.commands.scoring.StaticScore;
 import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.scoring.VisionTargeting;
 import frc.robot.controls.util.RumbleInterface;
@@ -81,7 +83,29 @@ public class DriverControls implements RumbleInterface {
             )
           )
       );
-
+    /* 
+    m_controller
+      .a()
+      .whileTrue(
+        new StaticScore(
+          STATIC_LOCATIONS.OUTPOST_ANGLE,
+          STATIC_LOCATIONS.OUTPOST_RPS
+        )
+      );
+    m_controller
+      .b()
+      .whileTrue(
+        new StaticScore(
+          STATIC_LOCATIONS.TRENCH_ANGLE,
+          STATIC_LOCATIONS.TRENCH_RPS
+        )
+      );
+    m_controller
+      .y()
+      .whileTrue(
+        new StaticScore(STATIC_LOCATIONS.HUB_ANGLE, STATIC_LOCATIONS.HUB_RPS)
+      );
+*/
     m_controller
       .povLeft()
       .onTrue(
