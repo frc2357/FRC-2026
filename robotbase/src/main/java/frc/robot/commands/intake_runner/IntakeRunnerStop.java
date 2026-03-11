@@ -1,4 +1,4 @@
-package frc.robot.commands.intakerunner;
+package frc.robot.commands.intake_runner;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
