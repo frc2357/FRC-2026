@@ -32,6 +32,8 @@ public class IntakePivot extends SubsystemBase {
   // INTAKE_PIVOT Mechanism
   private Arm m_arm;
 
+  private boolean m_hasDeployed;
+
   public IntakePivot() {
     m_motor = new SparkMax(CAN_ID.INTAKE_PIVOT_MOTOR, MotorType.kBrushless);
 
@@ -65,6 +67,8 @@ public class IntakePivot extends SubsystemBase {
       );
 
     m_arm = new Arm(m_armConfig);
+
+    m_hasDeployed = false;
   }
 
   /**
@@ -97,6 +101,14 @@ public class IntakePivot extends SubsystemBase {
 
   public void stopMotor() {
     m_arm.setDutyCycleSetpoint(0);
+  }
+
+  public boolean hasDeployed() {
+    return m_hasDeployed;
+  }
+
+  public void setDeployed(boolean hasDeployed) {
+    m_hasDeployed = hasDeployed;
   }
 
   @Override

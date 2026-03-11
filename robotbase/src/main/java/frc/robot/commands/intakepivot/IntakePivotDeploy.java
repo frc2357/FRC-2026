@@ -10,7 +10,10 @@ public class IntakePivotDeploy extends ParallelDeadlineGroup {
 
   public IntakePivotDeploy() {
     super(
-      new WaitUntilIntakePivotStall(),
+      new WaitUntilIntakePivotStall().finallyDo((boolean interrupted) ->
+        // Only say we have deployed intake if this command finishes
+        Robot.intakePivot.setDeployed(!interrupted)
+      ),
       Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.DEPLOY_SPEED),
       Commands.runEnd(
         () -> SmartDashboard.putBoolean("Deploying", true),
