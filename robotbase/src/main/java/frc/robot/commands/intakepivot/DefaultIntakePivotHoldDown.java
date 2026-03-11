@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.INTAKE_PIVOT;
 import frc.robot.Robot;
 
-public class DefaultIntakePivotHold extends Command {
+public class DefaultIntakePivotHoldDown extends Command {
 
-  public DefaultIntakePivotHold() {
+  public DefaultIntakePivotHoldDown() {
     addRequirements(Robot.intakePivot);
   }
 
