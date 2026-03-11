@@ -62,7 +62,6 @@ public class Constants {
 
     public static final double DRIVER_RUMBLE_SECONDS = 2;
     public static final double CODRIVER_RUMBLE_SECONDS = 2;
-
     public static final double JOYSTICK_RAMP_EXPONENT = 1;
   }
 

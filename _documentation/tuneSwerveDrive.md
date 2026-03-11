@@ -50,3 +50,22 @@ The `fieldRelative` swerve request should use the `Velocity` `DriveRequestType`.
 
 - The 2024 gain was `0`. I would expect this to be the same for 2025. You only need this gain, if you cannot resolve an overshoot with the `kP` gain and still acheive the desired acceleration. Like the other gains, use the `velDrive` command to tune.
 - To tune, follow the steps listed in kP, but start with an upper bound of 0.01 and lower bound of 0.001. It should be a very small gain.
+
+# Wheel Radius & Odometry
+
+### Wheel Measurement
+
+The distance calculations for the robot are done using the wheel radius. You can measure this with calipers and it is entered into tunerConstants.
+
+### Measurement by Driving a set distance
+
+- The actual radius in contact with the carpet can vary from the radius measured with calipers.
+- The actual radius can be calculated by driving the robot a set distance, counting the wheel rotations, and doing basic arithmetic.
+- The robot calculates the distance for its internal pose using the formula
+  `Distance = 2π * radius * rotations`
+
+- To avoid manually counting, set the kWheelRadius in tunerConstants to `1` to get a simplified (as calculated by the robot) `Distance = 2π * rotations` and display the robot's pose in Elastic
+- Now the robot's pose will show 2π times the number of rotations by the swerve wheels.
+- Mark off a start line and an end line 200 inches apart and restart the robot lined up at the start to reset its pose to 0.
+- After driving (or pushing) the robot for the precise distance, read the Robot Pose in Elastic to get the number of wheel rotations for the 200 inches.
+- Using `radius = Distance/(2π*rotations)`, enter the calculated value into kWheelRadius in tunerConstants.
