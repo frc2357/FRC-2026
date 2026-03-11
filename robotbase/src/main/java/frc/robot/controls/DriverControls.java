@@ -20,7 +20,7 @@ import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.feeder.FeederSetSpeed;
 import frc.robot.commands.floor.FloorSetSpeed;
-import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.intakerunner.IntakeRunnerAxis;
 import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.scoring.VisionTargeting;
 import frc.robot.controls.util.RumbleInterface;
@@ -46,7 +46,7 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .rightTrigger()
       .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+        new IntakeRunnerAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
       );
 
     //m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(10)));
