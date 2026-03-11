@@ -6,12 +6,12 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
-public class IntakePivotDeploy extends ParallelDeadlineGroup {
+public class IntakePivotRetract extends ParallelDeadlineGroup {
 
-  public IntakePivotDeploy() {
+  public IntakePivotRetract() {
     super(
       new WaitUntilIntakePivotStall(),
-      Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.DEPLOY_SPEED),
+      Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.RETRACT_SPEED),
       Commands.runEnd(
         () -> SmartDashboard.putBoolean("Deploying", true),
         () -> SmartDashboard.putBoolean("Deploying", false)

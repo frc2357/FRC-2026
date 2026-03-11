@@ -383,11 +383,14 @@ public class Constants {
     // Intaking/general movement is going to cause pivot to bounce
     public static final Angle DEPLOYED_TOLERANCE = Degrees.of(10);
 
-    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(10);
+    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(-5);
+
+    public static final Dimensionless RETRACT_SPEED = Percent.of(30);
 
     public static final Dimensionless DEPLOY_SPEED = Percent.of(-30);
+
     public static final Current AMP_STALL_THRESHOLD = Amps.of(35);
-    public static final Time TIME_TO_STALL = Seconds.of(0.04);
+    public static final Time TIME_TO_STALL = Seconds.of(0.1);
   }
 
   public static final class FEEDER {

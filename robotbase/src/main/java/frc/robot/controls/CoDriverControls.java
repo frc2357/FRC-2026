@@ -14,6 +14,7 @@ import frc.robot.commands.debug.TunnelFeed;
 import frc.robot.commands.debug.TunnelFeedReverse;
 import frc.robot.commands.floor.FloorAxis;
 import frc.robot.commands.intakepivot.IntakePivotDeploy;
+import frc.robot.commands.intakepivot.IntakePivotRetract;
 import frc.robot.commands.intakerunner.IntakeRunnerAxis;
 import frc.robot.controls.util.RumbleInterface;
 
@@ -145,6 +146,9 @@ public class CoDriverControls implements RumbleInterface {
 
     m_controller.rightBumper().whileTrue(new TunnelFeed());
     m_controller.leftBumper().whileTrue(new TunnelFeedReverse());
+
+    m_controller.a().whileTrue(new IntakePivotDeploy());
+    m_controller.b().whileTrue(new IntakePivotRetract());
   }
 
   private double modifyAxis(double value) {
