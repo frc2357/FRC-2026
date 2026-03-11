@@ -5,11 +5,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Robot;
 import frc.robot.commands.auto.AutoBase;
-import frc.robot.commands.auto.Crab;
+import frc.robot.commands.auto.Drive24Feet;
 import frc.robot.commands.auto.FlipTest;
-import frc.robot.commands.auto.SpinnyCircle;
+import frc.robot.commands.auto.SpinnyCircleAroundBlueHub;
 import java.util.Map;
 
 public class AutoChooserManager {
@@ -19,9 +18,9 @@ public class AutoChooserManager {
 
   // The auto routines that will show up on the auto command chooser.
   private AutoBase[] m_autos = {
-    new Crab(),
+    new Drive24Feet(),
     new FlipTest(),
-    new SpinnyCircle(),
+    new SpinnyCircleAroundBlueHub(),
   };
 
   private AutoChooser m_autoChooser = new AutoChooser();
