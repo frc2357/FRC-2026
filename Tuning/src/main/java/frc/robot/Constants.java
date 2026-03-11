@@ -116,43 +116,4 @@ public final class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
   }
-
-  public static final class INTAKE_PIVOT {
-
-    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kBrake)
-      .inverted(false)
-      .openLoopRampRate(0.25)
-      .smartCurrentLimit(40, 40)
-      .voltageCompensation(12); //
-
-    public static final ClosedLoopConfig CLOSED_LOOP_CONFIG =
-      MOTOR_CONFIG.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-
-    public static final AngularVelocity NEO_MAX_VEL = RPM.of(5676);
-
-    public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromStages("12:52", "16:54") //TODO: Ensure accurate IntakePivot Gearing
-    );
-
-    public static final AngularVelocity MAX_POSSIBLE_VELOCITY =
-      NEO_MAX_VEL.times(GEARING.getRotorToMechanismRatio());
-
-    public static final EncoderConfig ENCODER_CONFIG = MOTOR_CONFIG.encoder
-      .positionConversionFactor(GEARING.getRotorToMechanismRatio())
-      .velocityConversionFactor(GEARING.getRotorToMechanismRatio() / 60.0);
-
-    public static final MechanismGearing ENCODER_GEARING = new MechanismGearing(
-      GearBox.fromStages("1:1")
-    );
-
-    public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER_CONFIG =
-      MOTOR_CONFIG.absoluteEncoder
-        .positionConversionFactor(ENCODER_GEARING.getRotorToMechanismRatio())
-        .velocityConversionFactor(
-          ENCODER_GEARING.getRotorToMechanismRatio() / 60.0
-        );
-
-    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(40);
-  }
 }

@@ -2,11 +2,9 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Value;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,43 +32,19 @@ public class IntakePivot extends SubsystemBase {
   // INTAKE_PIVOT Mechanism
   private Arm m_arm;
 
-  private AbsoluteEncoder m_encoder;
-
   public IntakePivot() {
     m_motor = new SparkMax(CAN_ID.INTAKE_PIVOT_MOTOR, MotorType.kBrushless);
 
-    m_encoder = m_motor.getAbsoluteEncoder();
     m_smartMotorControllerConfig = new SmartMotorControllerConfig(this)
-      .withExternalEncoder(m_encoder)
-      .withExternalEncoderInverted(INTAKE_PIVOT.ENCODER_INVERTED)
-      .withUseExternalFeedbackEncoder(true)
-      .withExternalEncoderGearing(INTAKE_PIVOT.EXTERNAL_ENCODER_GEARING)
-      .withExternalEncoderZeroOffset(INTAKE_PIVOT.EXTERNAL_ENCODER_OFFSET)
-      .withControlMode(ControlMode.CLOSED_LOOP)
+      .withControlMode(ControlMode.OPEN_LOOP)
       .withVendorConfig(INTAKE_PIVOT.INTAKE_PIVOT_BASE_CONFIG)
-      .withFeedforward(INTAKE_PIVOT.FEEDFORWARD)
-      .withSimFeedforward(INTAKE_PIVOT.FEEDFORWARD)
       // Telemetry name and verbosity level
       .withTelemetry(INTAKE_PIVOT.MOTOR_NETWORK_KEY, TelemetryVerbosity.HIGH)
       // Gearing from the motor rotor to final shaft.
-      // You could also use .withGearing(12) which does the same thing.
       .withGearing(INTAKE_PIVOT.GEARING)
       // Motor properties to prevent over currenting.
-      .withStatorCurrentLimit(INTAKE_PIVOT.STALL_LIMIT)
-      .withClosedLoopController(
-        INTAKE_PIVOT.P,
-        INTAKE_PIVOT.I,
-        INTAKE_PIVOT.D,
-        INTAKE_PIVOT.MAX_ANGULAR_VELOCITY,
-        INTAKE_PIVOT.MAX_ANGULAR_ACCELERATION
-      )
-      .withSimClosedLoopController(
-        INTAKE_PIVOT.P,
-        INTAKE_PIVOT.I,
-        INTAKE_PIVOT.D,
-        INTAKE_PIVOT.MAX_ANGULAR_VELOCITY,
-        INTAKE_PIVOT.MAX_ANGULAR_ACCELERATION
-      );
+      .withStatorCurrentLimit(INTAKE_PIVOT.STALL_LIMIT);
+
     m_sparkSmartMotorController = new SparkWrapper(
       m_motor,
       DCMotor.getNEO(1),
@@ -91,34 +65,6 @@ public class IntakePivot extends SubsystemBase {
       );
 
     m_arm = new Arm(m_armConfig);
-  }
-
-  /**
-   * Gets the current angle of the intake_pivot.
-   *
-   * @return intake_pivot angle.
-   */
-  public Angle getAngle() {
-    return m_arm.getAngle();
-  }
-
-  /**
-   * Set the intake_pivot angle setpoint (command)
-   *
-   * @param angle angle setpoint to use
-   * @return {@link edu.wpi.first.wpilibj2.command.Command}
-   */
-  public Command setAngle(Angle angle) {
-    return m_arm.run(angle).finallyDo(() -> this.stopMotor());
-  }
-
-  /**
-   * Set the intake_pivot angle setpoint (not command)
-   *
-   * @param angle angle setpoint to use
-   */
-  public void setAngleSetpoint(Angle angle) {
-    m_arm.setMechanismPositionSetpoint(angle);
   }
 
   /**
