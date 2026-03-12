@@ -296,7 +296,7 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
-    public static final Dimensionless FLOOR_SPEED = Percent.of(50);
+    public static final Dimensionless FLOOR_SPEED = Percent.of(100);
   }
 
   public static final class TUNNEL {
@@ -306,7 +306,7 @@ public class Constants {
       .inverted(true)
       .openLoopRampRate(0.25)
       .smartCurrentLimit(30, 20)
-      .voltageCompensation(10);
+      .voltageCompensation(12);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless TUNNEL_SPEED = Percent.of(80);

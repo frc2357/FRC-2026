@@ -143,6 +143,19 @@ public class Robot extends TimedRobot {
       "Start",
       new VisionScore(driverControls::getLeftX, driverControls::getLeftY)
     );
+
+    SmartDashboard.putNumber(
+      "floor speed",
+      Constants.FLOOR.FLOOR_SPEED.in(Value)
+    );
+    SmartDashboard.putNumber(
+      "tunnel speed",
+      Constants.TUNNEL.TUNNEL_SPEED.in(Value)
+    );
+    SmartDashboard.putNumber(
+      "feed speed",
+      Constants.FEEDER.FEED_SPEED.in(Value)
+    );
   }
 
   @Override
