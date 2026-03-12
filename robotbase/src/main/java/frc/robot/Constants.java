@@ -518,8 +518,10 @@ public class Constants {
         0
       );
 
-      public static final Angle TRENCH_ANGLE = Degrees.of(0);
-      public static final AngularVelocity TRENCH_RPS = RotationsPerSecond.of(0);
+      public static final Angle TRENCH_ANGLE = Degrees.of(7.9);
+      public static final AngularVelocity TRENCH_RPS = RotationsPerSecond.of(
+        56
+      );
     }
   }
 

@@ -15,6 +15,7 @@ import frc.robot.Constants.CONTROLLER;
 import frc.robot.Constants.FEEDER;
 import frc.robot.Constants.FLOOR;
 import frc.robot.Constants.SCORING.STATIC_LOCATIONS;
+import frc.robot.Constants.TUNNEL;
 import frc.robot.Robot;
 import frc.robot.commands.drive.DrivePoseTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
@@ -25,6 +26,7 @@ import frc.robot.commands.intakerunner.IntakeRunnerAxis;
 import frc.robot.commands.scoring.StaticScore;
 import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.scoring.VisionTargeting;
+import frc.robot.commands.tunnel.TunnelSetSpeed;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
@@ -58,7 +60,8 @@ public class DriverControls implements RumbleInterface {
       .whileTrue(
         new ParallelCommandGroup(
           new FeederSetSpeed(FEEDER.FEED_SPEED),
-          new FloorSetSpeed(FLOOR.FLOOR_SPEED)
+          new FloorSetSpeed(FLOOR.FLOOR_SPEED),
+          new TunnelSetSpeed(TUNNEL.TUNNEL_SPEED)
         )
       );
 
