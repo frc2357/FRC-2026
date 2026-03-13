@@ -7,13 +7,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import java.util.function.Supplier;
 
-public class ManualScore extends ParallelCommandGroup {
+public class Score extends ParallelCommandGroup {
 
-  public ManualScore(AngularVelocity shooterVelocity, Angle hoodAngle) {
+  public Score(AngularVelocity shooterVelocity, Angle hoodAngle) {
     this(() -> shooterVelocity, () -> hoodAngle);
   }
 
-  public ManualScore(
+  public Score(
     Supplier<AngularVelocity> shooterVelocity,
     Supplier<Angle> hoodAngle
   ) {

@@ -29,7 +29,7 @@ import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
 import frc.robot.commands.floor.FloorAxis;
-import frc.robot.commands.scoring.ManualScore;
+import frc.robot.commands.scoring.Score;
 import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
@@ -145,7 +145,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Robot Field", m_robotField);
     SmartDashboard.putData(
       "Start",
-      new ManualScore(
+      new Score(
         () ->
           RotationsPerSecond.of(
             SmartDashboard.getNumber("Shooter Target RPS", 0)

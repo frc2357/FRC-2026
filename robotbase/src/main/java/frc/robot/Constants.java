@@ -441,16 +441,15 @@ public class Constants {
 
     public static final class SETPOINTS {
 
-      public static final AngularVelocity HUB_SHOT = RotationsPerSecond.of(
-        47.33
-      );
+      public static final AngularVelocity HUB_SHOT = RotationsPerSecond.of(48);
 
       public static final AngularVelocity TRENCH_SHOT = RotationsPerSecond.of(
         56
       );
 
+      // Farthest corner possible
       public static final AngularVelocity OUTPOST_SHOT = RotationsPerSecond.of(
-        65
+        64
       );
     }
   }
@@ -510,13 +509,14 @@ public class Constants {
 
     public static final class SETPOINTS {
 
-      public static final Angle HOME = Degrees.of(2);
+      public static final Angle HOME = Degrees.of(1);
 
-      public static final Angle HUB_SHOT = Degrees.of(2);
+      public static final Angle HUB_SHOT = Degrees.of(1);
 
       public static final Angle TRENCH_SHOT = Degrees.of(8.9);
 
-      public static final Angle OUTPOST_SHOT = Degrees.of(13);
+      // Farthest corner possible
+      public static final Angle OUTPOST_SHOT = Degrees.of(18);
     }
   }
 

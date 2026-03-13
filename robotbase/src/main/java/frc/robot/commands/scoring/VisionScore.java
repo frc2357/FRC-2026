@@ -11,7 +11,10 @@ public class VisionScore extends ParallelCommandGroup {
 
   public VisionScore(Supplier<Dimensionless> x, Supplier<Dimensionless> y) {
     super(
-      new VisionTargeting(),
+      new Score(
+        () -> Robot.scoreCalculator.getCalculatedShooterVelocity(),
+        () -> Robot.scoreCalculator.getCalculatedHoodAngle()
+      ),
       new DrivePoseTargetingHub(x, y),
       new SequentialCommandGroup(
         Robot.shooter.waitUntilTargetVelocity(),
