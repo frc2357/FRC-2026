@@ -5,6 +5,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.HootAutoReplay;
@@ -28,6 +29,7 @@ import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
 import frc.robot.commands.floor.FloorAxis;
+import frc.robot.commands.scoring.ManualScore;
 import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
@@ -143,7 +145,13 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Robot Field", m_robotField);
     SmartDashboard.putData(
       "Start",
-      new VisionScore(driverControls::getLeftX, driverControls::getLeftY)
+      new ManualScore(
+        () ->
+          RotationsPerSecond.of(
+            SmartDashboard.getNumber("Shooter Target RPS", 0)
+          ),
+        () -> Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 2))
+      )
     );
 
     SmartDashboard.putNumber(

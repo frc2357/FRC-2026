@@ -297,7 +297,7 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
-    public static final Dimensionless FLOOR_SPEED = Percent.of(100);
+    public static final Dimensionless FLOOR_SPEED = Percent.of(80);
   }
 
   public static final class TUNNEL {
@@ -467,9 +467,9 @@ public class Constants {
 
     // This is the number that should be copied from the rev hardware client when
     // pressing the "zero encoder" button
-    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.074407265);
+    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.08340765);
 
-    // The actual angle of the hood when on the hard stp
+    // The actual angle of the hood when on the hard stop
     public static final Angle FABRICATED_ADJUSTMENT = Degrees.of(1).times(
       ENCODER_GEARING.getMechanismToRotorRatio()
     );
