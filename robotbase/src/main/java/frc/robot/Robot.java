@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.INTAKE_RUNNER;
 import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.controller.RumbleDriverController;
@@ -113,7 +114,7 @@ public class Robot extends TimedRobot {
         return Value.of(SmartDashboard.getNumber("Floor", 0.0));
       })
     );
-    //hood.setDefaultCommand(hood.goHome()); TODO: uncomment when ready to verify
+    hood.setDefaultCommand(hood.goHome());
 
     m_autoChooserManager = new AutoChooserManager();
     m_InitRobotCommand = new InitRobotCommand();

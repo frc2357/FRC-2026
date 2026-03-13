@@ -51,10 +51,12 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .rightTrigger()
       .whileTrue(
-        new ManualScore(() ->
-          RotationsPerSecond.of(
-            SmartDashboard.getNumber("Shooter Target RPS", 0)
-          )
+        new ManualScore(
+          () ->
+            RotationsPerSecond.of(
+              SmartDashboard.getNumber("Shooter Target RPS", 0)
+            ),
+          () -> Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 2))
         )
       );
 

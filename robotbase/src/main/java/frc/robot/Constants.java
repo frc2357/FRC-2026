@@ -310,8 +310,8 @@ public class Constants {
       .voltageCompensation(12);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
-    public static final Dimensionless TUNNEL_SPEED = Percent.of(80);
-    public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-80);
+    public static final Dimensionless TUNNEL_SPEED = Percent.of(100);
+    public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-100);
   }
 
   public static final class INTAKE_RUNNER {
@@ -321,7 +321,7 @@ public class Constants {
     public static final SparkBaseConfig LEFT_MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
       .inverted(true)
-      .smartCurrentLimit(30, 30)
+      .smartCurrentLimit(40, 20)
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
@@ -384,12 +384,12 @@ public class Constants {
     public static final SparkBaseConfig FEEDER_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
       .inverted(true)
-      .smartCurrentLimit(20, 20)
+      .smartCurrentLimit(15, 10)
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
-    public static final Dimensionless FEED_SPEED = Percent.of(80);
-    public static final Dimensionless REVERSE_FEED_SPEED = Percent.of(-80);
+    public static final Dimensionless FEED_SPEED = Percent.of(100);
+    public static final Dimensionless REVERSE_FEED_SPEED = Percent.of(-100);
   }
 
   public static final class SHOOTER {
@@ -438,6 +438,21 @@ public class Constants {
       Units.Inches.of(-2.833),
       new Rotation2d(Units.Degrees.of(90))
     );
+
+    public static final class SETPOINTS {
+
+      public static final AngularVelocity HUB_SHOT = RotationsPerSecond.of(
+        47.33
+      );
+
+      public static final AngularVelocity TRENCH_SHOT = RotationsPerSecond.of(
+        56
+      );
+
+      public static final AngularVelocity OUTPOST_SHOT = RotationsPerSecond.of(
+        65
+      );
+    }
   }
 
   public static final class HOOD {
@@ -496,6 +511,12 @@ public class Constants {
     public static final class SETPOINTS {
 
       public static final Angle HOME = Degrees.of(2);
+
+      public static final Angle HUB_SHOT = Degrees.of(2);
+
+      public static final Angle TRENCH_SHOT = Degrees.of(8.9);
+
+      public static final Angle OUTPOST_SHOT = Degrees.of(13);
     }
   }
 
