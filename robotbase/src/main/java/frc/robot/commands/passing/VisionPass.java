@@ -13,7 +13,6 @@ import frc.robot.commands.feeder.FeederSetSpeed;
 import frc.robot.commands.feeder.FeederStop;
 import frc.robot.commands.floor.FloorSetSpeed;
 import frc.robot.commands.floor.FloorStop;
-import frc.robot.commands.scoring.VisionTargeting;
 import frc.robot.util.MathUtil;
 import java.util.function.Supplier;
 
@@ -22,7 +21,7 @@ public class VisionPass extends ParallelCommandGroup {
   public VisionPass(Supplier<Dimensionless> x, Supplier<Dimensionless> y) {
     super();
     addCommands(
-      new VisionTargeting(),
+      new VisionTargetPassing(),
       new DrivePosePassing(x, y),
       new SequentialCommandGroup(
         Robot.shooter.waitUntilTargetVelocity(),
