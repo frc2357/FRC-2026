@@ -25,7 +25,7 @@ public class DrivePoseTargetingHub extends Command {
     m_x = x;
     m_y = y;
 
-    this.alongWith(new SetShotTarget(() -> FieldConstants.Hub.centerPoint));
+    this.alongWith(new SetShotTarget(FieldConstants.Hub.centerPoint));
   }
 
   @Override
