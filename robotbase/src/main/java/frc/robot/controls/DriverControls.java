@@ -58,26 +58,8 @@ public class DriverControls implements RumbleInterface {
         )
       );
 
-    m_controller
-      .rightTrigger()
-      .whileTrue(
-        new ManualScore(() ->
-          RotationsPerSecond.of(
-            SmartDashboard.getNumber("Shooter Target RPS", 0)
-          )
-        )
-      );
-
     m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(10)));
     m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-10)));
-    // m_controller
-    //   .a()
-    //   .whileTrue(
-    //     new ParallelCommandGroup(
-    //       new FeederSetSpeed(FEEDER.FEED_SPEED),
-    //       new FloorSetSpeed(FLOOR.FLOOR_SPEED)
-    //     )
-    //   );
 
     m_controller
       .x()

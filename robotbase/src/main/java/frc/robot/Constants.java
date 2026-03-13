@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
@@ -449,8 +450,20 @@ public class Constants {
       GearBox.fromStages("166:20")
     );
 
-    public static final Angle LOWER_ANGLE_LIMIT = Degrees.of(0.1);
-    public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(28);
+    // This is the number that should be copied from the rev hardware client when
+    // pressing the "zero encoder" button
+    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.074407265);
+
+    // The actual angle of the hood when on the hard stp
+    public static final Angle FABRICATED_ADJUSTMENT = Degrees.of(1).times(
+      ENCODER_GEARING.getMechanismToRotorRatio()
+    );
+    public static final Angle ADJUSTED_ZERO_OFFSET = PHYSICAL_ZERO_OFFSET.minus(
+      FABRICATED_ADJUSTMENT
+    );
+
+    public static final Angle LOWER_ANGLE_LIMIT = Degrees.of(0.9);
+    public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(34);
     public static final Angle SIM_STARTING_POSITION = Degrees.zero();
 
     // Mass of the flywheel.
