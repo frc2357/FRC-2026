@@ -144,7 +144,7 @@ public class Hood extends SubsystemBase {
   }
 
   public Command setSpeed(Dimensionless speed) {
-    return set(speed.in(Value)).finallyDo(() -> stopMotor());
+    return set(speed.in(Value));
   }
 
   public Command axisSpeed(Supplier<Dimensionless> axis) {

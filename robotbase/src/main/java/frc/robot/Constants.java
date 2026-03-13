@@ -468,7 +468,7 @@ public class Constants {
     // pressing the "zero encoder" button
     public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.08340765);
 
-    // The actual angle of the hood when on the hard stop
+    // Fabricated offset to prevent wrapping
     public static final Angle FABRICATED_ADJUSTMENT = Degrees.of(1).times(
       ENCODER_GEARING.getMechanismToRotorRatio()
     );
