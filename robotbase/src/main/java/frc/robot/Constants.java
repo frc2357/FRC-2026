@@ -88,7 +88,7 @@ public class Constants {
     public static final double HEADING_CONTROLLER_D = 0;
 
     public static final Dimensionless INTAKE_TRANSLATION_MODIFIER = Percent.of(
-      50
+      55
     );
     public static final Dimensionless INTAKE_ROTATION_MODIFIER = Percent.of(50);
   }
@@ -330,7 +330,7 @@ public class Constants {
         .apply(LEFT_MOTOR_CONFIG)
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
 
-    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(50);
+    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(80);
   }
 
   public static final class INTAKE_PIVOT {
