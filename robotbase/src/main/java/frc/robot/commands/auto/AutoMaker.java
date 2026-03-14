@@ -65,21 +65,13 @@ public final class AutoMaker {
     return AutoMaker.newAuto(name).routine;
   }
 
-  public static AutoTrajectory newDefaultTrajectory(
+  public static AutoTrajectory newTrajectory(
     AutoRoutine routine,
-    String trajName
+    String trajName,
+    AutoDriveMode driveMode
   ) {
     AutoTrajectory traj = routine.trajectory(trajName);
-    traj.active().whileTrue(new SetAutoDriveMode(AutoDriveMode.DEFAULT));
-    return traj;
-  }
-
-  public static AutoTrajectory newTargetLockTrajectory(
-    AutoRoutine routine,
-    String trajName
-  ) {
-    AutoTrajectory traj = routine.trajectory(trajName);
-    traj.active().whileTrue(new SetAutoDriveMode(AutoDriveMode.TARGET_LOCK));
+    traj.active().whileTrue(new SetAutoDriveMode(driveMode));
     return traj;
   }
 }
