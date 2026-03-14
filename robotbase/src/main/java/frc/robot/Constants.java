@@ -551,6 +551,8 @@ public class Constants {
     public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(34);
     public static final Angle SIM_STARTING_POSITION = Degrees.zero();
 
+    public static final Dimensionless MANUAL_HOOD_SPEED = Percent.of(10);
+
     // Mass of the flywheel.
     // Telemetry name and verbosity for the arm.
     public static final String MECHANISM_NETWORK_KEY = "HoodMech";
