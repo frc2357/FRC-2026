@@ -15,6 +15,7 @@ import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.HOOD;
 import java.util.function.Supplier;
@@ -53,7 +54,10 @@ public class Hood extends SubsystemBase {
       .withFeedforward(HOOD.FEEDFORWARD)
       .withSimFeedforward(HOOD.FEEDFORWARD)
       // Telemetry name and verbosity level
-      .withTelemetry(HOOD.MOTOR_NETWORK_KEY, TelemetryVerbosity.HIGH)
+      .withTelemetry(
+        HOOD.MOTOR_NETWORK_KEY,
+        Constants.ROBOT.MECHANISM_VERBOSITY
+      )
       // Gearing from the motor rotor to final shaft.
       // You could also use .withGearing(12) which does the same thing.
       .withGearing(HOOD.GEARING)
@@ -78,7 +82,12 @@ public class Hood extends SubsystemBase {
       .withStartingPosition(HOOD.SIM_STARTING_POSITION)
       // Mass of the flywheel.
       // Telemetry name and verbosity for the arm.
-      .withTelemetry(HOOD.MECHANISM_NETWORK_KEY, TelemetryVerbosity.HIGH);
+      .withTelemetry(
+        HOOD.MECHANISM_NETWORK_KEY,
+        Constants.ROBOT.PERFORMANCE_MODE
+          ? TelemetryVerbosity.LOW
+          : TelemetryVerbosity.HIGH
+      );
 
     m_hood = new Pivot(m_hoodConfig);
 

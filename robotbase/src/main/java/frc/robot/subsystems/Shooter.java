@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.SHOOTER;
 import java.util.function.Supplier;
@@ -23,7 +24,6 @@ import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
-import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class Shooter extends SubsystemBase {
@@ -74,7 +74,10 @@ public class Shooter extends SubsystemBase {
       .withFeedforward(SHOOTER.FEEDFORWARD)
       .withSimFeedforward(SHOOTER.FEEDFORWARD)
       // Telemetry name and verbosity level
-      .withTelemetry(SHOOTER.MOTOR_NETWORK_KEY, TelemetryVerbosity.HIGH)
+      .withTelemetry(
+        SHOOTER.MOTOR_NETWORK_KEY,
+        Constants.ROBOT.MECHANISM_VERBOSITY
+      )
       // Gearing from the motor rotor to final shaft.
       .withGearing(SHOOTER.GEARING)
       // Motor properties to prevent over currenting.
@@ -95,7 +98,10 @@ public class Shooter extends SubsystemBase {
       .withUpperSoftLimit(SHOOTER.MAX_ANGULAR_VELOCITY)
       .withSpeedometerSimulation()
       // Telemetry name and verbosity for the arm.
-      .withTelemetry(SHOOTER.MECHANISM_NETWORK_KEY, TelemetryVerbosity.HIGH);
+      .withTelemetry(
+        SHOOTER.MECHANISM_NETWORK_KEY,
+        Constants.ROBOT.MECHANISM_VERBOSITY
+      );
 
     m_shooter = new FlyWheel(m_shooterConfig);
   }

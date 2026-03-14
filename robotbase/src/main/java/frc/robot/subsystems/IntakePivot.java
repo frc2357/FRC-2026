@@ -8,10 +8,10 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.INTAKE_PIVOT;
 import java.util.function.Supplier;
@@ -20,7 +20,6 @@ import yams.mechanisms.positional.Arm;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
-import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.local.SparkWrapper;
 
 public class IntakePivot extends SubsystemBase {
@@ -44,7 +43,10 @@ public class IntakePivot extends SubsystemBase {
       .withControlMode(ControlMode.OPEN_LOOP)
       .withVendorConfig(INTAKE_PIVOT.INTAKE_PIVOT_BASE_CONFIG)
       // Telemetry name and verbosity level
-      .withTelemetry(INTAKE_PIVOT.MOTOR_NETWORK_KEY, TelemetryVerbosity.HIGH)
+      .withTelemetry(
+        INTAKE_PIVOT.MOTOR_NETWORK_KEY,
+        Constants.ROBOT.MECHANISM_VERBOSITY
+      )
       // Gearing from the motor rotor to final shaft.
       .withGearing(INTAKE_PIVOT.GEARING)
       // Motor properties to prevent over currenting.
@@ -66,7 +68,7 @@ public class IntakePivot extends SubsystemBase {
       // Telemetry name and verbosity for the arm.
       .withTelemetry(
         INTAKE_PIVOT.MECHANISM_NETWORK_KEY,
-        TelemetryVerbosity.HIGH
+        Constants.ROBOT.MECHANISM_VERBOSITY
       );
 
     m_arm = new Arm(m_armConfig);
