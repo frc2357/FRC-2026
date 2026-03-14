@@ -26,7 +26,7 @@ public class DrivePosePassing extends Command {
 
   @Override
   public void execute() {
-    Rotation2d target = Robot.scoreCalculator.getCalculatedDriveAngle();
+    Rotation2d target = Robot.shotCalculator.getCalculatedDriveAngle();
     SmartDashboard.putNumber("Target angle", target.getDegrees());
     Robot.swerve.driveAtAngle(
       m_y.get().times(Constants.SWERVE.AXIS_MAX_SPEED).times(SWERVE.MAX_SPEED),

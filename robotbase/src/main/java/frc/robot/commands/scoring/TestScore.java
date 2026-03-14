@@ -24,7 +24,7 @@ public class TestScore extends Command {
       SmartDashboard.getNumber("Fire Distance Inches", 0.0)
     );
     AngularVelocity velocity =
-      Robot.scoreCalculator.getShooterVelocityStationary(distance);
+      Robot.shotCalculator.getShooterVelocityStationary(distance);
     Robot.shooter.setVelocitySetpoint(velocity);
   }
 
