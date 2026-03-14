@@ -1,10 +1,12 @@
 package frc.robot.controls;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Constants.SHOOTER;
 import frc.robot.Robot;
 import frc.robot.commands.debug.SlowPitShoot;
+import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.scoring.ScoreFeed;
 
 public class PitControls {
@@ -17,12 +19,18 @@ public class PitControls {
   }
 
   public void mapControls() {
-    m_controller.b().onTrue(new SlowPitShoot());
+    m_controller.b().whileTrue(new SlowPitShoot());
 
-    m_controller.x().onTrue(new ScoreFeed());
+    m_controller.x().whileTrue(new ScoreFeed());
 
-    m_controller.a().onTrue();
+    m_controller.a().whileTrue();
 
-    m_controller.y().onTrue();
+    m_controller.y().whileTrue(new IntakePivotJiggle());
+
+    m_controller
+      .povUp()
+      .whileTrue(Robot.hood.setSpeed(Constants.HOOD.MANUAL_HOOD_SPEED));
+
+      m_controller.povDown().whileTrue(Robot.hood.setSpeed(Constants.HOOD.MANUAL_HOOD_SPEED.times(-1)))
   }
 }
