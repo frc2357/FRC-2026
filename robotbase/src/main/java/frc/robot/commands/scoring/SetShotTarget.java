@@ -8,11 +8,10 @@ import java.util.function.Supplier;
 public class SetShotTarget extends Command {
 
   private Translation2d m_previousTarget;
-  private Translation2d m_targetStatic;
   private Supplier<Translation2d> m_targetSupplier;
 
   public SetShotTarget(Translation2d target) {
-    m_targetStatic = target;
+    m_targetSupplier = () -> target;
   }
 
   public SetShotTarget(Supplier<Translation2d> targetSupplier) {
@@ -22,9 +21,6 @@ public class SetShotTarget extends Command {
   @Override
   public void initialize() {
     m_previousTarget = Robot.scoreCalculator.getShotTarget();
-    if (m_targetStatic != null) {
-      Robot.scoreCalculator.setShotTarget(m_targetStatic);
-    }
   }
 
   @Override

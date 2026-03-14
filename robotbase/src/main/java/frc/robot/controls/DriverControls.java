@@ -1,12 +1,9 @@
 package frc.robot.controls;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -19,7 +16,7 @@ import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.intakepivot.IntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intaking.TeleopIntake;
-import frc.robot.commands.scoring.Score;
+import frc.robot.commands.passing.VisionPass;
 import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.scoring.teleop.HubScore;
 import frc.robot.commands.scoring.teleop.OutpostScore;
@@ -60,15 +57,18 @@ public class DriverControls implements RumbleInterface {
       .whileTrue(new VisionScore(this::getLeftX, this::getLeftY));
     m_controller
       .leftBumper()
-      .whileTrue(
-        new Score(
-          () ->
-            RotationsPerSecond.of(
-              SmartDashboard.getNumber("Shooter Target RPS", 0)
-            ),
-          () -> Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 2))
-        )
-      );
+      .whileTrue(new VisionPass(this::getLeftX, this::getLeftY));
+    // m_controller
+    //   .leftBumper()
+    //   .whileTrue(
+    //     new Score(
+    //       () ->
+    //         RotationsPerSecond.of(
+    //           SmartDashboard.getNumber("Shooter Target RPS", 0)
+    //         ),
+    //       () -> Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 2))
+    //     )
+    //   );
 
     m_controller.rightBumper().whileTrue(new TrenchScore());
     m_controller.y().whileTrue(new OutpostScore());

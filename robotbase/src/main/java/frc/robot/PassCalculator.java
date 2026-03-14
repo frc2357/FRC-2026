@@ -15,7 +15,7 @@ import frc.robot.util.InterpolationUtil;
 
 public class PassCalculator {
 
-  private AngularVelocity m_shooterVelocity;
+  private AngularVelocity m_shooterVelocity = RotationsPerSecond.of(0);
 
   private final CurveTuner<Distance, AngularVelocity> m_shooterCurve =
     new CurveTuner<>(
@@ -31,7 +31,7 @@ public class PassCalculator {
   }
 
   public PassCalculator() {
-    m_shooterCurve.put(PASS_POINTS.CLOSEST_POINT, RotationsPerSecond.of(40));
+    m_shooterCurve.put(PASS_POINTS.CLOSEST_POINT, RotationsPerSecond.of(50));
     m_shooterCurve.put(PASS_POINTS.FURTHEST_POINT, RotationsPerSecond.of(70));
   }
 
