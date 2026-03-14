@@ -8,7 +8,6 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
-import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
@@ -77,10 +76,6 @@ public class Robot extends TimedRobot {
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
   );
-  /* log and replay timestamp and joystick data */
-  private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
-    .withTimestampReplay()
-    .withJoystickReplay();
 
   public Robot() {
     swerve = TunerConstants.createDrivetrain();
@@ -176,8 +171,6 @@ public class Robot extends TimedRobot {
     Robot.cameraManager.updateResult();
     Robot.cameraManager.addSwerveEstimates(Robot.swerve::addVisionMeasurement);
     Robot.scoreCalculator.updateCalculatedShot();
-
-    m_timeAndJoystickReplay.update();
 
     CommandScheduler.getInstance().run();
 

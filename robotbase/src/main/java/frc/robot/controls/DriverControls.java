@@ -13,12 +13,14 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
+import frc.robot.commands.drive.DrivePoseTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.intakepivot.IntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intaking.TeleopIntake;
 import frc.robot.commands.scoring.Score;
+import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.scoring.teleop.HubScore;
 import frc.robot.commands.scoring.teleop.OutpostScore;
 import frc.robot.commands.scoring.teleop.TrenchScore;
@@ -41,6 +43,7 @@ public class DriverControls implements RumbleInterface {
     Trigger isShooting = m_controller
       .rightTrigger()
       .or(m_controller.rightBumper())
+      .or(m_controller.leftBumper())
       .or(m_controller.y())
       .or(m_controller.x());
 
@@ -52,9 +55,11 @@ public class DriverControls implements RumbleInterface {
     isShooting.and(isIntaking.negate()).whileTrue(new IntakePivotJiggle());
     isShooting.negate().onTrue(new IntakePivotDeploy());
 
-    //m_controller.rightTrigger().whileTrue(new VisionScore(this::getLeftX, this::getLeftY));
     m_controller
       .rightTrigger()
+      .whileTrue(new VisionScore(this::getLeftX, this::getLeftY));
+    m_controller
+      .leftBumper()
       .whileTrue(
         new Score(
           () ->
@@ -68,6 +73,10 @@ public class DriverControls implements RumbleInterface {
     m_controller.rightBumper().whileTrue(new TrenchScore());
     m_controller.y().whileTrue(new OutpostScore());
     m_controller.x().whileTrue(new HubScore());
+
+    m_controller
+      .a()
+      .whileTrue(new DrivePoseTargetingHub(this::getLeftX, this::getLeftY));
 
     m_controller
       .povLeft()

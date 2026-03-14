@@ -72,35 +72,39 @@ public class ScoreCalculator {
 
     // TODO: Rename to be more indicative of the point
     // Distances should be relative to top center point of the hub
-    public static final Distance CLOSEST_POINT = Inches.of(47); // Up against the hub
+    public static final Distance HUB = Inches.of(43); // Up against the hub
     public static final Distance POINT_2 = Inches.of(75);
     public static final Distance POINT_3 = Inches.of(100);
-    public static final Distance POINT_4 = Inches.of(125);
-    public static final Distance POINT_5 = Inches.of(200);
-    public static final Distance FARTHEST_POINT = Inches.of(265); // Far corner of the outpost
+    public static final Distance TRENCH = Inches.of(127);
+    public static final Distance POINT_5 = Inches.of(150);
+    public static final Distance POINT_6 = Inches.of(175);
+    public static final Distance OUTPOST_CORNER = Inches.of(205); // Far corner of the outpost
   }
 
   public ScoreCalculator() {
-    m_shooterCurve.put(SHOT_POINTS.CLOSEST_POINT, RotationsPerSecond.of(47.33));
+    m_shooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(48));
     m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(51.27));
     m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(53));
-    m_shooterCurve.put(SHOT_POINTS.POINT_4, RotationsPerSecond.of(55));
-    m_shooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(63));
-    m_shooterCurve.put(SHOT_POINTS.FARTHEST_POINT, RotationsPerSecond.of(64));
+    m_shooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(56));
+    m_shooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(58));
+    m_shooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(60));
+    m_shooterCurve.put(SHOT_POINTS.OUTPOST_CORNER, RotationsPerSecond.of(64));
 
-    m_hoodCurve.put(SHOT_POINTS.CLOSEST_POINT, Degrees.of(1));
+    m_hoodCurve.put(SHOT_POINTS.HUB, Degrees.of(1));
     m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(3.44));
     m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(5.75));
-    m_hoodCurve.put(SHOT_POINTS.POINT_4, Degrees.of(11.5));
+    m_hoodCurve.put(SHOT_POINTS.TRENCH, Degrees.of(8.9));
     m_hoodCurve.put(SHOT_POINTS.POINT_5, Degrees.of(14));
-    m_hoodCurve.put(SHOT_POINTS.FARTHEST_POINT, Degrees.of(14));
+    m_hoodCurve.put(SHOT_POINTS.POINT_6, Degrees.of(15));
+    m_hoodCurve.put(SHOT_POINTS.OUTPOST_CORNER, Degrees.of(18));
 
-    m_timeOfFlightCurve.put(SHOT_POINTS.CLOSEST_POINT, Seconds.of(1));
-    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_2, Seconds.of(1.05));
-    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_3, Seconds.of(1.1));
-    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_4, Seconds.of(1.2));
-    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_5, Seconds.of(2));
-    m_timeOfFlightCurve.put(SHOT_POINTS.FARTHEST_POINT, Seconds.of(2.1));
+    m_timeOfFlightCurve.put(SHOT_POINTS.HUB, Seconds.of(1.005));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_2, Seconds.of(1.068));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_3, Seconds.of(1.168));
+    m_timeOfFlightCurve.put(SHOT_POINTS.TRENCH, Seconds.of(1.132));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_5, Seconds.of(1.032));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_6, Seconds.of(1.138));
+    m_timeOfFlightCurve.put(SHOT_POINTS.OUTPOST_CORNER, Seconds.of(1.18));
 
     SmartDashboard.putBoolean(SCORING.IS_SOTF_KEY, false);
   }
