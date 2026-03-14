@@ -75,6 +75,8 @@ public class Constants {
     public static final double DRIVER_RUMBLE_SECONDS = 2;
     public static final double CODRIVER_RUMBLE_SECONDS = 2;
     public static final double JOYSTICK_RAMP_EXPONENT = 1;
+
+    public static final int PIT_CONTROLLER_PORT = 5;
   }
 
   public static final class SWERVE {
@@ -440,6 +442,7 @@ public class Constants {
       new SimpleMotorFeedforward(0.12, 0.125, 0.01);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+    public static final Dimensionless SLOW_SPEED = Percent.of(30); // double check
 
     public static final Dimensionless SCORE_TOLERANCE = Percent.of(5);
     public static final Time STABLE_VELOCITY = Seconds.of(0.1);
