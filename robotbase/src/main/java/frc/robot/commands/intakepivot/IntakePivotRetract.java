@@ -8,9 +8,7 @@ public class IntakePivotRetract extends ParallelDeadlineGroup {
 
   public IntakePivotRetract() {
     super(
-      new WaitUntilIntakePivotStall().finallyDo(() ->
-        Robot.intakePivot.setDeployed(false)
-      ),
+      new WaitUntilIntakePivotStall(),
       Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.RETRACT_SPEED)
     );
   }

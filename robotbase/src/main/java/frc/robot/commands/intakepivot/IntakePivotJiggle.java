@@ -1,6 +1,5 @@
 package frc.robot.commands.intakepivot;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -12,7 +11,6 @@ public class IntakePivotJiggle extends SequentialCommandGroup {
 
   public IntakePivotJiggle() {
     super(
-      new InstantCommand(() -> Robot.intakePivot.setDeployed(false)),
       new RepeatCommand(
         new SequentialCommandGroup(
           new ParallelRaceGroup(
