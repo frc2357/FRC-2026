@@ -379,10 +379,10 @@ public class Constants {
 
     public static final Dimensionless DEPLOY_SPEED = Percent.of(-30);
 
-    public static final Dimensionless JIGGLE_UP_SPEED = Percent.of(10);
+    public static final Dimensionless JIGGLE_UP_SPEED = Percent.of(20);
     public static final Dimensionless JIGGLE_DOWN_SPEED = Percent.of(-10);
 
-    public static final Time JIGGLE_UP_TIME = Seconds.of(1);
+    public static final Time JIGGLE_UP_TIME = Seconds.of(0.3);
 
     public static final Current AMP_STALL_THRESHOLD = Amps.of(35);
     public static final Time TIME_TO_STALL = Seconds.of(0.1);
