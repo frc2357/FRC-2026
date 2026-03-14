@@ -6,6 +6,7 @@ import frc.robot.Constants.CONTROLLER;
 import frc.robot.Constants.SHOOTER;
 import frc.robot.Robot;
 import frc.robot.commands.debug.SlowPitShoot;
+import frc.robot.commands.drive.TestSwerve;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.scoring.ScoreFeed;
 
@@ -23,7 +24,7 @@ public class PitControls {
 
     m_controller.x().whileTrue(new ScoreFeed());
 
-    m_controller.a().whileTrue();
+    m_controller.a().whileTrue(new TestSwerve());
 
     m_controller.y().whileTrue(new IntakePivotJiggle());
 
@@ -31,6 +32,10 @@ public class PitControls {
       .povUp()
       .whileTrue(Robot.hood.setSpeed(Constants.HOOD.MANUAL_HOOD_SPEED));
 
-      m_controller.povDown().whileTrue(Robot.hood.setSpeed(Constants.HOOD.MANUAL_HOOD_SPEED.times(-1)))
+    m_controller
+      .povDown()
+      .whileTrue(
+        Robot.hood.setSpeed(Constants.HOOD.MANUAL_HOOD_SPEED.times(-1))
+      );
   }
 }
