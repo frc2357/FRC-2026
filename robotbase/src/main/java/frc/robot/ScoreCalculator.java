@@ -106,7 +106,7 @@ public class ScoreCalculator {
     m_timeOfFlightCurve.put(SHOT_POINTS.POINT_6, Seconds.of(1.138));
     m_timeOfFlightCurve.put(SHOT_POINTS.OUTPOST_CORNER, Seconds.of(1.18));
 
-    SmartDashboard.putBoolean(SCORING.IS_SOTF_KEY, false);
+    SmartDashboard.putBoolean(SCORING.IS_SOTF_KEY, true);
   }
 
   /**
@@ -299,7 +299,7 @@ public class ScoreCalculator {
    * Should be called in Robot.periodic every loop
    */
   public void updateCalculatedShot() {
-    if (SmartDashboard.getBoolean(SCORING.IS_SOTF_KEY, false)) {
+    if (SmartDashboard.getBoolean(SCORING.IS_SOTF_KEY, true)) {
       m_latestCalculatedShot = calculateShotFromShootOnTheFly();
     } else {
       m_latestCalculatedShot = calculateShotFromPoseStationary();
