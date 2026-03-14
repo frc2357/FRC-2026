@@ -342,6 +342,7 @@ public class Constants {
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
 
     public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(80);
+    public static final Dimensionless INTAKE_JIGGLING_SPEED = Percent.of(10);
   }
 
   public static final class INTAKE_PIVOT {
