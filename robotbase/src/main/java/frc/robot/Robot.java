@@ -4,9 +4,10 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
-import com.ctre.phoenix6.HootAutoReplay;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
@@ -26,7 +27,7 @@ import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
 import frc.robot.commands.floor.FloorAxis;
-import frc.robot.commands.scoring.VisionScore;
+import frc.robot.commands.scoring.Score;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
@@ -75,10 +76,6 @@ public class Robot extends TimedRobot {
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
   );
-  /* log and replay timestamp and joystick data */
-  private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
-    .withTimestampReplay()
-    .withJoystickReplay();
 
   public Robot() {
     swerve = TunerConstants.createDrivetrain();
@@ -112,7 +109,7 @@ public class Robot extends TimedRobot {
         return Value.of(SmartDashboard.getNumber("Floor", 0.0));
       })
     );
-    //hood.setDefaultCommand(hood.goHome()); TODO: uncomment when ready to verify
+    hood.setDefaultCommand(hood.goHome());
 
     m_autoChooserManager = new AutoChooserManager();
     m_InitRobotCommand = new InitRobotCommand();
@@ -141,7 +138,26 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Robot Field", m_robotField);
     SmartDashboard.putData(
       "Start",
-      new VisionScore(driverControls::getLeftX, driverControls::getLeftY)
+      new Score(
+        () ->
+          RotationsPerSecond.of(
+            SmartDashboard.getNumber("Shooter Target RPS", 0)
+          ),
+        () -> Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 2))
+      )
+    );
+
+    SmartDashboard.putNumber(
+      "floor speed",
+      Constants.FLOOR.FLOOR_SPEED.in(Value)
+    );
+    SmartDashboard.putNumber(
+      "tunnel speed",
+      Constants.TUNNEL.TUNNEL_SPEED.in(Value)
+    );
+    SmartDashboard.putNumber(
+      "feed speed",
+      Constants.FEEDER.FEED_SPEED.in(Value)
     );
   }
 
@@ -155,8 +171,6 @@ public class Robot extends TimedRobot {
     Robot.cameraManager.updateResult();
     Robot.cameraManager.addSwerveEstimates(Robot.swerve::addVisionMeasurement);
     Robot.scoreCalculator.updateCalculatedShot();
-
-    m_timeAndJoystickReplay.update();
 
     CommandScheduler.getInstance().run();
 

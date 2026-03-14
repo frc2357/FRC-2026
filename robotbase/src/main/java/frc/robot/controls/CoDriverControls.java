@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
@@ -16,8 +15,6 @@ import frc.robot.commands.debug.TunnelFeedReverse;
 import frc.robot.commands.floor.FloorAxis;
 import frc.robot.commands.hood.ToggleDefaultHood;
 import frc.robot.commands.intakepivot.ForceIntakeDeploy;
-import frc.robot.commands.intakepivot.IntakePivotDeploy;
-import frc.robot.commands.intakepivot.IntakePivotRetract;
 import frc.robot.commands.intakerunner.IntakeRunnerAxis;
 import frc.robot.controls.util.RumbleInterface;
 

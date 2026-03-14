@@ -211,7 +211,7 @@ public class PhotonVisionCamera {
       );
     }
 
-    if (m_connectionLost) {
+    if (m_camera.isConnected() && m_connectionLost) {
       m_connectionLost = false;
       DriverStation.reportWarning(
         "[" +
