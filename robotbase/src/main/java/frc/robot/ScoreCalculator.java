@@ -142,6 +142,10 @@ public class ScoreCalculator {
     );
     SmartDashboard.putNumber("Computed Hood Angle", hoodAngle.in(Degrees));
     SmartDashboard.putNumber("Computed Drive Angle", driveAngle.getDegrees());
+    SmartDashboard.putNumber(
+      "latency",
+      Constants.SCORING.SOTF_LATENCY_COMPENSATION.in(Seconds)
+    );
 
     return new CalculatedShot(shooterVelocity, hoodAngle, driveAngle);
   }
@@ -153,18 +157,22 @@ public class ScoreCalculator {
   public CalculatedShot calculateShotFromShootOnTheFly() {
     // Get current robot pose
     Pose2d initialRobotPose = Robot.swerve.getFieldRelativePose2d();
-    ChassisSpeeds robotSpeeds = Robot.swerve.getCurrentFieldRelativeSpeeds(); // try field velocities instead
+    ChassisSpeeds robotRelativeSpeeds =
+      Robot.swerve.getCurrentRobotRelativeSpeeds();
+    ChassisSpeeds fieldRelativeSpeeds =
+      Robot.swerve.getCurrentFieldRelativeSpeeds(); // try field velocities instead
 
+    var latency = SmartDashboard.getNumber(
+      "latency",
+      Constants.SCORING.SOTF_LATENCY_COMPENSATION.in(Seconds)
+    );
     // Account for the robot's velocity and latency compensation
     // to compute a guess to where the robot actually is
     Pose2d velocityCompensatedRobotPose = initialRobotPose.exp(
       new Twist2d(
-        robotSpeeds.vxMetersPerSecond *
-          SCORING.SOTF_LATENCY_COMPENSATION.in(Seconds),
-        robotSpeeds.vyMetersPerSecond *
-          SCORING.SOTF_LATENCY_COMPENSATION.in(Seconds),
-        robotSpeeds.omegaRadiansPerSecond *
-          SCORING.SOTF_LATENCY_COMPENSATION.in(Seconds)
+        robotRelativeSpeeds.vxMetersPerSecond * latency,
+        robotRelativeSpeeds.vyMetersPerSecond * latency,
+        robotRelativeSpeeds.omegaRadiansPerSecond * latency
       )
     );
 
@@ -183,7 +191,7 @@ public class ScoreCalculator {
 
     // The field-relative speed of the shooter moving on the field
     ChassisSpeeds shooterSpeeds = MathUtil.transformVelocity(
-      robotSpeeds,
+      fieldRelativeSpeeds,
       Constants.SHOOTER.ROBOT_TO_SHOOTER.getTranslation(),
       initialRobotPose.getRotation()
     );
@@ -212,6 +220,8 @@ public class ScoreCalculator {
       );
     }
 
+    // Should use a moving average to compute at least
+    // hood angle and drive angle. Maybe shooter velocity too
     AngularVelocity shooterVelocity = m_shooterCurve.get(
       futureShootertoTargetDistance
     );

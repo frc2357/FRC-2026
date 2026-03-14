@@ -525,8 +525,10 @@ public class Constants {
     /**
      * The latency compensation to account for the time a ball is feeding, in the shooter,
      * or signals being sent to the motors for shoot on the fly algorithm
+     *
+     * I do not understand why the best value for this is zero
      *  */
-    public static final Time SOTF_LATENCY_COMPENSATION = Seconds.of(0.03);
+    public static final Time SOTF_LATENCY_COMPENSATION = Seconds.of(0);
 
     public static final String IS_SOTF_KEY = "Enable SOTF";
 
