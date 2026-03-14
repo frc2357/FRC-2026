@@ -1,16 +1,12 @@
 package frc.robot.commands.drive;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SWERVE;
 import frc.robot.Robot;
-import frc.robot.commands.scoring.SetShotTarget;
 import java.util.function.Supplier;
 
 public class DrivePosePassing extends Command {
@@ -26,8 +22,6 @@ public class DrivePosePassing extends Command {
 
     m_x = x;
     m_y = y;
-
-    this.alongWith(new SetShotTarget(this::getTarget));
   }
 
   @Override
@@ -44,17 +38,5 @@ public class DrivePosePassing extends Command {
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  private Translation2d getTarget() {
-    // We are going to be targeting the center point of either bump (depending on what side of the field we're on)
-    // Since our shooter curves are tuned to roughly intersect the point at a height of 72 inches,
-    // the fuel should land past the bump inside of our alliance zone.
-    Pose2d robotPose = Robot.swerve.getAllianceRelativePose2d();
-    if (robotPose.getY() > FieldConstants.Hub.centerPoint.getY()) {
-      return FieldConstants.Bump.Left.centerPoint;
-    } else {
-      return FieldConstants.Bump.Right.centerPoint;
-    }
   }
 }

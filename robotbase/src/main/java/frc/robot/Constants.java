@@ -553,7 +553,7 @@ public class Constants {
       public static final Angle OUTPOST_SHOT = Degrees.of(18);
     }
 
-    public static final Angle PASSING_STATIC_ANGLE = Degrees.of(0); // TODO: Tune
+    public static final Angle PASSING_STATIC_ANGLE = Degrees.of(18); // TODO: Tune
   }
 
   public class SCORING {

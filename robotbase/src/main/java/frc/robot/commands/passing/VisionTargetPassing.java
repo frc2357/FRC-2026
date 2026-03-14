@@ -12,7 +12,7 @@ public class VisionTargetPassing extends Command {
 
   @Override
   public void initialize() {
-    Robot.hood.setAngle(HOOD.PASSING_STATIC_ANGLE);
+    Robot.hood.setAngleSetpoint(HOOD.PASSING_STATIC_ANGLE);
   }
 
   @Override

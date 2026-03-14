@@ -5,10 +5,8 @@ import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SWERVE;
 import frc.robot.Robot;
-import frc.robot.commands.scoring.SetShotTarget;
 import java.util.function.Supplier;
 
 public class DrivePoseTargetingHub extends Command {
@@ -24,8 +22,6 @@ public class DrivePoseTargetingHub extends Command {
 
     m_x = x;
     m_y = y;
-
-    this.alongWith(new SetShotTarget(FieldConstants.Hub.centerPoint));
   }
 
   @Override
