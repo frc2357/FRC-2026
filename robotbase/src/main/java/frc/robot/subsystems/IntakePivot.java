@@ -8,7 +8,9 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
@@ -33,8 +35,6 @@ public class IntakePivot extends SubsystemBase {
   private final ArmConfig m_armConfig;
   // INTAKE_PIVOT Mechanism
   private Arm m_arm;
-
-  private boolean m_hasDeployed;
 
   public IntakePivot() {
     m_motor = new SparkMax(CAN_ID.INTAKE_PIVOT_MOTOR, MotorType.kBrushless);
@@ -72,8 +72,6 @@ public class IntakePivot extends SubsystemBase {
       );
 
     m_arm = new Arm(m_armConfig);
-
-    m_hasDeployed = false;
   }
 
   /**
@@ -106,14 +104,6 @@ public class IntakePivot extends SubsystemBase {
 
   public void stopMotor() {
     m_arm.setDutyCycleSetpoint(0);
-  }
-
-  public boolean hasDeployed() {
-    return m_hasDeployed;
-  }
-
-  public void setDeployed(boolean hasDeployed) {
-    m_hasDeployed = hasDeployed;
   }
 
   public Trigger isIntakeStallingTrigger() {

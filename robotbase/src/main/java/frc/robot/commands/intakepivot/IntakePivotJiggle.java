@@ -1,19 +1,20 @@
 package frc.robot.commands.intakepivot;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.commands.intakerunner.IntakeRunnerSetSpeed;
 
-public class IntakePivotJiggle extends SequentialCommandGroup {
+public class IntakePivotJiggle extends RepeatCommand {
 
   public IntakePivotJiggle() {
     super(
-      new InstantCommand(() -> Robot.intakePivot.setDeployed(false)),
-      new RepeatCommand(
+      new ParallelCommandGroup(
+        new IntakeRunnerSetSpeed(Constants.INTAKE_RUNNER.INTAKE_JIGGLING_SPEED),
         new SequentialCommandGroup(
           new ParallelRaceGroup(
             Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.JIGGLE_UP_SPEED),
