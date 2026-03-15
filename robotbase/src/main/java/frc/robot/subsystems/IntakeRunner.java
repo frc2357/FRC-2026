@@ -9,33 +9,33 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
-import frc.robot.Constants.INTAKE;
+import frc.robot.Constants.INTAKE_RUNNER;
 
-public class Intake extends SubsystemBase {
+public class IntakeRunner extends SubsystemBase {
 
   private SparkMax m_leftMotor;
 
-  //private SparkMax m_rightMotor;
+  private SparkMax m_rightMotor;
 
-  public Intake() {
+  public IntakeRunner() {
     m_leftMotor = new SparkMax(CAN_ID.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
 
     m_leftMotor.configure(
-      INTAKE.LEFT_MOTOR_CONFIG,
+      INTAKE_RUNNER.LEFT_MOTOR_CONFIG,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
     );
 
-    // m_rightMotor = new SparkMax(
-    //   CAN_ID.RIGHT_INTAKE_MOTOR,
-    //   MotorType.kBrushless
-    // );
+    m_rightMotor = new SparkMax(
+      CAN_ID.RIGHT_INTAKE_MOTOR,
+      MotorType.kBrushless
+    );
 
-    // m_rightMotor.configure(
-    //   INTAKE.RIGHT_MOTOR_CONFIG,
-    //   ResetMode.kNoResetSafeParameters,
-    //   PersistMode.kNoPersistParameters
-    // );
+    m_rightMotor.configure(
+      INTAKE_RUNNER.RIGHT_MOTOR_CONFIG,
+      ResetMode.kNoResetSafeParameters,
+      PersistMode.kNoPersistParameters
+    );
   }
 
   public void setSpeed(Dimensionless percentOutput) {
@@ -43,7 +43,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void setAxisSpeed(Dimensionless axisSpeed) {
-    Dimensionless m_speed = axisSpeed.times(INTAKE.AXIS_MAX_SPEED);
+    Dimensionless m_speed = axisSpeed.times(INTAKE_RUNNER.AXIS_MAX_SPEED);
     setSpeed(m_speed);
   }
 

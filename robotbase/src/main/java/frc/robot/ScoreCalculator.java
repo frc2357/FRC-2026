@@ -4,24 +4,44 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.SCORING;
 import frc.robot.networkTables.CurveTuner;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.InterpolationUtil;
+import frc.robot.util.MathUtil;
 
+/**
+ * Performs various computations to calculate parameters for scoring into the hub
+ *
+ * This file has a lot of object instantiation, if we start seeing occasional
+ * loop overruns, this is a point of optimization.
+ */
 public class ScoreCalculator {
 
   public record CalculatedShot(
     AngularVelocity shooterVelocity,
-    Angle hoodPosition
+    Angle hoodPosition,
+    Rotation2d driveAngle
   ) {}
+
+  private CalculatedShot m_latestCalculatedShot = new CalculatedShot(
+    RotationsPerSecond.of(0),
+    Degrees.of(0),
+    Rotation2d.fromDegrees(0)
+  );
 
   private final CurveTuner<Distance, AngularVelocity> m_shooterCurve =
     new CurveTuner<Distance, AngularVelocity>(
@@ -39,53 +59,61 @@ public class ScoreCalculator {
     InterpolationUtil::Interpolate
   );
 
+  private final CurveTuner<Distance, Time> m_timeOfFlightCurve = new CurveTuner<
+    Distance,
+    Time
+  >(
+    "ToF Curve",
+    InterpolationUtil::InverseInterpolate,
+    InterpolationUtil::Interpolate
+  );
+
   public static final class SHOT_POINTS {
 
     // TODO: Rename to be more indicative of the point
     // Distances should be relative to top center point of the hub
-    public static final Distance CLOSEST_POINT = Inches.of(24); // Up against the hub
-    public static final Distance POINT_2 = Inches.of(50);
+    public static final Distance HUB = Inches.of(43); // Up against the hub
+    public static final Distance POINT_2 = Inches.of(75);
     public static final Distance POINT_3 = Inches.of(100);
-    public static final Distance POINT_4 = Inches.of(200);
-    public static final Distance FARTHEST_POINT = Inches.of(265); // Far corner of the outpost
+    public static final Distance TRENCH = Inches.of(127);
+    public static final Distance POINT_5 = Inches.of(150);
+    public static final Distance POINT_6 = Inches.of(175);
+    public static final Distance OUTPOST_CORNER = Inches.of(205); // Far corner of the outpost
   }
 
   public ScoreCalculator() {
-    m_shooterCurve.put(SHOT_POINTS.CLOSEST_POINT, RotationsPerSecond.of(48.5));
-    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(48.5));
+    m_shooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(48));
+    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(51.27));
     m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(53));
-    m_shooterCurve.put(SHOT_POINTS.POINT_4, RotationsPerSecond.of(64));
-    m_shooterCurve.put(SHOT_POINTS.FARTHEST_POINT, RotationsPerSecond.of(64));
+    m_shooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(56));
+    m_shooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(58));
+    m_shooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(60));
+    m_shooterCurve.put(SHOT_POINTS.OUTPOST_CORNER, RotationsPerSecond.of(64));
 
-    m_hoodCurve.put(SHOT_POINTS.CLOSEST_POINT, Degrees.of(0));
-    m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(0));
-    m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(2));
-    m_hoodCurve.put(SHOT_POINTS.POINT_4, Degrees.of(14));
-    m_hoodCurve.put(SHOT_POINTS.FARTHEST_POINT, Degrees.of(14));
-  }
+    m_hoodCurve.put(SHOT_POINTS.HUB, Degrees.of(1));
+    m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(3.44));
+    m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(5.75));
+    m_hoodCurve.put(SHOT_POINTS.TRENCH, Degrees.of(8.9));
+    m_hoodCurve.put(SHOT_POINTS.POINT_5, Degrees.of(14));
+    m_hoodCurve.put(SHOT_POINTS.POINT_6, Degrees.of(15));
+    m_hoodCurve.put(SHOT_POINTS.OUTPOST_CORNER, Degrees.of(18));
 
-  public CalculatedShot calculateShot(Distance targetDistance) {
-    AngularVelocity shooterVelocity = m_shooterCurve.get(targetDistance);
-    Angle hoodAngle = m_hoodCurve.get(targetDistance);
+    m_timeOfFlightCurve.put(SHOT_POINTS.HUB, Seconds.of(1.005));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_2, Seconds.of(1.068));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_3, Seconds.of(1.168));
+    m_timeOfFlightCurve.put(SHOT_POINTS.TRENCH, Seconds.of(1.132));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_5, Seconds.of(1.032));
+    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_6, Seconds.of(1.138));
+    m_timeOfFlightCurve.put(SHOT_POINTS.OUTPOST_CORNER, Seconds.of(1.18));
 
-    SmartDashboard.putNumber(
-      "Computed Shooter RPS",
-      shooterVelocity.in(RotationsPerSecond)
-    );
-    SmartDashboard.putNumber("Computed Hood Angle", hoodAngle.in(Degrees));
-
-    return new CalculatedShot(shooterVelocity, hoodAngle);
-  }
-
-  public CalculatedShot calculateFromPose() {
-    return calculateShot(shotDistanceFromPose());
+    SmartDashboard.putBoolean(SCORING.IS_SOTF_KEY, true);
   }
 
   /**
    * Computed using pose estimation
    * @return The distance between the top center point of the hub and the shooter flywheel
    */
-  public Distance shotDistanceFromPose() {
+  public CalculatedShot calculateShotFromPoseStationary() {
     Pose2d robotPose = Robot.swerve.getFieldRelativePose2d();
 
     Pose2d shooterPose = robotPose.transformBy(
@@ -96,29 +124,210 @@ public class ScoreCalculator {
       FieldConstants.Hub.topCenterPoint.toTranslation2d()
     );
 
-    Distance distance = Meters.of(
+    Distance targetDistance = Meters.of(
       shooterPose.getTranslation().getDistance(targetHub)
     );
     SmartDashboard.putNumber(
       "Pose Computed Distance Inches",
-      distance.in(Inches)
+      targetDistance.in(Inches)
     );
-    return distance;
+
+    AngularVelocity shooterVelocity = m_shooterCurve.get(targetDistance);
+    Angle hoodAngle = m_hoodCurve.get(targetDistance);
+    Rotation2d driveAngle = computeTargetDriveAngle(robotPose, targetHub);
+
+    SmartDashboard.putNumber(
+      "Computed Shooter RPS",
+      shooterVelocity.in(RotationsPerSecond)
+    );
+    SmartDashboard.putNumber("Computed Hood Angle", hoodAngle.in(Degrees));
+    SmartDashboard.putNumber("Computed Drive Angle", driveAngle.getDegrees());
+    SmartDashboard.putNumber(
+      "latency",
+      Constants.SCORING.SOTF_LATENCY_COMPENSATION.in(Seconds)
+    );
+
+    return new CalculatedShot(shooterVelocity, hoodAngle, driveAngle);
   }
 
-  public CalculatedShot calculatedFromShooterCamera() {
-    Distance distance = shotDistanceFromShooterCamera();
-    return calculateShot(distance);
+  /**
+   * Implementation of LUT based shoot on the fly algorithm
+   * @return
+   */
+  public CalculatedShot calculateShotFromShootOnTheFly() {
+    // Get current robot pose
+    Pose2d initialRobotPose = Robot.swerve.getFieldRelativePose2d();
+    ChassisSpeeds robotRelativeSpeeds =
+      Robot.swerve.getCurrentRobotRelativeSpeeds();
+    ChassisSpeeds fieldRelativeSpeeds =
+      Robot.swerve.getCurrentFieldRelativeSpeeds(); // try field velocities instead
+
+    var latency = SmartDashboard.getNumber(
+      "latency",
+      Constants.SCORING.SOTF_LATENCY_COMPENSATION.in(Seconds)
+    );
+    // Account for the robot's velocity and latency compensation
+    // to compute a guess to where the robot actually is
+    Pose2d velocityCompensatedRobotPose = initialRobotPose.exp(
+      new Twist2d(
+        robotRelativeSpeeds.vxMetersPerSecond * latency,
+        robotRelativeSpeeds.vyMetersPerSecond * latency,
+        robotRelativeSpeeds.omegaRadiansPerSecond * latency
+      )
+    );
+
+    Pose2d shooterPose = velocityCompensatedRobotPose.transformBy(
+      Constants.SHOOTER.ROBOT_TO_SHOOTER
+    );
+
+    Translation2d targetHub = AllianceFlipUtil.apply(
+      FieldConstants.Hub.topCenterPoint.toTranslation2d()
+    );
+
+    // Initial target distance
+    Distance shooterToTargetDistance = Meters.of(
+      targetHub.getDistance(shooterPose.getTranslation())
+    );
+
+    // The field-relative speed of the shooter moving on the field
+    ChassisSpeeds shooterSpeeds = MathUtil.transformVelocity(
+      fieldRelativeSpeeds,
+      Constants.SHOOTER.ROBOT_TO_SHOOTER.getTranslation(),
+      initialRobotPose.getRotation()
+    );
+
+    // Account for robot velocity and compute future target distance
+    Time timeOfFlight = m_timeOfFlightCurve.get(shooterToTargetDistance);
+    Pose2d futureShooterPose = shooterPose;
+    Distance futureShootertoTargetDistance = shooterToTargetDistance;
+
+    // Converge on the future position
+    // increasing iterations will improve accuracy but decrease performance
+    // decreasing iterations will reduce accuracy but increase performance
+    // it is likely jut a few iterations will produce a result good enough for us
+    for (int i = 0; i < SCORING.SOTF_CONVERGE_ITERATIONS; i++) {
+      timeOfFlight = m_timeOfFlightCurve.get(futureShootertoTargetDistance);
+      double offsetX =
+        shooterSpeeds.vxMetersPerSecond * timeOfFlight.in(Seconds);
+      double offsetY =
+        shooterSpeeds.vyMetersPerSecond * timeOfFlight.in(Seconds);
+      futureShooterPose = new Pose2d(
+        shooterPose.getTranslation().plus(new Translation2d(offsetX, offsetY)),
+        shooterPose.getRotation()
+      );
+      futureShootertoTargetDistance = Meters.of(
+        targetHub.getDistance(futureShooterPose.getTranslation())
+      );
+    }
+
+    // Should use a moving average to compute at least
+    // hood angle and drive angle. Maybe shooter velocity too
+    AngularVelocity shooterVelocity = m_shooterCurve.get(
+      futureShootertoTargetDistance
+    );
+    Angle hoodAngle = m_hoodCurve.get(futureShootertoTargetDistance);
+
+    Pose2d futureRobotPose = futureShooterPose.transformBy(
+      Constants.SHOOTER.ROBOT_TO_SHOOTER.inverse()
+    );
+    Rotation2d driveAngle = computeTargetDriveAngle(futureRobotPose, targetHub);
+
+    SmartDashboard.putNumber(
+      "SOTF Direct Distance Inches",
+      shooterToTargetDistance.in(Inches)
+    );
+    SmartDashboard.putNumber(
+      "SOTF Future Distance Inches",
+      futureShootertoTargetDistance.in(Inches)
+    );
+    SmartDashboard.putNumber(
+      "SOTF Shooter RPS",
+      shooterVelocity.in(RotationsPerSecond)
+    );
+    SmartDashboard.putNumber("SOTF Hood Angle", hoodAngle.in(Degrees));
+    SmartDashboard.putNumber("SOTF Drive Angle", driveAngle.getDegrees());
+
+    return new CalculatedShot(shooterVelocity, hoodAngle, driveAngle);
   }
 
   // TODO Implement, requires changes in pose initialization branch
   // Pre-emptive work in the event pose estimation proves to be un-reliable
+  public CalculatedShot calculatedFromShooterCameraStationary() {
+    return new CalculatedShot(
+      RotationsPerSecond.of(0),
+      Degrees.of(0),
+      Rotation2d.fromDegrees(0)
+    );
+  }
+
+  private static Rotation2d computeTargetDriveAngle(
+    Pose2d robotPose,
+    Translation2d target
+  ) {
+    // Start with the angle from robot center to target
+    Rotation2d driveAngleGuess = target
+      .minus(robotPose.getTranslation())
+      .getAngle();
+
+    // Run iterations to account for the launcher 'swinging' as the robot rotates
+    for (int i = 0; i < SCORING.DRIVE_ANGLE_CONVERGE_ITERATIONS; i++) {
+      // 1. Find where the launcher would be on the field if the robot faces our guess
+      Translation2d projectedLauncherPose = robotPose
+        .getTranslation()
+        .plus(
+          Constants.SHOOTER.ROBOT_TO_SHOOTER.getTranslation().rotateBy(
+            driveAngleGuess
+          )
+        );
+
+      // 2. Find the angle from that projected launcher position to the target
+      Rotation2d launcherToTargetAngle = target
+        .minus(projectedLauncherPose)
+        .getAngle();
+
+      // 3. Subtract the launcher's mount angle from the required pointing angle
+      // If launcher is at -50, robot must be at (TargetAngle - (-50))
+      driveAngleGuess = launcherToTargetAngle.minus(
+        Constants.SHOOTER.ROBOT_TO_SHOOTER.getRotation()
+      );
+    }
+
+    return driveAngleGuess;
+  }
+
   /**
-   * Computed using the pitch and yaw of the shooter camera
-   * @return The distance between the top center point of the hub and the shooter flywheel
+   * Should be called in Robot.periodic every loop
    */
-  public Distance shotDistanceFromShooterCamera() {
-    return Meters.of(0);
+  public void updateCalculatedShot() {
+    if (SmartDashboard.getBoolean(SCORING.IS_SOTF_KEY, true)) {
+      m_latestCalculatedShot = calculateShotFromShootOnTheFly();
+    } else {
+      m_latestCalculatedShot = calculateShotFromPoseStationary();
+    }
+  }
+
+  public CalculatedShot getCalculatedShot() {
+    return m_latestCalculatedShot;
+  }
+
+  public Rotation2d getCalculatedDriveAngle() {
+    return m_latestCalculatedShot.driveAngle();
+  }
+
+  public AngularVelocity getCalculatedShooterVelocity() {
+    return m_latestCalculatedShot.shooterVelocity();
+  }
+
+  public Angle getCalculatedHoodAngle() {
+    return m_latestCalculatedShot.hoodPosition();
+  }
+
+  public AngularVelocity getShooterVelocityStationary(Distance distance) {
+    return m_shooterCurve.get(distance);
+  }
+
+  public Angle getHoodAngleStationary(Distance distance) {
+    return m_hoodCurve.get(distance);
   }
 
   public void updateCurveTuners() {

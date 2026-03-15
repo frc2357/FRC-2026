@@ -1,8 +1,6 @@
 package frc.robot.controls;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Percent;
-import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
@@ -11,16 +9,21 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
 import frc.robot.commands.drive.DrivePoseTargetingHub;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
-import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.intakepivot.IntakePivotDeploy;
+import frc.robot.commands.intakepivot.IntakePivotJiggle;
+import frc.robot.commands.intaking.TeleopIntake;
 import frc.robot.commands.scoring.Score;
 import frc.robot.commands.scoring.VisionScore;
-import frc.robot.commands.scoring.VisionTargeting;
+import frc.robot.commands.scoring.teleop.HubScore;
+import frc.robot.commands.scoring.teleop.OutpostScore;
+import frc.robot.commands.scoring.teleop.TrenchScore;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
@@ -33,33 +36,47 @@ public class DriverControls implements RumbleInterface {
   }
 
   public void mapControls() {
+    // Button chord for all buttons that cause intaking
+    Trigger isIntaking = m_controller.leftTrigger();
+
+    // Button chord for all buttons that cause shooting
+    Trigger isShooting = m_controller
+      .rightTrigger()
+      .or(m_controller.rightBumper())
+      .or(m_controller.leftBumper())
+      .or(m_controller.y())
+      .or(m_controller.x());
+
     m_controller.back().onTrue(new FlipPerspective());
     m_controller.start().onTrue(new ResetPerspective());
 
-    m_controller.leftTrigger().whileTrue(new VisionTargeting());
+    m_controller.leftTrigger().whileTrue(new TeleopIntake());
+
+    isShooting.and(isIntaking.negate()).whileTrue(new IntakePivotJiggle());
+    isShooting.negate().onTrue(new IntakePivotDeploy());
 
     m_controller
       .rightTrigger()
-      .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis() * -1))
-      );
-
-    m_controller.y().whileTrue(Robot.hood.setSpeed(Percent.of(10)));
-    m_controller.a().whileTrue(Robot.hood.setSpeed(Percent.of(-10)));
-
+      .whileTrue(new VisionScore(this::getLeftX, this::getLeftY));
     m_controller
-      .x()
-      .whileTrue(new DrivePoseTargetingHub(this::getLeftX, this::getLeftY));
-
-    m_controller.b().whileTrue(new VisionScore(this::getLeftX, this::getLeftY));
-
-    m_controller
-      .povRight()
+      .leftBumper()
       .whileTrue(
-        Robot.hood.setAngle(() ->
-          Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 1))
+        new Score(
+          () ->
+            RotationsPerSecond.of(
+              SmartDashboard.getNumber("Shooter Target RPS", 0)
+            ),
+          () -> Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 2))
         )
       );
+
+    m_controller.rightBumper().whileTrue(new TrenchScore());
+    m_controller.y().whileTrue(new OutpostScore());
+    m_controller.x().whileTrue(new HubScore());
+
+    m_controller
+      .a()
+      .whileTrue(new DrivePoseTargetingHub(this::getLeftX, this::getLeftY));
 
     m_controller
       .povLeft()

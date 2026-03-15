@@ -1,34 +1,29 @@
 package frc.robot.commands.scoring;
 
-import static edu.wpi.first.units.Units.Inches;
-
-import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
-import frc.robot.ScoreCalculator.CalculatedShot;
+import java.util.function.Supplier;
 
-/**
- * This command is not representative of our actual scoring sequence
- * It was primarily created to validate the shooter curve
- */
-public class Score extends Command {
+public class Score extends ParallelCommandGroup {
 
-  public Score() {
-    SmartDashboard.putNumber("Fire Distance Inches", 0.0);
+  public Score(AngularVelocity shooterVelocity, Angle hoodAngle) {
+    this(() -> shooterVelocity, () -> hoodAngle);
   }
 
-  @Override
-  public void execute() {
-    Distance distance = Inches.of(
-      SmartDashboard.getNumber("Fire Distance Inches", 0.0)
+  public Score(
+    Supplier<AngularVelocity> shooterVelocity,
+    Supplier<Angle> hoodAngle
+  ) {
+    super(
+      Robot.shooter.setVelocity(shooterVelocity),
+      Robot.hood.setAngle(hoodAngle),
+      new SequentialCommandGroup(
+        Robot.shooter.waitUntilTargetVelocity(),
+        new ScoreFeed()
+      )
     );
-    CalculatedShot shot = Robot.scoreCalculator.calculateShot(distance);
-    Robot.shooter.setVelocitySetpoint(shot.shooterVelocity());
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    Robot.shooter.stopMotor();
   }
 }

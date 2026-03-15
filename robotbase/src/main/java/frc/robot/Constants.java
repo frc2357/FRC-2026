@@ -9,11 +9,13 @@ import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 import choreo.auto.AutoFactory;
+import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -45,17 +47,31 @@ import edu.wpi.first.units.measure.Time;
 import frc.robot.generated.TunerConstants;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 
 public class Constants {
+
+  public static final class ROBOT {
+
+    public static final boolean PERFORMANCE_MODE = true;
+
+    public static final TelemetryVerbosity MECHANISM_VERBOSITY =
+      Constants.ROBOT.PERFORMANCE_MODE
+        ? TelemetryVerbosity.LOW
+        : TelemetryVerbosity.HIGH;
+  }
 
   public static final class CONTROLLER {
 
     public static final int DRIVER_CONTROLLER_PORT = 1;
     public static final double DRIVER_CONTROLLER_DEADBAND = 0.01;
+
     public static final int CODRIVER_CONTROLLER_PORT = 0;
     public static final double CODRIVER_CONTROLLER_DEADBAND = 0.025;
+
     public static final double DRIVER_RUMBLE_INTENSITY = .5;
     public static final double CODRIVER_RUMBLE_INTENSITY = .5;
+
     public static final double DRIVER_RUMBLE_SECONDS = 2;
     public static final double CODRIVER_RUMBLE_SECONDS = 2;
     public static final double JOYSTICK_RAMP_EXPONENT = 1;
@@ -83,7 +99,7 @@ public class Constants {
     public static final double HEADING_CONTROLLER_D = 0;
 
     public static final Dimensionless INTAKE_TRANSLATION_MODIFIER = Percent.of(
-      50
+      55
     );
     public static final Dimensionless INTAKE_ROTATION_MODIFIER = Percent.of(50);
   }
@@ -151,13 +167,13 @@ public class Constants {
       public static final String NAME = "shooter";
 
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-        Units.Inches.of(-8.262),
-        Units.Inches.of(-9.386),
-        Units.Inches.of(16.249),
+        Units.Inches.of(-9.004),
+        Units.Inches.of(12.554),
+        Units.Inches.of(15.993),
         new Rotation3d(
-          Units.Degrees.of(7.698),
-          Units.Degrees.of(-6.383),
-          Units.Degrees.of(309.637)
+          Units.Degrees.of(10),
+          Units.Degrees.of(0),
+          Units.Degrees.of(90)
         )
       );
 
@@ -267,6 +283,7 @@ public class Constants {
   public static final class CAN_ID {
 
     public static final int FLOOR_MOTOR = 23; //TODO: make sure that the old spindexter motor is the same for the floor (or just change the CAN ID)
+    public static final int TUNNEL_MOTOR = 34;
 
     public static final int LEFT_INTAKE_MOTOR = 24;
     public static final int RIGHT_INTAKE_MOTOR = 25;
@@ -284,23 +301,38 @@ public class Constants {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
-      .smartCurrentLimit(40, 40)
-      .openLoopRampRate(0.25); // TODO: double check these values
+      .inverted(true)
+      .smartCurrentLimit(40, 20)
+      .openLoopRampRate(0.25)
+      .voltageCompensation(10);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
-    public static final Dimensionless FLOOR_SPEED = Percent.of(50);
+    public static final Dimensionless FLOOR_SPEED = Percent.of(80);
   }
 
-  public static final class INTAKE {
+  public static final class TUNNEL {
+
+    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
+      .idleMode(IdleMode.kCoast)
+      .inverted(true)
+      .openLoopRampRate(0.25)
+      .smartCurrentLimit(30, 20)
+      .voltageCompensation(12);
+
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+    public static final Dimensionless TUNNEL_SPEED = Percent.of(100);
+    public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-100);
+  }
+
+  public static final class INTAKE_RUNNER {
 
     public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(75);
 
     public static final SparkBaseConfig LEFT_MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
-      .smartCurrentLimit(30, 30)
+      .inverted(true)
+      .smartCurrentLimit(40, 20)
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
@@ -309,7 +341,7 @@ public class Constants {
         .apply(LEFT_MOTOR_CONFIG)
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
 
-    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(75);
+    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(80);
   }
 
   public static final class INTAKE_PIVOT {
@@ -329,44 +361,31 @@ public class Constants {
 
     public static final Angle SIM_LOWER_ANGLE = Degrees.of(0);
     public static final Angle SIM_UPPER_ANGLE = Degrees.of(123.3);
-    public static final Angle SIM_STARTING_POSITION = Degrees.zero();
-
-    public static final Angle topAngle = Degrees.of(10);
-    public static final Angle bottomAngle = Degrees.of(5);
-
-    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
-
-    public static final double P = 0;
-    public static final double I = 0;
-    public static final double D = 0;
-    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(3600);
-    public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
-      RotationsPerSecondPerSecond.of(120);
+    public static final Angle SIM_STARTING_POSITION = Degrees.of(20);
 
     public static final Current STALL_LIMIT = Amps.of(40);
 
     public static final SparkBaseConfig INTAKE_PIVOT_BASE_CONFIG =
       new SparkMaxConfig()
-        .idleMode(IdleMode.kCoast)
+        .idleMode(IdleMode.kBrake)
         .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
         .voltageCompensation(12);
 
-    public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(0, 0, 0);
-
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
-    public static final Angle EXTERNAL_ENCODER_OFFSET = Degrees.of(0);
-    public static final MechanismGearing EXTERNAL_ENCODER_GEARING =
-      new MechanismGearing(GearBox.fromStages("1:1"));
-    public static final Boolean ENCODER_INVERTED = true;
+    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(-5);
 
-    // TODO: Make sure these are right
-    public static final Angle DEPLOYED_ANGLE = Degrees.of(0);
-    // Intaking/general movement is going to cause pivot to bounce
-    public static final Angle DEPLOYED_TOLERANCE = Degrees.of(10);
+    public static final Dimensionless RETRACT_SPEED = Percent.of(30);
 
-    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(10);
+    public static final Dimensionless DEPLOY_SPEED = Percent.of(-30);
+
+    public static final Dimensionless JIGGLE_UP_SPEED = Percent.of(10);
+    public static final Dimensionless JIGGLE_DOWN_SPEED = Percent.of(-10);
+
+    public static final Time JIGGLE_UP_TIME = Seconds.of(2);
+
+    public static final Current AMP_STALL_THRESHOLD = Amps.of(35);
+    public static final Time TIME_TO_STALL = Seconds.of(0.1);
   }
 
   public static final class FEEDER {
@@ -376,14 +395,17 @@ public class Constants {
     public static final SparkBaseConfig FEEDER_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
       .inverted(true)
-      .smartCurrentLimit(20, 20)
-      .openLoopRampRate(0.5)
+      .smartCurrentLimit(15, 10)
+      .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
-    public static final Dimensionless FEED_SPEED = Percent.of(80);
+    public static final Dimensionless FEED_SPEED = Percent.of(100);
+    public static final Dimensionless REVERSE_FEED_SPEED = Percent.of(-100);
   }
 
   public static final class SHOOTER {
+
+    public static final double STEP_AXIS_STEP = 0.1;
 
     public static final MechanismGearing GEARING = new MechanismGearing(
       GearBox.fromStages("1:1")
@@ -407,7 +429,7 @@ public class Constants {
         .voltageCompensation(12);
 
     // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
-    public static final double P = 0.01;
+    public static final double P = 0.005;
     public static final double I = 0;
     public static final double D = 0;
     public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(5767);
@@ -415,7 +437,7 @@ public class Constants {
       RotationsPerSecondPerSecond.of(150);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(0.12, 0.1225, 0.1225);
+      new SimpleMotorFeedforward(0.12, 0.125, 0.01);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
@@ -423,26 +445,50 @@ public class Constants {
     public static final Time STABLE_VELOCITY = Seconds.of(0.1);
 
     public static final Transform2d ROBOT_TO_SHOOTER = new Transform2d(
-      Units.Inches.of(-1.566),
-      Units.Inches.of(-9.199),
-      new Rotation2d(Units.Degrees.of(-50))
+      Units.Inches.of(-6.781),
+      Units.Inches.of(-2.833),
+      new Rotation2d(Units.Degrees.of(90))
     );
+
+    public static final class SETPOINTS {
+
+      public static final AngularVelocity HUB_SHOT = RotationsPerSecond.of(48);
+
+      public static final AngularVelocity TRENCH_SHOT = RotationsPerSecond.of(
+        56
+      );
+
+      // Farthest corner possible
+      public static final AngularVelocity OUTPOST_SHOT = RotationsPerSecond.of(
+        64
+      );
+    }
   }
 
   public static final class HOOD {
 
-    // TODO: Most of the hood's mechanical properties will need updated when we switch to the herring bone gear
-
     public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromStages("5:1", "9:1", "20:19", "166:16")
+      GearBox.fromStages("5:1", "9:1", "1:1", "166:20")
     );
 
     public static final MechanismGearing ENCODER_GEARING = new MechanismGearing(
-      GearBox.fromStages("166:16") // TODO: Reminder to update this to 166:20 when new shooter goes on
+      GearBox.fromStages("166:20")
     );
 
-    public static final Angle LOWER_ANGLE_LIMIT = Degrees.of(0);
-    public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(20);
+    // This is the number that should be copied from the rev hardware client when
+    // pressing the "zero encoder" button
+    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.08340765);
+
+    // Fabricated offset to prevent wrapping
+    public static final Angle FABRICATED_ADJUSTMENT = Degrees.of(1).times(
+      ENCODER_GEARING.getMechanismToRotorRatio()
+    );
+    public static final Angle ADJUSTED_ZERO_OFFSET = PHYSICAL_ZERO_OFFSET.minus(
+      FABRICATED_ADJUSTMENT
+    );
+
+    public static final Angle LOWER_ANGLE_LIMIT = Degrees.of(0.9);
+    public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(34);
     public static final Angle SIM_STARTING_POSITION = Degrees.zero();
 
     // Mass of the flywheel.
@@ -450,30 +496,100 @@ public class Constants {
     public static final String MECHANISM_NETWORK_KEY = "HoodMech";
     public static final String MOTOR_NETWORK_KEY = "HoodMotor";
 
-    public static final Current STALL_LIMIT = Amps.of(20);
+    public static final Current STALL_LIMIT = Amps.of(10);
 
     public static final SparkBaseConfig HOOD_BASE_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
       .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 20)
       .voltageCompensation(12);
 
-    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
+    public static final SignalsConfig SIGNAL_CONFIG = HOOD_BASE_CONFIG.signals
+      .absoluteEncoderPositionPeriodMs(20)
+      .absoluteEncoderVelocityPeriodMs(20);
 
-    public static final double P = 45;
+    public static final double P = 50;
     public static final double I = 0;
     public static final double D = 0;
-    public static final AngularVelocity MAX_ANGULAR_VELOCITY =
-      // Max rpm of neo 550 multiplied by gear ratio and set to 80%
-      RotationsPerSecond.of(GEARING.getMechanismToRotorRatio() * 11000 * 0.8);
-    public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
-      RotationsPerSecondPerSecond.of(3);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(.18, 0.01, .6);
+      new SimpleMotorFeedforward(0.1, 0.0, 0.0);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(30);
     public static final Distance LENGTH = Inches.of(8);
     public static final Mass MASS = Pounds.of(1.365);
+
+    public static final class SETPOINTS {
+
+      public static final Angle HOME = Degrees.of(1);
+
+      public static final Angle HUB_SHOT = Degrees.of(1);
+
+      public static final Angle TRENCH_SHOT = Degrees.of(8.9);
+
+      // Farthest corner possible
+      public static final Angle OUTPOST_SHOT = Degrees.of(18);
+    }
+  }
+
+  public class SCORING {
+
+    /**
+     * The latency compensation to account for the time a ball is feeding, in the shooter,
+     * or signals being sent to the motors for shoot on the fly algorithm
+     *
+     * I do not understand why the best value for this is zero
+     *  */
+    public static final Time SOTF_LATENCY_COMPENSATION = Seconds.of(0);
+
+    public static final String IS_SOTF_KEY = "Enable SOTF";
+
+    public static final int SOTF_CONVERGE_ITERATIONS = 20;
+    public static final int DRIVE_ANGLE_CONVERGE_ITERATIONS = 2;
+
+    public static final Time TIME_TO_WARN_FOR_ACTIVE_HUB = Seconds.of(10);
+  }
+
+  public class SHIFT {
+
+    public static final Time AUTO_LENGTH = Seconds.of(20);
+    public static final Time TELEOP_LENGTH = Seconds.of(140);
+
+    // Times relative to teleop (start of teleop = 0)
+    public static final Time[] TELEOP_SHIFT_START_TIMES = {
+      Seconds.of(0),
+      Seconds.of(10.0),
+      Seconds.of(35.0),
+      Seconds.of(60.0),
+      Seconds.of(85.0),
+      Seconds.of(110.0),
+    };
+    public static final Time[] TELEOP_SHIFT_END_TIMES = {
+      Seconds.of(10.0),
+      Seconds.of(35.0),
+      Seconds.of(60.0),
+      Seconds.of(85.0),
+      Seconds.of(110.0),
+      Seconds.of(140.0),
+    };
+
+    // Order of when hub is active when we lose auto
+    public static final boolean[] AUTO_LOSE_SCHEDULE = {
+      true,
+      true,
+      false,
+      true,
+      false,
+      true,
+    };
+    // Order of when hub is active when we win auto
+    public static final boolean[] AUTO_WIN_SCHEDULE = {
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+    };
   }
 
   public class FieldConstants {

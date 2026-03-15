@@ -47,6 +47,9 @@ public class CurveTuner<
   }
 
   private void updateSelectedCurveIndex(K key) {
+    if (key == null) {
+      return;
+    }
     V value = get(key);
     SmartDashboard.putNumber(
       String.format("%s Value (%s)", m_name, value.unit().name()),

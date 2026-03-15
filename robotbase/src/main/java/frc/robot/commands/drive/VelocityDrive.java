@@ -35,5 +35,9 @@ public class VelocityDrive extends Command {
       .getValue()
       .in(Units.RotationsPerSecond);
     SmartDashboard.putNumber("Drive RPS", RotationsPerSecond);
+    SmartDashboard.putNumber(
+      "Calculated Drive MS",
+      Robot.swerve.getModule(0).getCurrentState().speedMetersPerSecond
+    );
   }
 }

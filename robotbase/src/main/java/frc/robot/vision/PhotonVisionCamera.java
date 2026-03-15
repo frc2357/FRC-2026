@@ -95,8 +95,6 @@ public class PhotonVisionCamera {
   private Matrix<N3, N1> m_singleTagStdDevs;
   private Matrix<N3, N1> m_currentStdDevs;
 
-  private static final Field2d m_unfiltered = new Field2d();
-
   /**
    * Represents a camera from PhotonVision.
    *
@@ -136,8 +134,6 @@ public class PhotonVisionCamera {
       Double.MAX_VALUE,
       Double.MAX_VALUE
     );
-
-    SmartDashboard.putData(cameraName + " unfiltered", m_unfiltered);
   }
 
   /**
@@ -187,8 +183,6 @@ public class PhotonVisionCamera {
         continue;
       }
 
-      m_unfiltered.setRobotPose(visionEst.get().estimatedPose.toPose2d());
-
       if (!passesRobotSpeedFilter(visionEst.get())) {
         continue;
       }
@@ -211,7 +205,7 @@ public class PhotonVisionCamera {
       );
     }
 
-    if (m_connectionLost) {
+    if (m_camera.isConnected() && m_connectionLost) {
       m_connectionLost = false;
       DriverStation.reportWarning(
         "[" +
@@ -229,7 +223,7 @@ public class PhotonVisionCamera {
    * @return true if the vision estimate is within reasonable constraints to the robot
    */
   public boolean passesRobotSpeedFilter(EstimatedRobotPose estimate) {
-    ChassisSpeeds speeds = Robot.swerve.getCurrentChassisSpeeds();
+    ChassisSpeeds speeds = Robot.swerve.getCurrentRobotRelativeSpeeds();
 
     // Check if we are translating too fast
     if (

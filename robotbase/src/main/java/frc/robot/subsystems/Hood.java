@@ -3,15 +3,19 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Value;
 
+import com.revrobotics.PersistMode;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.HOOD;
 import java.util.function.Supplier;
@@ -44,25 +48,16 @@ public class Hood extends SubsystemBase {
       .withControlMode(ControlMode.CLOSED_LOOP)
       .withVendorConfig(HOOD.HOOD_BASE_CONFIG)
       // Feedback Constants (PID Constants)
-      .withClosedLoopController(
-        HOOD.P,
-        HOOD.I,
-        HOOD.D,
-        HOOD.MAX_ANGULAR_VELOCITY,
-        HOOD.MAX_ANGULAR_ACCELERATION
-      )
-      .withSimClosedLoopController(
-        HOOD.P,
-        HOOD.I,
-        HOOD.D,
-        HOOD.MAX_ANGULAR_VELOCITY,
-        HOOD.MAX_ANGULAR_ACCELERATION
-      )
+      .withClosedLoopController(HOOD.P, HOOD.I, HOOD.D)
+      .withSimClosedLoopController(HOOD.P, HOOD.I, HOOD.D)
       // Feedforward Constants
       .withFeedforward(HOOD.FEEDFORWARD)
       .withSimFeedforward(HOOD.FEEDFORWARD)
       // Telemetry name and verbosity level
-      .withTelemetry(HOOD.MOTOR_NETWORK_KEY, TelemetryVerbosity.HIGH)
+      .withTelemetry(
+        HOOD.MOTOR_NETWORK_KEY,
+        Constants.ROBOT.MECHANISM_VERBOSITY
+      )
       // Gearing from the motor rotor to final shaft.
       // You could also use .withGearing(12) which does the same thing.
       .withGearing(HOOD.GEARING)
@@ -71,6 +66,7 @@ public class Hood extends SubsystemBase {
       .withExternalEncoder(m_encoder)
       .withUseExternalFeedbackEncoder(true)
       .withExternalEncoderGearing(HOOD.ENCODER_GEARING)
+      .withExternalEncoderZeroOffset(HOOD.ADJUSTED_ZERO_OFFSET)
       .withSoftLimit(HOOD.LOWER_ANGLE_LIMIT, HOOD.UPPER_ANGLE_LIMIT);
 
     m_sparkSmartMotorController = new SparkWrapper(
@@ -86,9 +82,26 @@ public class Hood extends SubsystemBase {
       .withStartingPosition(HOOD.SIM_STARTING_POSITION)
       // Mass of the flywheel.
       // Telemetry name and verbosity for the arm.
-      .withTelemetry(HOOD.MECHANISM_NETWORK_KEY, TelemetryVerbosity.HIGH);
+      .withTelemetry(
+        HOOD.MECHANISM_NETWORK_KEY,
+        Constants.ROBOT.MECHANISM_VERBOSITY
+      );
 
     m_hood = new Pivot(m_hoodConfig);
+
+    // Account for YAMS assuming the feedback sensor returns velocity nativley in RPM
+    // The CANANDMAG Helium Encoder 0.2 natively returns rotations per second
+    // so the conversion factor should not be divided by 60 like YAMS is doing.
+    SparkBaseConfig baseConfig =
+      (SparkBaseConfig) m_sparkSmartMotorController.getMotorControllerConfig();
+    baseConfig.absoluteEncoder.velocityConversionFactor(
+      HOOD.ENCODER_GEARING.getRotorToMechanismRatio()
+    );
+    m_motor.configure(
+      baseConfig,
+      ResetMode.kNoResetSafeParameters,
+      PersistMode.kPersistParameters
+    );
   }
 
   /**
@@ -107,11 +120,15 @@ public class Hood extends SubsystemBase {
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
   public Command setAngle(Angle angle) {
-    return m_hood.run(angle).finallyDo(() -> this.stopMotor());
+    return m_hood.run(angle);
   }
 
   public Command setAngle(Supplier<Angle> angle) {
-    return m_hood.run(angle).finallyDo(() -> this.stopMotor());
+    return m_hood.run(angle);
+  }
+
+  public Command goHome() {
+    return this.setAngle(HOOD.SETPOINTS.HOME);
   }
 
   /**
@@ -130,7 +147,7 @@ public class Hood extends SubsystemBase {
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
   private Command set(double dutyCycle) {
-    return m_hood.set(dutyCycle).finallyDo(() -> this.stopMotor());
+    return m_hood.set(dutyCycle);
   }
 
   public Command setSpeed(Dimensionless speed) {

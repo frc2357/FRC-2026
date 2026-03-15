@@ -3,12 +3,14 @@ package frc.robot.util;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Time;
 
 public class InterpolationUtil {
 
@@ -43,6 +45,16 @@ public class InterpolationUtil {
       Interpolator.forDouble().interpolate(
         startValue.in(RPM),
         endValue.in(RPM),
+        q
+      )
+    );
+  }
+
+  public static Time Interpolate(Time startValue, Time endValue, double q) {
+    return Seconds.of(
+      Interpolator.forDouble().interpolate(
+        startValue.in(Seconds),
+        endValue.in(Seconds),
         q
       )
     );

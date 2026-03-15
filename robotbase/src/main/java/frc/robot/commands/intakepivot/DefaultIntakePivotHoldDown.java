@@ -1,12 +1,12 @@
-package frc.robot.commands.intake;
+package frc.robot.commands.intakepivot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.INTAKE_PIVOT;
 import frc.robot.Robot;
 
-public class DefaultIntakePivotPercentOutput extends Command {
+public class DefaultIntakePivotHoldDown extends Command {
 
-  public DefaultIntakePivotPercentOutput() {
+  public DefaultIntakePivotHoldDown() {
     addRequirements(Robot.intakePivot);
   }
 

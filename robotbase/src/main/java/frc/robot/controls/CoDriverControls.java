@@ -4,14 +4,18 @@ import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
-import frc.robot.commands.intake.IntakeAxis;
+import frc.robot.commands.debug.TunnelFeed;
+import frc.robot.commands.debug.TunnelFeedReverse;
+import frc.robot.commands.floor.FloorAxis;
+import frc.robot.commands.hood.ToggleDefaultHood;
+import frc.robot.commands.intakepivot.ForceIntakeDeploy;
+import frc.robot.commands.intakerunner.IntakeRunnerAxis;
 import frc.robot.controls.util.RumbleInterface;
 
 public class CoDriverControls implements RumbleInterface {
@@ -68,36 +72,87 @@ public class CoDriverControls implements RumbleInterface {
 
     m_controller.start().onTrue(new StopAllMotors());
 
-    // change WaitCommad to ShooterHoodAxis once it is finshed
-    onlyUp.whileTrue(new WaitCommand(0));
-
     onlyUp
-      .and(m_controller.rightTrigger())
+      .and(
+        () ->
+          m_controller.getRightTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
       .whileTrue(
-        Robot.shooter.axisSpeed(() ->
+        Robot.shooter.stepAxisSpeed(() ->
           Value.of(m_controller.getRightTriggerAxis())
         )
       );
 
     onlyUp
-      .and(m_controller.leftTrigger())
+      .and(
+        () ->
+          m_controller.getLeftTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
       .whileTrue(
-        Robot.shooter.axisSpeed(() ->
+        Robot.shooter.stepAxisSpeed(() ->
           Value.of(-m_controller.getLeftTriggerAxis())
         )
       );
 
-    onlyLeft
-      .and(m_controller.leftTrigger())
+    onlyUp
+      .and(noLetterButtons)
       .whileTrue(
-        new IntakeAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
+        Robot.hood.axisSpeed(() -> Value.of(-m_controller.getRightY()))
+      );
+    onlyUp.and(m_controller.a()).whileTrue(new ToggleDefaultHood());
+
+    onlyLeft
+      .and(
+        () ->
+          m_controller.getLeftTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
+      .whileTrue(
+        new IntakeRunnerAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
       );
 
     onlyLeft
-      .and(m_controller.rightTrigger())
+      .and(
+        () ->
+          m_controller.getRightTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
       .whileTrue(
-        new IntakeAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+        new IntakeRunnerAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
       );
+
+    onlyLeft
+      .and(noLetterButtons)
+      .whileTrue(
+        Robot.intakePivot.axisSpeed(() -> Value.of(-m_controller.getRightY()))
+      );
+    // Force the intake down incase deploy fails
+    onlyLeft.and(m_controller.a()).whileTrue(new ForceIntakeDeploy());
+
+    onlyRight
+      .and(
+        () ->
+          m_controller.getRightTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
+      .whileTrue(
+        new FloorAxis(() -> Value.of(m_controller.getRightTriggerAxis()))
+      );
+
+    onlyRight
+      .and(
+        () ->
+          m_controller.getLeftTriggerAxis() >
+          Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
+      )
+      .whileTrue(
+        new FloorAxis(() -> Value.of(-m_controller.getLeftTriggerAxis()))
+      );
+
+    m_controller.rightBumper().whileTrue(new TunnelFeed());
+    m_controller.leftBumper().whileTrue(new TunnelFeedReverse());
   }
 
   private double modifyAxis(double value) {

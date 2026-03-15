@@ -6,15 +6,15 @@
 
 **Where**: m = mass of the robot in lbs a = width of the robot in inches b = length of the robot in inches
 
-**Result**: (1/12) \* m \* ((a/12)^2 + (b/12)^2) = x \* ft^2
+**Result**: (1/12) \* m \* ((a/12)^2 + (b/12)^2) = x [ lb \* ft^2 ]
 
 **Tuning**: May be necessary to tweak the MOI higher or lower. It was lower in 2024.
 
 **Note**: The official [Choreo documentation](https://choreo.autos/) Keeps a list of ways to [estimate your MOI](https://choreo.autos/usage/estimating-moi/), consider that page as well, as this is where we originally found this formula.
 
-Ex: In 2025 the MOI is calculated to be ~5.243 Kg/m^2, and this did not need tuning.
+Ex: In 2025 the MOI is calculated to be ~ 5.243 [ Kg/m^2 ], and this did not need tuning.
 
-## Tuning the PID controllers
+## Tuning the PID controllers that are located in CONSTANTS under CHOREO
 
 ### Tune x and y controller
 

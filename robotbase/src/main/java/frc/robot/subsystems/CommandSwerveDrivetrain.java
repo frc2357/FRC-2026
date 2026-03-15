@@ -21,11 +21,9 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -408,37 +406,14 @@ public class CommandSwerveDrivetrain
     super.resetTranslation(translation);
   }
 
-  public ChassisSpeeds getCurrentChassisSpeeds() {
+  public ChassisSpeeds getCurrentRobotRelativeSpeeds() {
     return super.getState().Speeds;
   }
 
-  private Twist2d m_fieldRelativeRobotVelocity = new Twist2d();
-
-  public LinearVelocity getXVelocity() {
-    return Units.MetersPerSecond.of(
-      getCurrentChassisSpeeds().vxMetersPerSecond
-    );
-  }
-
-  public LinearVelocity getYVelocity() {
-    return Units.MetersPerSecond.of(
-      getCurrentChassisSpeeds().vyMetersPerSecond
-    );
-  }
-
-  private void updateFieldVelocity() {
-    Translation2d linearFieldVelocity = new Translation2d(
-      getXVelocity().in(Units.MetersPerSecond),
-      getYVelocity().in(Units.MetersPerSecond)
-    ).rotateBy(getFieldRelativePose2d().getRotation());
-
-    m_fieldRelativeRobotVelocity = new Twist2d(
-      linearFieldVelocity.getX(),
-      linearFieldVelocity.getY(),
-      getPigeon2()
-        .getAngularVelocityZWorld()
-        .getValue()
-        .in(Units.RadiansPerSecond)
+  public ChassisSpeeds getCurrentFieldRelativeSpeeds() {
+    return ChassisSpeeds.fromRobotRelativeSpeeds(
+      getCurrentRobotRelativeSpeeds(),
+      getFieldRelativePose2d().getRotation()
     );
   }
 
@@ -448,11 +423,13 @@ public class CommandSwerveDrivetrain
     );
 
   private final SwerveRequest.FieldCentricFacingAngle m_driveAtAngle =
-    new SwerveRequest.FieldCentricFacingAngle().withHeadingPID(
-      SWERVE.HEADING_CONTROLLER_P,
-      SWERVE.HEADING_CONTROLLER_I,
-      SWERVE.HEADING_CONTROLLER_D
-    );
+    new SwerveRequest.FieldCentricFacingAngle()
+      .withHeadingPID(
+        SWERVE.HEADING_CONTROLLER_P,
+        SWERVE.HEADING_CONTROLLER_I,
+        SWERVE.HEADING_CONTROLLER_D
+      )
+      .withDriveRequestType(DriveRequestType.Velocity);
 
   public void driveFieldRelative(
     LinearVelocity x,
