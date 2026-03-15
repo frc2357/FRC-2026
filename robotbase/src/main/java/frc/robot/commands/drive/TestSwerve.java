@@ -12,32 +12,9 @@ public class TestSwerve extends SequentialCommandGroup {
   public TestSwerve() {
     super(
       new InstantCommand(() -> new ResetPerspective()),
-      new SequentialCommandGroup(
-        new ParallelDeadlineGroup(
-          new WaitCommand(1),
-          new DefaultDrive(
-            () -> Value.of(0),
-            () -> Value.of(0.5),
-            () -> Value.of(0)
-          )
-        ),
-        new ParallelDeadlineGroup(
-          new WaitCommand(1),
-          new DefaultDrive(
-            () -> Value.of(0),
-            () -> Value.of(-0.5),
-            () -> Value.of(0)
-          ),
-          new ParallelDeadlineGroup(
-            new WaitCommand(1),
-            new DefaultDrive(
-              () -> Value.of(0),
-              () -> Value.of(0),
-              () -> Value.of(.5)
-            )
-          )
-        )
-      )
+      new ParallelDeadlineGroup(new WaitCommand(1), new VelocityDrive()),
+      new ParallelDeadlineGroup(new WaitCommand(1), new VelocityDrive()),
+      new ParallelDeadlineGroup(new WaitCommand(1), new VelocityDrive())
     );
   }
 }
