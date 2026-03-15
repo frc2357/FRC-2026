@@ -495,7 +495,7 @@ public class Constants {
       new SimpleMotorFeedforward(0.12, 0.125, 0.01);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
-    public static final Dimensionless SLOW_SPEED = Percent.of(30); // double check
+    public static final AngularVelocity SLOW_SPEED = RotationsPerSecond.of(5); // checked with pit
 
     public static final AngularVelocity INITIAL_SCORE_TOLERANCE =
       RotationsPerSecond.of(0.5);
