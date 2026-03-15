@@ -47,8 +47,19 @@ import edu.wpi.first.units.measure.Time;
 import frc.robot.generated.TunerConstants;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 
 public class Constants {
+
+  public static final class ROBOT {
+
+    public static final boolean PERFORMANCE_MODE = true;
+
+    public static final TelemetryVerbosity MECHANISM_VERBOSITY =
+      Constants.ROBOT.PERFORMANCE_MODE
+        ? TelemetryVerbosity.LOW
+        : TelemetryVerbosity.HIGH;
+  }
 
   public static final class CONTROLLER {
 

@@ -95,8 +95,6 @@ public class PhotonVisionCamera {
   private Matrix<N3, N1> m_singleTagStdDevs;
   private Matrix<N3, N1> m_currentStdDevs;
 
-  private static final Field2d m_unfiltered = new Field2d();
-
   /**
    * Represents a camera from PhotonVision.
    *
@@ -136,8 +134,6 @@ public class PhotonVisionCamera {
       Double.MAX_VALUE,
       Double.MAX_VALUE
     );
-
-    SmartDashboard.putData(cameraName + " unfiltered", m_unfiltered);
   }
 
   /**
@@ -186,8 +182,6 @@ public class PhotonVisionCamera {
       if (visionEst.isEmpty()) {
         continue;
       }
-
-      m_unfiltered.setRobotPose(visionEst.get().estimatedPose.toPose2d());
 
       if (!passesRobotSpeedFilter(visionEst.get())) {
         continue;
