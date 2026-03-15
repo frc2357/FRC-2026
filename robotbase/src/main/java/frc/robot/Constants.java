@@ -305,6 +305,7 @@ public class Constants {
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
     public static final Dimensionless FLOOR_SPEED = Percent.of(80);
+    public static final Dimensionless SLOW_FLOOR_SPEED = Percent.of(10);
   }
 
   public static final class TUNNEL {
@@ -318,6 +319,7 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless TUNNEL_SPEED = Percent.of(100);
+    public static final Dimensionless SLOW_TUNNEL_SPEED = Percent.of(10);
     public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-100);
   }
 
@@ -337,8 +339,8 @@ public class Constants {
         .apply(LEFT_MOTOR_CONFIG)
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
 
-    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(70);
-    public static final Dimensionless INTAKE_JIGGLING_SPEED = Percent.of(10);
+    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(80);
+    public static final Dimensionless CLEAN_SPEED = Percent.of(10);
   }
 
   public static final class INTAKE_PIVOT {
@@ -454,8 +456,9 @@ public class Constants {
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
-    public static final Dimensionless KICK_SPEED = Percent.of(75);
-    public static final Dimensionless REVERSE_KICK_SPEED = Percent.of(-75);
+    public static final Dimensionless FEED_SPEED = Percent.of(100);
+    public static final Dimensionless SLOW_FEED_SPEED = Percent.of(10);
+    public static final Dimensionless REVERSE_FEED_SPEED = Percent.of(-100);
   }
 
   public static final class SHOOTER {

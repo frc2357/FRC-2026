@@ -6,11 +6,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
-import frc.robot.commands.drive.TestSwerve;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intakerunner.IntakeRunnerAxis;
-import frc.robot.commands.scoring.ScoreFeed;
-import frc.robot.commands.scoring.SlowPitShoot;
+import frc.robot.commands.pit.CleanFeed;
+import frc.robot.commands.pit.SlowPitShoot;
+import frc.robot.commands.pit.TestSwerve;
 
 public class PitControls {
 
@@ -24,18 +24,16 @@ public class PitControls {
   public void mapControls() {
     m_controller.b().whileTrue(new SlowPitShoot());
 
-    m_controller.x().whileTrue(new ScoreFeed());
+    m_controller.x().whileTrue(new CleanFeed());
 
     m_controller.a().whileTrue(new TestSwerve());
 
     m_controller.y().whileTrue(new IntakePivotJiggle());
 
     m_controller
-      .rightTrigger()
+      .rightBumper()
       .whileTrue(
-        new IntakeRunnerAxis(() ->
-          Percent.of(m_controller.getRightTriggerAxis())
-        )
+        new IntakeRunnerAxis(() -> Constants.INTAKE_RUNNER.CLEAN_SPEED)
       );
 
     m_controller
