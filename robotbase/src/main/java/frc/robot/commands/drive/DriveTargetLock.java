@@ -9,15 +9,12 @@ import frc.robot.Constants.SWERVE;
 import frc.robot.Robot;
 import java.util.function.Supplier;
 
-public class DrivePosePassing extends Command {
+public class DriveTargetLock extends Command {
 
   Supplier<Dimensionless> m_x;
   Supplier<Dimensionless> m_y;
 
-  public DrivePosePassing(
-    Supplier<Dimensionless> x,
-    Supplier<Dimensionless> y
-  ) {
+  public DriveTargetLock(Supplier<Dimensionless> x, Supplier<Dimensionless> y) {
     addRequirements(Robot.swerve);
 
     m_x = x;
