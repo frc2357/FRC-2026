@@ -2,6 +2,7 @@ package frc.robot.commands.drive;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Dimensionless;
@@ -31,10 +32,9 @@ public class VelocityDrive extends Command {
   @Override
   public void initialize() {
     Robot.swerve.driveFieldRelative(
-      MetersPerSecond.of(m_speedX.magnitude()),
-      MetersPerSecond.of(m_speedY.magnitude()),
-      RadiansPerSecond.of(m_rotation.magnitude())
-      // MetersPerSecond.of(SmartDashboard.getNumber("Drive Target MS", 2)),
+      MetersPerSecond.of(m_speedX.in(Value)),
+      MetersPerSecond.of(m_speedY.in(Value)),
+      RadiansPerSecond.of(m_rotation.in(Value))
     );
   }
 
