@@ -95,6 +95,8 @@ public class PhotonVisionCamera {
   private Matrix<N3, N1> m_singleTagStdDevs;
   private Matrix<N3, N1> m_currentStdDevs;
 
+  private final Field2d m_visionField = new Field2d();
+
   /**
    * Represents a camera from PhotonVision.
    *
@@ -134,6 +136,8 @@ public class PhotonVisionCamera {
       Double.MAX_VALUE,
       Double.MAX_VALUE
     );
+
+    SmartDashboard.putData("[" + cameraName + "] Field", m_visionField);
   }
 
   /**
@@ -203,6 +207,8 @@ public class PhotonVisionCamera {
         visionEst.get(),
         result.getTargets()
       );
+
+      m_visionField.setRobotPose(visionEst.get().estimatedPose.toPose2d());
     }
 
     if (m_camera.isConnected() && m_connectionLost) {
