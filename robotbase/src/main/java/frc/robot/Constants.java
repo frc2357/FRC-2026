@@ -75,6 +75,8 @@ public class Constants {
     public static final double DRIVER_RUMBLE_SECONDS = 2;
     public static final double CODRIVER_RUMBLE_SECONDS = 2;
     public static final double JOYSTICK_RAMP_EXPONENT = 1;
+
+    public static final int PIT_CONTROLLER_PORT = 5;
   }
 
   public static final class SWERVE {
@@ -309,6 +311,7 @@ public class Constants {
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
     public static final Dimensionless FLOOR_SPEED = Percent.of(80);
+    public static final Dimensionless SLOW_FLOOR_SPEED = Percent.of(10);
   }
 
   public static final class TUNNEL {
@@ -322,6 +325,7 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless TUNNEL_SPEED = Percent.of(100);
+    public static final Dimensionless SLOW_TUNNEL_SPEED = Percent.of(10);
     public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-100);
   }
 
@@ -342,6 +346,7 @@ public class Constants {
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
 
     public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(80);
+    public static final Dimensionless CLEAN_SPEED = Percent.of(10);
   }
 
   public static final class INTAKE_PIVOT {
@@ -400,6 +405,7 @@ public class Constants {
       .voltageCompensation(12);
 
     public static final Dimensionless FEED_SPEED = Percent.of(100);
+    public static final Dimensionless SLOW_FEED_SPEED = Percent.of(10);
     public static final Dimensionless REVERSE_FEED_SPEED = Percent.of(-100);
   }
 
@@ -440,6 +446,7 @@ public class Constants {
       new SimpleMotorFeedforward(0.12, 0.125, 0.01);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+    public static final AngularVelocity SLOW_SPEED = RotationsPerSecond.of(5); // checked with pit
 
     public static final Dimensionless SCORE_TOLERANCE = Percent.of(5);
     public static final Time STABLE_VELOCITY = Seconds.of(0.1);
@@ -490,6 +497,8 @@ public class Constants {
     public static final Angle LOWER_ANGLE_LIMIT = Degrees.of(0.9);
     public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(34);
     public static final Angle SIM_STARTING_POSITION = Degrees.zero();
+
+    public static final Dimensionless MANUAL_HOOD_SPEED = Percent.of(10);
 
     // Mass of the flywheel.
     // Telemetry name and verbosity for the arm.
