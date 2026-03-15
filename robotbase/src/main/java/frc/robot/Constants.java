@@ -198,10 +198,9 @@ public class Constants {
 
       public static final String NAME = "backLeft";
 
-      // Camera flipped
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-        Units.Inches.of(11.184),
         Units.Inches.of(-12.893),
+        Units.Inches.of(11.184),
         Units.Inches.of(8.587),
         new Rotation3d(
           Units.Degrees.of(6.964),
@@ -231,10 +230,9 @@ public class Constants {
 
       public static final String NAME = "backRight";
 
-      // Camera flipped
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-        Units.Inches.of(-11.184),
         Units.Inches.of(-12.893),
+        Units.Inches.of(-11.184),
         Units.Inches.of(8.587),
         new Rotation3d(
           Units.Degrees.of(-6.964),

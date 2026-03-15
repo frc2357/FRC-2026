@@ -20,20 +20,20 @@ public class CameraManager extends SubsystemBase {
   );
 
   // TODO: Enable these and add to m_cameras when we are on the robot
-  // public PhotonVisionCamera m_backLeft = new PhotonVisionCamera(
-  //   Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
-  //   Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM,
-  //   Constants.PHOTON_VISION.BACK_LEFT_CAM.kSingleTagStdDevs,
-  //   Constants.PHOTON_VISION.BACK_LEFT_CAM.kMultiTagStdDevs
-  // );
-  // public PhotonVisionCamera m_backRight = new PhotonVisionCamera(
-  //   Constants.PHOTON_VISION.BACK_RIGHT_CAM.NAME,
-  //   Constants.PHOTON_VISION.BACK_RIGHT_CAM.ROBOT_TO_CAM_TRANSFORM,
-  //   Constants.PHOTON_VISION.BACK_RIGHT_CAM.kSingleTagStdDevs,
-  //   Constants.PHOTON_VISION.BACK_RIGHT_CAM.kMultiTagStdDevs
-  // );
+  public PhotonVisionCamera m_backLeft = new PhotonVisionCamera(
+    Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
+    Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM,
+    Constants.PHOTON_VISION.BACK_LEFT_CAM.kSingleTagStdDevs,
+    Constants.PHOTON_VISION.BACK_LEFT_CAM.kMultiTagStdDevs
+  );
+  public PhotonVisionCamera m_backRight = new PhotonVisionCamera(
+    Constants.PHOTON_VISION.BACK_RIGHT_CAM.NAME,
+    Constants.PHOTON_VISION.BACK_RIGHT_CAM.ROBOT_TO_CAM_TRANSFORM,
+    Constants.PHOTON_VISION.BACK_RIGHT_CAM.kSingleTagStdDevs,
+    Constants.PHOTON_VISION.BACK_RIGHT_CAM.kMultiTagStdDevs
+  );
 
-  PhotonVisionCamera[] m_cameras = { m_shooter };
+  PhotonVisionCamera[] m_cameras = { m_shooter, m_backLeft, m_backRight };
 
   @SuppressWarnings("unchecked")
   Optional<SwervePoseEstimate>[] m_estimates = (Optional<
