@@ -14,7 +14,7 @@ import frc.robot.commands.debug.TunnelFeed;
 import frc.robot.commands.debug.TunnelFeedReverse;
 import frc.robot.commands.floor.FloorAxis;
 import frc.robot.commands.hood.ToggleDefaultHood;
-import frc.robot.commands.intakepivot.ForceIntakeDeploy;
+import frc.robot.commands.intakePivot.ForceIntakeDeploy;
 import frc.robot.commands.intakerunner.IntakeRunnerAxis;
 import frc.robot.controls.util.RumbleInterface;
 
