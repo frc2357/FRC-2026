@@ -31,6 +31,7 @@ import frc.robot.commands.scoring.teleop.TeleopScore;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
+import frc.robot.controls.PitControls;
 import frc.robot.generated.TunerConstants;
 import frc.robot.networkTables.AutoChooserManager;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -50,6 +51,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   public static DriverControls driverControls;
   public static CoDriverControls coDriverControls;
+  public static PitControls pitControls;
   private static Command m_defaultDrive;
 
   public static CommandSwerveDrivetrain swerve;
@@ -98,6 +100,7 @@ public class Robot extends TimedRobot {
 
     driverControls = new DriverControls();
     coDriverControls = new CoDriverControls();
+    pitControls = new PitControls();
     m_defaultDrive = new DefaultDrive(
       driverControls::getLeftX,
       driverControls::getLeftY,
@@ -164,7 +167,7 @@ public class Robot extends TimedRobot {
     );
     SmartDashboard.putNumber(
       "kicker speed",
-      Constants.KICKER.KICK_SPEED.in(Value)
+      Constants.KICKER.FEED_SPEED.in(Value)
     );
   }
 
