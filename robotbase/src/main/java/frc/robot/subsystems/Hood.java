@@ -84,9 +84,7 @@ public class Hood extends SubsystemBase {
       // Telemetry name and verbosity for the arm.
       .withTelemetry(
         HOOD.MECHANISM_NETWORK_KEY,
-        Constants.ROBOT.PERFORMANCE_MODE
-          ? TelemetryVerbosity.LOW
-          : TelemetryVerbosity.HIGH
+        Constants.ROBOT.MECHANISM_VERBOSITY
       );
 
     m_hood = new Pivot(m_hoodConfig);
