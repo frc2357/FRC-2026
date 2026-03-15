@@ -107,7 +107,7 @@ public class DriveNaiveTargetingHub extends Command {
     // This is the direction, in field coordinates, from the robot toward the AprilTag
 
     Translation2d targetHub = AllianceFlipUtil.apply(
-      FieldConstants.Hub.topCenterPoint.toTranslation2d()
+      FieldConstants.Hub.centerPoint
     );
     Pose3d aprilTag = FieldConstants.FIELD_LAYOUT.getTagPose(
       DriveNaiveTargetingHub.TARGET_ID

@@ -29,7 +29,7 @@ import frc.robot.util.MathUtil;
  * This file has a lot of object instantiation, if we start seeing occasional
  * loop overruns, this is a point of optimization.
  */
-public class ScoreCalculator {
+public class ShotCalculator {
 
   public record CalculatedShot(
     AngularVelocity shooterVelocity,
@@ -42,6 +42,13 @@ public class ScoreCalculator {
     Degrees.of(0),
     Rotation2d.fromDegrees(0)
   );
+
+  private final CurveTuner<Distance, AngularVelocity> m_passingShooterCurve =
+    new CurveTuner<Distance, AngularVelocity>(
+      "Passing Shooter Curve",
+      InterpolationUtil::InverseInterpolate,
+      InterpolationUtil::Interpolate
+    );
 
   private final CurveTuner<Distance, AngularVelocity> m_shooterCurve =
     new CurveTuner<Distance, AngularVelocity>(
@@ -81,7 +88,17 @@ public class ScoreCalculator {
     public static final Distance OUTPOST_CORNER = Inches.of(205); // Far corner of the outpost
   }
 
-  public ScoreCalculator() {
+  public static final class PASS_POINTS {
+
+    // These points are not exact and don't correlate to anything specific. They are mainly here for simpler interpolation.
+    public static final Distance CLOSEST = Inches.of(43);
+    public static final Distance FURTHERST = Inches.of(500);
+  }
+
+  public ShotCalculator() {
+    m_passingShooterCurve.put(PASS_POINTS.CLOSEST, RotationsPerSecond.of(50));
+    m_passingShooterCurve.put(PASS_POINTS.FURTHERST, RotationsPerSecond.of(90));
+
     m_shooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(48));
     m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(51.27));
     m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(53));
@@ -120,21 +137,26 @@ public class ScoreCalculator {
       Constants.SHOOTER.ROBOT_TO_SHOOTER
     );
 
-    Translation2d targetHub = AllianceFlipUtil.apply(
-      FieldConstants.Hub.topCenterPoint.toTranslation2d()
-    );
+    Translation2d target = AllianceFlipUtil.apply(getShotTarget());
 
     Distance targetDistance = Meters.of(
-      shooterPose.getTranslation().getDistance(targetHub)
+      shooterPose.getTranslation().getDistance(target)
     );
     SmartDashboard.putNumber(
       "Pose Computed Distance Inches",
       targetDistance.in(Inches)
     );
 
-    AngularVelocity shooterVelocity = m_shooterCurve.get(targetDistance);
-    Angle hoodAngle = m_hoodCurve.get(targetDistance);
-    Rotation2d driveAngle = computeTargetDriveAngle(robotPose, targetHub);
+    AngularVelocity shooterVelocity;
+    Angle hoodAngle;
+    if (isInAllianceZone()) {
+      shooterVelocity = m_shooterCurve.get(targetDistance);
+      hoodAngle = m_hoodCurve.get(targetDistance);
+    } else {
+      shooterVelocity = m_passingShooterCurve.get(targetDistance);
+      hoodAngle = Constants.HOOD.PASSING_STATIC_ANGLE;
+    }
+    Rotation2d driveAngle = computeTargetDriveAngle(robotPose, target);
 
     SmartDashboard.putNumber(
       "Computed Shooter RPS",
@@ -180,13 +202,11 @@ public class ScoreCalculator {
       Constants.SHOOTER.ROBOT_TO_SHOOTER
     );
 
-    Translation2d targetHub = AllianceFlipUtil.apply(
-      FieldConstants.Hub.topCenterPoint.toTranslation2d()
-    );
+    Translation2d target = AllianceFlipUtil.apply(getShotTarget());
 
     // Initial target distance
     Distance shooterToTargetDistance = Meters.of(
-      targetHub.getDistance(shooterPose.getTranslation())
+      target.getDistance(shooterPose.getTranslation())
     );
 
     // The field-relative speed of the shooter moving on the field
@@ -216,21 +236,28 @@ public class ScoreCalculator {
         shooterPose.getRotation()
       );
       futureShootertoTargetDistance = Meters.of(
-        targetHub.getDistance(futureShooterPose.getTranslation())
+        target.getDistance(futureShooterPose.getTranslation())
       );
     }
 
     // Should use a moving average to compute at least
     // hood angle and drive angle. Maybe shooter velocity too
-    AngularVelocity shooterVelocity = m_shooterCurve.get(
-      futureShootertoTargetDistance
-    );
-    Angle hoodAngle = m_hoodCurve.get(futureShootertoTargetDistance);
+    AngularVelocity shooterVelocity;
+    Angle hoodAngle;
+    if (isInAllianceZone()) {
+      shooterVelocity = m_shooterCurve.get(futureShootertoTargetDistance);
+      hoodAngle = m_hoodCurve.get(futureShootertoTargetDistance);
+    } else {
+      shooterVelocity = m_passingShooterCurve.get(
+        futureShootertoTargetDistance
+      );
+      hoodAngle = Constants.HOOD.PASSING_STATIC_ANGLE;
+    }
 
     Pose2d futureRobotPose = futureShooterPose.transformBy(
       Constants.SHOOTER.ROBOT_TO_SHOOTER.inverse()
     );
-    Rotation2d driveAngle = computeTargetDriveAngle(futureRobotPose, targetHub);
+    Rotation2d driveAngle = computeTargetDriveAngle(futureRobotPose, target);
 
     SmartDashboard.putNumber(
       "SOTF Direct Distance Inches",
@@ -295,6 +322,31 @@ public class ScoreCalculator {
     return driveAngleGuess;
   }
 
+  private boolean isInAllianceZone() {
+    Pose2d robotPose = Robot.swerve.getAllianceRelativePose2d();
+    Pose2d shooterPose = robotPose.transformBy(
+      Constants.SHOOTER.ROBOT_TO_SHOOTER
+    );
+    return shooterPose.getX() < FieldConstants.LinesVertical.allianceZone;
+  }
+
+  private Translation2d getShotTarget() {
+    Pose2d robotPose = Robot.swerve.getAllianceRelativePose2d();
+    Pose2d shooterPose = robotPose.transformBy(
+      Constants.SHOOTER.ROBOT_TO_SHOOTER
+    );
+
+    if (isInAllianceZone()) {
+      return FieldConstants.Hub.centerPoint;
+    } else {
+      if (shooterPose.getY() > FieldConstants.Hub.centerPoint.getY()) {
+        return FieldConstants.LeftBump.centerPoint;
+      } else {
+        return FieldConstants.RightBump.centerPoint;
+      }
+    }
+  }
+
   /**
    * Should be called in Robot.periodic every loop
    */
@@ -323,11 +375,19 @@ public class ScoreCalculator {
   }
 
   public AngularVelocity getShooterVelocityStationary(Distance distance) {
-    return m_shooterCurve.get(distance);
+    if (isInAllianceZone()) {
+      return m_shooterCurve.get(distance);
+    } else {
+      return m_passingShooterCurve.get(distance);
+    }
   }
 
   public Angle getHoodAngleStationary(Distance distance) {
-    return m_hoodCurve.get(distance);
+    if (isInAllianceZone()) {
+      return m_hoodCurve.get(distance);
+    } else {
+      return Constants.HOOD.PASSING_STATIC_ANGLE;
+    }
   }
 
   public void updateCurveTuners() {

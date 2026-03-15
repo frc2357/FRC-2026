@@ -9,23 +9,21 @@ import frc.robot.Constants.SWERVE;
 import frc.robot.Robot;
 import java.util.function.Supplier;
 
-public class DrivePoseTargetingHub extends Command {
+public class DriveTargetLock extends Command {
 
   Supplier<Dimensionless> m_x;
   Supplier<Dimensionless> m_y;
 
-  public DrivePoseTargetingHub(
-    Supplier<Dimensionless> x,
-    Supplier<Dimensionless> y
-  ) {
+  public DriveTargetLock(Supplier<Dimensionless> x, Supplier<Dimensionless> y) {
     addRequirements(Robot.swerve);
+
     m_x = x;
     m_y = y;
   }
 
   @Override
   public void execute() {
-    Rotation2d target = Robot.scoreCalculator.getCalculatedDriveAngle();
+    Rotation2d target = Robot.shotCalculator.getCalculatedDriveAngle();
     SmartDashboard.putNumber("Target angle", target.getDegrees());
     Robot.swerve.driveAtAngle(
       m_y.get().times(Constants.SWERVE.AXIS_MAX_SPEED).times(SWERVE.MAX_SPEED),

@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
   public static Tunnel tunnel;
 
   public static CameraManager cameraManager;
-  public static ScoreCalculator scoreCalculator;
+  public static ShotCalculator shotCalculator;
 
   public static ShiftTimer shiftTimer;
 
@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
     cameraManager = new CameraManager();
 
     swerve.registerTelemetry(logger::telemeterize);
-    scoreCalculator = new ScoreCalculator();
+    shotCalculator = new ShotCalculator();
 
     driverControls = new DriverControls();
     coDriverControls = new CoDriverControls();
@@ -170,13 +170,13 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     Robot.cameraManager.updateResult();
     Robot.cameraManager.addSwerveEstimates(Robot.swerve::addVisionMeasurement);
-    Robot.scoreCalculator.updateCalculatedShot();
+    Robot.shotCalculator.updateCalculatedShot();
 
     CommandScheduler.getInstance().run();
 
     m_robotField.setRobotPose(swerve.getFieldRelativePose2d());
 
-    scoreCalculator.updateCurveTuners();
+    shotCalculator.updateCurveTuners();
   }
 
   @Override
@@ -190,7 +190,7 @@ public class Robot extends TimedRobot {
     );
 
     // Log curve values when robot is disabled (like when match ends)
-    scoreCalculator.logCurveValues();
+    shotCalculator.logCurveValues();
   }
 
   @Override

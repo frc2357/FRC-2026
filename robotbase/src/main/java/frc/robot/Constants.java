@@ -34,7 +34,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.units.Units;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -79,7 +79,7 @@ public class Constants {
 
   public static final class SWERVE {
 
-    public static final Time TIME_TO_COAST = Units.Seconds.of(3);
+    public static final Time TIME_TO_COAST = Seconds.of(3);
 
     public static final AngularVelocity MAX_ANGULAR_RATE =
       RotationsPerSecond.of(1);
@@ -89,10 +89,8 @@ public class Constants {
     public static final AngularVelocity MAX_DRIVE_AT_ANGLE_ANGULAR_RATE =
       RadiansPerSecond.of(2);
 
-    public static final Dimensionless AXIS_MAX_ANGULAR_RATE = Units.Percent.of(
-      100
-    );
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(100);
+    public static final Dimensionless AXIS_MAX_ANGULAR_RATE = Percent.of(100);
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
     public static final double HEADING_CONTROLLER_P = 4.5;
     public static final double HEADING_CONTROLLER_I = 0;
@@ -135,14 +133,10 @@ public class Constants {
 
       // Camera flipped
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-        Units.Inches.of(-9.516),
-        Units.Inches.of(-5.028),
-        Units.Inches.of(21.137),
-        new Rotation3d(
-          Units.Degrees.of(0),
-          Units.Degrees.of(-10),
-          Units.Degrees.of(180)
-        )
+        Inches.of(-9.516),
+        Inches.of(-5.028),
+        Inches.of(21.137),
+        new Rotation3d(Degrees.of(0), Degrees.of(-10), Degrees.of(180))
       );
 
       // The standard deviations of our vision estimated poses, which affect correction rate
@@ -167,14 +161,10 @@ public class Constants {
       public static final String NAME = "shooter";
 
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-        Units.Inches.of(-9.004),
-        Units.Inches.of(12.554),
-        Units.Inches.of(15.993),
-        new Rotation3d(
-          Units.Degrees.of(10),
-          Units.Degrees.of(0),
-          Units.Degrees.of(90)
-        )
+        Inches.of(-9.004),
+        Inches.of(12.554),
+        Inches.of(15.993),
+        new Rotation3d(Degrees.of(10), Degrees.of(0), Degrees.of(90))
       );
 
       // The standard deviations of our vision estimated poses, which affect correction rate
@@ -200,13 +190,13 @@ public class Constants {
 
       // Camera flipped
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-        Units.Inches.of(11.184),
-        Units.Inches.of(-12.893),
-        Units.Inches.of(8.587),
+        Inches.of(11.184),
+        Inches.of(-12.893),
+        Inches.of(8.587),
         new Rotation3d(
-          Units.Degrees.of(6.964),
-          Units.Degrees.of(7.177),
-          Units.Degrees.of(135.864)
+          Degrees.of(6.964),
+          Degrees.of(7.177),
+          Degrees.of(135.864)
         )
       );
 
@@ -233,13 +223,13 @@ public class Constants {
 
       // Camera flipped
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
-        Units.Inches.of(-11.184),
-        Units.Inches.of(-12.893),
-        Units.Inches.of(8.587),
+        Inches.of(-11.184),
+        Inches.of(-12.893),
+        Inches.of(8.587),
         new Rotation3d(
-          Units.Degrees.of(-6.964),
-          Units.Degrees.of(7.177),
-          Units.Degrees.of(225.864)
+          Degrees.of(-6.964),
+          Degrees.of(7.177),
+          Degrees.of(225.864)
         )
       );
 
@@ -327,7 +317,7 @@ public class Constants {
 
   public static final class INTAKE_RUNNER {
 
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(75);
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(75);
 
     public static final SparkBaseConfig LEFT_MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
@@ -390,7 +380,7 @@ public class Constants {
 
   public static final class FEEDER {
 
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(100);
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
     public static final SparkBaseConfig FEEDER_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
@@ -445,9 +435,9 @@ public class Constants {
     public static final Time STABLE_VELOCITY = Seconds.of(0.1);
 
     public static final Transform2d ROBOT_TO_SHOOTER = new Transform2d(
-      Units.Inches.of(-6.781),
-      Units.Inches.of(-2.833),
-      new Rotation2d(Units.Degrees.of(90))
+      Inches.of(-6.781),
+      Inches.of(-2.833),
+      new Rotation2d(Degrees.of(90))
     );
 
     public static final class SETPOINTS {
@@ -529,6 +519,8 @@ public class Constants {
       // Farthest corner possible
       public static final Angle OUTPOST_SHOT = Degrees.of(18);
     }
+
+    public static final Angle PASSING_STATIC_ANGLE = Degrees.of(18); // TODO: Tune
   }
 
   public class SCORING {
@@ -599,8 +591,7 @@ public class Constants {
 
     // AprilTag related constants
     public static final int aprilTagCount = FIELD_LAYOUT.getTags().size();
-    public static final double aprilTagWidth =
-      edu.wpi.first.math.util.Units.inchesToMeters(6.5);
+    public static final double aprilTagWidth = Units.inchesToMeters(6.5);
 
     // Field dimensions
     public static final double fieldLength = FIELD_LAYOUT.getFieldLength();
@@ -610,24 +601,24 @@ public class Constants {
     public static class Hub {
 
       // Dimensions
-      public static final double width =
-        edu.wpi.first.math.util.Units.inchesToMeters(47.0);
-      public static final double height =
-        edu.wpi.first.math.util.Units.inchesToMeters(72.0); // includes the catcher at the top
-      public static final double innerWidth =
-        edu.wpi.first.math.util.Units.inchesToMeters(41.7);
-      public static final double innerHeight =
-        edu.wpi.first.math.util.Units.inchesToMeters(56.5);
+      public static final double width = Units.inchesToMeters(47.0);
+      public static final double height = Units.inchesToMeters(72.0); // includes the catcher at the top
+      public static final double innerWidth = Units.inchesToMeters(41.7);
+      public static final double innerHeight = Units.inchesToMeters(56.5);
 
       // Relevant reference points on alliance side
-      public static final Translation3d topCenterPoint = new Translation3d(
+      public static final Translation2d centerPoint = new Translation2d(
         FIELD_LAYOUT.getTagPose(26).get().getX() + width / 2.0,
-        fieldWidth / 2.0,
+        fieldWidth / 2.0
+      );
+      public static final Translation3d topCenterPoint = new Translation3d(
+        centerPoint.getX(),
+        centerPoint.getY(),
         height
       );
       public static final Translation3d innerCenterPoint = new Translation3d(
-        FIELD_LAYOUT.getTagPose(26).get().getX() + width / 2.0,
-        fieldWidth / 2.0,
+        centerPoint.getX(),
+        centerPoint.getY(),
         innerHeight
       );
 
@@ -684,6 +675,104 @@ public class Constants {
       public static final Pose2d leftFace = FIELD_LAYOUT.getTagPose(21)
         .get()
         .toPose2d();
+    }
+
+    public static class LeftBump {
+
+      // Dimensions
+      public static final double width = Units.inchesToMeters(73.0);
+      public static final double height = Units.inchesToMeters(6.513);
+      public static final double depth = Units.inchesToMeters(44.4);
+
+      public static final Translation2d centerPoint = new Translation2d(
+        Hub.centerPoint.getX(),
+        Hub.centerPoint.getY() + Hub.width / 2.0 + width / 2.0
+      );
+
+      // Relevant reference points on alliance side
+      public static final Translation2d nearLeftCorner = new Translation2d(
+        LinesVertical.hubCenter - width / 2,
+        Units.inchesToMeters(255)
+      );
+      public static final Translation2d nearRightCorner = Hub.nearLeftCorner;
+      public static final Translation2d farLeftCorner = new Translation2d(
+        LinesVertical.hubCenter + width / 2,
+        Units.inchesToMeters(255)
+      );
+      public static final Translation2d farRightCorner = Hub.farLeftCorner;
+
+      // Relevant reference points on opposing side
+      public static final Translation2d oppNearLeftCorner = new Translation2d(
+        LinesVertical.hubCenter - width / 2,
+        Units.inchesToMeters(255)
+      );
+      public static final Translation2d oppNearRightCorner =
+        Hub.oppNearLeftCorner;
+      public static final Translation2d oppFarLeftCorner = new Translation2d(
+        LinesVertical.hubCenter + width / 2,
+        Units.inchesToMeters(255)
+      );
+      public static final Translation2d oppFarRightCorner =
+        Hub.oppFarLeftCorner;
+    }
+
+    public static class RightBump {
+
+      // Dimensions
+      public static final double width = Units.inchesToMeters(73.0);
+      public static final double height = Units.inchesToMeters(6.513);
+      public static final double depth = Units.inchesToMeters(44.4);
+
+      public static final Translation2d centerPoint = new Translation2d(
+        Hub.centerPoint.getX(),
+        Hub.centerPoint.getY() - Hub.width / 2.0 - width / 2.0
+      );
+
+      // Relevant reference points on alliance side
+      public static final Translation2d nearLeftCorner = new Translation2d(
+        LinesVertical.hubCenter + width / 2,
+        Units.inchesToMeters(255)
+      );
+      public static final Translation2d nearRightCorner = Hub.nearLeftCorner;
+      public static final Translation2d farLeftCorner = new Translation2d(
+        LinesVertical.hubCenter - width / 2,
+        Units.inchesToMeters(255)
+      );
+      public static final Translation2d farRightCorner = Hub.farLeftCorner;
+
+      // Relevant reference points on opposing side
+      public static final Translation2d oppNearLeftCorner = new Translation2d(
+        LinesVertical.hubCenter + width / 2,
+        Units.inchesToMeters(255)
+      );
+      public static final Translation2d oppNearRightCorner =
+        Hub.oppNearLeftCorner;
+      public static final Translation2d oppFarLeftCorner = new Translation2d(
+        LinesVertical.hubCenter - width / 2,
+        Units.inchesToMeters(255)
+      );
+      public static final Translation2d oppFarRightCorner =
+        Hub.oppFarLeftCorner;
+    }
+
+    public static class LinesVertical {
+
+      public static final double center = fieldLength / 2.0;
+      public static final double starting = FIELD_LAYOUT.getTagPose(26)
+        .get()
+        .getX();
+      public static final double allianceZone = starting;
+      public static final double hubCenter =
+        FIELD_LAYOUT.getTagPose(26).get().getX() + Hub.width / 2.0;
+      public static final double neutralZoneNear =
+        center - Units.inchesToMeters(120);
+      public static final double neutralZoneFar =
+        center + Units.inchesToMeters(120);
+      public static final double oppHubCenter =
+        FIELD_LAYOUT.getTagPose(4).get().getX() + Hub.width / 2.0;
+      public static final double oppAllianceZone = FIELD_LAYOUT.getTagPose(10)
+        .get()
+        .getX();
     }
   }
 }
