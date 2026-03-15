@@ -5,20 +5,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SWERVE;
 import frc.robot.Robot;
 
-public class SetIntakeDriveModifiers extends Command {
+public class SetActionDriveModifiers extends Command {
 
   private Dimensionless m_previousTranslationModifier;
   private Dimensionless m_previousRotationModifier;
 
-  public SetIntakeDriveModifiers() {
+  public SetActionDriveModifiers() {
     m_previousTranslationModifier = Robot.swerve.getTranslationModifier();
     m_previousRotationModifier = Robot.swerve.getRotationModifier();
   }
 
   @Override
   public void initialize() {
-    Robot.swerve.setTranslationModifier(SWERVE.INTAKE_TRANSLATION_MODIFIER);
-    Robot.swerve.setRotationModifier(SWERVE.INTAKE_ROTATION_MODIFIER);
+    Robot.swerve.setTranslationModifier(SWERVE.ACTION_TRANSLATION_MODIFIER);
+    Robot.swerve.setRotationModifier(SWERVE.ACTION_ROTATION_MODIFIER);
   }
 
   @Override
