@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.Percent;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
-import frc.robot.Constants.SHOOTER;
 import frc.robot.Robot;
 import frc.robot.commands.drive.TestSwerve;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
