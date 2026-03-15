@@ -386,6 +386,11 @@ public class Constants {
 
     public static final Current AMP_STALL_THRESHOLD = Amps.of(35);
     public static final Time TIME_TO_STALL = Seconds.of(0.1);
+
+    // When intake is zeroed at the upper hard stops, fully deployed is about -160 rotations
+    public static final Angle INTAKE_DEPLOYED_ENCODER_ROTATIONS = Rotations.of(
+      -125
+    );
   }
 
   public static final class FEEDER {

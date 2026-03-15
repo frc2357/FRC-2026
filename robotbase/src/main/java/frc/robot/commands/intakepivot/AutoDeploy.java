@@ -1,7 +1,8 @@
 package frc.robot.commands.intakepivot;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Robot;
 
 public class AutoDeploy extends SequentialCommandGroup {
 
@@ -10,11 +11,8 @@ public class AutoDeploy extends SequentialCommandGroup {
    */
   public AutoDeploy() {
     super(
-      new IntakePivotDeploy(),
-      new WaitCommand(0.25),
-      new IntakePivotDeploy(),
-      new WaitCommand(0.25),
-      new IntakePivotDeploy()
+      new InstantCommand(() -> Robot.intakePivot.zeroMotorEncoder()),
+      new AutoIntakePivotDeploy()
     );
   }
 }
