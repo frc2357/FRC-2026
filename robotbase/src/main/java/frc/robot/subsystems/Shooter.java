@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
 
@@ -81,7 +82,8 @@ public class Shooter extends SubsystemBase {
       // Gearing from the motor rotor to final shaft.
       .withGearing(SHOOTER.GEARING)
       // Motor properties to prevent over currenting.
-      .withStatorCurrentLimit(SHOOTER.STALL_LIMIT);
+      .withStatorCurrentLimit(SHOOTER.STALL_LIMIT)
+      .withClosedLoopTolerance(Rotations.of(0.01));
 
     m_sparkSmartMotorController = new SparkWrapper(
       m_motorLeft,

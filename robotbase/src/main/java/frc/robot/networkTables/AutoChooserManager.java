@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.auto.AutoBase;
 import frc.robot.commands.auto.Drive24Feet;
 import frc.robot.commands.auto.FlipTest;
+import frc.robot.commands.auto.RightTrench;
 import frc.robot.commands.auto.SpinnyCircleAroundBlueHub;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ public class AutoChooserManager {
     new Drive24Feet(),
     new FlipTest(),
     new SpinnyCircleAroundBlueHub(),
+    new RightTrench(),
   };
 
   private AutoChooser m_autoChooser = new AutoChooser();
