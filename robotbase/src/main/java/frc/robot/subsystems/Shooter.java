@@ -180,8 +180,8 @@ public class Shooter extends SubsystemBase {
     m_shooter.setDutyCycleSetpoint(0);
   }
 
-  public Command waitUntilTargetVelocity() {
-    var trigger = new Trigger(
+  public Trigger isAtTargetVelocity() {
+    return new Trigger(
       () ->
         m_sparkSmartMotorController
           .getMechanismSetpointVelocity()
@@ -193,7 +193,6 @@ public class Shooter extends SubsystemBase {
             SHOOTER.SCORE_TOLERANCE.in(Value)
           )
     ).debounce(SHOOTER.STABLE_VELOCITY.in(Seconds), DebounceType.kRising);
-    return Commands.waitUntil(trigger);
   }
 
   @Override

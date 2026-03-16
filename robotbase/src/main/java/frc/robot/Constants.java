@@ -26,6 +26,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -562,6 +563,17 @@ public class Constants {
     public static final int DRIVE_ANGLE_CONVERGE_ITERATIONS = 2;
 
     public static final Time TIME_TO_WARN_FOR_ACTIVE_HUB = Seconds.of(10);
+
+    public static final Rectangle2d[] NO_SHOOT_ZONES = new Rectangle2d[] {
+      // This rect represents a 47in x 47in square centered on the neutral zone side of the hub.
+      // Basically the hub if it were translated 47in towards the neutral zone.
+      new Rectangle2d(
+        FieldConstants.Hub.farRightCorner,
+        FieldConstants.Hub.farRightCorner.plus(
+          new Translation2d(FieldConstants.Hub.width, FieldConstants.Hub.width)
+        )
+      ),
+    };
   }
 
   public class SHIFT {
