@@ -169,7 +169,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     Robot.cameraManager.updateResult();
-    //Robot.cameraManager.addSwerveEstimates(Robot.swerve::addVisionMeasurement);
+    if (!DriverStation.isAutonomous()) {
+      Robot.cameraManager.addSwerveEstimates(
+        Robot.swerve::addVisionMeasurement
+      );
+    }
     Robot.scoreCalculator.updateCalculatedShot();
 
     CommandScheduler.getInstance().run();
