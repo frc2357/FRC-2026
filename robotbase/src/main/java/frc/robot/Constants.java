@@ -290,6 +290,7 @@ public class Constants {
     public static final int INTAKE_PIVOT_MOTOR = 33;
 
     public static final int FEEDER_MOTOR = 32;
+    public static final int KICKER_MOTOR = 35;
 
     public static final int HOOD_MOTOR = 28;
 
@@ -402,6 +403,21 @@ public class Constants {
 
     public static final Dimensionless FEED_SPEED = Percent.of(100);
     public static final Dimensionless REVERSE_FEED_SPEED = Percent.of(-100);
+  }
+
+  public static final class KICKER {
+
+    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(100);
+
+    public static final SparkBaseConfig KICKER_CONFIG = new SparkMaxConfig()
+      .idleMode(IdleMode.kCoast)
+      .inverted(false)
+      .smartCurrentLimit(15, 10)
+      .openLoopRampRate(0.25)
+      .voltageCompensation(12);
+
+    public static final Dimensionless KICK_SPEED = Percent.of(100);
+    public static final Dimensionless REVERSE_KICK_SPEED = Percent.of(-100);
   }
 
   public static final class SHOOTER {
