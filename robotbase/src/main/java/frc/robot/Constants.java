@@ -391,6 +391,9 @@ public class Constants {
     public static final Angle INTAKE_DEPLOYED_ENCODER_ROTATIONS = Rotations.of(
       -125
     );
+
+    // Maximum amount of time we can stall the intake against the hardstop without ripping it off
+    public static final Time INTAKE_MAXIMUM_STALL_TIME = Seconds.of(3);
   }
 
   public static final class FEEDER {

@@ -20,9 +20,9 @@ import frc.robot.commands.intakepivot.IntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intaking.TeleopIntake;
 import frc.robot.commands.scoring.Score;
-import frc.robot.commands.scoring.VisionScore;
 import frc.robot.commands.scoring.teleop.HubScore;
 import frc.robot.commands.scoring.teleop.OutpostScore;
+import frc.robot.commands.scoring.teleop.TeleopShoot;
 import frc.robot.commands.scoring.teleop.TrenchScore;
 import frc.robot.controls.util.RumbleInterface;
 
@@ -57,7 +57,7 @@ public class DriverControls implements RumbleInterface {
 
     m_controller
       .rightTrigger()
-      .whileTrue(new VisionScore(this::getLeftX, this::getLeftY));
+      .whileTrue(new TeleopShoot(this::getLeftX, this::getLeftY));
     m_controller
       .leftBumper()
       .whileTrue(
