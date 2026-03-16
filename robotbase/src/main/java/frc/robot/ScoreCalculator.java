@@ -82,20 +82,20 @@ public class ScoreCalculator {
   }
 
   public ScoreCalculator() {
-    m_shooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(48));
-    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(51.27));
-    m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(53));
-    m_shooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(56));
+    m_shooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(45));
+    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(50));
+    m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(52));
+    m_shooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(54));
     m_shooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(58));
-    m_shooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(60));
+    m_shooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(61));
     m_shooterCurve.put(SHOT_POINTS.OUTPOST_CORNER, RotationsPerSecond.of(64));
 
     m_hoodCurve.put(SHOT_POINTS.HUB, Degrees.of(1));
-    m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(3.44));
-    m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(5.75));
-    m_hoodCurve.put(SHOT_POINTS.TRENCH, Degrees.of(8.9));
-    m_hoodCurve.put(SHOT_POINTS.POINT_5, Degrees.of(14));
-    m_hoodCurve.put(SHOT_POINTS.POINT_6, Degrees.of(15));
+    m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(4));
+    m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(7));
+    m_hoodCurve.put(SHOT_POINTS.TRENCH, Degrees.of(10.5));
+    m_hoodCurve.put(SHOT_POINTS.POINT_5, Degrees.of(13));
+    m_hoodCurve.put(SHOT_POINTS.POINT_6, Degrees.of(16.5));
     m_hoodCurve.put(SHOT_POINTS.OUTPOST_CORNER, Degrees.of(18));
 
     m_timeOfFlightCurve.put(SHOT_POINTS.HUB, Seconds.of(1.005));

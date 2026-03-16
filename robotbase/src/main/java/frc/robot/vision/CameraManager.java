@@ -1,10 +1,15 @@
 package frc.robot.vision;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.PHOTON_VISION;
+import frc.robot.Constants.SHOOTER;
 import frc.robot.vision.PhotonVisionCamera.SwervePoseEstimate;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -20,20 +25,22 @@ public class CameraManager extends SubsystemBase {
   );
 
   // TODO: Enable these and add to m_cameras when we are on the robot
-  // public PhotonVisionCamera m_backLeft = new PhotonVisionCamera(
-  //   Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
-  //   Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM,
-  //   Constants.PHOTON_VISION.BACK_LEFT_CAM.kSingleTagStdDevs,
-  //   Constants.PHOTON_VISION.BACK_LEFT_CAM.kMultiTagStdDevs
-  // );
-  // public PhotonVisionCamera m_backRight = new PhotonVisionCamera(
-  //   Constants.PHOTON_VISION.BACK_RIGHT_CAM.NAME,
-  //   Constants.PHOTON_VISION.BACK_RIGHT_CAM.ROBOT_TO_CAM_TRANSFORM,
-  //   Constants.PHOTON_VISION.BACK_RIGHT_CAM.kSingleTagStdDevs,
-  //   Constants.PHOTON_VISION.BACK_RIGHT_CAM.kMultiTagStdDevs
-  // );
+  public PhotonVisionCamera m_backLeft = new PhotonVisionCamera(
+    Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
+    Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM,
+    Constants.PHOTON_VISION.BACK_LEFT_CAM.kSingleTagStdDevs,
+    Constants.PHOTON_VISION.BACK_LEFT_CAM.kMultiTagStdDevs
+  );
+  public PhotonVisionCamera m_backRight = new PhotonVisionCamera(
+    Constants.PHOTON_VISION.BACK_RIGHT_CAM.NAME,
+    Constants.PHOTON_VISION.BACK_RIGHT_CAM.ROBOT_TO_CAM_TRANSFORM,
+    Constants.PHOTON_VISION.BACK_RIGHT_CAM.kSingleTagStdDevs,
+    Constants.PHOTON_VISION.BACK_RIGHT_CAM.kMultiTagStdDevs
+  );
 
   PhotonVisionCamera[] m_cameras = { m_shooter };
+
+  // PhotonVisionCamera[] m_cameras = { m_shooter, m_backLeft, m_backRight };
 
   @SuppressWarnings("unchecked")
   Optional<SwervePoseEstimate>[] m_estimates = (Optional<
