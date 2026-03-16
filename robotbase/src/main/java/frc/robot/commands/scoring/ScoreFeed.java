@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.feeder.FeederSetSpeed;
 import frc.robot.commands.floor.FloorSetSpeed;
+import frc.robot.commands.kicker.KickerSetSpeed;
 import frc.robot.commands.tunnel.TunnelSetSpeed;
 
 public class ScoreFeed extends ParallelCommandGroup {
@@ -18,6 +19,14 @@ public class ScoreFeed extends ParallelCommandGroup {
           SmartDashboard.getNumber(
             "feed speed",
             Constants.FEEDER.FEED_SPEED.in(Value)
+          )
+        )
+      ),
+      new KickerSetSpeed(() ->
+        Value.of(
+          SmartDashboard.getNumber(
+            "kicker speed",
+            Constants.KICKER.KICK_SPEED.in(Value)
           )
         )
       ),

@@ -39,6 +39,7 @@ import frc.robot.subsystems.Floor;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.IntakePivot;
 import frc.robot.subsystems.IntakeRunner;
+import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tunnel;
 import frc.robot.triggers.ShiftWarning;
@@ -64,6 +65,7 @@ public class Robot extends TimedRobot {
   public static Shooter shooter;
   public static Hood hood;
   public static Feeder feeder;
+  public static Kicker kicker;
   public static Tunnel tunnel;
 
   public static CameraManager cameraManager;
@@ -86,6 +88,7 @@ public class Robot extends TimedRobot {
     hood = new Hood();
     floor = new Floor();
     feeder = new Feeder();
+    kicker = new Kicker();
     tunnel = new Tunnel();
 
     cameraManager = new CameraManager();
@@ -158,6 +161,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber(
       "feed speed",
       Constants.FEEDER.FEED_SPEED.in(Value)
+    );
+    SmartDashboard.putNumber(
+      "kicker speed",
+      Constants.KICKER.KICK_SPEED.in(Value)
     );
   }
 
