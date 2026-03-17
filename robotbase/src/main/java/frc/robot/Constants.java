@@ -422,8 +422,8 @@ public class Constants {
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
-    public static final Dimensionless KICK_SPEED = Percent.of(100);
-    public static final Dimensionless REVERSE_KICK_SPEED = Percent.of(-100);
+    public static final Dimensionless KICK_SPEED = Percent.of(75);
+    public static final Dimensionless REVERSE_KICK_SPEED = Percent.of(-75);
   }
 
   public static final class SHOOTER {
