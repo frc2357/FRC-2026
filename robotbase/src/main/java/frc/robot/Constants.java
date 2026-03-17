@@ -386,6 +386,14 @@ public class Constants {
 
     public static final Current AMP_STALL_THRESHOLD = Amps.of(35);
     public static final Time TIME_TO_STALL = Seconds.of(0.1);
+
+    // When intake is zeroed at the upper hard stops, fully deployed is about -160 rotations
+    public static final Angle INTAKE_DEPLOYED_ENCODER_ROTATIONS = Rotations.of(
+      -125
+    );
+
+    // Maximum amount of time we can stall the intake against the hardstop without ripping it off
+    public static final Time INTAKE_MAXIMUM_STALL_TIME = Seconds.of(3);
   }
 
   public static final class FEEDER {
@@ -409,13 +417,13 @@ public class Constants {
 
     public static final SparkBaseConfig KICKER_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(false)
+      .inverted(true)
       .smartCurrentLimit(15, 10)
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
-    public static final Dimensionless KICK_SPEED = Percent.of(100);
-    public static final Dimensionless REVERSE_KICK_SPEED = Percent.of(-100);
+    public static final Dimensionless KICK_SPEED = Percent.of(75);
+    public static final Dimensionless REVERSE_KICK_SPEED = Percent.of(-75);
   }
 
   public static final class SHOOTER {
