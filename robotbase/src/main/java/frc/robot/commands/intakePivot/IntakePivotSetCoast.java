@@ -7,12 +7,12 @@ import frc.robot.Robot;
 public class IntakePivotSetCoast extends Command {
 
   public IntakePivotSetCoast() {
-    addRequirements(Robot.swerve);
+    addRequirements(Robot.intakePivot);
   }
 
   @Override
   public void initialize() {
-    Robot.swerve.configNeutralMode(NeutralModeValue.Coast);
+    Robot.intakePivot.configNeutralMode(NeutralModeValue.Coast);
   }
 
   @Override

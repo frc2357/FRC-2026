@@ -7,12 +7,12 @@ import frc.robot.Robot;
 public class HoodSetCoast extends Command {
 
   public HoodSetCoast() {
-    addRequirements(Robot.swerve);
+    addRequirements(Robot.hood);
   }
 
   @Override
   public void initialize() {
-    Robot.swerve.configNeutralMode(NeutralModeValue.Coast);
+    Robot.hood.configNeutralMode(NeutralModeValue.Coast);
   }
 
   @Override
