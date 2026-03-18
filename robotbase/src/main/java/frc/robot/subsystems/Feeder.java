@@ -75,7 +75,8 @@ public class Feeder extends SubsystemBase {
       .withGearing(FEEDER.GEARING)
       // Motor properties to prevent over currenting.
       .withStatorCurrentLimit(FEEDER.STALL_LIMIT)
-      .withClosedLoopTolerance(Rotations.of(0.01));
+      .withClosedLoopTolerance(Rotations.of(0.01))
+      .withMotorInverted(FEEDER.INVERTED);
 
     m_sparkSmartMotorController = new SparkWrapper(
       m_motor,

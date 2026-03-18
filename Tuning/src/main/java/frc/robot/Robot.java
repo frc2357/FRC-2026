@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Value;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.FeederTuningSubsystem;
 import frc.robot.subsystems.HoodTuningSubsystem;
 import frc.robot.subsystems.ShooterTuningSubsystem;
 
@@ -20,17 +21,20 @@ public class Robot extends TimedRobot {
 
   ShooterTuningSubsystem m_shooter;
   HoodTuningSubsystem m_hood;
+  FeederTuningSubsystem m_feeder;
 
   public Robot() {
-    m_shooter = new ShooterTuningSubsystem();
+    //m_shooter = new ShooterTuningSubsystem();
     //m_hood = new HoodTuningSubsystem();
+    m_feeder = new FeederTuningSubsystem();
     m_controller = new XboxController(0);
   }
 
   @Override
   public void robotPeriodic() {
-    m_shooter.updateDashboard();
+    //m_shooter.updateDashboard();
     //m_hood.updateDashboard();
+    m_feeder.updateDashboard();
   }
 
   @Override
@@ -44,8 +48,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    m_shooter.teleopPeriodic();
+    //m_shooter.teleopPeriodic();
     //m_hood.teleopPeriodic();
+    m_feeder.teleopPeriodic();
   }
 
   @Override
@@ -53,7 +58,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-    m_shooter.setAxisSpeed(Value.of(-m_controller.getRightY()));
+    // m_shooter.setAxisSpeed(Value.of(-m_controller.getRightY()));
     //m_hood.setAxisSpeed(Value.of(-m_controller.getRightY()));
+    m_feeder.setAxisSpeed(Value.of(-m_controller.getRightY()));
   }
 }

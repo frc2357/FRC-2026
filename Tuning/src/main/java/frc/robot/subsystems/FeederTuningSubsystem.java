@@ -25,15 +25,15 @@ import frc.robot.Constants.FEEDER;
 
 public class FeederTuningSubsystem implements Sendable {
 
-  private SparkMax m_motorLeft;
+  private SparkMax m_motor;
   private SparkClosedLoopController m_PIDController;
   private RelativeEncoder m_encoder;
 
-  public double P = 0.00;
+  public double P = 0.005;
   public double I = 0;
   public double D = 0;
-  public double staticFF = 0.0;
-  public double velocityFF = 0.0;
+  public double staticFF = 0.15;
+  public double velocityFF = 0.125;
   public double accelerationFF = 0.0;
   public AngularVelocity maxVelocity = RotationsPerSecond.of(77); // Max at free speed is ~96, 80% is 77
   public AngularAcceleration maxAcceleration = RotationsPerSecondPerSecond.of(
@@ -46,15 +46,15 @@ public class FeederTuningSubsystem implements Sendable {
   private AngularVelocity m_targetVelocity = Units.RotationsPerSecond.of(0);
 
   public FeederTuningSubsystem() {
-    m_motorLeft = new SparkMax(CAN_ID.FEEDER_MOTOR, MotorType.kBrushless);
+    m_motor = new SparkMax(CAN_ID.FEEDER_MOTOR, MotorType.kBrushless);
 
-    m_motorLeft.configure(
+    m_motor.configure(
       m_motorconfig,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
     );
-    m_PIDController = m_motorLeft.getClosedLoopController();
-    m_encoder = m_motorLeft.getEncoder();
+    m_PIDController = m_motor.getClosedLoopController();
+    m_encoder = m_motor.getEncoder();
 
     Preferences.initDouble("feederP", P);
     Preferences.initDouble("feederI", I);
@@ -100,29 +100,29 @@ public class FeederTuningSubsystem implements Sendable {
   }
 
   public void displayDashboard() {
-    SmartDashboard.putNumber("Shooter P", P);
-    SmartDashboard.putNumber("Shooter I", I);
-    SmartDashboard.putNumber("Shooter D", D);
-    SmartDashboard.putNumber("Shooter Static FF", staticFF);
-    SmartDashboard.putNumber("Shooter Velocity FF", velocityFF);
-    SmartDashboard.putNumber("Shooter Acceleration FF", accelerationFF);
+    SmartDashboard.putNumber("Feeder P", P);
+    SmartDashboard.putNumber("Feeder I", I);
+    SmartDashboard.putNumber("Feeder D", D);
+    SmartDashboard.putNumber("Feeder Static FF", staticFF);
+    SmartDashboard.putNumber("Feeder Velocity FF", velocityFF);
+    SmartDashboard.putNumber("Feeder Acceleration FF", accelerationFF);
 
     SmartDashboard.putNumber(
-      "Shooter MaxVel RPS",
+      "Feeder MaxVel RPS",
       maxVelocity.in(RotationsPerSecond)
     );
     SmartDashboard.putNumber(
-      "Shooter MaxAccel RPS",
+      "Feeder MaxAccel RPS",
       maxAcceleration.in(RotationsPerSecondPerSecond)
     );
     SmartDashboard.putNumber("RPS Tolerance", rpsTolerance);
     SmartDashboard.putNumber("Motor Velocity RPS", m_encoder.getVelocity());
-    SmartDashboard.putNumber("Shooter Target RPS", 0);
+    SmartDashboard.putNumber("Feeder Target RPS", 0);
 
     SmartDashboard.putBoolean("Is At Target", isAtTargetSpeed());
-    SmartDashboard.putNumber("Voltage", m_motorLeft.getBusVoltage());
+    SmartDashboard.putNumber("Voltage", m_motor.getBusVoltage());
     SmartDashboard.putBoolean(
-      "Shooter Running",
+      "Feeder Running",
       !getVelocity().isNear(RotationsPerSecond.zero(), rpsTolerance)
     );
     SmartDashboard.putData("Save feeder Config", this);
@@ -141,7 +141,7 @@ public class FeederTuningSubsystem implements Sendable {
       .cruiseVelocity(maxVelocity.in(RotationsPerSecond))
       .allowedProfileError(rpsTolerance);
 
-    m_motorLeft.configure(
+    m_motor.configure(
       m_motorconfig,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kNoPersistParameters
@@ -149,19 +149,19 @@ public class FeederTuningSubsystem implements Sendable {
   }
 
   public void updateDashboard() {
-    double newP = SmartDashboard.getNumber("Shooter P", 0);
-    double newI = SmartDashboard.getNumber("Shooter I", 0);
-    double newD = SmartDashboard.getNumber("Shooter D", 0);
-    double newStaticFF = SmartDashboard.getNumber("Shooter Static FF", 0);
-    double newVelocityFF = SmartDashboard.getNumber("Shooter Velocity FF", 0);
+    double newP = SmartDashboard.getNumber("Feeder P", 0);
+    double newI = SmartDashboard.getNumber("Feeder I", 0);
+    double newD = SmartDashboard.getNumber("Feeder D", 0);
+    double newStaticFF = SmartDashboard.getNumber("Feeder Static FF", 0);
+    double newVelocityFF = SmartDashboard.getNumber("Feeder Velocity FF", 0);
     double newAccelerationFF = SmartDashboard.getNumber(
-      "Shooter Acceleration FF",
+      "Feeder Acceleration FF",
       0
     );
 
-    double newMaxVelocity = SmartDashboard.getNumber("Shooter MaxVel RPS", 0);
+    double newMaxVelocity = SmartDashboard.getNumber("Feeder MaxVel RPS", 0);
     double newMaxAcceleration = SmartDashboard.getNumber(
-      "Shooter MaxAccel RPS",
+      "Feeder MaxAccel RPS",
       0
     );
     double newRpsTolerance = SmartDashboard.getNumber(
@@ -174,16 +174,16 @@ public class FeederTuningSubsystem implements Sendable {
       getVelocity().in(RotationsPerSecond)
     );
 
-    SmartDashboard.putNumber("Voltage", m_motorLeft.getBusVoltage());
+    SmartDashboard.putNumber("Voltage", m_motor.getBusVoltage());
     SmartDashboard.putBoolean(
-      "Shooter Running",
+      "Feeder Running",
       !getVelocity().isNear(RotationsPerSecond.zero(), rpsTolerance)
     );
     SmartDashboard.putBoolean("Is At Target", isAtTargetSpeed());
 
     m_targetVelocity = RotationsPerSecond.of(
       SmartDashboard.getNumber(
-        "Shooter Target RPS",
+        "Feeder Target RPS",
         m_targetVelocity.in(RotationsPerSecond)
       )
     );
@@ -213,15 +213,15 @@ public class FeederTuningSubsystem implements Sendable {
   }
 
   public void setSpeed(Dimensionless percentOutput) {
-    m_motorLeft.set(percentOutput.in(Value));
+    m_motor.set(percentOutput.in(Value));
   }
 
   public void setAxisSpeed(Dimensionless speed) {
-    m_motorLeft.set(speed.times(FEEDER.AXIS_MAX_SPEED).in(Value));
+    m_motor.set(speed.times(FEEDER.AXIS_MAX_SPEED).in(Value));
   }
 
   public void stop() {
-    m_motorLeft.stopMotor();
+    m_motor.stopMotor();
   }
 
   public AngularVelocity getVelocity() {

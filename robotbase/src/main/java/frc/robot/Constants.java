@@ -397,10 +397,12 @@ public class Constants {
 
     public static final Current STALL_LIMIT = Amps.of(20);
 
+    public static final boolean INVERTED = true;
+
     public static final SparkBaseConfig FEEDER_BASE_CONFIG =
       new SparkMaxConfig()
         .idleMode(IdleMode.kCoast)
-        .inverted(true)
+        .inverted(INVERTED)
         .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 10)
         .openLoopRampRate(0.25)
         .voltageCompensation(12);
@@ -422,19 +424,21 @@ public class Constants {
     public static final double P = 0.005;
     public static final double I = 0;
     public static final double D = 0;
-    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(5767);
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(
+      5767
+    ).times(0.8);
     public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
       RotationsPerSecondPerSecond.of(150);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(0.12, 0.125, 0.01);
+      new SimpleMotorFeedforward(0.15, 0.125, 0.0);
 
     public static final Dimensionless FEED_SPEED_PERCENT = Percent.of(100);
     public static final Dimensionless REVERSE_FEED_SPEED_PERCENT = Percent.of(
       -100
     );
 
-    public static final AngularVelocity FEED_SPEED = RotationsPerSecond.of(60);
+    public static final AngularVelocity FEED_SPEED = RotationsPerSecond.of(77);
   }
 
   public static final class KICKER {
