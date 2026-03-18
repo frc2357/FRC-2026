@@ -180,7 +180,7 @@ public class Shooter extends SubsystemBase {
     m_shooter.setDutyCycleSetpoint(0);
   }
 
-  public Trigger isAtTargetVelocity() {
+  public Trigger isAtInitialTargetVelocity() {
     return new Trigger(
       () ->
         m_sparkSmartMotorController
@@ -190,7 +190,22 @@ public class Shooter extends SubsystemBase {
           .getMechanismVelocity()
           .isNear(
             m_sparkSmartMotorController.getMechanismSetpointVelocity().get(),
-            SHOOTER.SCORE_TOLERANCE.in(Value)
+            SHOOTER.INITIAL_SCORE_TOLERANCE.in(Value)
+          )
+    ).debounce(SHOOTER.STABLE_VELOCITY.in(Seconds), DebounceType.kRising);
+  }
+
+  public Trigger isAtContinuousTargetVelocity() {
+    return new Trigger(
+      () ->
+        m_sparkSmartMotorController
+          .getMechanismSetpointVelocity()
+          .isPresent() &&
+        m_sparkSmartMotorController
+          .getMechanismVelocity()
+          .isNear(
+            m_sparkSmartMotorController.getMechanismSetpointVelocity().get(),
+            SHOOTER.CONTINUOUS_SCORE_TOLERANCE.in(Value)
           )
     ).debounce(SHOOTER.STABLE_VELOCITY.in(Seconds), DebounceType.kRising);
   }

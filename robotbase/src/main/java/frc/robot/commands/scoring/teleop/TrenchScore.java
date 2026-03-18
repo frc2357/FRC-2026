@@ -1,9 +1,10 @@
 package frc.robot.commands.scoring.teleop;
 
 import frc.robot.Constants;
-import frc.robot.commands.scoring.Score;
+import frc.robot.commands.scoring.auto.AutoScore;
 
-public class TrenchScore extends Score {
+// Extending AutoScore to avoid all the constraints of TeleopScore
+public class TrenchScore extends AutoScore {
 
   public TrenchScore() {
     super(

@@ -101,6 +101,10 @@ public class Constants {
       55
     );
     public static final Dimensionless ACTION_ROTATION_MODIFIER = Percent.of(50);
+
+    public static final Angle TELEOP_SHOOT_DRIVE_ANGLE_TOLERANCE = Degrees.of(
+      15
+    );
   }
 
   public static final class PHOTON_VISION {
@@ -362,7 +366,7 @@ public class Constants {
         .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
         .voltageCompensation(12);
 
-    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50);
 
     public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(-5);
 
@@ -404,7 +408,7 @@ public class Constants {
 
   public static final class KICKER {
 
-    public static final Dimensionless AXIS_MAX_SPEED = Units.Percent.of(100);
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
     public static final SparkBaseConfig KICKER_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
@@ -455,7 +459,10 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
-    public static final Dimensionless SCORE_TOLERANCE = Percent.of(5);
+    public static final Dimensionless INITIAL_SCORE_TOLERANCE = Percent.of(5);
+    public static final Dimensionless CONTINUOUS_SCORE_TOLERANCE = Percent.of(
+      10
+    );
     public static final Time STABLE_VELOCITY = Seconds.of(0.1);
 
     public static final Transform2d ROBOT_TO_SHOOTER = new Transform2d(

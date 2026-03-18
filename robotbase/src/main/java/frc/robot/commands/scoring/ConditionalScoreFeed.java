@@ -27,6 +27,14 @@ public class ConditionalScoreFeed extends Command {
           )
         )
       );
+      Robot.kicker.setSpeed(
+        Value.of(
+          SmartDashboard.getNumber(
+            "kicker speed",
+            Constants.KICKER.KICK_SPEED.in(Value)
+          )
+        )
+      );
       Robot.tunnel.setSpeed(
         Value.of(
           SmartDashboard.getNumber(
@@ -60,6 +68,7 @@ public class ConditionalScoreFeed extends Command {
 
   private void stopAllFeeding() {
     Robot.feeder.stop();
+    Robot.kicker.stop();
     Robot.tunnel.stop();
     Robot.floor.stop();
   }
