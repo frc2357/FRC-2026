@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
 
@@ -188,10 +189,11 @@ public class Shooter extends SubsystemBase {
           .isPresent() &&
         m_sparkSmartMotorController
           .getMechanismVelocity()
-          .isNear(
-            m_sparkSmartMotorController.getMechanismSetpointVelocity().get(),
-            SHOOTER.INITIAL_SCORE_TOLERANCE.in(Value)
+          .minus(
+            m_sparkSmartMotorController.getMechanismSetpointVelocity().get()
           )
+          .abs(RotationsPerSecond) <=
+        SHOOTER.INITIAL_SCORE_TOLERANCE.in(RotationsPerSecond)
     ).debounce(SHOOTER.STABLE_VELOCITY.in(Seconds), DebounceType.kRising);
   }
 

@@ -85,6 +85,26 @@ public final class Constants {
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
   }
 
+  public static final class FEEDER {
+
+    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
+      .idleMode(IdleMode.kCoast)
+      .inverted(false)
+      .openLoopRampRate(0.25)
+      .smartCurrentLimit(40, 40)
+      .voltageCompensation(12);
+
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("1:1")
+    );
+
+    public static final EncoderConfig ENCODER_CONFIG = MOTOR_CONFIG.encoder
+      .positionConversionFactor(GEARING.getRotorToMechanismRatio())
+      .velocityConversionFactor(GEARING.getRotorToMechanismRatio() / 60.0);
+
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+  }
+
   // The hood's max RPS is ~0.49
   // The encoder shaft max RPS is ~4.06
   public static final class HOOD {

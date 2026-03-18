@@ -1,5 +1,6 @@
 package frc.robot.commands.scoring;
 
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,11 +20,11 @@ public class ConditionalScoreFeed extends Command {
   @Override
   public void execute() {
     if (m_condition.getAsBoolean()) {
-      Robot.feeder.setSpeed(
-        Value.of(
+      Robot.feeder.setVelocitySetpoint(
+        RotationsPerSecond.of(
           SmartDashboard.getNumber(
             "feed speed",
-            Constants.FEEDER.FEED_SPEED.in(Value)
+            Constants.FEEDER.FEED_SPEED.in(RotationsPerSecond)
           )
         )
       );
@@ -67,7 +68,7 @@ public class ConditionalScoreFeed extends Command {
   }
 
   private void stopAllFeeding() {
-    Robot.feeder.stop();
+    Robot.feeder.stopMotor();
     Robot.kicker.stop();
     Robot.tunnel.stop();
     Robot.floor.stop();

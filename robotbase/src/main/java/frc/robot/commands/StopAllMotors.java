@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Robot;
-import frc.robot.commands.feeder.FeederStop;
 import frc.robot.commands.floor.FloorStop;
 import frc.robot.commands.intakerunner.IntakeRunnerStop;
 import frc.robot.commands.kicker.KickerStop;
@@ -16,7 +15,7 @@ public class StopAllMotors extends ParallelCommandGroup {
     super(
       new IntakeRunnerStop(),
       new FloorStop(),
-      new FeederStop(),
+      Robot.feeder.stopCommand(),
       new KickerStop(),
       new TunnelStop(),
       Robot.hood.stopCommand(),
