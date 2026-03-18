@@ -339,6 +339,8 @@ public class Constants {
         .apply(LEFT_MOTOR_CONFIG)
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
 
+    public static final Dimensionless INTAKE_JIGGLING_SPEED = Percent.of(10);
+
     public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(80);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);
   }
@@ -404,6 +406,7 @@ public class Constants {
     public static final Current STALL_LIMIT = Amps.of(40);
 
     public static final boolean INVERTED = true;
+    public static final Dimensionless SLOW_FEED_SPEED = Percent.of(10);
 
     public static final SparkBaseConfig FEEDER_BASE_CONFIG =
       new SparkMaxConfig()
@@ -458,8 +461,8 @@ public class Constants {
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
+    public static final Dimensionless CLEAN_SPEED = Percent.of(10);
     public static final Dimensionless FEED_SPEED = Percent.of(100);
-    public static final Dimensionless SLOW_FEED_SPEED = Percent.of(10);
     public static final Dimensionless REVERSE_FEED_SPEED = Percent.of(-100);
   }
 
@@ -522,6 +525,8 @@ public class Constants {
       public static final AngularVelocity TRENCH_SHOT = RotationsPerSecond.of(
         54
       );
+
+      public static final AngularVelocity PIT_SHOT = RotationsPerSecond.of(5);
 
       // Farthest corner possible
       public static final AngularVelocity OUTPOST_SHOT = RotationsPerSecond.of(
@@ -592,6 +597,8 @@ public class Constants {
       public static final Angle HUB_SHOT = Degrees.of(1);
 
       public static final Angle TRENCH_SHOT = Degrees.of(10.5);
+
+      public static final Angle PIT_SHOT = Degrees.of(10);
 
       // Farthest corner possible
       public static final Angle OUTPOST_SHOT = Degrees.of(18);

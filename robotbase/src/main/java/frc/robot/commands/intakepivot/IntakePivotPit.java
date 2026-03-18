@@ -12,7 +12,6 @@ public class IntakePivotPit extends SequentialCommandGroup {
 
   public IntakePivotPit() {
     super(
-      new InstantCommand(() -> Robot.intakePivot.setDeployed(false)),
       new RepeatCommand(
         new SequentialCommandGroup(
           new ParallelRaceGroup(

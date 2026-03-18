@@ -32,7 +32,7 @@ public class ConditionalScoreFeed extends Command {
         Value.of(
           SmartDashboard.getNumber(
             "kicker speed",
-            Constants.KICKER.KICK_SPEED.in(Value)
+            Constants.KICKER.FEED_SPEED.in(Value)
           )
         )
       );
