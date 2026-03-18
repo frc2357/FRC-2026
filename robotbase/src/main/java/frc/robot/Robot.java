@@ -160,7 +160,7 @@ public class Robot extends TimedRobot {
     );
     SmartDashboard.putNumber(
       "feed speed",
-      Constants.FEEDER.FEED_SPEED.in(Value)
+      Constants.FEEDER.FEED_SPEED_PERCENT.in(Value)
     );
     SmartDashboard.putNumber(
       "kicker speed",

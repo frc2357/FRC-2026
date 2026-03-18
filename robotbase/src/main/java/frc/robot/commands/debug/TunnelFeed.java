@@ -9,7 +9,7 @@ public class TunnelFeed extends ParallelCommandGroup {
 
   public TunnelFeed() {
     super(
-      Robot.feeder.setSpeed(Constants.FEEDER.FEED_SPEED),
+      Robot.feeder.setSpeed(Constants.FEEDER.FEED_SPEED_PERCENT),
       new TunnelSetSpeed(Constants.TUNNEL.TUNNEL_SPEED)
     );
   }

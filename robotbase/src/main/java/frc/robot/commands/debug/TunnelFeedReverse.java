@@ -9,7 +9,7 @@ public class TunnelFeedReverse extends ParallelCommandGroup {
 
   public TunnelFeedReverse() {
     super(
-      Robot.feeder.setSpeed(Constants.FEEDER.REVERSE_FEED_SPEED),
+      Robot.feeder.setSpeed(Constants.FEEDER.REVERSE_FEED_SPEED_PERCENT),
       new TunnelSetSpeed(Constants.TUNNEL.REVERSE_TUNNEL_SPEED)
     );
   }

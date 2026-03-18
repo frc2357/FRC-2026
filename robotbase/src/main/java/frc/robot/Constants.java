@@ -429,8 +429,12 @@ public class Constants {
     public static final SimpleMotorFeedforward FEEDFORWARD =
       new SimpleMotorFeedforward(0.12, 0.125, 0.01);
 
-    public static final Dimensionless FEED_SPEED = Percent.of(100);
-    public static final Dimensionless REVERSE_FEED_SPEED = Percent.of(-100);
+    public static final Dimensionless FEED_SPEED_PERCENT = Percent.of(100);
+    public static final Dimensionless REVERSE_FEED_SPEED_PERCENT = Percent.of(
+      -100
+    );
+
+    public static final AngularVelocity FEED_SPEED = RotationsPerSecond.of(60);
   }
 
   public static final class KICKER {

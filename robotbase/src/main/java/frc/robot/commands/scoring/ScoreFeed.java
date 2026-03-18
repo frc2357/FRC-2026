@@ -1,5 +1,6 @@
 package frc.robot.commands.scoring;
 
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,11 +15,11 @@ public class ScoreFeed extends ParallelCommandGroup {
 
   public ScoreFeed() {
     super(
-      Robot.feeder.setSpeed(() ->
-        Value.of(
+      Robot.feeder.setVelocity(() ->
+        RotationsPerSecond.of(
           SmartDashboard.getNumber(
             "feed speed",
-            Constants.FEEDER.FEED_SPEED.in(Value)
+            Constants.FEEDER.FEED_SPEED.in(RotationsPerSecond)
           )
         )
       ),
