@@ -395,7 +395,7 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
-    public static final Current STALL_LIMIT = Amps.of(20);
+    public static final Current STALL_LIMIT = Amps.of(40);
 
     public static final boolean INVERTED = true;
 
@@ -425,8 +425,8 @@ public class Constants {
     public static final double I = 0;
     public static final double D = 0;
     public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(
-      5767
-    ).times(0.8);
+      5676
+    ).times(1);
     public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
       RotationsPerSecondPerSecond.of(150);
 
@@ -485,7 +485,7 @@ public class Constants {
     public static final double P = 0.005;
     public static final double I = 0;
     public static final double D = 0;
-    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(5767);
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(5676);
     public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
       RotationsPerSecondPerSecond.of(150);
 
@@ -494,7 +494,8 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
-    public static final Dimensionless INITIAL_SCORE_TOLERANCE = Percent.of(5);
+    public static final AngularVelocity INITIAL_SCORE_TOLERANCE =
+      RotationsPerSecond.of(0.5);
     public static final Dimensionless CONTINUOUS_SCORE_TOLERANCE = Percent.of(
       10
     );
