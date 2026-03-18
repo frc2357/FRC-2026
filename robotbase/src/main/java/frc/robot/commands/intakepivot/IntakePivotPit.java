@@ -16,7 +16,7 @@ public class IntakePivotPit extends SequentialCommandGroup {
       new RepeatCommand(
         new SequentialCommandGroup(
           new ParallelRaceGroup(
-            Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.JIGGLE_UP_SPEED),
+            Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.PIT_UP_SPEED),
             new WaitUntilIntakePivotStall(),
             new WaitCommand(Constants.INTAKE_PIVOT.JIGGLE_UP_TIME)
           ),
