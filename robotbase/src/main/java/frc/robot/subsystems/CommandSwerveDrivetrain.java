@@ -55,6 +55,11 @@ public class CommandSwerveDrivetrain
   implements Subsystem
 {
 
+  public static enum AutoDriveMode {
+    DEFAULT,
+    TARGET_LOCK,
+  }
+
   private Dimensionless m_translationModifier = Percent.of(100);
   private Dimensionless m_rotationModifier = Percent.of(100);
 
@@ -70,6 +75,8 @@ public class CommandSwerveDrivetrain
     Rotation2d.k180deg;
   /* Keep track if we've ever applied the operator perspective before or not */
   private boolean m_hasAppliedOperatorPerspective = false;
+
+  private AutoDriveMode m_autoDriveMode = AutoDriveMode.DEFAULT;
 
   /* Swerve requests to apply during SysId characterization */
   private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization =
@@ -489,7 +496,25 @@ public class CommandSwerveDrivetrain
   }
 
   public void followChoreoPath(SwerveSample sample) {
-    System.out.println("choreo following path" + sample.toString());
+    System.out.println(
+      String.format(
+        "Choreo following path '%s' (%s)",
+        sample.toString(),
+        m_autoDriveMode.name()
+      )
+    );
+
+    switch (m_autoDriveMode) {
+      case DEFAULT:
+        followChoreoPathDefault(sample);
+        break;
+      case TARGET_LOCK:
+        followChoreoPathTargetLock(sample);
+        break;
+    }
+  }
+
+  public void followChoreoPathDefault(SwerveSample sample) {
     Pose2d pose = getFieldRelativePose2d();
     CHOREO.ROTATION_CONTROLLER.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -511,6 +536,27 @@ public class CommandSwerveDrivetrain
         .withSpeeds(targetSpeeds)
         .withWheelForceFeedforwardsX(sample.moduleForcesX())
         .withWheelForceFeedforwardsY(sample.moduleForcesY())
+    );
+  }
+
+  public void followChoreoPathTargetLock(SwerveSample sample) {
+    Pose2d pose = getFieldRelativePose2d();
+
+    ChassisSpeeds targetSpeeds = sample.getChassisSpeeds();
+
+    targetSpeeds.vxMetersPerSecond += CHOREO.X_CONTROLLER.calculate(
+      pose.getX(),
+      sample.x
+    );
+    targetSpeeds.vyMetersPerSecond += CHOREO.Y_CONTROLLER.calculate(
+      pose.getY(),
+      sample.y
+    );
+
+    driveAtAngle(
+      MetersPerSecond.of(targetSpeeds.vxMetersPerSecond),
+      MetersPerSecond.of(targetSpeeds.vyMetersPerSecond),
+      Robot.scoreCalculator.getCalculatedDriveAngle()
     );
   }
 
@@ -563,5 +609,13 @@ public class CommandSwerveDrivetrain
 
   public Dimensionless getRotationModifier() {
     return m_rotationModifier;
+  }
+
+  public AutoDriveMode getAutoDriveMode() {
+    return m_autoDriveMode;
+  }
+
+  public void setAutoDriveMode(AutoDriveMode autoDriveMode) {
+    m_autoDriveMode = autoDriveMode;
   }
 }
