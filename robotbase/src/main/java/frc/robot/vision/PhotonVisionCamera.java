@@ -12,8 +12,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.PHOTON_VISION;
 import frc.robot.Robot;
@@ -95,8 +93,6 @@ public class PhotonVisionCamera {
   private Matrix<N3, N1> m_singleTagStdDevs;
   private Matrix<N3, N1> m_currentStdDevs;
 
-  private final Field2d m_visionField = new Field2d();
-
   /**
    * Represents a camera from PhotonVision.
    *
@@ -136,8 +132,6 @@ public class PhotonVisionCamera {
       Double.MAX_VALUE,
       Double.MAX_VALUE
     );
-
-    SmartDashboard.putData("[" + cameraName + "] Field", m_visionField);
   }
 
   /**
@@ -207,8 +201,6 @@ public class PhotonVisionCamera {
         visionEst.get(),
         result.getTargets()
       );
-
-      m_visionField.setRobotPose(visionEst.get().estimatedPose.toPose2d());
     }
 
     if (m_camera.isConnected() && m_connectionLost) {

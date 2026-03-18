@@ -2,7 +2,6 @@ package frc.robot.commands.drive;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Dimensionless;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.SWERVE;
@@ -24,7 +23,6 @@ public class DriveTargetLock extends Command {
   @Override
   public void execute() {
     Rotation2d target = Robot.shotCalculator.getCalculatedDriveAngle();
-    SmartDashboard.putNumber("Target angle", target.getDegrees());
     Robot.swerve.driveAtAngle(
       m_y.get().times(Constants.SWERVE.AXIS_MAX_SPEED).times(SWERVE.MAX_SPEED),
       m_x.get().times(Constants.SWERVE.AXIS_MAX_SPEED).times(SWERVE.MAX_SPEED),

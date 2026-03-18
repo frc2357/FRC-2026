@@ -15,7 +15,6 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SCORING;
 import frc.robot.networkTables.CurveTuner;
@@ -122,8 +121,6 @@ public class ShotCalculator {
     m_timeOfFlightCurve.put(SHOT_POINTS.POINT_5, Seconds.of(1.032));
     m_timeOfFlightCurve.put(SHOT_POINTS.POINT_6, Seconds.of(1.138));
     m_timeOfFlightCurve.put(SHOT_POINTS.OUTPOST_CORNER, Seconds.of(1.18));
-
-    SmartDashboard.putBoolean(SCORING.IS_SOTF_KEY, true);
   }
 
   /**
@@ -142,10 +139,6 @@ public class ShotCalculator {
     Distance targetDistance = Meters.of(
       shooterPose.getTranslation().getDistance(target)
     );
-    SmartDashboard.putNumber(
-      "Pose Computed Distance Inches",
-      targetDistance.in(Inches)
-    );
 
     AngularVelocity shooterVelocity;
     Angle hoodAngle;
@@ -157,17 +150,6 @@ public class ShotCalculator {
       hoodAngle = Constants.HOOD.PASSING_STATIC_ANGLE;
     }
     Rotation2d driveAngle = computeTargetDriveAngle(robotPose, target);
-
-    SmartDashboard.putNumber(
-      "Computed Shooter RPS",
-      shooterVelocity.in(RotationsPerSecond)
-    );
-    SmartDashboard.putNumber("Computed Hood Angle", hoodAngle.in(Degrees));
-    SmartDashboard.putNumber("Computed Drive Angle", driveAngle.getDegrees());
-    SmartDashboard.putNumber(
-      "latency",
-      Constants.SCORING.SOTF_LATENCY_COMPENSATION.in(Seconds)
-    );
 
     return new CalculatedShot(shooterVelocity, hoodAngle, driveAngle);
   }
@@ -184,10 +166,7 @@ public class ShotCalculator {
     ChassisSpeeds fieldRelativeSpeeds =
       Robot.swerve.getCurrentFieldRelativeSpeeds(); // try field velocities instead
 
-    var latency = SmartDashboard.getNumber(
-      "latency",
-      Constants.SCORING.SOTF_LATENCY_COMPENSATION.in(Seconds)
-    );
+    var latency = Constants.SCORING.SOTF_LATENCY_COMPENSATION.in(Seconds);
     // Account for the robot's velocity and latency compensation
     // to compute a guess to where the robot actually is
     Pose2d velocityCompensatedRobotPose = initialRobotPose.exp(
@@ -258,21 +237,6 @@ public class ShotCalculator {
       Constants.SHOOTER.ROBOT_TO_SHOOTER.inverse()
     );
     Rotation2d driveAngle = computeTargetDriveAngle(futureRobotPose, target);
-
-    SmartDashboard.putNumber(
-      "SOTF Direct Distance Inches",
-      shooterToTargetDistance.in(Inches)
-    );
-    SmartDashboard.putNumber(
-      "SOTF Future Distance Inches",
-      futureShootertoTargetDistance.in(Inches)
-    );
-    SmartDashboard.putNumber(
-      "SOTF Shooter RPS",
-      shooterVelocity.in(RotationsPerSecond)
-    );
-    SmartDashboard.putNumber("SOTF Hood Angle", hoodAngle.in(Degrees));
-    SmartDashboard.putNumber("SOTF Drive Angle", driveAngle.getDegrees());
 
     return new CalculatedShot(shooterVelocity, hoodAngle, driveAngle);
   }
@@ -351,11 +315,7 @@ public class ShotCalculator {
    * Should be called in Robot.periodic every loop
    */
   public void updateCalculatedShot() {
-    if (SmartDashboard.getBoolean(SCORING.IS_SOTF_KEY, true)) {
-      m_latestCalculatedShot = calculateShotFromShootOnTheFly();
-    } else {
-      m_latestCalculatedShot = calculateShotFromPoseStationary();
-    }
+    m_latestCalculatedShot = calculateShotFromShootOnTheFly();
   }
 
   public CalculatedShot getCalculatedShot() {

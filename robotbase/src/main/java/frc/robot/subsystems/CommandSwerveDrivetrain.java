@@ -31,7 +31,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -73,8 +72,6 @@ public class CommandSwerveDrivetrain
   /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
   private static final Rotation2d kRedAlliancePerspectiveRotation =
     Rotation2d.k180deg;
-  /* Keep track if we've ever applied the operator perspective before or not */
-  private boolean m_hasAppliedOperatorPerspective = false;
 
   private AutoDriveMode m_autoDriveMode = AutoDriveMode.DEFAULT;
 
@@ -300,10 +297,6 @@ public class CommandSwerveDrivetrain
      * This ensures driving behavior doesn't change until an explicit disable event
      * occurs during testing.
      */
-    SmartDashboard.putNumber(
-      "robot angle",
-      this.getState().Pose.getRotation().getDegrees()
-    );
   }
 
   private void startSimThread() {
@@ -374,7 +367,6 @@ public class CommandSwerveDrivetrain
   }
 
   public void addVisionMeasurement(SwervePoseEstimate estimate) {
-    SmartDashboard.putBoolean("adding estimate", true);
     this.addVisionMeasurement(
       estimate.pose(),
       estimate.timestamp(),
