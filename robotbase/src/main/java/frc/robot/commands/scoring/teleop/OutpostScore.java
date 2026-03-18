@@ -1,9 +1,9 @@
 package frc.robot.commands.scoring.teleop;
 
 import frc.robot.Constants;
-import frc.robot.commands.scoring.Score;
 
-public class OutpostScore extends Score {
+// Extending AutoScore to avoid all the constraints of TeleopScore
+public class OutpostScore extends TeleopScore {
 
   public OutpostScore() {
     super(

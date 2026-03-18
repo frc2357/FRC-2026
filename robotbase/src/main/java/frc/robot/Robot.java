@@ -27,7 +27,7 @@ import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
 import frc.robot.commands.floor.FloorAxis;
-import frc.robot.commands.scoring.Score;
+import frc.robot.commands.scoring.teleop.TeleopScore;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
@@ -69,7 +69,7 @@ public class Robot extends TimedRobot {
   public static Tunnel tunnel;
 
   public static CameraManager cameraManager;
-  public static ScoreCalculator scoreCalculator;
+  public static ShotCalculator shotCalculator;
 
   public static ShiftTimer shiftTimer;
 
@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
     cameraManager = new CameraManager();
 
     swerve.registerTelemetry(logger::telemeterize);
-    scoreCalculator = new ScoreCalculator();
+    shotCalculator = new ShotCalculator();
 
     driverControls = new DriverControls();
     coDriverControls = new CoDriverControls();
@@ -141,7 +141,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Robot Field", m_robotField);
     SmartDashboard.putData(
       "Start",
-      new Score(
+      new TeleopScore(
         () ->
           RotationsPerSecond.of(
             SmartDashboard.getNumber("Shooter Target RPS", 0)
@@ -181,13 +181,13 @@ public class Robot extends TimedRobot {
         Robot.swerve::addVisionMeasurement
       );
     }
-    Robot.scoreCalculator.updateCalculatedShot();
+    Robot.shotCalculator.updateCalculatedShot();
 
     CommandScheduler.getInstance().run();
 
     m_robotField.setRobotPose(swerve.getFieldRelativePose2d());
 
-    scoreCalculator.updateCurveTuners();
+    shotCalculator.updateCurveTuners();
   }
 
   @Override
@@ -201,7 +201,7 @@ public class Robot extends TimedRobot {
     );
 
     // Log curve values when robot is disabled (like when match ends)
-    scoreCalculator.logCurveValues();
+    shotCalculator.logCurveValues();
   }
 
   @Override

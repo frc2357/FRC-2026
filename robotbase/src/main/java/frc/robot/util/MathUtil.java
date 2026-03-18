@@ -11,7 +11,7 @@ public class MathUtil {
    *
    * From: https://github.com/Mechanical-Advantage/RobotCode2026Public/blob/main/src/main/java/org/littletonrobotics/frc2026/util/geometry/GeomUtil.java#L183
    *
-   * Computes the velocity for a new center of rotation given the velocity, new reference point
+   * Computes the velocity for a new center of rotation given the velocity, new reference pose
    * and current angle
    *
    * Consider the case where the robot is spinning in place. The velocity of the robot's

@@ -30,7 +30,7 @@ public class ScoreFeed extends ParallelCommandGroup {
           )
         )
       ),
-      new TunnelSetSpeed(
+      new TunnelSetSpeed(() ->
         Value.of(
           SmartDashboard.getNumber(
             "tunnel speed",
@@ -38,7 +38,7 @@ public class ScoreFeed extends ParallelCommandGroup {
           )
         )
       ),
-      new FloorSetSpeed(
+      new FloorSetSpeed(() ->
         Value.of(
           SmartDashboard.getNumber(
             "floor speed",

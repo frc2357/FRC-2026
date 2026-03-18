@@ -13,15 +13,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
-import frc.robot.commands.drive.DrivePoseTargetingHub;
+import frc.robot.commands.drive.DriveTargetLock;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetPerspective;
 import frc.robot.commands.intakepivot.IntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intaking.TeleopIntake;
-import frc.robot.commands.scoring.Score;
 import frc.robot.commands.scoring.teleop.HubScore;
 import frc.robot.commands.scoring.teleop.OutpostScore;
+import frc.robot.commands.scoring.teleop.TeleopScore;
 import frc.robot.commands.scoring.teleop.TeleopShoot;
 import frc.robot.commands.scoring.teleop.TrenchScore;
 import frc.robot.controls.util.RumbleInterface;
@@ -61,7 +61,7 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .leftBumper()
       .whileTrue(
-        new Score(
+        new TeleopScore(
           () ->
             RotationsPerSecond.of(
               SmartDashboard.getNumber("Shooter Target RPS", 0)
@@ -76,7 +76,7 @@ public class DriverControls implements RumbleInterface {
 
     m_controller
       .a()
-      .whileTrue(new DrivePoseTargetingHub(this::getLeftX, this::getLeftY));
+      .whileTrue(new DriveTargetLock(this::getLeftX, this::getLeftY));
 
     m_controller
       .povLeft()
