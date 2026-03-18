@@ -7,11 +7,10 @@ import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import frc.robot.commands.auto.AutoMaker.Auto;
 import frc.robot.commands.intakepivot.AutoIntakePivotDeploy;
-import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intakerunner.IntakeRunnerUntil;
 import frc.robot.commands.scoring.auto.AutoScore;
 
-public class RightTrench extends AutoBase {
+public class LeftTrenchDepot extends AutoBase {
 
   protected AutoRoutine m_routine;
   protected AutoTrajectory m_startTraj;
@@ -21,8 +20,8 @@ public class RightTrench extends AutoBase {
    * Will create the first trajectory, and set the routine to wait, reset odometry, and run the first trajectory
    * @param name Name of the auto routine
    */
-  public RightTrench() {
-    super("RightTrench");
+  public LeftTrenchDepot() {
+    super("LeftTrenchDepot");
   }
 
   @Override
@@ -31,15 +30,12 @@ public class RightTrench extends AutoBase {
     AutoTrajectory traj = auto.startTrajectory();
     traj.active().onTrue(new AutoIntakePivotDeploy());
     traj
-      .atTime("StartIntake")
-      .onTrue(new IntakeRunnerUntil(traj.atTime("StopIntake")));
+      .atTime("StartIntake1")
+      .onTrue(new IntakeRunnerUntil(traj.atTime("StopIntake1")));
+    traj.atTime("StartIntake2").onTrue(new IntakeRunnerUntil(traj.done()));
     traj
-      .done()
-      .onTrue(
-        new AutoScore(RotationsPerSecond.of(58), Degrees.of(13)).alongWith(
-          new IntakePivotJiggle()
-        )
-      );
+      .atTime("StartShooter")
+      .onTrue(new AutoScore(RotationsPerSecond.of(60), Degrees.of(16)));
 
     return auto.routine();
   }

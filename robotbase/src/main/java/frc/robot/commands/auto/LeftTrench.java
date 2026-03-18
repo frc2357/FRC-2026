@@ -11,7 +11,7 @@ import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intakerunner.IntakeRunnerUntil;
 import frc.robot.commands.scoring.auto.AutoScore;
 
-public class RightTrench extends AutoBase {
+public class LeftTrench extends AutoBase {
 
   protected AutoRoutine m_routine;
   protected AutoTrajectory m_startTraj;
@@ -21,8 +21,8 @@ public class RightTrench extends AutoBase {
    * Will create the first trajectory, and set the routine to wait, reset odometry, and run the first trajectory
    * @param name Name of the auto routine
    */
-  public RightTrench() {
-    super("RightTrench");
+  public LeftTrench() {
+    super("LeftTrench");
   }
 
   @Override
