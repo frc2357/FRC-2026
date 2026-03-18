@@ -495,7 +495,7 @@ public class Constants {
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
     public static final AngularVelocity INITIAL_SCORE_TOLERANCE =
-      RotationsPerSecond.of(0.5);
+      RotationsPerSecond.of(1);
     public static final Dimensionless CONTINUOUS_SCORE_TOLERANCE = Percent.of(
       10
     );
@@ -617,6 +617,13 @@ public class Constants {
         )
       ),
     };
+  }
+
+  public class AUTO {
+
+    public static final AngularVelocity AUTO_PASSING_SHOOTER_VELOCITY =
+      RotationsPerSecond.of(40);
+    public static final Angle AUTO_PASSING_HOOD_ANGLE = Degrees.of(15);
   }
 
   public class SHIFT {

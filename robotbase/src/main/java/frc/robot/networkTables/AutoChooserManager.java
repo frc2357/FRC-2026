@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.auto.AutoBase;
+import frc.robot.commands.auto.LeftTrench;
+import frc.robot.commands.auto.LeftTrenchDepot;
 import frc.robot.commands.auto.RightTrench;
 import java.util.Map;
 
@@ -21,6 +23,8 @@ public class AutoChooserManager {
     // new SpinnyCircleAroundBlueHub(),
     // new TargetLockTest(),
     new RightTrench(),
+    new LeftTrench(),
+    new LeftTrenchDepot(),
   };
 
   private AutoChooser m_autoChooser = new AutoChooser();

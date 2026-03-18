@@ -160,7 +160,7 @@ public class Robot extends TimedRobot {
     );
     SmartDashboard.putNumber(
       "feed speed",
-      Constants.FEEDER.FEED_SPEED_PERCENT.in(Value)
+      Constants.FEEDER.FEED_SPEED.in(RotationsPerSecond)
     );
     SmartDashboard.putNumber(
       "kicker speed",
@@ -176,11 +176,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     Robot.cameraManager.updateResult();
-    if (!DriverStation.isAutonomous()) {
-      Robot.cameraManager.addSwerveEstimates(
-        Robot.swerve::addVisionMeasurement
-      );
-    }
+    Robot.cameraManager.addSwerveEstimates(Robot.swerve::addVisionMeasurement);
     Robot.shotCalculator.updateCalculatedShot();
 
     CommandScheduler.getInstance().run();
