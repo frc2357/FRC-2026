@@ -128,6 +128,18 @@ public class Shooter extends SubsystemBase {
     return m_shooter.run(speed).finallyDo(() -> this.stopMotor());
   }
 
+  /**
+   * Set the shooter velocity.
+   *
+   * Does not stop the shooter on end
+   *
+   * @param speed Speed to set.
+   * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
+   */
+  public Command autoSetVelocity(AngularVelocity speed) {
+    return m_shooter.run(speed);
+  }
+
   public Command setVelocity(Supplier<AngularVelocity> speed) {
     return m_shooter.run(speed).finallyDo(() -> this.stopMotor());
   }

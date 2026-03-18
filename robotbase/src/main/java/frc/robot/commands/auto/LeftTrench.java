@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import frc.robot.Robot;
 import frc.robot.commands.auto.AutoMaker.Auto;
 import frc.robot.commands.intakepivot.AutoIntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
@@ -34,9 +35,12 @@ public class LeftTrench extends AutoBase {
       .atTime("StartIntake")
       .onTrue(new IntakeRunnerUntil(traj.atTime("StopIntake")));
     traj
+      .atTime("StopIntake")
+      .onTrue(Robot.shooter.autoSetVelocity(RotationsPerSecond.of(55)));
+    traj
       .done()
       .onTrue(
-        new AutoScore(RotationsPerSecond.of(58), Degrees.of(13)).alongWith(
+        new AutoScore(RotationsPerSecond.of(55), Degrees.of(13)).alongWith(
           new IntakePivotJiggle()
         )
       );

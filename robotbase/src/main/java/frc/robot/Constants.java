@@ -495,7 +495,7 @@ public class Constants {
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
     public static final AngularVelocity INITIAL_SCORE_TOLERANCE =
-      RotationsPerSecond.of(0.5);
+      RotationsPerSecond.of(1);
     public static final Dimensionless CONTINUOUS_SCORE_TOLERANCE = Percent.of(
       10
     );
