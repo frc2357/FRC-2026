@@ -395,12 +395,39 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
-    public static final SparkBaseConfig FEEDER_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kCoast)
-      .inverted(true)
-      .smartCurrentLimit(15, 10)
-      .openLoopRampRate(0.25)
-      .voltageCompensation(12);
+    public static final Current STALL_LIMIT = Amps.of(20);
+
+    public static final SparkBaseConfig FEEDER_BASE_CONFIG =
+      new SparkMaxConfig()
+        .idleMode(IdleMode.kCoast)
+        .inverted(true)
+        .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 10)
+        .openLoopRampRate(0.25)
+        .voltageCompensation(12);
+
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("1:1")
+    );
+
+    // Diameter of the flywheel.
+    public static final Distance DIAMETER = Inches.of(2);
+    // Mass of the flywheel.
+    public static final Mass MASS = Pounds.of(1);
+    // Maximum speed of the shooter.
+
+    public static final String MECHANISM_NETWORK_KEY = "FeederMech";
+    public static final String MOTOR_NETWORK_KEY = "FeederMotor";
+
+    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
+    public static final double P = 0.005;
+    public static final double I = 0;
+    public static final double D = 0;
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(5767);
+    public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
+      RotationsPerSecondPerSecond.of(150);
+
+    public static final SimpleMotorFeedforward FEEDFORWARD =
+      new SimpleMotorFeedforward(0.12, 0.125, 0.01);
 
     public static final Dimensionless FEED_SPEED = Percent.of(100);
     public static final Dimensionless REVERSE_FEED_SPEED = Percent.of(-100);

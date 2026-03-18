@@ -556,7 +556,7 @@ public class CommandSwerveDrivetrain
     driveAtAngle(
       MetersPerSecond.of(targetSpeeds.vxMetersPerSecond),
       MetersPerSecond.of(targetSpeeds.vyMetersPerSecond),
-      Robot.scoreCalculator.getCalculatedDriveAngle()
+      Robot.shotCalculator.getCalculatedDriveAngle()
     );
   }
 

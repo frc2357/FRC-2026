@@ -67,7 +67,7 @@ public class ConditionalScoreFeed extends Command {
   }
 
   private void stopAllFeeding() {
-    Robot.feeder.stop();
+    Robot.feeder.stopMotor();
     Robot.kicker.stop();
     Robot.tunnel.stop();
     Robot.floor.stop();
