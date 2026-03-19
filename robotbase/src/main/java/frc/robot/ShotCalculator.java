@@ -15,6 +15,8 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SCORING;
 import frc.robot.networkTables.CurveTuner;
@@ -29,6 +31,8 @@ import frc.robot.util.MathUtil;
  * loop overruns, this is a point of optimization.
  */
 public class ShotCalculator {
+
+  private Field2d targetField = new Field2d();
 
   public record CalculatedShot(
     AngularVelocity shooterVelocity,
@@ -48,6 +52,15 @@ public class ShotCalculator {
       InterpolationUtil::InverseInterpolate,
       InterpolationUtil::Interpolate
     );
+
+  private final CurveTuner<Distance, Angle> m_passingHoodCurve = new CurveTuner<
+    Distance,
+    Angle
+  >(
+    "Passing Hood Curve",
+    InterpolationUtil::InverseInterpolate,
+    InterpolationUtil::Interpolate
+  );
 
   private final CurveTuner<Distance, AngularVelocity> m_shooterCurve =
     new CurveTuner<Distance, AngularVelocity>(
@@ -95,23 +108,26 @@ public class ShotCalculator {
   }
 
   public ShotCalculator() {
-    m_passingShooterCurve.put(PASS_POINTS.CLOSEST, RotationsPerSecond.of(50));
-    m_passingShooterCurve.put(PASS_POINTS.FURTHERST, RotationsPerSecond.of(90));
+    m_passingShooterCurve.put(PASS_POINTS.CLOSEST, RotationsPerSecond.of(70));
+    m_passingShooterCurve.put(PASS_POINTS.FURTHERST, RotationsPerSecond.of(95));
 
-    m_shooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(45));
-    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(50));
-    m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(52));
-    m_shooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(54));
-    m_shooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(58));
-    m_shooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(61));
-    m_shooterCurve.put(SHOT_POINTS.OUTPOST_CORNER, RotationsPerSecond.of(64));
+    m_passingHoodCurve.put(PASS_POINTS.CLOSEST, Degrees.of(25));
+    m_passingHoodCurve.put(PASS_POINTS.FURTHERST, Degrees.of(34));
+
+    m_shooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(50));
+    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(52));
+    m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(54));
+    m_shooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(56));
+    m_shooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(60));
+    m_shooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(63));
+    m_shooterCurve.put(SHOT_POINTS.OUTPOST_CORNER, RotationsPerSecond.of(66));
 
     m_hoodCurve.put(SHOT_POINTS.HUB, Degrees.of(1));
-    m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(4));
-    m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(7));
-    m_hoodCurve.put(SHOT_POINTS.TRENCH, Degrees.of(10.5));
-    m_hoodCurve.put(SHOT_POINTS.POINT_5, Degrees.of(13));
-    m_hoodCurve.put(SHOT_POINTS.POINT_6, Degrees.of(16.5));
+    m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(5));
+    m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(8));
+    m_hoodCurve.put(SHOT_POINTS.TRENCH, Degrees.of(11));
+    m_hoodCurve.put(SHOT_POINTS.POINT_5, Degrees.of(14));
+    m_hoodCurve.put(SHOT_POINTS.POINT_6, Degrees.of(17));
     m_hoodCurve.put(SHOT_POINTS.OUTPOST_CORNER, Degrees.of(18));
 
     m_timeOfFlightCurve.put(SHOT_POINTS.HUB, Seconds.of(1.005));
@@ -121,6 +137,8 @@ public class ShotCalculator {
     m_timeOfFlightCurve.put(SHOT_POINTS.POINT_5, Seconds.of(1.032));
     m_timeOfFlightCurve.put(SHOT_POINTS.POINT_6, Seconds.of(1.138));
     m_timeOfFlightCurve.put(SHOT_POINTS.OUTPOST_CORNER, Seconds.of(1.18));
+
+    SmartDashboard.putData("target", targetField);
   }
 
   /**
@@ -147,7 +165,7 @@ public class ShotCalculator {
       hoodAngle = m_hoodCurve.get(targetDistance);
     } else {
       shooterVelocity = m_passingShooterCurve.get(targetDistance);
-      hoodAngle = Constants.HOOD.PASSING_STATIC_ANGLE;
+      hoodAngle = m_passingHoodCurve.get(targetDistance);
     }
     Rotation2d driveAngle = computeTargetDriveAngle(robotPose, target);
 
@@ -186,6 +204,11 @@ public class ShotCalculator {
     // Initial target distance
     Distance shooterToTargetDistance = Meters.of(
       target.getDistance(shooterPose.getTranslation())
+    );
+
+    SmartDashboard.putNumber(
+      "Direct Distance Inches",
+      shooterToTargetDistance.in(Inches)
     );
 
     // The field-relative speed of the shooter moving on the field
@@ -238,6 +261,13 @@ public class ShotCalculator {
     );
     Rotation2d driveAngle = computeTargetDriveAngle(futureRobotPose, target);
 
+    targetField.setRobotPose(
+      target.getX(),
+      target.getY(),
+      Rotation2d.fromDegrees(0)
+    );
+
+    SmartDashboard.putNumber("target angle", driveAngle.getDegrees());
     return new CalculatedShot(shooterVelocity, hoodAngle, driveAngle);
   }
 
@@ -286,7 +316,7 @@ public class ShotCalculator {
     return driveAngleGuess;
   }
 
-  private boolean isInAllianceZone() {
+  public boolean isInAllianceZone() {
     Pose2d robotPose = Robot.swerve.getAllianceRelativePose2d();
     Pose2d shooterPose = robotPose.transformBy(
       Constants.SHOOTER.ROBOT_TO_SHOOTER
@@ -346,17 +376,21 @@ public class ShotCalculator {
     if (isInAllianceZone()) {
       return m_hoodCurve.get(distance);
     } else {
-      return Constants.HOOD.PASSING_STATIC_ANGLE;
+      return m_passingHoodCurve.get(distance);
     }
   }
 
   public void updateCurveTuners() {
     m_shooterCurve.updateCurveValues();
     m_hoodCurve.updateCurveValues();
+    m_passingShooterCurve.updateCurveValues();
+    m_passingHoodCurve.updateCurveValues();
   }
 
   public void logCurveValues() {
     m_shooterCurve.logCurrentValues();
     m_hoodCurve.logCurrentValues();
+    m_passingShooterCurve.logCurrentValues();
+    m_passingHoodCurve.logCurrentValues();
   }
 }

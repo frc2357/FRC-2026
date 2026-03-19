@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.auto.AutoBase;
+import frc.robot.commands.auto.Center;
 import frc.robot.commands.auto.LeftTrench;
 import frc.robot.commands.auto.LeftTrenchBump;
 import frc.robot.commands.auto.LeftTrenchDepot;
@@ -26,7 +27,7 @@ public class AutoChooserManager {
     new RightTrench(),
     new LeftTrench(),
     new LeftTrenchDepot(),
-    new LeftTrenchBump(),
+    new Center(),
   };
 
   private AutoChooser m_autoChooser = new AutoChooser();

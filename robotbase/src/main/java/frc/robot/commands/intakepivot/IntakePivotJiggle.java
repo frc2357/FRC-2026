@@ -26,6 +26,7 @@ public class IntakePivotJiggle extends ParallelCommandGroup {
               Constants.INTAKE_PIVOT.JIGGLE_DOWN_SPEED
             ),
             new WaitUntilIntakePivotStall()
+            //new WaitUntilIntakePivotStallAndPosition()
           )
         )
       )

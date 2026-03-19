@@ -112,6 +112,11 @@ public class Constants {
     public static final Angle TELEOP_SHOOT_DRIVE_ANGLE_TOLERANCE = Degrees.of(
       15
     );
+
+    public static final Dimensionless PASS_TRANSLATION_MODIFIER = Percent.of(
+      50
+    );
+    public static final Dimensionless PASS_ROTATION_MODIFIER = Percent.of(75);
   }
 
   public static final class PHOTON_VISION {
@@ -524,15 +529,15 @@ public class Constants {
 
       public static final AngularVelocity PIT_SHOT = RotationsPerSecond.of(15);
 
-      public static final AngularVelocity HUB_SHOT = RotationsPerSecond.of(45);
+      public static final AngularVelocity HUB_SHOT = RotationsPerSecond.of(50);
 
       public static final AngularVelocity TRENCH_SHOT = RotationsPerSecond.of(
-        54
+        56
       );
 
       // Farthest corner possible
       public static final AngularVelocity OUTPOST_SHOT = RotationsPerSecond.of(
-        64
+        66
       );
     }
   }
@@ -600,7 +605,7 @@ public class Constants {
 
       public static final Angle HUB_SHOT = Degrees.of(1);
 
-      public static final Angle TRENCH_SHOT = Degrees.of(10.5);
+      public static final Angle TRENCH_SHOT = Degrees.of(11);
 
       // Farthest corner possible
       public static final Angle OUTPOST_SHOT = Degrees.of(18);

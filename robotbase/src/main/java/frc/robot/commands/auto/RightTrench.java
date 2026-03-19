@@ -7,10 +7,12 @@ import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import frc.robot.Robot;
 import frc.robot.commands.auto.AutoMaker.Auto;
+import frc.robot.commands.drive.AutoTargetLock;
 import frc.robot.commands.intakepivot.AutoIntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intakerunner.IntakeRunnerUntil;
 import frc.robot.commands.scoring.auto.AutoScore;
+import frc.robot.commands.scoring.auto.AutoShoot;
 
 public class RightTrench extends AutoBase {
 
@@ -36,14 +38,16 @@ public class RightTrench extends AutoBase {
       .onTrue(new IntakeRunnerUntil(traj.atTime("StopIntake")));
     traj
       .atTime("StopIntake")
-      .onTrue(Robot.shooter.autoSetVelocity(RotationsPerSecond.of(56)));
-    traj
-      .done()
-      .onTrue(
-        new AutoScore(RotationsPerSecond.of(56), Degrees.of(13)).alongWith(
-          new IntakePivotJiggle()
-        )
-      );
+      .onTrue(Robot.shooter.autoSetVelocity(RotationsPerSecond.of(57)));
+    // traj
+    //   .done()
+    //   .onTrue(
+    //     new AutoScore(RotationsPerSecond.of(57), Degrees.of(13)).alongWith(
+    //       new IntakePivotJiggle()
+    //     )
+    //   );
+    traj.done().onTrue(new AutoShoot());
+    traj.done().onTrue(new AutoTargetLock());
 
     return auto.routine();
   }
