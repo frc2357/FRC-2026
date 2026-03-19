@@ -4,10 +4,7 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.Value;
-
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
@@ -26,8 +23,6 @@ import frc.robot.commands.controller.RumbleDriverController;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
-import frc.robot.commands.floor.FloorAxis;
-import frc.robot.commands.scoring.teleop.TeleopScore;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
@@ -107,11 +102,6 @@ public class Robot extends TimedRobot {
     swerve.registerTelemetry(logger::telemeterize);
     swerve.setDefaultCommand(m_defaultDrive);
 
-    floor.setDefaultCommand(
-      new FloorAxis(() -> {
-        return Value.of(SmartDashboard.getNumber("Floor", 0.0));
-      })
-    );
     hood.setDefaultCommand(hood.goHome());
 
     m_autoChooserManager = new AutoChooserManager();
@@ -129,43 +119,13 @@ public class Robot extends TimedRobot {
       .and(DriverStation::isFMSAttached)
       .onTrue(new RumbleDriverController());
 
-    SmartDashboard.putNumber("Floor", 0.0);
-    SmartDashboard.putNumber("Shooter Target RPS", 0);
-
-    SmartDashboard.putNumber("Hood Target Degree", 0);
-
     // DON'T DELETE - Load the april tag field
     // This prevents a loop overrun when we first access the constants
     AprilTagFieldLayout layout = Constants.FieldConstants.FIELD_LAYOUT;
 
     SmartDashboard.putData("Robot Field", m_robotField);
-    SmartDashboard.putData(
-      "Start",
-      new TeleopScore(
-        () ->
-          RotationsPerSecond.of(
-            SmartDashboard.getNumber("Shooter Target RPS", 0)
-          ),
-        () -> Degrees.of(SmartDashboard.getNumber("Hood Target Degree", 2))
-      )
-    );
 
-    SmartDashboard.putNumber(
-      "floor speed",
-      Constants.FLOOR.FLOOR_SPEED.in(Value)
-    );
-    SmartDashboard.putNumber(
-      "tunnel speed",
-      Constants.TUNNEL.TUNNEL_SPEED.in(Value)
-    );
-    SmartDashboard.putNumber(
-      "feed speed",
-      Constants.FEEDER.FEED_SPEED.in(RotationsPerSecond)
-    );
-    SmartDashboard.putNumber(
-      "kicker speed",
-      Constants.KICKER.KICK_SPEED.in(Value)
-    );
+    SignalLogger.enableAutoLogging(false);
   }
 
   @Override

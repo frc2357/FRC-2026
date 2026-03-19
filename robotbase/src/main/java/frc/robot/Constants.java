@@ -100,7 +100,7 @@ public class Constants {
     public static final Dimensionless ACTION_TRANSLATION_MODIFIER = Percent.of(
       55
     );
-    public static final Dimensionless ACTION_ROTATION_MODIFIER = Percent.of(50);
+    public static final Dimensionless ACTION_ROTATION_MODIFIER = Percent.of(75);
 
     public static final Angle TELEOP_SHOOT_DRIVE_ANGLE_TOLERANCE = Degrees.of(
       15
