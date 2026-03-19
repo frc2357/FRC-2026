@@ -12,7 +12,10 @@ import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
 import frc.robot.commands.drive.DriveTargetLock;
 import frc.robot.commands.drive.FlipPerspective;
+import frc.robot.commands.drive.ResetDriveModifiers;
 import frc.robot.commands.drive.ResetPerspective;
+import frc.robot.commands.drive.SetIntakeDriveModifiers;
+import frc.robot.commands.drive.SetScoreDriveModifiers;
 import frc.robot.commands.intakepivot.IntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intaking.TeleopIntake;
@@ -49,7 +52,16 @@ public class DriverControls implements RumbleInterface {
     m_controller.leftTrigger().whileTrue(new TeleopIntake());
 
     isShooting.and(isIntaking.negate()).whileTrue(new IntakePivotJiggle());
-    isShooting.negate().onTrue(new IntakePivotDeploy());
+    isShooting.whileTrue(new SetScoreDriveModifiers());
+
+    isIntaking
+      .and(isShooting.negate())
+      .whileTrue(new SetIntakeDriveModifiers());
+
+    isShooting
+      .negate()
+      .and(isIntaking.negate())
+      .whileTrue(new ResetDriveModifiers());
 
     m_controller
       .rightTrigger()
