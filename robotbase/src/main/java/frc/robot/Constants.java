@@ -70,6 +70,8 @@ public class Constants {
     public static final int CODRIVER_CONTROLLER_PORT = 0;
     public static final double CODRIVER_CONTROLLER_DEADBAND = 0.025;
 
+    public static final int PIT_CONTROLLER_PORT = 5;
+
     public static final double DRIVER_RUMBLE_INTENSITY = .5;
     public static final double CODRIVER_RUMBLE_INTENSITY = .5;
 
@@ -306,7 +308,7 @@ public class Constants {
       .voltageCompensation(10);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
-
+    public static final Dimensionless SLOW_FLOOR_SPEED = Percent.of(10);
     public static final Dimensionless FLOOR_SPEED = Percent.of(80);
   }
 
@@ -321,6 +323,7 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless TUNNEL_SPEED = Percent.of(100);
+    public static final Dimensionless SLOW_TUNNEL_SPEED = Percent.of(10);
     public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-100);
   }
 
@@ -341,6 +344,7 @@ public class Constants {
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
 
     public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(70);
+    public static final Dimensionless CLEAN_SPEED = Percent.of(10);
     public static final Dimensionless INTAKE_JIGGLING_SPEED = Percent.of(10);
   }
 
@@ -379,6 +383,7 @@ public class Constants {
 
     public static final Dimensionless DEPLOY_SPEED = Percent.of(-30);
 
+    public static final Dimensionless PIT_UP_SPEED = Percent.of(10);
     public static final Dimensionless JIGGLE_UP_SPEED = Percent.of(20);
     public static final Dimensionless JIGGLE_DOWN_SPEED = Percent.of(-10);
 
@@ -444,6 +449,7 @@ public class Constants {
     );
 
     public static final AngularVelocity FEED_SPEED = RotationsPerSecond.of(77);
+    public static final Dimensionless SLOW_FEED_SPEED = Percent.of(10);
   }
 
   public static final class KICKER {
@@ -457,8 +463,9 @@ public class Constants {
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
-    public static final Dimensionless KICK_SPEED = Percent.of(75);
-    public static final Dimensionless REVERSE_KICK_SPEED = Percent.of(-75);
+    public static final Dimensionless CLEAN_SPEED = Percent.of(10);
+    public static final Dimensionless KICK_SPEED = Percent.of(100);
+    public static final Dimensionless REVERSE_KICK_SPEED = Percent.of(-100);
   }
 
   public static final class SHOOTER {
@@ -498,7 +505,7 @@ public class Constants {
       new SimpleMotorFeedforward(0.12, 0.125, 0.01);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
-
+    public static final Dimensionless CLEAN_SPEED = Percent.of(10);
     public static final AngularVelocity INITIAL_SCORE_TOLERANCE =
       RotationsPerSecond.of(1);
     public static final Dimensionless CONTINUOUS_SCORE_TOLERANCE = Percent.of(
@@ -513,6 +520,8 @@ public class Constants {
     );
 
     public static final class SETPOINTS {
+
+      public static final AngularVelocity PIT_SHOT = RotationsPerSecond.of(15);
 
       public static final AngularVelocity HUB_SHOT = RotationsPerSecond.of(45);
 
@@ -577,10 +586,14 @@ public class Constants {
       new SimpleMotorFeedforward(0.1, 0.0, 0.0);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(30);
+    public static final Dimensionless MANUAL_HOOD_SPEED = Percent.of(10);
+
     public static final Distance LENGTH = Inches.of(8);
     public static final Mass MASS = Pounds.of(1.365);
 
     public static final class SETPOINTS {
+
+      public static final Angle PIT_SHOT = Degrees.of(10);
 
       public static final Angle HOME = Degrees.of(1);
 
