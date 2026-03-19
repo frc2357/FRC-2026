@@ -603,6 +603,11 @@ public class CommandSwerveDrivetrain
     return m_rotationModifier;
   }
 
+  public void resetDriveModifiers() {
+    m_translationModifier = Percent.of(100);
+    m_rotationModifier = Percent.of(100);
+  }
+
   public AutoDriveMode getAutoDriveMode() {
     return m_autoDriveMode;
   }
