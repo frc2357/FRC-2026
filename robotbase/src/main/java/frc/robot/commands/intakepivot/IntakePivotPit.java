@@ -1,6 +1,5 @@
 package frc.robot.commands.intakepivot;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -17,7 +16,7 @@ public class IntakePivotPit extends SequentialCommandGroup {
           new ParallelRaceGroup(
             Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.PIT_UP_SPEED),
             new WaitUntilIntakePivotStall(),
-            new WaitCommand(Constants.INTAKE_PIVOT.JIGGLE_UP_TIME)
+            new WaitCommand(Constants.INTAKE_PIVOT.PIT_UP_TIME)
           ),
           new ParallelRaceGroup(
             Robot.intakePivot.setSpeed(

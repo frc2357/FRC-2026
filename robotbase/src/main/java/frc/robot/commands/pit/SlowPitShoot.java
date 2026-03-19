@@ -1,17 +1,14 @@
 package frc.robot.commands.pit;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants;
-import frc.robot.commands.scoring.PitScore;
+import frc.robot.commands.scoring.auto.AutoScore;
 
-public class SlowPitShoot extends ParallelCommandGroup {
+public class SlowPitShoot extends AutoScore {
 
   public SlowPitShoot() {
     super(
-      new PitScore(
-        Constants.SHOOTER.SETPOINTS.PIT_SHOT,
-        Constants.HOOD.SETPOINTS.PIT_SHOT
-      )
+      () -> Constants.SHOOTER.SETPOINTS.PIT_SHOT,
+      () -> Constants.HOOD.SETPOINTS.PIT_SHOT
     );
   }
 }

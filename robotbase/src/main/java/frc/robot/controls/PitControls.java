@@ -1,14 +1,13 @@
 package frc.robot.controls;
 
-import static edu.wpi.first.units.Units.Percent;
-
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
 import frc.robot.commands.drive.CrossWheels;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
-import frc.robot.commands.intakerunner.IntakeRunnerAxis;
+import frc.robot.commands.intakepivot.IntakePivotPit;
+import frc.robot.commands.intakerunner.IntakeRunnerSetSpeed;
 import frc.robot.commands.pit.CleanFeed;
 import frc.robot.commands.pit.SlowPitShoot;
 import frc.robot.commands.pit.TestSwerve;
@@ -29,13 +28,11 @@ public class PitControls {
 
     m_controller.a().whileTrue(new TestSwerve());
 
-    m_controller.y().whileTrue(new IntakePivotJiggle());
+    m_controller.y().whileTrue(new IntakePivotPit());
 
     m_controller
       .rightBumper()
-      .whileTrue(
-        new IntakeRunnerAxis(() -> Constants.INTAKE_RUNNER.CLEAN_SPEED)
-      );
+      .whileTrue(new IntakeRunnerSetSpeed(Constants.INTAKE_RUNNER.CLEAN_SPEED));
 
     m_controller.leftBumper().whileTrue(new CleanFeed());
 

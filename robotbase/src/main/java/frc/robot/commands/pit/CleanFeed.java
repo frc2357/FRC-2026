@@ -1,7 +1,5 @@
 package frc.robot.commands.pit;
 
-import static edu.wpi.first.units.Units.Value;
-
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Constants.SHOOTER;
