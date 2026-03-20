@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
+import frc.robot.commands.drive.CrossWheels;
 import frc.robot.commands.drive.DriveTargetLock;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetDriveModifiers;
@@ -75,7 +76,13 @@ public class DriverControls implements RumbleInterface {
 
     m_controller.rightBumper().whileTrue(new TrenchScore());
     m_controller.y().whileTrue(new OutpostScore());
-    m_controller.x().whileTrue(new HubScore());
+    m_controller
+      .x()
+      .whileTrue(new HubScore())
+      .and(() -> getRightX().isEquivalent(Value.zero()))
+      .and(() -> getLeftX().isEquivalent(Value.zero()))
+      .and(() -> getLeftY().isEquivalent(Value.zero()))
+      .whileTrue(new CrossWheels());
 
     m_controller
       .a()
