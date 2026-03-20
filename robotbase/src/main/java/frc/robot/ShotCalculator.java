@@ -104,14 +104,17 @@ public class ShotCalculator {
 
     // These points are not exact and don't correlate to anything specific. They are mainly here for simpler interpolation.
     public static final Distance CLOSEST = Inches.of(43);
+    public static final Distance CEILING = Inches.of(250);
     public static final Distance FURTHERST = Inches.of(500);
   }
 
   public ShotCalculator() {
-    m_passingShooterCurve.put(PASS_POINTS.CLOSEST, RotationsPerSecond.of(70));
+    m_passingShooterCurve.put(PASS_POINTS.CLOSEST, RotationsPerSecond.of(50));
+    //m_passingShooterCurve.put(PASS_POINTS.CEILING, RotationsPerSecond.of(95));
     m_passingShooterCurve.put(PASS_POINTS.FURTHERST, RotationsPerSecond.of(95));
 
-    m_passingHoodCurve.put(PASS_POINTS.CLOSEST, Degrees.of(25));
+    m_passingHoodCurve.put(PASS_POINTS.CLOSEST, Degrees.of(18));
+    m_passingHoodCurve.put(PASS_POINTS.CEILING, Degrees.of(34));
     m_passingHoodCurve.put(PASS_POINTS.FURTHERST, Degrees.of(34));
 
     m_shooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(50));

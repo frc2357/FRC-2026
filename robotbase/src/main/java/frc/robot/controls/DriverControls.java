@@ -23,6 +23,7 @@ import frc.robot.commands.intaking.TeleopIntake;
 import frc.robot.commands.scoring.teleop.HubScore;
 import frc.robot.commands.scoring.teleop.OutpostScore;
 import frc.robot.commands.scoring.teleop.TeleopShoot;
+import frc.robot.commands.scoring.teleop.TowerScore;
 import frc.robot.commands.scoring.teleop.TrenchScore;
 import frc.robot.controls.util.RumbleInterface;
 
@@ -76,6 +77,7 @@ public class DriverControls implements RumbleInterface {
     m_controller.rightBumper().whileTrue(new TrenchScore());
     m_controller.y().whileTrue(new OutpostScore());
     m_controller.x().whileTrue(new HubScore());
+    m_controller.leftBumper().whileTrue(new TowerScore());
 
     m_controller
       .a()

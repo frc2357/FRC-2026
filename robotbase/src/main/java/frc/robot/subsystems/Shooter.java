@@ -49,7 +49,7 @@ public class Shooter extends SubsystemBase {
     );
 
     m_motorRight.configure(
-      SHOOTER.SHOOTER_BASE_CONFIG,
+      SHOOTER.RIGHT_MOTOR_CONFIG,
       ResetMode.kNoResetSafeParameters,
       PersistMode.kPersistParameters
     );
@@ -85,7 +85,6 @@ public class Shooter extends SubsystemBase {
       // Motor properties to prevent over currenting.
       .withStatorCurrentLimit(SHOOTER.STALL_LIMIT)
       .withClosedLoopTolerance(Rotations.of(0.01));
-
     m_sparkSmartMotorController = new SparkWrapper(
       m_motorLeft,
       DCMotor.getNEO(1),

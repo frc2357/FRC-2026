@@ -465,7 +465,7 @@ public class Constants {
     public static final SparkBaseConfig KICKER_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
       .inverted(true)
-      .smartCurrentLimit(15, 10)
+      .smartCurrentLimit(60, 10)
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
@@ -499,6 +499,13 @@ public class Constants {
         .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
         .voltageCompensation(12);
 
+    public static final SparkBaseConfig RIGHT_MOTOR_CONFIG =
+      new SparkMaxConfig()
+        .idleMode(IdleMode.kCoast)
+        .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
+        .voltageCompensation(12)
+        .follow(CAN_ID.LEFT_SHOOTER_MOTOR, true);
+
     // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
     public static final double P = 0.005;
     public static final double I = 0;
@@ -530,6 +537,10 @@ public class Constants {
       public static final AngularVelocity PIT_SHOT = RotationsPerSecond.of(15);
 
       public static final AngularVelocity HUB_SHOT = RotationsPerSecond.of(50);
+
+      public static final AngularVelocity TOWER_SHOT = RotationsPerSecond.of(
+        60
+      );
 
       public static final AngularVelocity TRENCH_SHOT = RotationsPerSecond.of(
         56
@@ -604,6 +615,8 @@ public class Constants {
       public static final Angle HOME = Degrees.of(1);
 
       public static final Angle HUB_SHOT = Degrees.of(1);
+
+      public static final Angle TOWER_SHOT = Degrees.of(14);
 
       public static final Angle TRENCH_SHOT = Degrees.of(11);
 
