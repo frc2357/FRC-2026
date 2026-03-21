@@ -40,6 +40,7 @@ import frc.robot.Constants.CHOREO;
 import frc.robot.Constants.SWERVE;
 import frc.robot.Robot;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.vision.PhotonVisionCamera.SwervePoseEstimate;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -425,7 +426,7 @@ public class CommandSwerveDrivetrain
 
   private final SwerveRequest.FieldCentricFacingAngle m_driveAtAngle =
     new SwerveRequest.FieldCentricFacingAngle()
-      .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
+      .withForwardPerspective(ForwardPerspectiveValue.OperatorPerspective)
       .withHeadingPID(
         SWERVE.HEADING_CONTROLLER_P,
         SWERVE.HEADING_CONTROLLER_I,
@@ -451,12 +452,13 @@ public class CommandSwerveDrivetrain
     LinearVelocity y,
     Rotation2d angle
   ) {
+    angle = AllianceFlipUtil.apply(angle);
     this.setControl(
       m_driveAtAngle
         .withVelocityX(x.times(m_translationModifier))
         .withVelocityY(y.times(m_translationModifier))
         .withTargetDirection(angle)
-        .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
+        .withForwardPerspective(ForwardPerspectiveValue.OperatorPerspective)
         .withMaxAbsRotationalRate(
           SWERVE.MAX_DRIVE_AT_ANGLE_ANGULAR_RATE.times(m_rotationModifier)
         )

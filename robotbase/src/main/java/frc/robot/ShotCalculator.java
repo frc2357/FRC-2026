@@ -33,6 +33,8 @@ import frc.robot.util.MathUtil;
 public class ShotCalculator {
 
   private Field2d targetField = new Field2d();
+  private String shooterOffsetKey = "shooter offset rps";
+  private String hoodOffsetKey = "hood offset rps";
 
   public record CalculatedShot(
     AngularVelocity shooterVelocity,
@@ -142,6 +144,9 @@ public class ShotCalculator {
     m_timeOfFlightCurve.put(SHOT_POINTS.OUTPOST_CORNER, Seconds.of(1.18));
 
     SmartDashboard.putData("target", targetField);
+
+    SmartDashboard.putNumber(shooterOffsetKey, 0);
+    SmartDashboard.putNumber(hoodOffsetKey, 0);
   }
 
   /**
@@ -271,6 +276,13 @@ public class ShotCalculator {
     );
 
     SmartDashboard.putNumber("target angle", driveAngle.getDegrees());
+
+    shooterVelocity = shooterVelocity.plus(
+      RotationsPerSecond.of(SmartDashboard.getNumber(shooterOffsetKey, 0))
+    );
+    hoodAngle = hoodAngle.plus(
+      Degrees.of(SmartDashboard.getNumber(hoodOffsetKey, 0))
+    );
     return new CalculatedShot(shooterVelocity, hoodAngle, driveAngle);
   }
 
