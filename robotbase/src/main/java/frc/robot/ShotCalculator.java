@@ -117,13 +117,13 @@ public class ShotCalculator {
     m_passingHoodCurve.put(PASS_POINTS.CEILING, Degrees.of(34));
     m_passingHoodCurve.put(PASS_POINTS.FURTHERST, Degrees.of(34));
 
-    m_shooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(50));
-    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(52));
-    m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(54));
-    m_shooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(56));
-    m_shooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(60));
-    m_shooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(63));
-    m_shooterCurve.put(SHOT_POINTS.OUTPOST_CORNER, RotationsPerSecond.of(66));
+    m_shooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(51));
+    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(53));
+    m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(55));
+    m_shooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(57));
+    m_shooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(61));
+    m_shooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(64));
+    m_shooterCurve.put(SHOT_POINTS.OUTPOST_CORNER, RotationsPerSecond.of(67));
 
     m_hoodCurve.put(SHOT_POINTS.HUB, Degrees.of(1));
     m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(5));

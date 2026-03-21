@@ -346,7 +346,7 @@ public class Constants {
     public static final SparkBaseConfig RIGHT_MOTOR_CONFIG =
       new SparkMaxConfig()
         .apply(LEFT_MOTOR_CONFIG)
-        .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
+        .follow(CAN_ID.LEFT_INTAKE_MOTOR, false);
 
     public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(70);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);
