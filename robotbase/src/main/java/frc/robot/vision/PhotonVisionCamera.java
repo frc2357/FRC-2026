@@ -12,11 +12,16 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.PHOTON_VISION;
 import frc.robot.Robot;
 import java.util.List;
 import java.util.Optional;
+
+import javax.print.attribute.standard.RequestingUserName;
+
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -40,10 +45,10 @@ public class PhotonVisionCamera {
    * Estimate to add to a swerve pose estimator
    */
   public record SwervePoseEstimate(
-    Pose2d pose,
-    Matrix<N3, N1> stdDevs,
-    double timestamp
-  ) {}
+      Pose2d pose,
+      Matrix<N3, N1> stdDevs,
+      double timestamp) {
+  }
 
   // all of these are protected so we can use them in the extended classes
   // which are only extended so we can control which pipelines we are using.
@@ -57,9 +62,11 @@ public class PhotonVisionCamera {
   /**
    * The list of TargetInfo objects where we cache all of the target data.
    *
-   * <p>Index 0 is the best gamepeice that we detect.
+   * <p>
+   * Index 0 is the best gamepeice that we detect.
    *
-   * <p>Index 1-32 are the AprilTags that are on the field.
+   * <p>
+   * Index 1-32 are the AprilTags that are on the field.
    */
   protected final TargetInfo[] m_targetInfo;
 
@@ -74,7 +81,10 @@ public class PhotonVisionCamera {
    */
   protected Optional<EstimatedRobotPose> m_seedEstimate = Optional.empty();
 
-  /** The robot origin to camera lens transform 3D that we use to make the pose estimator. */
+  /**
+   * The robot origin to camera lens transform 3D that we use to make the pose
+   * estimator.
+   */
   protected final Transform3d ROBOT_TO_CAMERA_TRANSFORM; // if this changes, we have bigger issues.
 
   /** Whether or not we have connection with the camera still */
@@ -83,7 +93,8 @@ public class PhotonVisionCamera {
   /**
    * The fiducial ID of the best target we have.
    *
-   * <p>Used for methods that dont take in a fid ID but do some april tag stuff.
+   * <p>
+   * Used for methods that dont take in a fid ID but do some april tag stuff.
    */
   protected int m_bestTargetFiducialId;
 
@@ -93,23 +104,31 @@ public class PhotonVisionCamera {
   private Matrix<N3, N1> m_singleTagStdDevs;
   private Matrix<N3, N1> m_currentStdDevs;
 
+  private int m_snapCount;
+  private long m_snapLastMillis;
+  protected boolean m_snapDisable;
+
   /**
    * Represents a camera from PhotonVision.
    *
-   * <p>Handles connection, caching, calculating stuff, filtering, mostly everything.
+   * <p>
+   * Handles connection, caching, calculating stuff, filtering, mostly everything.
    *
-   * @param cameraName Name of the cameras Photon Vision network table. MUST match the net tables
-   *     name, or it wont work.
-   * @param robotToCameraTransform The Transform3d of the robots coordinate center to the camera.
-   * @param singleTagStdDevs Standard deviations to use on single-tag strategy
-   * @param multiTagStdDevs Standard deviations to use on multi-tag strategt
+   * @param cameraName             Name of the cameras Photon Vision network
+   *                               table. MUST match the net tables
+   *                               name, or it wont work.
+   * @param robotToCameraTransform The Transform3d of the robots coordinate center
+   *                               to the camera.
+   * @param singleTagStdDevs       Standard deviations to use on single-tag
+   *                               strategy
+   * @param multiTagStdDevs        Standard deviations to use on multi-tag
+   *                               strategt
    */
   public PhotonVisionCamera(
-    String cameraName,
-    Transform3d robotToCameraTransform,
-    Matrix<N3, N1> singleTagStdDevs,
-    Matrix<N3, N1> multiTagStdDevs
-  ) {
+      String cameraName,
+      Transform3d robotToCameraTransform,
+      Matrix<N3, N1> singleTagStdDevs,
+      Matrix<N3, N1> multiTagStdDevs) {
     m_camera = new PhotonCamera(cameraName);
     ROBOT_TO_CAMERA_TRANSFORM = robotToCameraTransform;
 
@@ -120,18 +139,17 @@ public class PhotonVisionCamera {
     }
 
     m_estimator = new PhotonPoseEstimator(
-      Constants.FieldConstants.FIELD_LAYOUT,
-      robotToCameraTransform
-    );
+        Constants.FieldConstants.FIELD_LAYOUT,
+        robotToCameraTransform);
 
     m_multiTagStdDevs = multiTagStdDevs;
     m_singleTagStdDevs = singleTagStdDevs;
 
     m_currentStdDevs = VecBuilder.fill(
-      Double.MAX_VALUE,
-      Double.MAX_VALUE,
-      Double.MAX_VALUE
-    );
+        Double.MAX_VALUE,
+        Double.MAX_VALUE,
+        Double.MAX_VALUE);
+    SmartDashboard.putBoolean("VisionSnapShot", m_snapDisable);
   }
 
   /**
@@ -139,8 +157,9 @@ public class PhotonVisionCamera {
    *
    * <p>
    *
-   * <h1>YOU SHOULD NEVER CALL THIS! This is for the Robot periodic ONLY. NEVER call this method
-   * outside of it. </h1>
+   * <h1>YOU SHOULD NEVER CALL THIS! This is for the Robot periodic ONLY. NEVER
+   * call this method
+   * outside of it.</h1>
    */
   protected void updateResult() {
     // Clear out member estimates every loop
@@ -150,12 +169,11 @@ public class PhotonVisionCamera {
     if (!m_camera.isConnected() && !m_connectionLost) {
       m_connectionLost = true;
       DriverStation.reportError(
-        "[" +
-          m_camera.getName() +
-          "]\n" +
-          PHOTON_VISION.LOST_CONNECTION_ERROR_MESSAGE,
-        false
-      );
+          "[" +
+              m_camera.getName() +
+              "]\n" +
+              PHOTON_VISION.LOST_CONNECTION_ERROR_MESSAGE,
+          false);
       return;
     }
     m_results = m_camera.getAllUnreadResults();
@@ -189,56 +207,60 @@ public class PhotonVisionCamera {
 
       // Commenting this filter out
       // We only want to use this filter if we plan to hard-set the robot pose
-      // to a vision estimate frequently (like at the start of a drive to pose command)
-      // Otherwise, our natural drift will lead this filter to never allow a vision estimate
+      // to a vision estimate frequently (like at the start of a drive to pose
+      // command)
+      // Otherwise, our natural drift will lead this filter to never allow a vision
+      // estimate
       // into our swerve pose estimator
       // if (!passesRobotPoseFilter(visionEst.get())) {
-      //   continue;
+      // continue;
       // }
 
+      // force a snap shot when re-establishing a good pose estimate
+      var force_snap = false;
+      if (m_poseEstimate.isEmpty() && visionEst.isPresent()) {
+        force_snap = true;
+      }
       m_poseEstimate = visionEst;
       m_currentStdDevs = updateEstimationStdDevs(
-        visionEst.get(),
-        result.getTargets()
-      );
+          visionEst.get(),
+          result.getTargets());
+
+      // forced on re-establishing good pose
+      // otherwise on a timer with a max number of captures
+      executeSnapshot(force_snap);
     }
 
     if (m_camera.isConnected() && m_connectionLost) {
       m_connectionLost = false;
       DriverStation.reportWarning(
-        "[" +
-          m_camera.getName() +
-          "]\n" +
-          PHOTON_VISION.CONNECTION_REGAINED_MESSAGE,
-        false
-      );
+          "[" +
+              m_camera.getName() +
+              "]\n" +
+              PHOTON_VISION.CONNECTION_REGAINED_MESSAGE,
+          false);
     }
   }
 
   /**
    *
    * @param estimate The camera's pose estimate
-   * @return true if the vision estimate is within reasonable constraints to the robot
+   * @return true if the vision estimate is within reasonable constraints to the
+   *         robot
    */
   public boolean passesRobotSpeedFilter(EstimatedRobotPose estimate) {
     ChassisSpeeds speeds = Robot.swerve.getCurrentRobotRelativeSpeeds();
 
     // Check if we are translating too fast
-    if (
-      Math.sqrt(
+    if (Math.sqrt(
         Math.pow(speeds.vxMetersPerSecond, 2) +
-          Math.pow(speeds.vyMetersPerSecond, 2)
-      ) >=
-      PHOTON_VISION.FILTER_PARAM.MAX_ROBOT_TRANSLATION.in(MetersPerSecond)
-    ) {
+            Math.pow(speeds.vyMetersPerSecond, 2)) >= PHOTON_VISION.FILTER_PARAM.MAX_ROBOT_TRANSLATION
+                .in(MetersPerSecond)) {
       return false;
     }
 
     // Check if we are rotating too fast
-    if (
-      speeds.omegaRadiansPerSecond >=
-      PHOTON_VISION.FILTER_PARAM.MAX_ROBOT_ROTATION.in(RadiansPerSecond)
-    ) {
+    if (speeds.omegaRadiansPerSecond >= PHOTON_VISION.FILTER_PARAM.MAX_ROBOT_ROTATION.in(RadiansPerSecond)) {
       return false;
     }
 
@@ -248,13 +270,10 @@ public class PhotonVisionCamera {
   public boolean passesRobotPoseFilter(EstimatedRobotPose estimate) {
     // Check if the estimate is too far away
     Pose2d robotPose = Robot.swerve.getFieldRelativePose2d();
-    if (
-      estimate.estimatedPose
+    if (estimate.estimatedPose
         .getTranslation()
         .toTranslation2d()
-        .getDistance(robotPose.getTranslation()) >=
-      PHOTON_VISION.FILTER_PARAM.MAX_DISTANCE_FROM_ROBOT.in(Meters)
-    ) {
+        .getDistance(robotPose.getTranslation()) >= PHOTON_VISION.FILTER_PARAM.MAX_DISTANCE_FROM_ROBOT.in(Meters)) {
       return false;
     }
 
@@ -262,33 +281,37 @@ public class PhotonVisionCamera {
   }
 
   /**
-   * Calculates new standard deviations This algorithm is a heuristic that creates dynamic standard
-   * deviations based on number of tags, estimation strategy, and distance from the tags.
+   * Calculates new standard deviations This algorithm is a heuristic that creates
+   * dynamic standard
+   * deviations based on number of tags, estimation strategy, and distance from
+   * the tags.
    *
-   * From the PhotonVision example code: https://github.com/PhotonVision/photonvision/blob/main/photonlib-java-examples/poseest/src/main/java/frc/robot/Vision.java
+   * From the PhotonVision example code:
+   * https://github.com/PhotonVision/photonvision/blob/main/photonlib-java-examples/poseest/src/main/java/frc/robot/Vision.java
    *
    * @param estimatedPose The estimated pose to guess standard deviations for.
-   * @param targets All targets in this camera frame
+   * @param targets       All targets in this camera frame
    */
   private Matrix<N3, N1> updateEstimationStdDevs(
-    EstimatedRobotPose estimatedPose,
-    List<PhotonTrackedTarget> targets
-  ) {
+      EstimatedRobotPose estimatedPose,
+      List<PhotonTrackedTarget> targets) {
     // Pose present. Start running Heuristic
     var estStdDevs = m_singleTagStdDevs;
     int numTags = 0;
     double avgDist = 0;
 
-    // Precalculation - see how many tags we found, and calculate an average-distance metric
+    // Precalculation - see how many tags we found, and calculate an
+    // average-distance metric
     for (var tgt : targets) {
       var tagPose = m_estimator.getFieldTags().getTagPose(tgt.getFiducialId());
-      if (tagPose.isEmpty()) continue;
+      if (tagPose.isEmpty())
+        continue;
       numTags++;
       avgDist += tagPose
-        .get()
-        .toPose2d()
-        .getTranslation()
-        .getDistance(estimatedPose.estimatedPose.toPose2d().getTranslation());
+          .get()
+          .toPose2d()
+          .getTranslation()
+          .getDistance(estimatedPose.estimatedPose.toPose2d().getTranslation());
     }
 
     if (numTags == 0) {
@@ -298,14 +321,16 @@ public class PhotonVisionCamera {
       // One or more tags visible, run the full heuristic.
       avgDist /= numTags;
       // Decrease std devs if multiple targets are visible
-      if (numTags > 1) estStdDevs = m_multiTagStdDevs;
+      if (numTags > 1)
+        estStdDevs = m_multiTagStdDevs;
       // Increase std devs based on (average) distance
-      if (numTags == 1 && avgDist > 4) estStdDevs = VecBuilder.fill(
-        Double.MAX_VALUE,
-        Double.MAX_VALUE,
-        Double.MAX_VALUE
-      );
-      else estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist) / 30));
+      if (numTags == 1 && avgDist > 4)
+        estStdDevs = VecBuilder.fill(
+            Double.MAX_VALUE,
+            Double.MAX_VALUE,
+            Double.MAX_VALUE);
+      else
+        estStdDevs = estStdDevs.times(1 + ((avgDist * avgDist) / 30));
       return estStdDevs;
     }
   }
@@ -334,12 +359,15 @@ public class PhotonVisionCamera {
   }
 
   /**
-   * Compares the current system time to the last cached timestamp, and sees if it is older than the
+   * Compares the current system time to the last cached timestamp, and sees if it
+   * is older than the
    * passsed in timeout.
    *
-   * @param fiducialId Fiducial ID of the desired target to valid the data of. Notes have a
-   *     fiducialId of 0
-   * @param timeoutMs The amount of milliseconds past which target info is deemed expired
+   * @param fiducialId Fiducial ID of the desired target to valid the data of.
+   *                   Notes have a
+   *                   fiducialId of 0
+   * @param timeoutMs  The amount of milliseconds past which target info is deemed
+   *                   expired
    * @return If the camera has seen the target within the timeout given
    */
   public boolean isValidTarget(int fiducialId, long timeoutMs) {
@@ -348,11 +376,9 @@ public class PhotonVisionCamera {
 
     TargetInfo target = m_targetInfo[fiducialId];
 
-    return (
-      target.timestamp > then ||
-      Math.abs(target.yaw) > PHOTON_VISION.MAX_ANGLE ||
-      Math.abs(target.pitch) > PHOTON_VISION.MAX_ANGLE
-    );
+    return (target.timestamp > then ||
+        Math.abs(target.yaw) > PHOTON_VISION.MAX_ANGLE ||
+        Math.abs(target.pitch) > PHOTON_VISION.MAX_ANGLE);
   }
 
   /**
@@ -377,8 +403,10 @@ public class PhotonVisionCamera {
 
   /**
    * @param fiducialId The fiducial ID of the target to get the yaw of.
-   * @param timeoutMs The amount of milliseconds past which target info is deemed expired
-   * @return Returns the desired targets yaw. <strong>Will be NaN if the cached data was invalid.
+   * @param timeoutMs  The amount of milliseconds past which target info is deemed
+   *                   expired
+   * @return Returns the desired targets yaw. <strong>Will be NaN if the cached
+   *         data was invalid.
    */
   public double getTargetYaw(int fiducialId, long timeoutMs) {
     if (isValidTarget(fiducialId, timeoutMs)) {
@@ -389,8 +417,10 @@ public class PhotonVisionCamera {
 
   /**
    * @param fiducialIds The list of fiducial IDs to check.
-   * @param timeoutMs The amount of milliseconds past which target info is deemed expired
-   * @return Returns the yaw of the first id in the list, <strong>or NaN if none are valid.
+   * @param timeoutMs   The amount of milliseconds past which target info is
+   *                    deemed expired
+   * @return Returns the yaw of the first id in the list, <strong>or NaN if none
+   *         are valid.
    */
   public double getTargetYaw(int[] fiducialIds, long timeoutMs) {
     for (int id : fiducialIds) {
@@ -403,9 +433,11 @@ public class PhotonVisionCamera {
   }
 
   /**
-   * @param id The ID of the target to get the pitch of.
-   * @param timeoutMs The amount of milliseconds past which target info is deemed expired
-   * @return Returns the desired targets pitch, <strong>will be NaN if the cached data was invalid.
+   * @param id        The ID of the target to get the pitch of.
+   * @param timeoutMs The amount of milliseconds past which target info is deemed
+   *                  expired
+   * @return Returns the desired targets pitch, <strong>will be NaN if the cached
+   *         data was invalid.
    */
   public double getTargetPitch(int fiducialId, long timeoutMs) {
     if (isValidTarget(fiducialId, timeoutMs)) {
@@ -416,8 +448,10 @@ public class PhotonVisionCamera {
 
   /**
    * @param fiducialIds The list of fiducial IDs to check.
-   * @param timeoutMs The amount of milliseconds past which target info is deemed expired
-   * @return Returns the pitch of the first id in the list, <strong>or NaN if none are valid.
+   * @param timeoutMs   The amount of milliseconds past which target info is
+   *                    deemed expired
+   * @return Returns the pitch of the first id in the list, <strong>or NaN if none
+   *         are valid.
    */
   public double getTargetPitch(int[] fiducialIds, long timeoutMs) {
     for (int id : fiducialIds) {
@@ -435,20 +469,45 @@ public class PhotonVisionCamera {
     }
     var est = m_poseEstimate.get();
     return Optional.of(
-      new SwervePoseEstimate(
-        est.estimatedPose.toPose2d(),
-        m_currentStdDevs,
-        est.timestampSeconds
-      )
-    );
+        new SwervePoseEstimate(
+            est.estimatedPose.toPose2d(),
+            m_currentStdDevs,
+            est.timestampSeconds));
   }
 
   /**
    * Purpose of this estimate is to seed the robot's current position
    * Do not add this measurement to the odometry using addVisionMeasurement
+   * 
    * @return The pose to be seeded as the robot's current position
    */
   public Optional<EstimatedRobotPose> getSeedEstimateForSwerve() {
     return m_seedEstimate;
   }
+
+  /**
+   * Purpose of this function is to gather example images from the cameras for
+   * offline analysis. This is called as part of updateResult(), and is currently
+   * located at the end of updateResult
+   * 
+   */
+  public void executeSnapshot(boolean force) {
+    var snapDisable = SmartDashboard.getBoolean("VisionSnapShot", false);
+    if (snapDisable) {
+      return;
+    }
+    if ((m_snapCount > PHOTON_VISION.SNAPSHOT_PARAM.MAX_SNAPSHOTS) || Robot.isSimulation()
+        || !(DriverStation.isAutonomous() || DriverStation.isTeleop())) {
+      return;
+    }
+
+    var now = System.currentTimeMillis();
+    if (force || (m_snapLastMillis + PHOTON_VISION.SNAPSHOT_PARAM.MIN_SNAPINTERVAL_MS > now)) {
+      m_snapCount++;
+      m_snapLastMillis = now;
+
+      m_camera.takeInputSnapshot();
+    }
+  }
+
 }
