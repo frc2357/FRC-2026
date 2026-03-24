@@ -70,6 +70,7 @@ public class Constants {
     public static final int CODRIVER_CONTROLLER_PORT = 0;
     public static final double CODRIVER_CONTROLLER_DEADBAND = 0.025;
 
+    public static final int TUNING_CONTROLLER_PORT = 4;
     public static final int PIT_CONTROLLER_PORT = 5;
 
     public static final double DRIVER_RUMBLE_INTENSITY = .5;

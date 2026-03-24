@@ -69,14 +69,14 @@ public class ShotCalculator {
     InterpolationUtil::Interpolate
   );
 
-  private final CurveTuner<Distance, AngularVelocity> m_shooterCurve =
+  private final CurveTuner<Distance, AngularVelocity> m_scoringShooterCurve =
     new CurveTuner<Distance, AngularVelocity>(
       "Shooter Curve",
       InterpolationUtil::InverseInterpolate,
       InterpolationUtil::Interpolate
     );
 
-  private final CurveTuner<Distance, Angle> m_hoodCurve = new CurveTuner<
+  private final CurveTuner<Distance, Angle> m_scoringHoodCurve = new CurveTuner<
     Distance,
     Angle
   >(
@@ -107,6 +107,16 @@ public class ShotCalculator {
     public static final Distance OUTPOST_CORNER = Inches.of(205); // Far corner of the outpost
   }
 
+  public static final Distance[] SHOT_POINT_ARRAY = {
+    SHOT_POINTS.HUB,
+    SHOT_POINTS.POINT_2,
+    SHOT_POINTS.POINT_3,
+    SHOT_POINTS.TRENCH,
+    SHOT_POINTS.POINT_5,
+    SHOT_POINTS.POINT_6,
+    SHOT_POINTS.OUTPOST_CORNER,
+  };
+
   public static final class PASS_POINTS {
 
     // These points are not exact and don't correlate to anything specific. They are mainly here for simpler interpolation.
@@ -124,21 +134,24 @@ public class ShotCalculator {
     m_passingHoodCurve.put(PASS_POINTS.CEILING, Degrees.of(34));
     m_passingHoodCurve.put(PASS_POINTS.FURTHERST, Degrees.of(34));
 
-    m_shooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(43));
-    m_shooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(46));
-    m_shooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(47));
-    m_shooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(49));
-    m_shooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(52));
-    m_shooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(54));
-    m_shooterCurve.put(SHOT_POINTS.OUTPOST_CORNER, RotationsPerSecond.of(58));
+    m_scoringShooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(43));
+    m_scoringShooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(46));
+    m_scoringShooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(47));
+    m_scoringShooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(49));
+    m_scoringShooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(52));
+    m_scoringShooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(54));
+    m_scoringShooterCurve.put(
+      SHOT_POINTS.OUTPOST_CORNER,
+      RotationsPerSecond.of(58)
+    );
 
-    m_hoodCurve.put(SHOT_POINTS.HUB, Degrees.of(1));
-    m_hoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(4));
-    m_hoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(6));
-    m_hoodCurve.put(SHOT_POINTS.TRENCH, Degrees.of(10.5));
-    m_hoodCurve.put(SHOT_POINTS.POINT_5, Degrees.of(13));
-    m_hoodCurve.put(SHOT_POINTS.POINT_6, Degrees.of(17));
-    m_hoodCurve.put(SHOT_POINTS.OUTPOST_CORNER, Degrees.of(18));
+    m_scoringHoodCurve.put(SHOT_POINTS.HUB, Degrees.of(1));
+    m_scoringHoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(4));
+    m_scoringHoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(6));
+    m_scoringHoodCurve.put(SHOT_POINTS.TRENCH, Degrees.of(10.5));
+    m_scoringHoodCurve.put(SHOT_POINTS.POINT_5, Degrees.of(13));
+    m_scoringHoodCurve.put(SHOT_POINTS.POINT_6, Degrees.of(17));
+    m_scoringHoodCurve.put(SHOT_POINTS.OUTPOST_CORNER, Degrees.of(18));
 
     m_timeOfFlightCurve.put(SHOT_POINTS.HUB, Seconds.of(1.005));
     m_timeOfFlightCurve.put(SHOT_POINTS.POINT_2, Seconds.of(1.068));
@@ -229,8 +242,10 @@ public class ShotCalculator {
     AngularVelocity shooterVelocity;
     Angle hoodAngle;
     if (isInAllianceZone()) {
-      shooterVelocity = m_shooterCurve.get(futureShootertoTargetDistance);
-      hoodAngle = m_hoodCurve.get(futureShootertoTargetDistance);
+      shooterVelocity = m_scoringShooterCurve.get(
+        futureShootertoTargetDistance
+      );
+      hoodAngle = m_scoringHoodCurve.get(futureShootertoTargetDistance);
     } else {
       shooterVelocity = m_passingShooterCurve.get(
         futureShootertoTargetDistance
@@ -394,7 +409,7 @@ public class ShotCalculator {
 
   public AngularVelocity getShooterVelocityStationary(Distance distance) {
     if (isInAllianceZone()) {
-      return m_shooterCurve.get(distance);
+      return m_scoringShooterCurve.get(distance);
     } else {
       return m_passingShooterCurve.get(distance);
     }
@@ -402,23 +417,31 @@ public class ShotCalculator {
 
   public Angle getHoodAngleStationary(Distance distance) {
     if (isInAllianceZone()) {
-      return m_hoodCurve.get(distance);
+      return m_scoringHoodCurve.get(distance);
     } else {
       return m_passingHoodCurve.get(distance);
     }
   }
 
   public void updateCurveTuners() {
-    m_shooterCurve.updateCurveValues();
-    m_hoodCurve.updateCurveValues();
+    m_scoringShooterCurve.updateCurveValues();
+    m_scoringHoodCurve.updateCurveValues();
     m_passingShooterCurve.updateCurveValues();
     m_passingHoodCurve.updateCurveValues();
   }
 
   public void logCurveValues() {
-    m_shooterCurve.logCurrentValues();
-    m_hoodCurve.logCurrentValues();
+    m_scoringShooterCurve.logCurrentValues();
+    m_scoringHoodCurve.logCurrentValues();
     m_passingShooterCurve.logCurrentValues();
     m_passingHoodCurve.logCurrentValues();
+  }
+
+  public CurveTuner<Distance, AngularVelocity> getScoringShooterCurve() {
+    return m_scoringShooterCurve;
+  }
+
+  public CurveTuner<Distance, Angle> getScoringHoodCurve() {
+    return m_scoringHoodCurve;
   }
 }

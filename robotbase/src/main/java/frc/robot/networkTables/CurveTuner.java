@@ -46,7 +46,13 @@ public class CurveTuner<
     SmartDashboard.putData(m_name, m_rowChooser);
   }
 
-  private void updateSelectedCurveIndex(K key) {
+  public void updateSelectedCurveIndex(K key) {
+    System.out.println("-------------------------------------");
+    System.out.println(m_name + " - Selected Key Changed");
+    System.out.println(
+      String.format("Selected Key: %f %s", key.magnitude(), key.unit().name())
+    );
+    System.out.println("-------------------------------------");
     if (key == null) {
       return;
     }
