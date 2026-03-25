@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -194,7 +196,31 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    SmartDashboard.putBoolean(
+      "FireControlAllow",
+      shotCalculator.fireControlApproval().getAsBoolean()
+    );
+
+    SmartDashboard.putString(
+      "Shift Name",
+      shiftTimer.getShiftInfo().shift().toString()
+    );
+
+    SmartDashboard.putNumber(
+      "Shift Time Remaining",
+      shiftTimer.getShiftInfo().timeRemaining().in(Seconds)
+    );
+    SmartDashboard.putBoolean(
+      "IsHubActive",
+      shiftTimer.getShiftInfo().isHubActive()
+    );
+
+    SmartDashboard.putNumber(
+      "Shooter ToF",
+      shotCalculator.getCalculatedShot().timeOfFlight().in(Seconds)
+    );
+  }
 
   @Override
   public void teleopExit() {}
