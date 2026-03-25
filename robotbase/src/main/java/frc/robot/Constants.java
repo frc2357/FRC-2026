@@ -327,9 +327,9 @@ public class Constants {
       .voltageCompensation(12);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
-    public static final Dimensionless TUNNEL_SPEED = Percent.of(100);
+    public static final Dimensionless TUNNEL_SPEED = Percent.of(92.07);
     public static final Dimensionless SLOW_TUNNEL_SPEED = Percent.of(10);
-    public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-100);
+    public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-92.07);
   }
 
   public static final class INTAKE_RUNNER {
@@ -338,7 +338,7 @@ public class Constants {
 
     public static final SparkBaseConfig LEFT_MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(true)
+      .inverted(false)
       .smartCurrentLimit(40, 20)
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
@@ -454,7 +454,9 @@ public class Constants {
       -100
     );
 
-    public static final AngularVelocity FEED_SPEED = RotationsPerSecond.of(77);
+    public static final AngularVelocity FEED_SPEED = RotationsPerSecond.of(
+      62.96576
+    );
     public static final Dimensionless SLOW_FEED_SPEED = Percent.of(10);
   }
 
