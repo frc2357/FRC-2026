@@ -17,8 +17,10 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SCORING;
+import frc.robot.ShiftTimer.ShiftInfo;
 import frc.robot.networkTables.CurveTuner;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.InterpolationUtil;
@@ -39,13 +41,15 @@ public class ShotCalculator {
   public record CalculatedShot(
     AngularVelocity shooterVelocity,
     Angle hoodPosition,
-    Rotation2d driveAngle
+    Rotation2d driveAngle,
+    Time timeOfFlight
   ) {}
 
   private CalculatedShot m_latestCalculatedShot = new CalculatedShot(
     RotationsPerSecond.of(0),
     Degrees.of(0),
-    Rotation2d.fromDegrees(0)
+    Rotation2d.fromDegrees(0),
+    Seconds.of(0)
   );
 
   private final CurveTuner<Distance, AngularVelocity> m_passingShooterCurve =
@@ -176,8 +180,14 @@ public class ShotCalculator {
       hoodAngle = m_passingHoodCurve.get(targetDistance);
     }
     Rotation2d driveAngle = computeTargetDriveAngle(robotPose, target);
+    Time timeOfFlight = m_timeOfFlightCurve.get(targetDistance);
 
-    return new CalculatedShot(shooterVelocity, hoodAngle, driveAngle);
+    return new CalculatedShot(
+      shooterVelocity,
+      hoodAngle,
+      driveAngle,
+      timeOfFlight
+    );
   }
 
   /**
@@ -283,7 +293,12 @@ public class ShotCalculator {
     hoodAngle = hoodAngle.plus(
       Degrees.of(SmartDashboard.getNumber(hoodOffsetKey, 0))
     );
-    return new CalculatedShot(shooterVelocity, hoodAngle, driveAngle);
+    return new CalculatedShot(
+      shooterVelocity,
+      hoodAngle,
+      driveAngle,
+      timeOfFlight
+    );
   }
 
   // TODO Implement, requires changes in pose initialization branch
@@ -292,7 +307,8 @@ public class ShotCalculator {
     return new CalculatedShot(
       RotationsPerSecond.of(0),
       Degrees.of(0),
-      Rotation2d.fromDegrees(0)
+      Rotation2d.fromDegrees(0),
+      Seconds.of(0)
     );
   }
 
@@ -337,6 +353,51 @@ public class ShotCalculator {
       Constants.SHOOTER.ROBOT_TO_SHOOTER
     );
     return shooterPose.getX() < FieldConstants.LinesVertical.allianceZone;
+  }
+
+  public Trigger fireControlApproval() {
+    return new Trigger(() -> {
+      if (!isInAllianceZone()) {
+        // Always approves when passing
+        return true;
+      }
+
+      ShiftInfo shiftInfo = Robot.shiftTimer.getShiftInfo();
+
+      if (shiftInfo.isHubActive()) {
+        // Always approves if the hub is active
+        return true;
+      }
+
+      if (
+        (shiftInfo
+            .timeRemaining()
+            .lte(
+              getCalculatedShot().timeOfFlight.plus(
+                Constants.SCORING.TOF_TIMING_BUFFER
+              )
+            ))
+      ) {
+        /* if the hub is not active, BUT the remaining time until activation is LESS THAN the time of flight,
+         it will return true */
+        return true;
+      }
+
+      if (
+        Constants.SHIFT.TELEOP_NUMBERED_SHIFT_LENGTH.minus(
+          shiftInfo.timeRemaining()
+        )
+          .plus(getCalculatedShot().timeOfFlight)
+          .plus(Constants.SCORING.TOF_TIMING_BUFFER)
+          .lte(Constants.SCORING.POST_HUB_DEACTIVATION_BUFFER_TIME)
+      ) {
+        //if the hub is not active, BUT the time since the shift started PLUS the ToF is LESS THAN the deactivation buffer
+        // (UP TO 3 seconds as per the game manual), then it returns true
+        return true;
+      }
+      // will not approve when hub is off AND outside the ToF buffer + deactivation buffer as calculated above
+      else return false;
+    });
   }
 
   private Translation2d getShotTarget() {
