@@ -643,6 +643,8 @@ public class Constants {
     public static final int DRIVE_ANGLE_CONVERGE_ITERATIONS = 2;
 
     public static final Time TIME_TO_WARN_FOR_ACTIVE_HUB = Seconds.of(10);
+    public static final Time POST_HUB_DEACTIVATION_BUFFER_TIME = Seconds.of(3);
+    public static final Time TOF_TIMING_BUFFER = Seconds.of(.1);
 
     public static final Rectangle2d[] NO_SHOOT_ZONES = new Rectangle2d[] {
       // This rect represents a 47in x 47in square centered on the neutral zone side of the hub.
@@ -667,6 +669,7 @@ public class Constants {
 
     public static final Time AUTO_LENGTH = Seconds.of(20);
     public static final Time TELEOP_LENGTH = Seconds.of(140);
+    public static final Time TELEOP_NUMBERED_SHIFT_LENGTH = Seconds.of(25);
 
     // Times relative to teleop (start of teleop = 0)
     public static final Time[] TELEOP_SHIFT_START_TIMES = {

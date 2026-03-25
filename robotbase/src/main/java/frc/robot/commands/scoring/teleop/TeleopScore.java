@@ -30,9 +30,9 @@ public class TeleopScore extends ParallelCommandGroup {
       new SequentialCommandGroup(
         new WaitUntilCommand(Robot.shooter.isAtInitialTargetVelocity()),
         new ConditionalScoreFeed(
-          isPositionedToShoot().and(
-            Robot.shooter.isAtContinuousTargetVelocity()
-          )
+          isPositionedToShoot()
+            .and(Robot.shooter.isAtContinuousTargetVelocity())
+            .and(Robot.shotCalculator.fireControlApproval())
         )
       )
     );
