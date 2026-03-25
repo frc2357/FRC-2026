@@ -655,6 +655,7 @@ public class Constants {
 
     public static final Time AUTO_LENGTH = Seconds.of(20);
     public static final Time TELEOP_LENGTH = Seconds.of(140);
+    public static final Time TELEOP_NUMBERED_SHIFT_LENGTH = Seconds.of(25);
 
     // Times relative to teleop (start of teleop = 0)
     public static final Time[] TELEOP_SHIFT_START_TIMES = {

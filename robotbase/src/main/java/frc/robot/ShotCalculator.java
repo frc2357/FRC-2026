@@ -362,7 +362,9 @@ public class ShotCalculator {
       }
 
       if (
-        Constants.SHIFT.TELEOP_LENGTH.minus(shiftInfo.timeRemaining())
+        Constants.SHIFT.TELEOP_NUMBERED_SHIFT_LENGTH.minus(
+          shiftInfo.timeRemaining()
+        )
           .plus(getCalculatedShot().timeOfFlight)
           .lte(Constants.SCORING.POST_HUB_DEACTIVATION_BUFFER_TIME)
       ) {
