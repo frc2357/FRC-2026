@@ -38,9 +38,9 @@ public class CameraManager extends SubsystemBase {
     Constants.PHOTON_VISION.BACK_RIGHT_CAM.kMultiTagStdDevs
   );
 
-  PhotonVisionCamera[] m_cameras = { m_shooter };
+  //PhotonVisionCamera[] m_cameras = { m_shooter };
 
-  // PhotonVisionCamera[] m_cameras = { m_shooter, m_backLeft, m_backRight };
+  PhotonVisionCamera[] m_cameras = { m_shooter, m_backLeft, m_backRight };
 
   @SuppressWarnings("unchecked")
   Optional<SwervePoseEstimate>[] m_estimates = (Optional<
