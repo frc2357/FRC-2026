@@ -157,38 +157,6 @@ public class ShotCalculator {
    * Computed using pose estimation
    * @return The distance between the top center point of the hub and the shooter flywheel
    */
-  public CalculatedShot calculateShotFromPoseStationary() {
-    Pose2d robotPose = Robot.swerve.getFieldRelativePose2d();
-
-    Pose2d shooterPose = robotPose.transformBy(
-      Constants.SHOOTER.ROBOT_TO_SHOOTER
-    );
-
-    Translation2d target = AllianceFlipUtil.apply(getShotTarget());
-
-    Distance targetDistance = Meters.of(
-      shooterPose.getTranslation().getDistance(target)
-    );
-
-    AngularVelocity shooterVelocity;
-    Angle hoodAngle;
-    if (isInAllianceZone()) {
-      shooterVelocity = m_shooterCurve.get(targetDistance);
-      hoodAngle = m_hoodCurve.get(targetDistance);
-    } else {
-      shooterVelocity = m_passingShooterCurve.get(targetDistance);
-      hoodAngle = m_passingHoodCurve.get(targetDistance);
-    }
-    Rotation2d driveAngle = computeTargetDriveAngle(robotPose, target);
-    Time timeOfFlight = m_timeOfFlightCurve.get(targetDistance);
-
-    return new CalculatedShot(
-      shooterVelocity,
-      hoodAngle,
-      driveAngle,
-      timeOfFlight
-    );
-  }
 
   /**
    * Implementation of LUT based shoot on the fly algorithm
@@ -389,7 +357,7 @@ public class ShotCalculator {
         )
           .plus(getCalculatedShot().timeOfFlight)
           .plus(Constants.SCORING.TOF_TIMING_BUFFER)
-          .lte(Constants.SCORING.POST_HUB_DEACTIVATION_BUFFER_TIME)
+          .lte(Constants.SCORING.POST_HUB_DEACTIVATION_GRACE_TIME)
       ) {
         //if the hub is not active, BUT the time since the shift started PLUS the ToF is LESS THAN the deactivation buffer
         // (UP TO 3 seconds as per the game manual), then it returns true
