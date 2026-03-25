@@ -355,9 +355,17 @@ public class ShotCalculator {
         return true;
       }
 
-      if ((shiftInfo.timeRemaining().lte(getCalculatedShot().timeOfFlight))) {
-        // if the hub is not active, BUT the remaining time until activation is LESS THAN the time of flight,
-        // it will return true
+      if (
+        (shiftInfo
+            .timeRemaining()
+            .lte(
+              getCalculatedShot().timeOfFlight.plus(
+                Constants.SCORING.TOF_TIMING_BUFFER
+              )
+            ))
+      ) {
+        /* if the hub is not active, BUT the remaining time until activation is LESS THAN the time of flight,
+         it will return true */
         return true;
       }
 
@@ -366,13 +374,14 @@ public class ShotCalculator {
           shiftInfo.timeRemaining()
         )
           .plus(getCalculatedShot().timeOfFlight)
+          .plus(Constants.SCORING.TOF_TIMING_BUFFER)
           .lte(Constants.SCORING.POST_HUB_DEACTIVATION_BUFFER_TIME)
       ) {
-        //if the hub is not active, BUT the time since the shift started PLUS the ToF is LESS THAN the buffer
+        //if the hub is not active, BUT the time since the shift started PLUS the ToF is LESS THAN the deactivation buffer
         // (UP TO 3 seconds as per the game manual), then it returns true
         return true;
       }
-      // will not approve when hub is off AND outside the ToF buffer
+      // will not approve when hub is off AND outside the ToF buffer + deactivation buffer as calculated above
       else return false;
     });
   }
