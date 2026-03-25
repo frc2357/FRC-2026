@@ -12,6 +12,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.PHOTON_VISION;
 import frc.robot.Robot;
@@ -93,6 +95,8 @@ public class PhotonVisionCamera {
   private Matrix<N3, N1> m_singleTagStdDevs;
   private Matrix<N3, N1> m_currentStdDevs;
 
+  private Field2d field = new Field2d();
+
   /**
    * Represents a camera from PhotonVision.
    *
@@ -132,6 +136,8 @@ public class PhotonVisionCamera {
       Double.MAX_VALUE,
       Double.MAX_VALUE
     );
+
+    SmartDashboard.putData(cameraName + " field", field);
   }
 
   /**
@@ -173,9 +179,9 @@ public class PhotonVisionCamera {
       cacheForAprilTags(result.targets);
 
       visionEst = m_estimator.estimateCoprocMultiTagPose(result);
-      if (visionEst.isEmpty()) {
-        visionEst = m_estimator.estimateLowestAmbiguityPose(result);
-      }
+      // if (visionEst.isEmpty()) {
+      //   visionEst = m_estimator.estimateLowestAmbiguityPose(result);
+      // }
 
       if (visionEst.isEmpty()) {
         continue;
@@ -201,6 +207,8 @@ public class PhotonVisionCamera {
         visionEst.get(),
         result.getTargets()
       );
+
+      field.setRobotPose(m_poseEstimate.get().estimatedPose.toPose2d());
     }
 
     if (m_camera.isConnected() && m_connectionLost) {

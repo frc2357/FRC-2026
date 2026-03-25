@@ -100,9 +100,11 @@ public class Constants {
     public static final double HEADING_CONTROLLER_D = 0;
 
     public static final Dimensionless INTAKE_TRANSLATION_MODIFIER = Percent.of(
-      55
+      100
     );
-    public static final Dimensionless INTAKE_ROTATION_MODIFIER = Percent.of(75);
+    public static final Dimensionless INTAKE_ROTATION_MODIFIER = Percent.of(
+      100
+    );
 
     public static final Dimensionless SCORE_TRANSLATION_MODIFIER = Percent.of(
       30
@@ -327,9 +329,9 @@ public class Constants {
       .voltageCompensation(12);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
-    public static final Dimensionless TUNNEL_SPEED = Percent.of(100);
+    public static final Dimensionless TUNNEL_SPEED = Percent.of(92.07);
     public static final Dimensionless SLOW_TUNNEL_SPEED = Percent.of(10);
-    public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-100);
+    public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-92.07);
   }
 
   public static final class INTAKE_RUNNER {
@@ -338,7 +340,7 @@ public class Constants {
 
     public static final SparkBaseConfig LEFT_MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
-      .inverted(true)
+      .inverted(false)
       .smartCurrentLimit(40, 20)
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
@@ -348,7 +350,7 @@ public class Constants {
         .apply(LEFT_MOTOR_CONFIG)
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
 
-    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(70);
+    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(100);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);
     public static final Dimensionless INTAKE_JIGGLING_SPEED = Percent.of(10);
   }
@@ -454,7 +456,9 @@ public class Constants {
       -100
     );
 
-    public static final AngularVelocity FEED_SPEED = RotationsPerSecond.of(77);
+    public static final AngularVelocity FEED_SPEED = RotationsPerSecond.of(
+      62.96576
+    );
     public static final Dimensionless SLOW_FEED_SPEED = Percent.of(10);
   }
 
