@@ -24,7 +24,6 @@ import frc.robot.Constants.SCORING;
 import frc.robot.ShiftTimer.ShiftInfo;
 import frc.robot.networkTables.CurveTuner;
 import frc.robot.util.AllianceFlipUtil;
-import frc.robot.util.InterpolationUtil;
 import frc.robot.util.MathUtil;
 
 /**
@@ -36,8 +35,6 @@ import frc.robot.util.MathUtil;
 public class ShotCalculator {
 
   private Field2d targetField = new Field2d();
-  private String shooterOffsetKey = "shooter offset rps";
-  private String hoodOffsetKey = "hood offset rps";
 
   public record CalculatedShot(
     AngularVelocity shooterVelocity,
@@ -53,118 +50,8 @@ public class ShotCalculator {
     Seconds.of(0)
   );
 
-  private final CurveTuner<Distance, AngularVelocity> m_passingShooterCurve =
-    new CurveTuner<Distance, AngularVelocity>(
-      "Passing Shooter Curve",
-      InterpolationUtil::InverseInterpolate,
-      InterpolationUtil::Interpolate
-    );
-
-  private final CurveTuner<Distance, Angle> m_passingHoodCurve = new CurveTuner<
-    Distance,
-    Angle
-  >(
-    "Passing Hood Curve",
-    InterpolationUtil::InverseInterpolate,
-    InterpolationUtil::Interpolate
-  );
-
-  private final CurveTuner<Distance, AngularVelocity> m_scoringShooterCurve =
-    new CurveTuner<Distance, AngularVelocity>(
-      "Shooter Curve",
-      InterpolationUtil::InverseInterpolate,
-      InterpolationUtil::Interpolate
-    );
-
-  private final CurveTuner<Distance, Angle> m_scoringHoodCurve = new CurveTuner<
-    Distance,
-    Angle
-  >(
-    "Hood Curve",
-    InterpolationUtil::InverseInterpolate,
-    InterpolationUtil::Interpolate
-  );
-
-  private final CurveTuner<Distance, Time> m_timeOfFlightCurve = new CurveTuner<
-    Distance,
-    Time
-  >(
-    "ToF Curve",
-    InterpolationUtil::InverseInterpolate,
-    InterpolationUtil::Interpolate
-  );
-
-  public static final class SHOT_POINTS {
-
-    // TODO: Rename to be more indicative of the point
-    // Distances should be relative to top center point of the hub
-    public static final Distance HUB = Inches.of(43); // Up against the hub
-    public static final Distance POINT_2 = Inches.of(75);
-    public static final Distance POINT_3 = Inches.of(100);
-    public static final Distance TRENCH = Inches.of(127);
-    public static final Distance POINT_5 = Inches.of(150);
-    public static final Distance POINT_6 = Inches.of(175);
-    public static final Distance OUTPOST_CORNER = Inches.of(205); // Far corner of the outpost
-  }
-
-  public static final Distance[] SHOT_POINT_ARRAY = {
-    SHOT_POINTS.HUB,
-    SHOT_POINTS.POINT_2,
-    SHOT_POINTS.POINT_3,
-    SHOT_POINTS.TRENCH,
-    SHOT_POINTS.POINT_5,
-    SHOT_POINTS.POINT_6,
-    SHOT_POINTS.OUTPOST_CORNER,
-  };
-
-  public static final class PASS_POINTS {
-
-    // These points are not exact and don't correlate to anything specific. They are mainly here for simpler interpolation.
-    public static final Distance CLOSEST = Inches.of(43);
-    public static final Distance CEILING = Inches.of(250);
-    public static final Distance FURTHERST = Inches.of(500);
-  }
-
   public ShotCalculator() {
-    m_passingShooterCurve.put(PASS_POINTS.CLOSEST, RotationsPerSecond.of(50));
-    //m_passingShooterCurve.put(PASS_POINTS.CEILING, RotationsPerSecond.of(95));
-    m_passingShooterCurve.put(PASS_POINTS.FURTHERST, RotationsPerSecond.of(95));
-
-    m_passingHoodCurve.put(PASS_POINTS.CLOSEST, Degrees.of(18));
-    m_passingHoodCurve.put(PASS_POINTS.CEILING, Degrees.of(34));
-    m_passingHoodCurve.put(PASS_POINTS.FURTHERST, Degrees.of(34));
-
-    m_scoringShooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(43));
-    m_scoringShooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(46));
-    m_scoringShooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(47));
-    m_scoringShooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(49));
-    m_scoringShooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(52));
-    m_scoringShooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(54));
-    m_scoringShooterCurve.put(
-      SHOT_POINTS.OUTPOST_CORNER,
-      RotationsPerSecond.of(58)
-    );
-
-    m_scoringHoodCurve.put(SHOT_POINTS.HUB, Degrees.of(1));
-    m_scoringHoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(4));
-    m_scoringHoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(6));
-    m_scoringHoodCurve.put(SHOT_POINTS.TRENCH, Degrees.of(10.5));
-    m_scoringHoodCurve.put(SHOT_POINTS.POINT_5, Degrees.of(13));
-    m_scoringHoodCurve.put(SHOT_POINTS.POINT_6, Degrees.of(17));
-    m_scoringHoodCurve.put(SHOT_POINTS.OUTPOST_CORNER, Degrees.of(18));
-
-    m_timeOfFlightCurve.put(SHOT_POINTS.HUB, Seconds.of(1.005));
-    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_2, Seconds.of(1.068));
-    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_3, Seconds.of(1.168));
-    m_timeOfFlightCurve.put(SHOT_POINTS.TRENCH, Seconds.of(1.132));
-    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_5, Seconds.of(1.032));
-    m_timeOfFlightCurve.put(SHOT_POINTS.POINT_6, Seconds.of(1.138));
-    m_timeOfFlightCurve.put(SHOT_POINTS.OUTPOST_CORNER, Seconds.of(1.18));
-
     SmartDashboard.putData("target", targetField);
-
-    SmartDashboard.putNumber(shooterOffsetKey, 0);
-    SmartDashboard.putNumber(hoodOffsetKey, 0);
   }
 
   /**
@@ -214,7 +101,9 @@ public class ShotCalculator {
     );
 
     // Account for robot velocity and compute future target distance
-    Time timeOfFlight = m_timeOfFlightCurve.get(shooterToTargetDistance);
+    Time timeOfFlight = Robot.shooterCurveManager.getTimeOfFlight(
+      shooterToTargetDistance
+    );
     Pose2d futureShooterPose = shooterPose;
     Distance futureShootertoTargetDistance = shooterToTargetDistance;
 
@@ -223,7 +112,9 @@ public class ShotCalculator {
     // decreasing iterations will reduce accuracy but increase performance
     // it is likely jut a few iterations will produce a result good enough for us
     for (int i = 0; i < SCORING.SOTF_CONVERGE_ITERATIONS; i++) {
-      timeOfFlight = m_timeOfFlightCurve.get(futureShootertoTargetDistance);
+      timeOfFlight = Robot.shooterCurveManager.getTimeOfFlight(
+        futureShootertoTargetDistance
+      );
       double offsetX =
         shooterSpeeds.vxMetersPerSecond * timeOfFlight.in(Seconds);
       double offsetY =
@@ -242,15 +133,19 @@ public class ShotCalculator {
     AngularVelocity shooterVelocity;
     Angle hoodAngle;
     if (isInAllianceZone()) {
-      shooterVelocity = m_scoringShooterCurve.get(
+      shooterVelocity = Robot.shooterCurveManager.getScoringShooterVelocity(
         futureShootertoTargetDistance
       );
-      hoodAngle = m_scoringHoodCurve.get(futureShootertoTargetDistance);
+      hoodAngle = Robot.shooterCurveManager.getScoringHoodAngle(
+        futureShootertoTargetDistance
+      );
     } else {
-      shooterVelocity = m_passingShooterCurve.get(
+      shooterVelocity = Robot.shooterCurveManager.getPassingShooterVelocity(
         futureShootertoTargetDistance
       );
-      hoodAngle = Constants.HOOD.PASSING_STATIC_ANGLE;
+      hoodAngle = Robot.shooterCurveManager.getPassingHoodAngle(
+        futureShootertoTargetDistance
+      );
     }
 
     Pose2d futureRobotPose = futureShooterPose.transformBy(
@@ -266,12 +161,6 @@ public class ShotCalculator {
 
     SmartDashboard.putNumber("target angle", driveAngle.getDegrees());
 
-    shooterVelocity = shooterVelocity.plus(
-      RotationsPerSecond.of(SmartDashboard.getNumber(shooterOffsetKey, 0))
-    );
-    hoodAngle = hoodAngle.plus(
-      Degrees.of(SmartDashboard.getNumber(hoodOffsetKey, 0))
-    );
     return new CalculatedShot(
       shooterVelocity,
       hoodAngle,
@@ -405,43 +294,5 @@ public class ShotCalculator {
 
   public Angle getCalculatedHoodAngle() {
     return m_latestCalculatedShot.hoodPosition();
-  }
-
-  public AngularVelocity getShooterVelocityStationary(Distance distance) {
-    if (isInAllianceZone()) {
-      return m_scoringShooterCurve.get(distance);
-    } else {
-      return m_passingShooterCurve.get(distance);
-    }
-  }
-
-  public Angle getHoodAngleStationary(Distance distance) {
-    if (isInAllianceZone()) {
-      return m_scoringHoodCurve.get(distance);
-    } else {
-      return m_passingHoodCurve.get(distance);
-    }
-  }
-
-  public void updateCurveTuners() {
-    m_scoringShooterCurve.updateCurveValues();
-    m_scoringHoodCurve.updateCurveValues();
-    m_passingShooterCurve.updateCurveValues();
-    m_passingHoodCurve.updateCurveValues();
-  }
-
-  public void logCurveValues() {
-    m_scoringShooterCurve.logCurrentValues();
-    m_scoringHoodCurve.logCurrentValues();
-    m_passingShooterCurve.logCurrentValues();
-    m_passingHoodCurve.logCurrentValues();
-  }
-
-  public CurveTuner<Distance, AngularVelocity> getScoringShooterCurve() {
-    return m_scoringShooterCurve;
-  }
-
-  public CurveTuner<Distance, Angle> getScoringHoodCurve() {
-    return m_scoringHoodCurve;
   }
 }

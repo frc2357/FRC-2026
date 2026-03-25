@@ -556,6 +556,10 @@ public class Constants {
         66
       );
     }
+
+    public static final AngularVelocity TUNING_STEP = RotationsPerSecond.of(
+      0.5
+    );
   }
 
   public static final class HOOD {
@@ -630,6 +634,8 @@ public class Constants {
     }
 
     public static final Angle PASSING_STATIC_ANGLE = Degrees.of(18); // TODO: Tune
+
+    public static final Angle TUNING_STEP = Degrees.of(0.5);
   }
 
   public class SCORING {

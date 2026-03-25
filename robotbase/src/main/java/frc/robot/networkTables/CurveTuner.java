@@ -5,8 +5,7 @@ import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.units.DistanceUnit;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Unit;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Preferences;
 import frc.robot.util.InterpolatingTreeMap;
 import java.util.Comparator;
 import java.util.Map;
@@ -17,8 +16,7 @@ public class CurveTuner<
 > extends InterpolatingTreeMap<K, V> {
 
   private String m_name;
-
-  private SendableChooser<K> m_rowChooser = new SendableChooser<>();
+  private int m_size = 0;
 
   public CurveTuner(
     String name,
@@ -26,7 +24,7 @@ public class CurveTuner<
     Interpolator<V> interpolator
   ) {
     super(inverseInterpolator, interpolator);
-    init(name);
+    m_name = name;
   }
 
   public CurveTuner(
@@ -36,57 +34,22 @@ public class CurveTuner<
     Comparator<K> comparator
   ) {
     super(inverseInterpolator, interpolator, comparator);
-    init(name);
-  }
-
-  public void init(String name) {
     m_name = name;
-
-    m_rowChooser.onChange(val -> updateSelectedCurveIndex(val));
-    SmartDashboard.putData(m_name, m_rowChooser);
-  }
-
-  public void updateSelectedCurveIndex(K key) {
-    System.out.println("-------------------------------------");
-    System.out.println(m_name + " - Selected Key Changed");
-    System.out.println(
-      String.format("Selected Key: %f %s", key.magnitude(), key.unit().name())
-    );
-    System.out.println("-------------------------------------");
-    if (key == null) {
-      return;
-    }
-    V value = get(key);
-    SmartDashboard.putNumber(
-      String.format("%s Value (%s)", m_name, value.unit().name()),
-      value.magnitude()
-    );
-  }
-
-  @SuppressWarnings("unchecked")
-  public void updateCurveValues() {
-    K key = m_rowChooser.getSelected();
-    if (key == null) return;
-    V previousValue = get(key);
-
-    String smartDashboardKey = String.format(
-      "%s Value (%s)",
-      m_name,
-      previousValue.unit().name()
-    );
-    double currentValueMagnitude = SmartDashboard.getNumber(
-      smartDashboardKey,
-      previousValue.magnitude()
-    );
-    put(key, (V) previousValue.unit().of(currentValueMagnitude));
   }
 
   public void put(K key, V value) {
     super.put(key, value);
+    m_size++;
 
-    m_rowChooser.addOption(
-      String.format("Distance: %.2f %s", key.magnitude(), key.unit().symbol()),
-      key
+    Preferences.initDouble(
+      String.format(
+        "%s/Setpoint %d: %.2f %s",
+        m_name,
+        m_size,
+        key.magnitude(),
+        key.unit().symbol()
+      ),
+      value.magnitude()
     );
   }
 
@@ -104,5 +67,9 @@ public class CurveTuner<
       );
     }
     System.out.println();
+  }
+
+  public String getName() {
+    return m_name;
   }
 }

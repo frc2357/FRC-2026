@@ -1,0 +1,626 @@
+[
+  {
+    "name": "/Preferences/Passing Shooter Curve/Distance: 43.00 in",
+    "type": "double",
+    "value": 50.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Shooter Curve/Distance: 500.00 in",
+    "type": "double",
+    "value": 95.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Hood Curve/Distance: 43.00 in",
+    "type": "double",
+    "value": 18.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Hood Curve/Distance: 250.00 in",
+    "type": "double",
+    "value": 34.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Hood Curve/Distance: 500.00 in",
+    "type": "double",
+    "value": 34.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Distance: 43.00 in",
+    "type": "double",
+    "value": 51.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Distance: 75.00 in",
+    "type": "double",
+    "value": 53.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Distance: 100.00 in",
+    "type": "double",
+    "value": 55.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Distance: 127.00 in",
+    "type": "double",
+    "value": 57.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Distance: 150.00 in",
+    "type": "double",
+    "value": 61.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Distance: 175.00 in",
+    "type": "double",
+    "value": 64.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Distance: 205.00 in",
+    "type": "double",
+    "value": 67.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Distance: 43.00 in",
+    "type": "double",
+    "value": 1.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Distance: 75.00 in",
+    "type": "double",
+    "value": 5.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Distance: 100.00 in",
+    "type": "double",
+    "value": 8.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Distance: 127.00 in",
+    "type": "double",
+    "value": 11.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Distance: 150.00 in",
+    "type": "double",
+    "value": 14.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Distance: 175.00 in",
+    "type": "double",
+    "value": 17.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Distance: 205.00 in",
+    "type": "double",
+    "value": 18.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Distance: 43.00 in",
+    "type": "double",
+    "value": 1.005,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Distance: 75.00 in",
+    "type": "double",
+    "value": 1.068,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Distance: 100.00 in",
+    "type": "double",
+    "value": 1.168,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Distance: 127.00 in",
+    "type": "double",
+    "value": 1.132,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Distance: 150.00 in",
+    "type": "double",
+    "value": 1.032,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Distance: 175.00 in",
+    "type": "double",
+    "value": 1.138,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Distance: 205.00 in",
+    "type": "double",
+    "value": 1.18,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Shooter Curve/Setpoint 0: 43.00 in",
+    "type": "double",
+    "value": 50.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Shooter Curve/Setpoint 1: 500.00 in",
+    "type": "double",
+    "value": 95.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Hood Curve/Setpoint 0: 43.00 in",
+    "type": "double",
+    "value": 18.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Hood Curve/Setpoint 1: 250.00 in",
+    "type": "double",
+    "value": 34.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Hood Curve/Setpoint 2: 500.00 in",
+    "type": "double",
+    "value": 34.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 0: 43.00 in",
+    "type": "double",
+    "value": 51.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 1: 75.00 in",
+    "type": "double",
+    "value": 53.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 2: 100.00 in",
+    "type": "double",
+    "value": 55.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 3: 127.00 in",
+    "type": "double",
+    "value": 57.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 4: 150.00 in",
+    "type": "double",
+    "value": 61.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 5: 175.00 in",
+    "type": "double",
+    "value": 64.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 6: 205.00 in",
+    "type": "double",
+    "value": 67.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 0: 43.00 in",
+    "type": "double",
+    "value": 2.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 1: 75.00 in",
+    "type": "double",
+    "value": 5.5,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 2: 100.00 in",
+    "type": "double",
+    "value": 9.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 3: 127.00 in",
+    "type": "double",
+    "value": 11.5,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 4: 150.00 in",
+    "type": "double",
+    "value": 15.5,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 5: 175.00 in",
+    "type": "double",
+    "value": 17.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 6: 205.00 in",
+    "type": "double",
+    "value": 18.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 0: 43.00 in",
+    "type": "double",
+    "value": 1.005,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 1: 75.00 in",
+    "type": "double",
+    "value": 1.068,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 2: 100.00 in",
+    "type": "double",
+    "value": 1.168,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 3: 127.00 in",
+    "type": "double",
+    "value": 1.132,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 4: 150.00 in",
+    "type": "double",
+    "value": 1.032,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 5: 175.00 in",
+    "type": "double",
+    "value": 1.138,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 6: 205.00 in",
+    "type": "double",
+    "value": 1.18,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Shooter Curve/Setpoint 1: 43.00 in",
+    "type": "double",
+    "value": 50.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Shooter Curve/Setpoint 2: 500.00 in",
+    "type": "double",
+    "value": 95.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Hood Curve/Setpoint 1: 43.00 in",
+    "type": "double",
+    "value": 18.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Hood Curve/Setpoint 2: 250.00 in",
+    "type": "double",
+    "value": 34.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Passing Hood Curve/Setpoint 3: 500.00 in",
+    "type": "double",
+    "value": 34.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 1: 43.00 in",
+    "type": "double",
+    "value": 51.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 2: 75.00 in",
+    "type": "double",
+    "value": 63.5,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 3: 100.00 in",
+    "type": "double",
+    "value": 55.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 4: 127.00 in",
+    "type": "double",
+    "value": 56.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 5: 150.00 in",
+    "type": "double",
+    "value": 61.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 6: 175.00 in",
+    "type": "double",
+    "value": 64.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Shooter Curve/Setpoint 7: 205.00 in",
+    "type": "double",
+    "value": 67.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 1: 43.00 in",
+    "type": "double",
+    "value": 1.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 2: 75.00 in",
+    "type": "double",
+    "value": 5.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 3: 100.00 in",
+    "type": "double",
+    "value": 8.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 4: 127.00 in",
+    "type": "double",
+    "value": 11.5,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 5: 150.00 in",
+    "type": "double",
+    "value": 14.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 6: 175.00 in",
+    "type": "double",
+    "value": 17.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/Hood Curve/Setpoint 7: 205.00 in",
+    "type": "double",
+    "value": 18.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 1: 43.00 in",
+    "type": "double",
+    "value": 1.005,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 2: 75.00 in",
+    "type": "double",
+    "value": 1.068,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 3: 100.00 in",
+    "type": "double",
+    "value": 1.168,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 4: 127.00 in",
+    "type": "double",
+    "value": 1.132,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 5: 150.00 in",
+    "type": "double",
+    "value": 1.032,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 6: 175.00 in",
+    "type": "double",
+    "value": 1.138,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/ToF Curve/Setpoint 7: 205.00 in",
+    "type": "double",
+    "value": 1.18,
+    "properties": {
+      "persistent": true
+    }
+  }
+]

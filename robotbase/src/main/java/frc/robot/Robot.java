@@ -10,6 +10,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -68,6 +69,7 @@ public class Robot extends TimedRobot {
   public static Tunnel tunnel;
 
   public static CameraManager cameraManager;
+  public static ShooterCurveManager shooterCurveManager;
   public static ShotCalculator shotCalculator;
 
   public static ShiftTimer shiftTimer;
@@ -94,6 +96,7 @@ public class Robot extends TimedRobot {
 
     swerve.registerTelemetry(logger::telemeterize);
     shotCalculator = new ShotCalculator();
+    shooterCurveManager = new ShooterCurveManager();
 
     driverControls = new DriverControls();
     coDriverControls = new CoDriverControls();
@@ -147,8 +150,6 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     m_robotField.setRobotPose(swerve.getFieldRelativePose2d());
-
-    shotCalculator.updateCurveTuners();
   }
 
   @Override
@@ -162,7 +163,7 @@ public class Robot extends TimedRobot {
     );
 
     // Log curve values when robot is disabled (like when match ends)
-    shotCalculator.logCurveValues();
+    shooterCurveManager.logCurveTuners();
   }
 
   @Override
