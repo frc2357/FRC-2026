@@ -35,6 +35,10 @@ import frc.robot.util.MathUtil;
 public class ShotCalculator {
 
   private Field2d targetField = new Field2d();
+  private String shooterOffsetKey = "shooter offset rps";
+  private String hoodOffsetKey = "hood offset rps";
+
+  private Distance m_shooterToTargetDistance = Meters.of(0);
 
   public record CalculatedShot(
     AngularVelocity shooterVelocity,
@@ -84,13 +88,13 @@ public class ShotCalculator {
     Translation2d target = AllianceFlipUtil.apply(getShotTarget());
 
     // Initial target distance
-    Distance shooterToTargetDistance = Meters.of(
+    m_shooterToTargetDistance = Meters.of(
       target.getDistance(shooterPose.getTranslation())
     );
 
     SmartDashboard.putNumber(
       "Direct Distance Inches",
-      shooterToTargetDistance.in(Inches)
+      m_shooterToTargetDistance.in(Inches)
     );
 
     // The field-relative speed of the shooter moving on the field
@@ -105,7 +109,7 @@ public class ShotCalculator {
       shooterToTargetDistance
     );
     Pose2d futureShooterPose = shooterPose;
-    Distance futureShootertoTargetDistance = shooterToTargetDistance;
+    Distance futureShootertoTargetDistance = m_shooterToTargetDistance;
 
     // Converge on the future position
     // increasing iterations will improve accuracy but decrease performance
@@ -167,6 +171,10 @@ public class ShotCalculator {
       driveAngle,
       timeOfFlight
     );
+  }
+
+  public Distance getDistance() {
+    return m_shooterToTargetDistance;
   }
 
   // TODO Implement, requires changes in pose initialization branch
