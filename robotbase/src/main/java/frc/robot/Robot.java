@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Value;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -128,6 +131,23 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Robot Field", m_robotField);
 
     SignalLogger.enableAutoLogging(false);
+
+    SmartDashboard.putNumber(
+      "feed speed",
+      Constants.FEEDER.FEED_SPEED.in(RotationsPerSecond)
+    );
+    SmartDashboard.putNumber(
+      "tunnel speed",
+      Constants.TUNNEL.TUNNEL_SPEED.in(Value)
+    );
+    SmartDashboard.putNumber(
+      "kicker speed",
+      Constants.KICKER.KICK_SPEED.in(Value)
+    );
+    SmartDashboard.putNumber(
+      "floor speed",
+      Constants.FLOOR.FLOOR_SPEED.in(Value)
+    );
   }
 
   @Override
