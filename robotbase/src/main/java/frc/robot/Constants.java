@@ -647,7 +647,6 @@ public class Constants {
     public static final int DRIVE_ANGLE_CONVERGE_ITERATIONS = 2;
 
     public static final Time TIME_TO_WARN_FOR_ACTIVE_HUB = Seconds.of(10);
-    public static final Time POST_HUB_DEACTIVATION_GRACE_TIME = Seconds.of(3);
     public static final Time TOF_TIMING_BUFFER = Seconds.of(.1);
 
     public static final Rectangle2d[] NO_SHOOT_ZONES = new Rectangle2d[] {

@@ -15,6 +15,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -325,6 +326,9 @@ public class ShotCalculator {
 
   public Trigger fireControlApproval() {
     return new Trigger(() -> {
+      if (!DriverStation.isFMSAttached()) {
+        return true;
+      }
       if (!isInAllianceZone()) {
         // Always approves when passing
         return true;
@@ -349,22 +353,7 @@ public class ShotCalculator {
         /* if the hub is not active, BUT the remaining time until activation is LESS THAN the time of flight,
          it will return true */
         return true;
-      }
-
-      if (
-        Constants.SHIFT.TELEOP_NUMBERED_SHIFT_LENGTH.minus(
-          shiftInfo.timeRemaining()
-        )
-          .plus(getCalculatedShot().timeOfFlight)
-          .plus(Constants.SCORING.TOF_TIMING_BUFFER)
-          .lte(Constants.SCORING.POST_HUB_DEACTIVATION_GRACE_TIME)
-      ) {
-        //if the hub is not active, BUT the time since the shift started PLUS the ToF is LESS THAN the deactivation buffer
-        // (UP TO 3 seconds as per the game manual), then it returns true
-        return true;
-      }
-      // will not approve when hub is off AND outside the ToF buffer + deactivation buffer as calculated above
-      else return false;
+      } else return false;
     });
   }
 
