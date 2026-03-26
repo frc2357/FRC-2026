@@ -155,11 +155,6 @@ public class ShotCalculator {
   }
 
   /**
-   * Computed using pose estimation
-   * @return The distance between the top center point of the hub and the shooter flywheel
-   */
-
-  /**
    * Implementation of LUT based shoot on the fly algorithm
    * @return
    */
