@@ -560,6 +560,8 @@ public class Constants {
     public static final AngularVelocity TUNING_STEP = RotationsPerSecond.of(
       0.5
     );
+
+    public static final Time CURVE_UPDATE_INTERVAL = Seconds.of(0.5);
   }
 
   public static final class HOOD {

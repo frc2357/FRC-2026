@@ -1,5 +1,6 @@
 package frc.robot.controls;
 
+import edu.wpi.first.units.DistanceUnit;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Preferences;
@@ -91,8 +92,7 @@ public class TuningControls implements RumbleInterface {
     SmartDashboard.putString(
       "Current Tuning Setpoint",
       String.format(
-        "Setpoint %d: %.2f %s",
-        m_currentSetpointIndex + 1,
+        "Setpoint: %.2f %s",
         currentDistance.magnitude(),
         currentDistance.unit().symbol()
       )
@@ -100,7 +100,7 @@ public class TuningControls implements RumbleInterface {
   }
 
   private Command createTuneCurveValueCommand(
-    CurveTuner<?, ?> tuner,
+    CurveTuner<DistanceUnit, Distance, ?, ?> tuner,
     double delta
   ) {
     return new InstantCommand(() -> {
@@ -110,14 +110,18 @@ public class TuningControls implements RumbleInterface {
       double newVal = oldVal + delta;
 
       Preferences.setDouble(key, newVal);
+
+      tuner.updateCurveValue(
+        ShooterCurveManager.SHOT_POINT_ARRAY[m_currentSetpointIndex],
+        newVal
+      );
     });
   }
 
-  private String getPreferencesKey(CurveTuner<?, ?> tuner) {
+  private String getPreferencesKey(CurveTuner<?, ?, ?, ?> tuner) {
     return String.format(
-      "%s/Setpoint %d: %.2f %s",
+      "%s/Setpoint: %.2f %s",
       tuner.getName(),
-      m_currentSetpointIndex + 1,
       ShooterCurveManager.SHOT_POINT_ARRAY[m_currentSetpointIndex].magnitude(),
       ShooterCurveManager
         .SHOT_POINT_ARRAY[m_currentSetpointIndex].unit().symbol()

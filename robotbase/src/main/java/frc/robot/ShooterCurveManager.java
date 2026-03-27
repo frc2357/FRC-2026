@@ -2,6 +2,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import edu.wpi.first.units.*;
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.networkTables.CurveTuner;
@@ -12,34 +13,67 @@ public class ShooterCurveManager {
   private final String shooterOffsetKey = "shooter offset rps";
   private final String hoodOffsetKey = "hood offset rps";
 
-  private final CurveTuner<Distance, AngularVelocity> passingShooterCurve =
-    new CurveTuner<>(
-      "Passing Shooter Curve",
-      InterpolationUtil::InverseInterpolate,
-      InterpolationUtil::Interpolate
-    );
+  private final CurveTuner<
+    DistanceUnit,
+    Distance,
+    AngularVelocityUnit,
+    AngularVelocity
+  > passingShooterCurve = new CurveTuner<>(
+    "Passing Shooter Curve",
+    Inches,
+    RotationsPerSecond,
+    InterpolationUtil::InverseInterpolate,
+    InterpolationUtil::Interpolate
+  );
 
-  private final CurveTuner<Distance, Angle> passingHoodCurve = new CurveTuner<>(
+  private final CurveTuner<
+    DistanceUnit,
+    Distance,
+    AngleUnit,
+    Angle
+  > passingHoodCurve = new CurveTuner<>(
     "Passing Hood Curve",
+    Inches,
+    Degrees,
     InterpolationUtil::InverseInterpolate,
     InterpolationUtil::Interpolate
   );
 
-  private final CurveTuner<Distance, AngularVelocity> scoringShooterCurve =
-    new CurveTuner<>(
-      "Shooter Curve",
-      InterpolationUtil::InverseInterpolate,
-      InterpolationUtil::Interpolate
-    );
+  private final CurveTuner<
+    DistanceUnit,
+    Distance,
+    AngularVelocityUnit,
+    AngularVelocity
+  > scoringShooterCurve = new CurveTuner<>(
+    "Shooter Curve",
+    Inches,
+    RotationsPerSecond,
+    InterpolationUtil::InverseInterpolate,
+    InterpolationUtil::Interpolate
+  );
 
-  private final CurveTuner<Distance, Angle> scoringHoodCurve = new CurveTuner<>(
+  private final CurveTuner<
+    DistanceUnit,
+    Distance,
+    AngleUnit,
+    Angle
+  > scoringHoodCurve = new CurveTuner<>(
     "Hood Curve",
+    Inches,
+    Degrees,
     InterpolationUtil::InverseInterpolate,
     InterpolationUtil::Interpolate
   );
 
-  private final CurveTuner<Distance, Time> timeOfFlightCurve = new CurveTuner<>(
+  private final CurveTuner<
+    DistanceUnit,
+    Distance,
+    TimeUnit,
+    Time
+  > timeOfFlightCurve = new CurveTuner<>(
     "ToF Curve",
+    Inches,
+    Seconds,
     InterpolationUtil::InverseInterpolate,
     InterpolationUtil::Interpolate
   );
@@ -118,6 +152,8 @@ public class ShooterCurveManager {
     timeOfFlightCurve.put(SHOT_POINTS.POINT_5, Seconds.of(1.032));
     timeOfFlightCurve.put(SHOT_POINTS.POINT_6, Seconds.of(1.138));
     timeOfFlightCurve.put(SHOT_POINTS.OUTPOST_CORNER, Seconds.of(1.18));
+
+    updateCurveValues();
   }
 
   public AngularVelocity getScoringShooterVelocity(Distance distance) {
@@ -146,18 +182,29 @@ public class ShooterCurveManager {
     return timeOfFlightCurve.get(distance);
   }
 
-  public void logCurveTuners() {
-    scoringShooterCurve.logCurrentValues();
-    scoringHoodCurve.logCurrentValues();
-    passingShooterCurve.logCurrentValues();
-    passingHoodCurve.logCurrentValues();
+  public void updateCurveValues() {
+    scoringShooterCurve.updateCurveValues();
+    scoringHoodCurve.updateCurveValues();
+    passingShooterCurve.updateCurveValues();
+    passingHoodCurve.updateCurveValues();
+    timeOfFlightCurve.updateCurveValues();
   }
 
-  public CurveTuner<Distance, AngularVelocity> getScoringShooterCurve() {
+  public CurveTuner<
+    DistanceUnit,
+    Distance,
+    AngularVelocityUnit,
+    AngularVelocity
+  > getScoringShooterCurve() {
     return scoringShooterCurve;
   }
 
-  public CurveTuner<Distance, Angle> getScoringHoodCurve() {
+  public CurveTuner<
+    DistanceUnit,
+    Distance,
+    AngleUnit,
+    Angle
+  > getScoringHoodCurve() {
     return scoringHoodCurve;
   }
 }
