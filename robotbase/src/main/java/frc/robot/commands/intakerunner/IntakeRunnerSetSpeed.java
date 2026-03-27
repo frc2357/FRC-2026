@@ -3,19 +3,24 @@ package frc.robot.commands.intakerunner;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import java.util.function.Supplier;
 
 public class IntakeRunnerSetSpeed extends Command {
 
-  private Dimensionless m_speed;
+  private Supplier<Dimensionless> m_speed;
 
   public IntakeRunnerSetSpeed(Dimensionless speed) {
+    this(() -> speed);
+  }
+
+  public IntakeRunnerSetSpeed(Supplier<Dimensionless> speed) {
     m_speed = speed;
     addRequirements(Robot.intake);
   }
 
   @Override
-  public void initialize() {
-    Robot.intake.setSpeed(m_speed);
+  public void execute() {
+    Robot.intake.setSpeed(m_speed.get());
   }
 
   @Override

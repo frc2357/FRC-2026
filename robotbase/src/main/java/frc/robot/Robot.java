@@ -148,6 +148,10 @@ public class Robot extends TimedRobot {
       "floor speed",
       Constants.FLOOR.FLOOR_SPEED.in(Value)
     );
+    SmartDashboard.putNumber(
+      "intake speed",
+      Constants.INTAKE_RUNNER.TELEOP_INTAKING_SPEED.in(Value)
+    );
   }
 
   @Override
