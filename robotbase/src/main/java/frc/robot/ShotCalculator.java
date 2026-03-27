@@ -15,10 +15,13 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SCORING;
+import frc.robot.ShiftTimer.ShiftInfo;
 import frc.robot.networkTables.CurveTuner;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.InterpolationUtil;
@@ -39,13 +42,15 @@ public class ShotCalculator {
   public record CalculatedShot(
     AngularVelocity shooterVelocity,
     Angle hoodPosition,
-    Rotation2d driveAngle
+    Rotation2d driveAngle,
+    Time timeOfFlight
   ) {}
 
   private CalculatedShot m_latestCalculatedShot = new CalculatedShot(
     RotationsPerSecond.of(0),
     Degrees.of(0),
-    Rotation2d.fromDegrees(0)
+    Rotation2d.fromDegrees(0),
+    Seconds.of(0)
   );
 
   private final CurveTuner<Distance, AngularVelocity> m_passingShooterCurve =
@@ -147,37 +152,6 @@ public class ShotCalculator {
 
     SmartDashboard.putNumber(shooterOffsetKey, 0);
     SmartDashboard.putNumber(hoodOffsetKey, 0);
-  }
-
-  /**
-   * Computed using pose estimation
-   * @return The distance between the top center point of the hub and the shooter flywheel
-   */
-  public CalculatedShot calculateShotFromPoseStationary() {
-    Pose2d robotPose = Robot.swerve.getFieldRelativePose2d();
-
-    Pose2d shooterPose = robotPose.transformBy(
-      Constants.SHOOTER.ROBOT_TO_SHOOTER
-    );
-
-    Translation2d target = AllianceFlipUtil.apply(getShotTarget());
-
-    Distance targetDistance = Meters.of(
-      shooterPose.getTranslation().getDistance(target)
-    );
-
-    AngularVelocity shooterVelocity;
-    Angle hoodAngle;
-    if (isInAllianceZone()) {
-      shooterVelocity = m_shooterCurve.get(targetDistance);
-      hoodAngle = m_hoodCurve.get(targetDistance);
-    } else {
-      shooterVelocity = m_passingShooterCurve.get(targetDistance);
-      hoodAngle = m_passingHoodCurve.get(targetDistance);
-    }
-    Rotation2d driveAngle = computeTargetDriveAngle(robotPose, target);
-
-    return new CalculatedShot(shooterVelocity, hoodAngle, driveAngle);
   }
 
   /**
@@ -283,7 +257,12 @@ public class ShotCalculator {
     hoodAngle = hoodAngle.plus(
       Degrees.of(SmartDashboard.getNumber(hoodOffsetKey, 0))
     );
-    return new CalculatedShot(shooterVelocity, hoodAngle, driveAngle);
+    return new CalculatedShot(
+      shooterVelocity,
+      hoodAngle,
+      driveAngle,
+      timeOfFlight
+    );
   }
 
   // TODO Implement, requires changes in pose initialization branch
@@ -292,7 +271,8 @@ public class ShotCalculator {
     return new CalculatedShot(
       RotationsPerSecond.of(0),
       Degrees.of(0),
-      Rotation2d.fromDegrees(0)
+      Rotation2d.fromDegrees(0),
+      Seconds.of(0)
     );
   }
 
@@ -337,6 +317,39 @@ public class ShotCalculator {
       Constants.SHOOTER.ROBOT_TO_SHOOTER
     );
     return shooterPose.getX() < FieldConstants.LinesVertical.allianceZone;
+  }
+
+  public Trigger fireControlApproval() {
+    return new Trigger(() -> {
+      if (!DriverStation.isFMSAttached()) {
+        return true;
+      }
+      if (!isInAllianceZone()) {
+        // Always approves when passing
+        return true;
+      }
+
+      ShiftInfo shiftInfo = Robot.shiftTimer.getShiftInfo();
+
+      if (shiftInfo.isHubActive()) {
+        // Always approves if the hub is active
+        return true;
+      }
+
+      if (
+        (shiftInfo
+            .timeRemaining()
+            .lte(
+              getCalculatedShot().timeOfFlight.minus(
+                Constants.SCORING.TOF_TIMING_BUFFER
+              )
+            ))
+      ) {
+        /* if the hub is not active, BUT the remaining time until activation is LESS THAN the time of flight,
+         it will return true */
+        return true;
+      } else return false;
+    });
   }
 
   private Translation2d getShotTarget() {

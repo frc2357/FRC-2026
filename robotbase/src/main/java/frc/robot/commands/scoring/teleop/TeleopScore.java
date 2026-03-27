@@ -4,37 +4,40 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.commands.drive.DriveTargetLock;
 import frc.robot.commands.scoring.ConditionalScoreFeed;
 import java.util.function.Supplier;
 
 public class TeleopScore extends ParallelCommandGroup {
 
-  public TeleopScore(AngularVelocity shooterVelocity, Angle hoodAngle) {
-    this(() -> shooterVelocity, () -> hoodAngle);
+  public TeleopScore(Dimensionless x, Dimensionless y) {
+    this(() -> x, () -> y);
   }
 
-  public TeleopScore(
-    Supplier<AngularVelocity> shooterVelocity,
-    Supplier<Angle> hoodAngle
-  ) {
+  public TeleopScore(Supplier<Dimensionless> x, Supplier<Dimensionless> y) {
     super();
     addCommands(
-      Robot.shooter.setVelocity(shooterVelocity),
-      Robot.hood.setAngle(hoodAngle),
+      Robot.shooter.setVelocity(
+        Robot.shotCalculator::getCalculatedShooterVelocity
+      ),
+      Robot.hood.setAngle(Robot.shotCalculator::getCalculatedHoodAngle),
       new SequentialCommandGroup(
         new WaitUntilCommand(Robot.shooter.isAtInitialTargetVelocity()),
         new ConditionalScoreFeed(
-          isPositionedToShoot().and(
-            Robot.shooter.isAtContinuousTargetVelocity()
-          )
+          isPositionedToShoot()
+            .and(Robot.shooter.isAtContinuousTargetVelocity())
+            .and(Robot.shotCalculator.fireControlApproval())
         )
-      )
+      ),
+      new DriveTargetLock(x, y)
     );
   }
 
