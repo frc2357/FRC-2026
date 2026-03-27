@@ -104,7 +104,9 @@ public class TuningControls implements RumbleInterface {
     double delta
   ) {
     return new InstantCommand(() -> {
-      String key = getPreferencesKey(tuner);
+      String key = tuner.getPreferencesKey(
+        ShooterCurveManager.SHOT_POINT_ARRAY[m_currentSetpointIndex]
+      );
 
       double oldVal = Preferences.getDouble(key, 0);
       double newVal = oldVal + delta;
@@ -116,16 +118,6 @@ public class TuningControls implements RumbleInterface {
         newVal
       );
     });
-  }
-
-  private String getPreferencesKey(CurveTuner<?, ?, ?, ?> tuner) {
-    return String.format(
-      "%s/Setpoint: %.2f %s",
-      tuner.getName(),
-      ShooterCurveManager.SHOT_POINT_ARRAY[m_currentSetpointIndex].magnitude(),
-      ShooterCurveManager
-        .SHOT_POINT_ARRAY[m_currentSetpointIndex].unit().symbol()
-    );
   }
 
   @Override

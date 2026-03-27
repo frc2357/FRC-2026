@@ -50,12 +50,7 @@ public class CurveTuner<
     super.put(key, value);
 
     Preferences.initDouble(
-      String.format(
-        "%s/Setpoint: %.2f %s",
-        m_name,
-        key.in(m_keyConversionUnit),
-        m_keyConversionUnit.symbol()
-      ),
+      getPreferencesKey(key),
       value.in(m_valueConversionUnit)
     );
   }
@@ -69,12 +64,7 @@ public class CurveTuner<
   public void updateCurveValue(K key) {
     V previousValue = get(key);
 
-    String prefKey = String.format(
-      "%s/Setpoint: %.2f %s",
-      m_name,
-      key.in(m_keyConversionUnit),
-      m_keyConversionUnit.symbol()
-    );
+    String prefKey = getPreferencesKey(key);
     double preferencesMagnitude = Preferences.getDouble(
       prefKey,
       previousValue.in(m_valueConversionUnit)
@@ -87,6 +77,15 @@ public class CurveTuner<
     for (K key : m_map.keySet()) {
       updateCurveValue(key);
     }
+  }
+
+  public String getPreferencesKey(K key) {
+    return String.format(
+      "%s/Setpoint: %.2f %s",
+      m_name,
+      key.in(m_keyConversionUnit),
+      m_keyConversionUnit.symbol()
+    );
   }
 
   public String getName() {
