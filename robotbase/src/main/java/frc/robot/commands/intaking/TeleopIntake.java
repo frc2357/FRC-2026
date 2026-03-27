@@ -16,7 +16,7 @@ public class TeleopIntake extends ParallelCommandGroup {
       new IntakeRunnerSetSpeed(() ->
         Value.of(
           SmartDashboard.getNumber(
-            "Intake Speed",
+            "intake speed",
             INTAKE_RUNNER.TELEOP_INTAKING_SPEED.in(Value)
           )
         )
