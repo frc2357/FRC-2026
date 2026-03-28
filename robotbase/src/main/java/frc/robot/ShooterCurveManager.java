@@ -151,9 +151,9 @@ public class ShooterCurveManager {
     timeOfFlightCurve.put(SHOT_POINTS.POINT_2, Seconds.of(1.192));
     timeOfFlightCurve.put(SHOT_POINTS.POINT_3, Seconds.of(1.186));
     timeOfFlightCurve.put(SHOT_POINTS.TRENCH, Seconds.of(1.112));
-    timeOfFlightCurve.put(SHOT_POINTS.POINT_5, Seconds.of(1.032));
-    timeOfFlightCurve.put(SHOT_POINTS.POINT_6, Seconds.of(1.138));
-    timeOfFlightCurve.put(SHOT_POINTS.OUTPOST_CORNER, Seconds.of(1.18));
+    timeOfFlightCurve.put(SHOT_POINTS.POINT_5, Seconds.of(1.166));
+    timeOfFlightCurve.put(SHOT_POINTS.POINT_6, Seconds.of(1.134));
+    timeOfFlightCurve.put(SHOT_POINTS.OUTPOST_CORNER, Seconds.of(1.162));
 
     updateCurveValues();
   }
