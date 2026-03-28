@@ -3,9 +3,12 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Value;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -48,6 +51,22 @@ public class ShotCalculator {
     Degrees.of(0),
     Rotation2d.fromDegrees(0),
     Seconds.of(0)
+  );
+
+  private final LinearFilter hoodAngleFilter = LinearFilter.movingAverage(
+    (int) (Constants.SCORING.MOVING_AVERAGE_TIME.div(
+        Constants.ROBOT.PERIODIC_LENGTH
+      ).in(Value))
+  );
+  private final LinearFilter driveAngleFilter = LinearFilter.movingAverage(
+    (int) (Constants.SCORING.MOVING_AVERAGE_TIME.div(
+        Constants.ROBOT.PERIODIC_LENGTH
+      ).in(Value))
+  );
+  private final LinearFilter shooterVelocityFilter = LinearFilter.movingAverage(
+    (int) (Constants.SCORING.MOVING_AVERAGE_TIME.div(
+        Constants.ROBOT.PERIODIC_LENGTH
+      ).in(Value))
   );
 
   public ShotCalculator() {
@@ -159,12 +178,24 @@ public class ShotCalculator {
       Rotation2d.fromDegrees(0)
     );
 
+    Angle filteredHoodAngle = Degrees.of(
+      hoodAngleFilter.calculate(hoodAngle.in(Degrees))
+    );
+
+    AngularVelocity filteredShooterVelocity = RPM.of(
+      shooterVelocityFilter.calculate(shooterVelocity.in(RPM))
+    );
+
+    Rotation2d filteredDriveAngle = new Rotation2d(
+      driveAngleFilter.calculate(driveAngle.getRadians())
+    );
+
     SmartDashboard.putNumber("target angle", driveAngle.getDegrees());
 
     return new CalculatedShot(
-      shooterVelocity,
-      hoodAngle,
-      driveAngle,
+      filteredShooterVelocity,
+      filteredHoodAngle,
+      filteredDriveAngle,
       timeOfFlight
     );
   }

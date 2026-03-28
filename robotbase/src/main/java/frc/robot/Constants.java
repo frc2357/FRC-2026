@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Pounds;
 import static edu.wpi.first.units.Units.RPM;
@@ -60,6 +61,8 @@ public class Constants {
       Constants.ROBOT.PERFORMANCE_MODE
         ? TelemetryVerbosity.LOW
         : TelemetryVerbosity.HIGH;
+
+    public static final Time PERIODIC_LENGTH = Milliseconds.of(20);
   }
 
   public static final class CONTROLLER {
@@ -649,6 +652,8 @@ public class Constants {
      * I do not understand why the best value for this is zero
      *  */
     public static final Time SOTF_LATENCY_COMPENSATION = Seconds.of(0);
+
+    public static final Time MOVING_AVERAGE_TIME = Seconds.of(.1);
 
     public static final String IS_SOTF_KEY = "Enable SOTF";
 
