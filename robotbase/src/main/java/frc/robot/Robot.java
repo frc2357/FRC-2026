@@ -10,7 +10,9 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,6 +29,7 @@ import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
 import frc.robot.controls.PitControls;
+import frc.robot.controls.TuningControls;
 import frc.robot.generated.TunerConstants;
 import frc.robot.networkTables.AutoChooserManager;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -46,13 +49,14 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   public static DriverControls driverControls;
   public static CoDriverControls coDriverControls;
+  public static TuningControls tuningControls;
   public static PitControls pitControls;
   private static Command m_defaultDrive;
 
   public static CommandSwerveDrivetrain swerve;
 
-  public static Floor floor;
   public static Alliance alliance = null;
+  public static MatchType matchType = null;
 
   public static InitRobotCommand m_InitRobotCommand;
 
@@ -61,16 +65,19 @@ public class Robot extends TimedRobot {
   public static IntakePivot intakePivot;
   public static Shooter shooter;
   public static Hood hood;
+  public static Floor floor;
   public static Feeder feeder;
   public static Kicker kicker;
   public static Tunnel tunnel;
 
   public static CameraManager cameraManager;
+  public static ShooterCurveManager shooterCurveManager;
   public static ShotCalculator shotCalculator;
 
   public static ShiftTimer shiftTimer;
 
   private static final Field2d m_robotField = new Field2d();
+  private final Timer m_curveUpdateTimer = new Timer();
 
   private final Telemetry logger = new Telemetry(
     Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
@@ -92,6 +99,7 @@ public class Robot extends TimedRobot {
 
     swerve.registerTelemetry(logger::telemeterize);
     shotCalculator = new ShotCalculator();
+    shooterCurveManager = new ShooterCurveManager();
 
     driverControls = new DriverControls();
     coDriverControls = new CoDriverControls();
@@ -133,6 +141,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     CommandScheduler.getInstance().schedule(m_InitRobotCommand);
+    m_curveUpdateTimer.start();
   }
 
   @Override
@@ -145,7 +154,14 @@ public class Robot extends TimedRobot {
 
     m_robotField.setRobotPose(swerve.getFieldRelativePose2d());
 
-    shotCalculator.updateCurveTuners();
+    if (
+      (matchType == MatchType.None || matchType == MatchType.Practice) &&
+      m_curveUpdateTimer.advanceIfElapsed(
+        Constants.SHOOTER.CURVE_UPDATE_INTERVAL.in(Units.Seconds)
+      )
+    ) {
+      shooterCurveManager.updateCurveValues();
+    }
   }
 
   @Override
@@ -157,9 +173,6 @@ public class Robot extends TimedRobot {
         .andThen(new WaitCommand(SWERVE.TIME_TO_COAST))
         .andThen(new DriveSetCoast())
     );
-
-    // Log curve values when robot is disabled (like when match ends)
-    shotCalculator.logCurveValues();
   }
 
   @Override
@@ -214,4 +227,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {}
+
+  public static void initializeTuningController() {
+    if (matchType == null) return;
+
+    switch (matchType) {
+      case Elimination:
+      case Qualification:
+        return;
+      default:
+        tuningControls = new TuningControls();
+    }
+  }
 }

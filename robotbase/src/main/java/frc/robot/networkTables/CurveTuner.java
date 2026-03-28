@@ -2,101 +2,93 @@ package frc.robot.networkTables;
 
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
-import edu.wpi.first.units.DistanceUnit;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Unit;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Preferences;
 import frc.robot.util.InterpolatingTreeMap;
 import java.util.Comparator;
-import java.util.Map;
 
 public class CurveTuner<
-  K extends Measure<DistanceUnit>,
-  V extends Measure<? extends Unit>
+  KU extends Unit,
+  K extends Measure<KU>,
+  VU extends Unit,
+  V extends Measure<VU>
 > extends InterpolatingTreeMap<K, V> {
 
   private String m_name;
-
-  private SendableChooser<K> m_rowChooser = new SendableChooser<>();
+  private KU m_keyConversionUnit;
+  private VU m_valueConversionUnit;
 
   public CurveTuner(
     String name,
+    KU keyConversionUnit,
+    VU valueConversionUnit,
     InverseInterpolator<K> inverseInterpolator,
     Interpolator<V> interpolator
   ) {
     super(inverseInterpolator, interpolator);
-    init(name);
+    m_name = name;
+    m_keyConversionUnit = keyConversionUnit;
+    m_valueConversionUnit = valueConversionUnit;
   }
 
   public CurveTuner(
     String name,
+    KU keyConversionUnit,
+    VU valueConversionUnit,
     InverseInterpolator<K> inverseInterpolator,
     Interpolator<V> interpolator,
     Comparator<K> comparator
   ) {
     super(inverseInterpolator, interpolator, comparator);
-    init(name);
-  }
-
-  public void init(String name) {
     m_name = name;
-
-    m_rowChooser.onChange(val -> updateSelectedCurveIndex(val));
-    SmartDashboard.putData(m_name, m_rowChooser);
-  }
-
-  private void updateSelectedCurveIndex(K key) {
-    if (key == null) {
-      return;
-    }
-    V value = get(key);
-    SmartDashboard.putNumber(
-      String.format("%s Value (%s)", m_name, value.unit().name()),
-      value.magnitude()
-    );
-  }
-
-  @SuppressWarnings("unchecked")
-  public void updateCurveValues() {
-    K key = m_rowChooser.getSelected();
-    if (key == null) return;
-    V previousValue = get(key);
-
-    String smartDashboardKey = String.format(
-      "%s Value (%s)",
-      m_name,
-      previousValue.unit().name()
-    );
-    double currentValueMagnitude = SmartDashboard.getNumber(
-      smartDashboardKey,
-      previousValue.magnitude()
-    );
-    put(key, (V) previousValue.unit().of(currentValueMagnitude));
+    m_keyConversionUnit = keyConversionUnit;
+    m_valueConversionUnit = valueConversionUnit;
   }
 
   public void put(K key, V value) {
     super.put(key, value);
 
-    m_rowChooser.addOption(
-      String.format("Distance: %.2f %s", key.magnitude(), key.unit().symbol()),
-      key
+    Preferences.initDouble(
+      getPreferencesKey(key),
+      value.in(m_valueConversionUnit)
     );
   }
 
-  public void logCurrentValues() {
-    System.out.println(m_name + " - Current Values");
-    for (Map.Entry<K, V> entry : m_map.entrySet()) {
-      System.out.println(
-        String.format(
-          "\tKey: %f %s - Value: %f %s",
-          entry.getKey().magnitude(),
-          entry.getKey().unit().name(),
-          entry.getValue().magnitude(),
-          entry.getValue().unit().name()
-        )
-      );
+  @SuppressWarnings("unchecked")
+  public void updateCurveValue(K key, double newMagnitude) {
+    super.put(key, (V) m_valueConversionUnit.of(newMagnitude));
+  }
+
+  @SuppressWarnings("unchecked")
+  public void updateCurveValue(K key) {
+    V previousValue = get(key);
+
+    String prefKey = getPreferencesKey(key);
+    double preferencesMagnitude = Preferences.getDouble(
+      prefKey,
+      previousValue.in(m_valueConversionUnit)
+    );
+
+    super.put(key, (V) m_valueConversionUnit.of(preferencesMagnitude));
+  }
+
+  public void updateCurveValues() {
+    for (K key : m_map.keySet()) {
+      updateCurveValue(key);
     }
-    System.out.println();
+  }
+
+  public String getPreferencesKey(K key) {
+    return String.format(
+      "%s/Setpoint: %.2f %s",
+      m_name,
+      key.in(m_keyConversionUnit),
+      m_keyConversionUnit.symbol()
+    );
+  }
+
+  public String getName() {
+    return m_name;
   }
 }
