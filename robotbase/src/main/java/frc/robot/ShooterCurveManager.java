@@ -101,9 +101,11 @@ public class ShooterCurveManager {
 
   public static final class PASS_POINTS {
 
-    public static final Distance CLOSEST = Inches.of(43);
-    public static final Distance CEILING = Inches.of(250);
-    public static final Distance FURTHERST = Inches.of(500);
+    public static final Distance CLOSEST = Inches.of(200);
+    public static final Distance CEILING = Inches.of(400);
+    public static final Distance FURTHERST = Inches.of(
+      Constants.FieldConstants.fieldLength
+    );
   }
 
   public ShooterCurveManager() {
@@ -145,13 +147,13 @@ public class ShooterCurveManager {
     scoringHoodCurve.put(SHOT_POINTS.OUTPOST_CORNER, Degrees.of(18));
 
     // Time of flight
-    timeOfFlightCurve.put(SHOT_POINTS.HUB, Seconds.of(1.005));
-    timeOfFlightCurve.put(SHOT_POINTS.POINT_2, Seconds.of(1.068));
-    timeOfFlightCurve.put(SHOT_POINTS.POINT_3, Seconds.of(1.168));
-    timeOfFlightCurve.put(SHOT_POINTS.TRENCH, Seconds.of(1.132));
-    timeOfFlightCurve.put(SHOT_POINTS.POINT_5, Seconds.of(1.032));
-    timeOfFlightCurve.put(SHOT_POINTS.POINT_6, Seconds.of(1.138));
-    timeOfFlightCurve.put(SHOT_POINTS.OUTPOST_CORNER, Seconds.of(1.18));
+    timeOfFlightCurve.put(SHOT_POINTS.HUB, Seconds.of(0.982));
+    timeOfFlightCurve.put(SHOT_POINTS.POINT_2, Seconds.of(1.192));
+    timeOfFlightCurve.put(SHOT_POINTS.POINT_3, Seconds.of(1.186));
+    timeOfFlightCurve.put(SHOT_POINTS.TRENCH, Seconds.of(1.112));
+    timeOfFlightCurve.put(SHOT_POINTS.POINT_5, Seconds.of(1.166));
+    timeOfFlightCurve.put(SHOT_POINTS.POINT_6, Seconds.of(1.134));
+    timeOfFlightCurve.put(SHOT_POINTS.OUTPOST_CORNER, Seconds.of(1.162));
 
     updateCurveValues();
   }

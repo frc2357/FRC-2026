@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
@@ -13,6 +14,7 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -124,7 +126,16 @@ public class Shooter extends SubsystemBase {
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
   public Command setVelocity(AngularVelocity speed) {
-    return m_shooter.run(speed).finallyDo(() -> this.stopMotor());
+    return m_shooter.run(speed);
+  }
+
+  /**
+   * Set the idle velocity.
+   *
+   * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
+   */
+  public Command setIdleVelocity() {
+    return m_shooter.run(SHOOTER.SETPOINTS.IDLE_SPEED);
   }
 
   /**
@@ -140,7 +151,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command setVelocity(Supplier<AngularVelocity> speed) {
-    return m_shooter.run(speed).finallyDo(() -> this.stopMotor());
+    return m_shooter.run(speed);
   }
 
   /**
@@ -159,7 +170,7 @@ public class Shooter extends SubsystemBase {
    * @return {@link edu.wpi.first.wpilibj2.command.RunCommand}
    */
   private Command set(double dutyCycle) {
-    return m_shooter.set(dutyCycle).finallyDo(() -> this.stopMotor());
+    return m_shooter.set(dutyCycle);
   }
 
   public Command setSpeed(Dimensionless speed) {
@@ -167,21 +178,19 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command axisSpeed(Supplier<Dimensionless> axis) {
-    return m_shooter
-      .set(() -> axis.get().times(SHOOTER.AXIS_MAX_SPEED).in(Value))
-      .finallyDo(() -> this.stopMotor());
+    return m_shooter.set(() ->
+      axis.get().times(SHOOTER.AXIS_MAX_SPEED).in(Value)
+    );
   }
 
   public Command stepAxisSpeed(Supplier<Dimensionless> axis) {
-    return m_shooter
-      .set(() ->
-        (Math.floor(
-            axis.get().times(SHOOTER.AXIS_MAX_SPEED).in(Value) /
-              SHOOTER.STEP_AXIS_STEP
-          ) *
-          SHOOTER.STEP_AXIS_STEP)
-      )
-      .finallyDo(() -> this.stopMotor());
+    return m_shooter.set(() ->
+      (Math.floor(
+          axis.get().times(SHOOTER.AXIS_MAX_SPEED).in(Value) /
+            SHOOTER.STEP_AXIS_STEP
+        ) *
+        SHOOTER.STEP_AXIS_STEP)
+    );
   }
 
   public Command stopCommand() {

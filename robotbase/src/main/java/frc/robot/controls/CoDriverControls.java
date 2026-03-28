@@ -16,6 +16,7 @@ import frc.robot.commands.debug.TunnelFeedReverse;
 import frc.robot.commands.hood.ToggleDefaultHood;
 import frc.robot.commands.intakepivot.IntakePivotDeploy;
 import frc.robot.commands.intakerunner.IntakeRunnerAxis;
+import frc.robot.commands.shooter.ToggleDefaultShooter;
 import frc.robot.controls.util.RumbleInterface;
 
 public class CoDriverControls implements RumbleInterface {
@@ -102,6 +103,7 @@ public class CoDriverControls implements RumbleInterface {
         Robot.hood.axisSpeed(() -> Value.of(-m_controller.getRightY()))
       );
     onlyUp.and(m_controller.a()).whileTrue(new ToggleDefaultHood());
+    onlyUp.and(m_controller.x()).whileTrue(new ToggleDefaultShooter());
 
     onlyLeft
       .and(

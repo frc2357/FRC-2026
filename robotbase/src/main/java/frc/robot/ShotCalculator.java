@@ -266,9 +266,9 @@ public class ShotCalculator {
       return FieldConstants.Hub.centerPoint;
     } else {
       if (shooterPose.getY() > FieldConstants.Hub.centerPoint.getY()) {
-        return FieldConstants.LeftBump.centerPoint;
+        return FieldConstants.LEFT_PASSING_POINT;
       } else {
-        return FieldConstants.RightBump.centerPoint;
+        return FieldConstants.RIGHT_PASSING_POINT;
       }
     }
   }
