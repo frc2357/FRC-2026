@@ -209,7 +209,7 @@ public class Constants {
 
       public static final Transform3d ROBOT_TO_CAM_TRANSFORM = new Transform3d(
         Inches.of(-14.116980),
-        Inches.of(-11.594771),
+        Inches.of(11.594771),
         Inches.of(8.689800),
         new Rotation3d(
           Degrees.of(6.964),
@@ -350,7 +350,7 @@ public class Constants {
         .apply(LEFT_MOTOR_CONFIG)
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
 
-    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(100);
+    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(80);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);
     public static final Dimensionless INTAKE_JIGGLING_SPEED = Percent.of(10);
   }
