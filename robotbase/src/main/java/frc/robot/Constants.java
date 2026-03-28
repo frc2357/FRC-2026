@@ -126,6 +126,10 @@ public class Constants {
     public static final Distance SHOOTER_TUNING_DISTANCE_TOLERANCE = Inches.of(
       .375
     );
+
+    public static final Double SHOOTER_TUNING_DRIVE_P = .1;
+    public static final Double SHOOTER_TUNING_DRIVE_I = 0.0;
+    public static final Double SHOOTER_TUNING_DRIVE_D = 0.0;
   }
 
   public static final class PHOTON_VISION {
