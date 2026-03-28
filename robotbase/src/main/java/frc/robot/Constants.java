@@ -511,7 +511,7 @@ public class Constants {
         .follow(CAN_ID.LEFT_SHOOTER_MOTOR, true);
 
     // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
-    public static final double P = 0.005;
+    public static final double P = 0.004;
     public static final double I = 0;
     public static final double D = 0;
     public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(5676);
@@ -519,7 +519,7 @@ public class Constants {
       RotationsPerSecondPerSecond.of(150);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(0.12, 0.125, 0.01);
+      new SimpleMotorFeedforward(0.14, 0.1255, 0.01);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);
