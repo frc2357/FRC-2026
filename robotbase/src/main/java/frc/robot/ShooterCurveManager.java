@@ -101,9 +101,11 @@ public class ShooterCurveManager {
 
   public static final class PASS_POINTS {
 
-    public static final Distance CLOSEST = Inches.of(43);
-    public static final Distance CEILING = Inches.of(250);
-    public static final Distance FURTHERST = Inches.of(500);
+    public static final Distance CLOSEST = Inches.of(200);
+    public static final Distance CEILING = Inches.of(400);
+    public static final Distance FURTHERST = Inches.of(
+      Constants.FieldConstants.fieldLength
+    );
   }
 
   public ShooterCurveManager() {

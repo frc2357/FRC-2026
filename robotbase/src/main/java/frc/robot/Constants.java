@@ -738,6 +738,15 @@ public class Constants {
     public static final double fieldLength = FIELD_LAYOUT.getFieldLength();
     public static final double fieldWidth = FIELD_LAYOUT.getFieldWidth();
 
+    public static final Translation2d RIGHT_PASSING_POINT = new Translation2d(
+      0,
+      fieldWidth / 4
+    );
+    public static final Translation2d LEFT_PASSING_POINT = new Translation2d(
+      0,
+      fieldWidth - fieldWidth / 4
+    );
+
     /** Hub related constants */
     public static class Hub {
 
