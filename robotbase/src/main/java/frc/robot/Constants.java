@@ -555,6 +555,10 @@ public class Constants {
       public static final AngularVelocity OUTPOST_SHOT = RotationsPerSecond.of(
         66
       );
+
+      public static final AngularVelocity IDLE_SPEED = RotationsPerSecond.of(
+        43
+      );
     }
 
     public static final AngularVelocity TUNING_STEP = RotationsPerSecond.of(

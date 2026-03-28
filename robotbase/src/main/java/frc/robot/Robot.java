@@ -113,6 +113,7 @@ public class Robot extends TimedRobot {
     swerve.setDefaultCommand(m_defaultDrive);
 
     hood.setDefaultCommand(hood.goHome());
+    shooter.setDefaultCommand(shooter.setIdleVelocity());
 
     m_autoChooserManager = new AutoChooserManager();
     m_InitRobotCommand = new InitRobotCommand();
