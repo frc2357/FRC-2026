@@ -160,8 +160,6 @@ public class CoDriverControls implements RumbleInterface {
 
     m_controller.rightBumper().whileTrue(new TunnelFeed());
     m_controller.leftBumper().whileTrue(new TunnelFeedReverse());
-
-    onlyDown.and(m_controller.a()).whileTrue(new ShooterTuningDriveDistance());
   }
 
   private double modifyAxis(double value) {

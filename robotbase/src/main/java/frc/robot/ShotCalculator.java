@@ -106,7 +106,7 @@ public class ShotCalculator {
 
     // Account for robot velocity and compute future target distance
     Time timeOfFlight = Robot.shooterCurveManager.getTimeOfFlight(
-      shooterToTargetDistance
+      m_shooterToTargetDistance
     );
     Pose2d futureShooterPose = shooterPose;
     Distance futureShootertoTargetDistance = m_shooterToTargetDistance;

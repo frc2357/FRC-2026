@@ -13,6 +13,7 @@ import frc.robot.Constants.HOOD;
 import frc.robot.Constants.SHOOTER;
 import frc.robot.Robot;
 import frc.robot.ShooterCurveManager;
+import frc.robot.commands.drive.ShooterTuningDriveDistance;
 import frc.robot.controls.util.RumbleInterface;
 import frc.robot.networkTables.CurveTuner;
 
@@ -66,6 +67,14 @@ public class TuningControls implements RumbleInterface {
         createTuneCurveValueCommand(
           Robot.shooterCurveManager.getScoringShooterCurve(),
           -SHOOTER.TUNING_STEP.magnitude()
+        )
+      );
+
+    m_controller
+      .rightTrigger()
+      .whileTrue(
+        new ShooterTuningDriveDistance(() ->
+          ShooterCurveManager.SHOT_POINT_ARRAY[m_currentSetpointIndex]
         )
       );
   }
