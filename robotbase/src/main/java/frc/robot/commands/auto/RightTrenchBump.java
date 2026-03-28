@@ -6,11 +6,10 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.auto.AutoMaker.Auto;
 import frc.robot.commands.drive.AutoTargetLock;
-import frc.robot.commands.intakepivot.AutoIntakePivotDeploy;
 import frc.robot.commands.intakerunner.IntakeRunnerUntil;
 import frc.robot.commands.scoring.auto.AutoShoot;
 
-public class RightTrench extends AutoBase {
+public class RightTrenchBump extends AutoBase {
 
   protected AutoRoutine m_routine;
   protected AutoTrajectory m_startTraj;
@@ -20,15 +19,15 @@ public class RightTrench extends AutoBase {
    * Will create the first trajectory, and set the routine to wait, reset odometry, and run the first trajectory
    * @param name Name of the auto routine
    */
-  public RightTrench() {
-    super("RightTrench");
+  public RightTrenchBump() {
+    super("RightTrenchBump");
   }
 
   @Override
   public AutoRoutine getRoutine() {
     Auto auto = AutoMaker.newAuto(m_name);
     AutoTrajectory traj = auto.startTrajectory();
-    traj.active().onTrue(new AutoIntakePivotDeploy());
+    // traj.active().onTrue(new AutoIntakePivotDeploy());
     traj
       .atTime("StartIntake")
       .onTrue(new IntakeRunnerUntil(traj.atTime("StopIntake")));
