@@ -11,7 +11,7 @@ public class ToggleDefaultShooter extends Command {
 
   @Override
   public void initialize() {
-    if (Robot.hood.getDefaultCommand() != null) {
+    if (Robot.shooter.getDefaultCommand() != null) {
       Robot.shooter.removeDefaultCommand();
       System.out.println("----- DISABLED SHOOTER DEFAULT COMMAND ----");
     } else {
