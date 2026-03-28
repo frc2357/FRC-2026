@@ -541,19 +541,19 @@ public class Constants {
 
       public static final AngularVelocity PIT_SHOT = RotationsPerSecond.of(15);
 
-      public static final AngularVelocity HUB_SHOT = RotationsPerSecond.of(50);
+      public static final AngularVelocity HUB_SHOT = RotationsPerSecond.of(43);
 
       public static final AngularVelocity TOWER_SHOT = RotationsPerSecond.of(
-        60
+        51
       );
 
       public static final AngularVelocity TRENCH_SHOT = RotationsPerSecond.of(
-        56
+        49
       );
 
       // Farthest corner possible
       public static final AngularVelocity OUTPOST_SHOT = RotationsPerSecond.of(
-        66
+        58
       );
 
       public static final AngularVelocity IDLE_SPEED = RotationsPerSecond.of(
