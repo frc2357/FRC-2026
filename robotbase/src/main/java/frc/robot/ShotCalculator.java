@@ -190,7 +190,26 @@ public class ShotCalculator {
       driveAngleFilter.calculate(driveAngle.getRadians())
     );
 
-    SmartDashboard.putNumber("target angle", driveAngle.getDegrees());
+    SmartDashboard.putNumber(
+      "Filtered DriveAngle",
+      filteredDriveAngle.getDegrees()
+    );
+
+    SmartDashboard.putNumber("DriveAngle", driveAngle.getDegrees());
+
+    SmartDashboard.putNumber(
+      "Filtered ShooterVelocity",
+      filteredShooterVelocity.in(RPM)
+    );
+
+    SmartDashboard.putNumber("ShooterVelocity", shooterVelocity.in(RPM));
+
+    SmartDashboard.putNumber(
+      "Filtered HoodAngle",
+      filteredHoodAngle.in(Degrees)
+    );
+
+    SmartDashboard.putNumber("HoodAngle", hoodAngle.in(Degrees));
 
     return new CalculatedShot(
       filteredShooterVelocity,
