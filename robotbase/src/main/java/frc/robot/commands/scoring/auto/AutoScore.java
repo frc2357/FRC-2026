@@ -23,7 +23,7 @@ public class AutoScore extends ParallelCommandGroup {
       Robot.shooter.setVelocity(shooterVelocity),
       Robot.hood.setAngle(hoodAngle),
       new SequentialCommandGroup(
-        new WaitUntilCommand(Robot.shooter.isAtInitialTargetVelocity()),
+        new WaitUntilCommand(Robot.shooter.isAtContinuousTargetVelocity()),
         new ScoreFeed()
       )
     );

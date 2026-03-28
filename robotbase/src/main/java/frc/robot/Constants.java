@@ -680,6 +680,9 @@ public class Constants {
     public static final AngularVelocity AUTO_PASSING_SHOOTER_VELOCITY =
       RotationsPerSecond.of(40);
     public static final Angle AUTO_PASSING_HOOD_ANGLE = Degrees.of(15);
+
+    public static final AngularVelocity AUTO_SHOOTER_IDLE =
+      RotationsPerSecond.of(47);
   }
 
   public class SHIFT {
