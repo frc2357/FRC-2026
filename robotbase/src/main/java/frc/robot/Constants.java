@@ -124,7 +124,7 @@ public class Constants {
     public static final LinearVelocity SHOOTER_TUNING_DRIVE_SPEED =
       MetersPerSecond.of(.1);
     public static final Distance SHOOTER_TUNING_DISTANCE_TOLERANCE = Inches.of(
-      .1
+      .375
     );
   }
 
