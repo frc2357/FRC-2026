@@ -137,6 +137,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Robot Field", m_robotField);
 
     SignalLogger.enableAutoLogging(false);
+    SignalLogger.stop();
   }
 
   @Override
