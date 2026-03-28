@@ -8,6 +8,7 @@ import frc.robot.commands.auto.AutoMaker.Auto;
 import frc.robot.commands.drive.AutoTargetLock;
 import frc.robot.commands.intakerunner.IntakeRunnerUntil;
 import frc.robot.commands.scoring.auto.AutoShoot;
+import frc.robot.subsystems.CommandSwerveDrivetrain.AutoDriveMode;
 
 public class RightTrenchBump extends AutoBase {
 
@@ -34,8 +35,13 @@ public class RightTrenchBump extends AutoBase {
     traj
       .atTime("StopIntake")
       .onTrue(Robot.shooter.autoSetVelocity(Constants.AUTO.AUTO_SHOOTER_IDLE));
-    traj.done().onTrue(new AutoShoot());
-    traj.done().onTrue(new AutoTargetLock());
+    traj
+      .atTime("StartShoot")
+      .onTrue(new AutoShoot().until(traj.atTime("EndShoot")));
+    traj
+      .atTime("StartShoot")
+      .onTrue(new SetAutoDriveMode(AutoDriveMode.TARGET_LOCK));
+    traj.atTime("EndShoot").onTrue(new SetAutoDriveMode(AutoDriveMode.DEFAULT));
 
     return auto.routine();
   }
