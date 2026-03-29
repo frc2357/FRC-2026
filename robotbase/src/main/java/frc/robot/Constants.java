@@ -478,7 +478,7 @@ public class Constants {
     public static final SparkBaseConfig KICKER_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
       .inverted(true)
-      .smartCurrentLimit(60, 10)
+      .smartCurrentLimit(20, 10)
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
