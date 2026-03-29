@@ -6,8 +6,10 @@ package frc.robot;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.util.StatusLogger;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
@@ -121,7 +123,8 @@ public class Robot extends TimedRobot {
     shiftTimer = new ShiftTimer();
 
     Trigger shiftWarning = new ShiftWarning().warn();
-    /** Making this trigger require being attached to the FMS to
+    /**
+     * Making this trigger require being attached to the FMS to
      * avoid us getting annoyed with it rumbling
      *
      * Should remove the fms attachment requirement for drive practice
@@ -138,6 +141,12 @@ public class Robot extends TimedRobot {
 
     SignalLogger.enableAutoLogging(false);
     SignalLogger.stop();
+    StatusLogger.disableAutoLogging();
+
+    // Starts recording to data log
+    DataLogManager.logNetworkTables(true);
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog());
   }
 
   @Override
