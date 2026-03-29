@@ -591,7 +591,7 @@ public class Constants {
     public static final Current STALL_LIMIT = Amps.of(10);
 
     public static final SparkBaseConfig HOOD_BASE_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kCoast)
+      .idleMode(IdleMode.kBrake)
       .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 10)
       .voltageCompensation(12);
 
