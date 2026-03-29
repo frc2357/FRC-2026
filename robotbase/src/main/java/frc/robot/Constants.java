@@ -399,12 +399,19 @@ public class Constants {
     public static final Time PIT_UP_TIME = Seconds.of(1.5);
 
     public static final Current AMP_STALL_THRESHOLD = Amps.of(35);
+    public static final AngularVelocity VELOCITY_STALL_THRESHOLD =
+      RotationsPerSecond.of(1); // TODO: Tune
+    public static final Dimensionless VELOCITY_STALL_MIN_APPLIED_OUTPUT =
+      Percent.of(1); // TODO: Tune
     public static final Time TIME_TO_STALL = Seconds.of(0.1);
 
     // When intake is zeroed at the upper hard stops, fully deployed is about -160 rotations
     public static final Angle INTAKE_DEPLOYED_ENCODER_ROTATIONS = Rotations.of(
       -125
     );
+    public static final Angle INTAKE_JIGGLE_UP_ENCODER_ROTATIONS = Rotations.of(
+      80
+    ); // TODO: Tune
 
     // Maximum amount of time we can stall the intake against the hardstop without ripping it off
     public static final Time INTAKE_MAXIMUM_STALL_TIME = Seconds.of(3);

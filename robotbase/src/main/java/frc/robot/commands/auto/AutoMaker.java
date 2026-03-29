@@ -6,6 +6,7 @@ import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Robot;
 import frc.robot.commands.util.VariableWaitCommand;
 import frc.robot.subsystems.CommandSwerveDrivetrain.AutoDriveMode;
 
@@ -43,6 +44,9 @@ public final class AutoMaker {
       .onTrue(
         // Commands.sequence() lets us sequence commands to run, letting us run multiple commands per trigger.
         Commands.sequence(
+          // Zero the intake pivot builtin encoder
+          Robot.intakePivot.zeroMotorEncoder(),
+          // Wait a certain amount of time based on a value on the SmartDashboard
           new VariableWaitCommand(() ->
             SmartDashboard.getNumber("wait seconds", 0)
           ),

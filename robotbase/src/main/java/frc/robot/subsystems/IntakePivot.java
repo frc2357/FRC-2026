@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
@@ -7,9 +9,12 @@ import static edu.wpi.first.units.Units.Value;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
@@ -91,6 +96,14 @@ public class IntakePivot extends SubsystemBase {
     return m_sparkSmartMotorController.getStatorCurrent();
   }
 
+  public AngularVelocity getVelocity() {
+    return RPM.of(m_motor.getEncoder().getVelocity());
+  }
+
+  public Dimensionless getAppliedOutput() {
+    return Percent.of(m_motor.getAppliedOutput());
+  }
+
   public Command axisSpeed(Supplier<Dimensionless> axis) {
     return m_arm
       .set(() -> axis.get().times(INTAKE_PIVOT.AXIS_MAX_SPEED).in(Value))
@@ -101,25 +114,47 @@ public class IntakePivot extends SubsystemBase {
     return m_arm.set(0);
   }
 
-  public void zeroMotorEncoder() {
-    m_motor.getEncoder().setPosition(0);
+  public Command zeroMotorEncoder() {
+    return new InstantCommand(() -> m_motor.getEncoder().setPosition(0));
   }
 
   public void stopMotor() {
     m_arm.setDutyCycleSetpoint(0);
   }
 
-  public Trigger isIntakeStallingTrigger() {
+  // A trigger to check if the pivot is stalling based on motor current
+  public Trigger isIntakeCurrentStallingTrigger() {
     return new Trigger(() ->
       getStatorCurrent().gte(INTAKE_PIVOT.AMP_STALL_THRESHOLD)
     ).debounce(INTAKE_PIVOT.TIME_TO_STALL.in(Seconds));
   }
 
-  public Trigger isInDeployedPositionTrigger() {
+  // A trigger to check if the pivot is stalling based on motor velocity and applied output
+  public Trigger isIntakeVelocityStallingTrigger() {
+    return new Trigger(
+      () ->
+        getAppliedOutput().gte(
+          INTAKE_PIVOT.VELOCITY_STALL_MIN_APPLIED_OUTPUT
+        ) &&
+        getVelocity().lte(INTAKE_PIVOT.VELOCITY_STALL_THRESHOLD)
+    ).debounce(INTAKE_PIVOT.TIME_TO_STALL.in(Seconds));
+  }
+
+  public Trigger isAbovePositionTrigger(Angle targetAngle) {
     return new Trigger(() ->
-      Rotations.of(m_motor.getEncoder().getPosition()).lte(
-        INTAKE_PIVOT.INTAKE_DEPLOYED_ENCODER_ROTATIONS
-      )
+      Rotations.of(m_motor.getEncoder().getPosition()).gte(targetAngle)
+    );
+  }
+
+  public Trigger isBelowPositionTrigger(Angle targetAngle) {
+    return new Trigger(() ->
+      Rotations.of(m_motor.getEncoder().getPosition()).lte(targetAngle)
+    );
+  }
+
+  public Trigger isInDeployedPositionTrigger() {
+    return isBelowPositionTrigger(
+      INTAKE_PIVOT.INTAKE_DEPLOYED_ENCODER_ROTATIONS
     );
   }
 
