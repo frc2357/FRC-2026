@@ -1,15 +1,16 @@
 package frc.robot.commands.auto;
 
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.auto.AutoMaker.Auto;
 import frc.robot.commands.drive.AutoTargetLock;
 import frc.robot.commands.intakepivot.AutoIntakePivotDeploy;
+import frc.robot.commands.intakepivot.IntakePivotDeploy;
 import frc.robot.commands.intakerunner.IntakeRunnerUntil;
 import frc.robot.commands.scoring.auto.AutoShoot;
+import frc.robot.subsystems.CommandSwerveDrivetrain.AutoDriveMode;
 
 public class LeftTrenchBump extends AutoBase {
 
@@ -30,12 +31,39 @@ public class LeftTrenchBump extends AutoBase {
     Auto auto = AutoMaker.newAuto(m_name);
     AutoTrajectory traj = auto.startTrajectory();
     traj.active().onTrue(new AutoIntakePivotDeploy());
+
+    // First pass into neutral zone
     traj
       .atTime("StartIntake")
       .onTrue(new IntakeRunnerUntil(traj.atTime("StopIntake")));
     traj
       .atTime("StopIntake")
-      .onTrue(Robot.shooter.autoSetVelocity(RotationsPerSecond.of(50)));
+      .onTrue(Robot.shooter.autoSetVelocity(Constants.AUTO.AUTO_SHOOTER_IDLE));
+
+    // Shoot and move from bump to trench
+    traj
+      .atTime("StartShoot")
+      .onTrue(new AutoShoot().until(traj.atTime("EndShoot")));
+    traj
+      .atTime("StartShoot")
+      .onTrue(
+        new SetAutoDriveMode(AutoDriveMode.TARGET_LOCK).until(
+          traj.atTime("EndShoot")
+        )
+      );
+
+    // Prepare for second swipe
+    traj.atTime("EndShoot").onTrue(new IntakePivotDeploy());
+
+    // Intake on second swipe
+    traj
+      .atTime("StartIntake2")
+      .onTrue(new IntakeRunnerUntil(traj.atTime("StopIntake2")));
+    traj
+      .atTime("StopIntake2")
+      .onTrue(Robot.shooter.autoSetVelocity(Constants.AUTO.AUTO_SHOOTER_IDLE));
+
+    // End with shooting by the bump
     traj.done().onTrue(new AutoShoot());
     traj.done().onTrue(new AutoTargetLock());
 

@@ -30,7 +30,7 @@ public class RightTrenchBump extends AutoBase {
   public AutoRoutine getRoutine() {
     Auto auto = AutoMaker.newAuto(m_name);
     AutoTrajectory traj = auto.startTrajectory();
-    //traj.active().onTrue(new AutoIntakePivotDeploy());
+    traj.active().onTrue(new AutoIntakePivotDeploy());
 
     // First pass into neutral zone
     traj
@@ -46,10 +46,13 @@ public class RightTrenchBump extends AutoBase {
       .onTrue(new AutoShoot().until(traj.atTime("EndShoot")));
     traj
       .atTime("StartShoot")
-      .onTrue(new SetAutoDriveMode(AutoDriveMode.TARGET_LOCK));
+      .onTrue(
+        new SetAutoDriveMode(AutoDriveMode.TARGET_LOCK).until(
+          traj.atTime("EndShoot")
+        )
+      );
 
     // Prepare for second swipe
-    traj.atTime("EndShoot").onTrue(new SetAutoDriveMode(AutoDriveMode.DEFAULT));
     traj.atTime("EndShoot").onTrue(new IntakePivotDeploy());
 
     // Intake on second swipe
