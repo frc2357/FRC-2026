@@ -459,9 +459,7 @@ public class CommandSwerveDrivetrain
         .withVelocityY(y.times(m_translationModifier))
         .withTargetDirection(angle)
         .withForwardPerspective(ForwardPerspectiveValue.OperatorPerspective)
-        .withMaxAbsRotationalRate(
-          SWERVE.MAX_DRIVE_AT_ANGLE_ANGULAR_RATE.times(m_rotationModifier)
-        )
+        .withMaxAbsRotationalRate(SWERVE.MAX_DRIVE_AT_ANGLE_ANGULAR_RATE)
     );
   }
 
