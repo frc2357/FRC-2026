@@ -580,7 +580,7 @@ public class Constants {
 
     // This is the number that should be copied from the rev hardware client when
     // pressing the "zero encoder" button
-    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.31635416);
+    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.14898406);
 
     // Fabricated offset to prevent wrapping
     public static final Angle FABRICATED_ADJUSTMENT = Degrees.of(1).times(
@@ -680,6 +680,9 @@ public class Constants {
     public static final AngularVelocity AUTO_PASSING_SHOOTER_VELOCITY =
       RotationsPerSecond.of(40);
     public static final Angle AUTO_PASSING_HOOD_ANGLE = Degrees.of(15);
+
+    public static final AngularVelocity AUTO_SHOOTER_IDLE =
+      RotationsPerSecond.of(47);
   }
 
   public class SHIFT {
