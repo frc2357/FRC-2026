@@ -13,6 +13,7 @@ public class ToggleDefaultShooter extends Command {
   public void initialize() {
     if (Robot.shooter.getDefaultCommand() != null) {
       Robot.shooter.removeDefaultCommand();
+      Robot.shooter.stopMotor();
       System.out.println("----- DISABLED SHOOTER DEFAULT COMMAND ----");
     } else {
       Robot.shooter.setDefaultCommand(Robot.shooter.setIdleVelocity());

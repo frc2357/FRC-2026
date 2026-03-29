@@ -15,6 +15,7 @@ import frc.robot.commands.debug.TunnelFeed;
 import frc.robot.commands.debug.TunnelFeedReverse;
 import frc.robot.commands.hood.ToggleDefaultHood;
 import frc.robot.commands.intakepivot.IntakePivotDeploy;
+import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intakerunner.IntakeRunnerAxis;
 import frc.robot.commands.shooter.ToggleDefaultShooter;
 import frc.robot.controls.util.RumbleInterface;
@@ -131,6 +132,7 @@ public class CoDriverControls implements RumbleInterface {
     // Force the intake down incase deploy fails
     onlyLeft.and(m_controller.a()).whileTrue(new IntakePivotDeploy());
     onlyLeft.and(m_controller.y()).onTrue(Robot.intakePivot.zeroMotorEncoder());
+    onlyLeft.and(m_controller.x()).whileTrue(new IntakePivotJiggle());
 
     // Floor/Kicker
     onlyRight

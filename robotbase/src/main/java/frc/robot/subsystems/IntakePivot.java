@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
 
@@ -13,6 +14,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -101,7 +103,7 @@ public class IntakePivot extends SubsystemBase {
   }
 
   public Dimensionless getAppliedOutput() {
-    return Percent.of(m_motor.getAppliedOutput());
+    return Value.of(m_motor.getAppliedOutput());
   }
 
   public Command axisSpeed(Supplier<Dimensionless> axis) {
@@ -133,10 +135,10 @@ public class IntakePivot extends SubsystemBase {
   public Trigger isIntakeVelocityStallingTrigger() {
     return new Trigger(
       () ->
-        getAppliedOutput().gte(
-          INTAKE_PIVOT.VELOCITY_STALL_MIN_APPLIED_OUTPUT
-        ) &&
-        getVelocity().lte(INTAKE_PIVOT.VELOCITY_STALL_THRESHOLD)
+        getAppliedOutput().abs(Value) >=
+          INTAKE_PIVOT.VELOCITY_STALL_MIN_APPLIED_OUTPUT.in(Value) &&
+        getVelocity().abs(RotationsPerSecond) <=
+        INTAKE_PIVOT.VELOCITY_STALL_THRESHOLD.in(RotationsPerSecond)
     ).debounce(INTAKE_PIVOT.TIME_TO_STALL.in(Seconds));
   }
 

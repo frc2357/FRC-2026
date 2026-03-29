@@ -127,14 +127,14 @@ public class ShooterCurveManager {
     passingHoodCurve.put(PASS_POINTS.FURTHERST, Degrees.of(34));
 
     scoringShooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(43));
-    scoringShooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(46));
+    scoringShooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(45.5));
     scoringShooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(47));
-    scoringShooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(49));
-    scoringShooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(52));
-    scoringShooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(54));
+    scoringShooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(47.5));
+    scoringShooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(50.25));
+    scoringShooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(52.5));
     scoringShooterCurve.put(
       SHOT_POINTS.OUTPOST_CORNER,
-      RotationsPerSecond.of(58)
+      RotationsPerSecond.of(56)
     );
 
     // Scoring hood
