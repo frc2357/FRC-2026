@@ -19,6 +19,9 @@ public class IntakePivotJiggle extends ParallelCommandGroup {
           new ParallelRaceGroup(
             Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.JIGGLE_UP_SPEED),
             new WaitUntilIntakePivotStall(),
+            new WaitUntilIntakePivotAbovePosition(
+              Constants.INTAKE_PIVOT.INTAKE_JIGGLE_UP_ENCODER_ROTATIONS
+            ),
             new WaitCommand(Constants.INTAKE_PIVOT.JIGGLE_UP_TIME)
           ),
           new ParallelRaceGroup(
