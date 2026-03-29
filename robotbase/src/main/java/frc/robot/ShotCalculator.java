@@ -35,8 +35,6 @@ import frc.robot.util.MathUtil;
 public class ShotCalculator {
 
   private Field2d targetField = new Field2d();
-  private String shooterOffsetKey = "shooter offset rps";
-  private String hoodOffsetKey = "hood offset rps";
 
   private Distance m_shooterToTargetDistance = Meters.of(0);
 

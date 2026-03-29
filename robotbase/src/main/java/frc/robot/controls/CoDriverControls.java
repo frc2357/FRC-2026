@@ -13,7 +13,6 @@ import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.debug.FloorAndKickerAxis;
 import frc.robot.commands.debug.TunnelFeed;
 import frc.robot.commands.debug.TunnelFeedReverse;
-import frc.robot.commands.drive.ShooterTuningDriveDistance;
 import frc.robot.commands.hood.ToggleDefaultHood;
 import frc.robot.commands.intakepivot.IntakePivotDeploy;
 import frc.robot.commands.intakerunner.IntakeRunnerAxis;

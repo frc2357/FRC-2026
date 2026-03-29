@@ -23,9 +23,10 @@ public class ShooterTuningDriveDistance extends Command {
     //Drives facing the hub to the specified distance from hub
     addRequirements(Robot.swerve);
     m_targetDistanceFromHub = targetDistanceFromHub;
-    m_PidController = new PIDController(Constants.SWERVE.SHOOTER_TUNING_DRIVE_P,Constants.SWERVE.SHOOTER_TUNING_DRIVE_I,Constants.SWERVE.SHOOTER_TUNING_DRIVE_D); 
-    m_PidController.setTolerance(
-      Constants.SWERVE.SHOOTER_TUNING_DISTANCE_TOLERANCE.in(Inches)
+    m_PidController = new PIDController(
+      Constants.SWERVE.SHOOTER_TUNING_DRIVE_P,
+      Constants.SWERVE.SHOOTER_TUNING_DRIVE_I,
+      Constants.SWERVE.SHOOTER_TUNING_DRIVE_D
     );
   }
 

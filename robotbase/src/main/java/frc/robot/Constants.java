@@ -121,10 +121,8 @@ public class Constants {
     );
     public static final Dimensionless PASS_ROTATION_MODIFIER = Percent.of(75);
 
-    public static final LinearVelocity SHOOTER_TUNING_DRIVE_SPEED =
-      MetersPerSecond.of(.1);
     public static final Distance SHOOTER_TUNING_DISTANCE_TOLERANCE = Inches.of(
-      .375
+      .5
     );
 
     public static final Double SHOOTER_TUNING_DRIVE_P = .1;
