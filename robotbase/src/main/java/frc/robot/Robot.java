@@ -9,6 +9,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.util.StatusLogger;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
@@ -44,7 +45,6 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tunnel;
 import frc.robot.triggers.ShiftWarning;
 import frc.robot.vision.CameraManager;
-import edu.wpi.first.wpilibj.DataLogManager;
 
 public class Robot extends TimedRobot {
 
@@ -82,7 +82,8 @@ public class Robot extends TimedRobot {
   private final Timer m_curveUpdateTimer = new Timer();
 
   private final Telemetry logger = new Telemetry(
-      Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond));
+    Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond)
+  );
 
   public Robot() {
     swerve = TunerConstants.createDrivetrain();
@@ -105,9 +106,10 @@ public class Robot extends TimedRobot {
     driverControls = new DriverControls();
     coDriverControls = new CoDriverControls();
     m_defaultDrive = new DefaultDrive(
-        driverControls::getLeftX,
-        driverControls::getLeftY,
-        driverControls::getRightX);
+      driverControls::getLeftX,
+      driverControls::getLeftY,
+      driverControls::getRightX
+    );
 
     swerve.registerTelemetry(logger::telemeterize);
     swerve.setDefaultCommand(m_defaultDrive);
@@ -128,8 +130,8 @@ public class Robot extends TimedRobot {
      * Should remove the fms attachment requirement for drive practice
      */
     shiftWarning
-        .and(DriverStation::isFMSAttached)
-        .onTrue(new RumbleDriverController());
+      .and(DriverStation::isFMSAttached)
+      .onTrue(new RumbleDriverController());
 
     // DON'T DELETE - Load the april tag field
     // This prevents a loop overrun when we first access the constants
@@ -142,6 +144,7 @@ public class Robot extends TimedRobot {
     StatusLogger.disableAutoLogging();
 
     // Starts recording to data log
+    DataLogManager.logNetworkTables(true);
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
   }
@@ -162,9 +165,12 @@ public class Robot extends TimedRobot {
 
     m_robotField.setRobotPose(swerve.getFieldRelativePose2d());
 
-    if ((matchType == MatchType.None || matchType == MatchType.Practice) &&
-        m_curveUpdateTimer.advanceIfElapsed(
-            Constants.SHOOTER.CURVE_UPDATE_INTERVAL.in(Units.Seconds))) {
+    if (
+      (matchType == MatchType.None || matchType == MatchType.Practice) &&
+      m_curveUpdateTimer.advanceIfElapsed(
+        Constants.SHOOTER.CURVE_UPDATE_INTERVAL.in(Units.Seconds)
+      )
+    ) {
       shooterCurveManager.updateCurveValues();
     }
   }
@@ -174,18 +180,17 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().schedule(new StopAllMotors());
 
     CommandScheduler.getInstance().schedule(
-        new DriveStop()
-            .andThen(new WaitCommand(SWERVE.TIME_TO_COAST))
-            .andThen(new DriveSetCoast()));
+      new DriveStop()
+        .andThen(new WaitCommand(SWERVE.TIME_TO_COAST))
+        .andThen(new DriveSetCoast())
+    );
   }
 
   @Override
-  public void disabledPeriodic() {
-  }
+  public void disabledPeriodic() {}
 
   @Override
-  public void disabledExit() {
-  }
+  public void disabledExit() {}
 
   @Override
   public void autonomousInit() {
@@ -199,12 +204,10 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {
-  }
+  public void autonomousPeriodic() {}
 
   @Override
-  public void autonomousExit() {
-  }
+  public void autonomousExit() {}
 
   @Override
   public void teleopInit() {
@@ -215,12 +218,10 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {
-  }
+  public void teleopPeriodic() {}
 
   @Override
-  public void teleopExit() {
-  }
+  public void teleopExit() {}
 
   @Override
   public void testInit() {
@@ -230,20 +231,16 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void testPeriodic() {
-  }
+  public void testPeriodic() {}
 
   @Override
-  public void testExit() {
-  }
+  public void testExit() {}
 
   @Override
-  public void simulationPeriodic() {
-  }
+  public void simulationPeriodic() {}
 
   public static void initializeTuningController() {
-    if (matchType == null)
-      return;
+    if (matchType == null) return;
 
     switch (matchType) {
       case Elimination:
