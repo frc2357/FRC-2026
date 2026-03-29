@@ -120,6 +120,14 @@ public class Constants {
       50
     );
     public static final Dimensionless PASS_ROTATION_MODIFIER = Percent.of(75);
+
+    public static final Distance SHOOTER_TUNING_DISTANCE_TOLERANCE = Inches.of(
+      .5
+    );
+
+    public static final Double SHOOTER_TUNING_DRIVE_P = .1;
+    public static final Double SHOOTER_TUNING_DRIVE_I = 0.0;
+    public static final Double SHOOTER_TUNING_DRIVE_D = 0.0;
   }
 
   public static final class PHOTON_VISION {

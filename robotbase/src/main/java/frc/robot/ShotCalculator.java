@@ -36,6 +36,8 @@ public class ShotCalculator {
 
   private Field2d targetField = new Field2d();
 
+  private Distance m_shooterToTargetDistance = Meters.of(0);
+
   public record CalculatedShot(
     AngularVelocity shooterVelocity,
     Angle hoodPosition,
@@ -84,13 +86,13 @@ public class ShotCalculator {
     Translation2d target = AllianceFlipUtil.apply(getShotTarget());
 
     // Initial target distance
-    Distance shooterToTargetDistance = Meters.of(
+    m_shooterToTargetDistance = Meters.of(
       target.getDistance(shooterPose.getTranslation())
     );
 
     SmartDashboard.putNumber(
       "Direct Distance Inches",
-      shooterToTargetDistance.in(Inches)
+      m_shooterToTargetDistance.in(Inches)
     );
 
     // The field-relative speed of the shooter moving on the field
@@ -102,10 +104,10 @@ public class ShotCalculator {
 
     // Account for robot velocity and compute future target distance
     Time timeOfFlight = Robot.shooterCurveManager.getTimeOfFlight(
-      shooterToTargetDistance
+      m_shooterToTargetDistance
     );
     Pose2d futureShooterPose = shooterPose;
-    Distance futureShootertoTargetDistance = shooterToTargetDistance;
+    Distance futureShootertoTargetDistance = m_shooterToTargetDistance;
 
     // Converge on the future position
     // increasing iterations will improve accuracy but decrease performance
@@ -167,6 +169,10 @@ public class ShotCalculator {
       driveAngle,
       timeOfFlight
     );
+  }
+
+  public Distance getDistance() {
+    return m_shooterToTargetDistance;
   }
 
   // TODO Implement, requires changes in pose initialization branch
