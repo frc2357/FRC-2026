@@ -55,6 +55,11 @@ public class DriverControls implements RumbleInterface {
 
     isShooting.and(isIntaking.negate()).whileTrue(new IntakePivotJiggle());
     isShooting
+      .negate()
+      .and(isIntaking.negate())
+      .onTrue(new IntakePivotDeploy());
+
+    isShooting
       .and(() -> !Robot.shotCalculator.isInAllianceZone())
       .whileTrue(new SetPassDriveModifiers());
     isShooting
