@@ -147,6 +147,8 @@ public class Robot extends TimedRobot {
     DataLogManager.logNetworkTables(true);
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
+
+    DriverStation.silenceJoystickConnectionWarning(true);
   }
 
   @Override
