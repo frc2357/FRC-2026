@@ -7,7 +7,7 @@ import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import frc.robot.commands.auto.AutoMaker.Auto;
 import frc.robot.commands.intakepivot.AutoIntakePivotDeploy;
-import frc.robot.commands.intakerunner.IntakeRunnerUntil;
+import frc.robot.commands.intaking.AutoIntakeUntil;
 import frc.robot.commands.scoring.auto.AutoScore;
 
 public class LeftTrenchDepot extends AutoBase {
@@ -31,8 +31,8 @@ public class LeftTrenchDepot extends AutoBase {
     traj.active().onTrue(new AutoIntakePivotDeploy());
     traj
       .atTime("StartIntake1")
-      .onTrue(new IntakeRunnerUntil(traj.atTime("StopIntake1")));
-    traj.atTime("StartIntake2").onTrue(new IntakeRunnerUntil(traj.done()));
+      .onTrue(new AutoIntakeUntil(traj.atTime("StopIntake1")));
+    traj.atTime("StartIntake2").onTrue(new AutoIntakeUntil(traj.done()));
     traj
       .atTime("StartShooter")
       .onTrue(new AutoScore(RotationsPerSecond.of(60), Degrees.of(16)));

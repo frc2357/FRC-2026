@@ -7,7 +7,7 @@ import frc.robot.Robot;
 import frc.robot.commands.auto.AutoMaker.Auto;
 import frc.robot.commands.drive.AutoTargetLock;
 import frc.robot.commands.intakepivot.AutoIntakePivotDeploy;
-import frc.robot.commands.intakerunner.IntakeRunnerUntil;
+import frc.robot.commands.intaking.AutoIntakeUntil;
 import frc.robot.commands.scoring.auto.AutoShoot;
 
 public class LeftTrench extends AutoBase {
@@ -31,7 +31,7 @@ public class LeftTrench extends AutoBase {
     traj.active().onTrue(new AutoIntakePivotDeploy());
     traj
       .atTime("StartIntake")
-      .onTrue(new IntakeRunnerUntil(traj.atTime("StopIntake")));
+      .onTrue(new AutoIntakeUntil(traj.atTime("StopIntake")));
     traj
       .atTime("StopIntake")
       .onTrue(Robot.shooter.autoSetVelocity(Constants.AUTO.AUTO_SHOOTER_IDLE));
