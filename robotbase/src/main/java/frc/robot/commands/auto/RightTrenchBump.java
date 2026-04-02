@@ -8,7 +8,7 @@ import frc.robot.commands.auto.AutoMaker.Auto;
 import frc.robot.commands.drive.AutoTargetLock;
 import frc.robot.commands.intakepivot.AutoIntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotDeploy;
-import frc.robot.commands.intakerunner.IntakeRunnerUntil;
+import frc.robot.commands.intaking.AutoIntakeUntil;
 import frc.robot.commands.scoring.auto.AutoShoot;
 import frc.robot.subsystems.CommandSwerveDrivetrain.AutoDriveMode;
 
@@ -35,7 +35,7 @@ public class RightTrenchBump extends AutoBase {
     // First pass into neutral zone
     traj
       .atTime("StartIntake")
-      .onTrue(new IntakeRunnerUntil(traj.atTime("StopIntake")));
+      .onTrue(new AutoIntakeUntil(traj.atTime("StopIntake")));
     traj
       .atTime("StopIntake")
       .onTrue(Robot.shooter.autoSetVelocity(Constants.AUTO.AUTO_SHOOTER_IDLE));
@@ -58,7 +58,7 @@ public class RightTrenchBump extends AutoBase {
     // Intake on second swipe
     traj
       .atTime("StartIntake2")
-      .onTrue(new IntakeRunnerUntil(traj.atTime("StopIntake2")));
+      .onTrue(new AutoIntakeUntil(traj.atTime("StopIntake2")));
 
     traj
       .atTime("StopIntake2")
