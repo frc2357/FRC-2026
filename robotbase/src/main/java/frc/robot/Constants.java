@@ -485,7 +485,7 @@ public class Constants {
     public static final SparkBaseConfig KICKER_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
       .inverted(true)
-      .smartCurrentLimit(20, 10)
+      .smartCurrentLimit(40, 10)
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
@@ -929,7 +929,13 @@ public class Constants {
       public static final double starting = FIELD_LAYOUT.getTagPose(26)
         .get()
         .getX();
+
+      public static final double backHub = FIELD_LAYOUT.getTagPose(20)
+        .get()
+        .getX();
+
       public static final double allianceZone = starting;
+      public static final double scoreZone = backHub;
       public static final double hubCenter =
         FIELD_LAYOUT.getTagPose(26).get().getX() + Hub.width / 2.0;
       public static final double neutralZoneNear =

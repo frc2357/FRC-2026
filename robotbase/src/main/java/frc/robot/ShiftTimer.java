@@ -3,6 +3,8 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
@@ -11,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.SHIFT;
 
-public class ShiftTimer {
+public class ShiftTimer implements Sendable {
 
   public record ShiftInfo(
     Shift shift,
@@ -101,5 +103,29 @@ public class ShiftTimer {
     }
 
     return new ShiftInfo(shift, isHubActive, timeRemaining);
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("ShiftTimer");
+
+    // 2. Add the requested properties
+    builder.addBooleanProperty(
+      "Is Hub Active",
+      () -> getShiftInfo().isHubActive(),
+      null
+    );
+    builder.addStringProperty(
+      "Current Shift",
+      () -> getShiftInfo().shift().toString(),
+      null
+    );
+
+    // Optional: Add time remaining since you already have the logic
+    builder.addDoubleProperty(
+      "Shift Time Remaining",
+      () -> getShiftInfo().timeRemaining().in(Seconds),
+      null
+    );
   }
 }

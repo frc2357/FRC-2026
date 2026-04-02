@@ -226,7 +226,7 @@ public class ShotCalculator {
     Pose2d shooterPose = robotPose.transformBy(
       Constants.SHOOTER.ROBOT_TO_SHOOTER
     );
-    return shooterPose.getX() < FieldConstants.LinesVertical.allianceZone;
+    return shooterPose.getX() < FieldConstants.LinesVertical.scoreZone;
   }
 
   public Trigger fireControlApproval() {
