@@ -6,6 +6,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -65,10 +66,12 @@ public class TeleopScore extends ParallelCommandGroup {
 
       for (Rectangle2d zone : Constants.SCORING.NO_SHOOT_ZONES) {
         if (zone.contains(shooterPose.getTranslation())) {
+          SmartDashboard.putBoolean("is positioned to shoot", false);
           return false;
         }
       }
 
+      SmartDashboard.putBoolean("is positioned to shoot", true);
       return true;
     });
   }

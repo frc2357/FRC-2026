@@ -236,6 +236,18 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     m_shooter.updateTelemetry();
+    SmartDashboard.putNumber(
+      "shooter rps",
+      this.getVelocity().in(RotationsPerSecond)
+    );
+    SmartDashboard.putBoolean(
+      "at continous velocity",
+      isAtContinuousTargetVelocity().getAsBoolean()
+    );
+    SmartDashboard.putBoolean(
+      "at initial velocity",
+      isAtInitialTargetVelocity().getAsBoolean()
+    );
   }
 
   @Override

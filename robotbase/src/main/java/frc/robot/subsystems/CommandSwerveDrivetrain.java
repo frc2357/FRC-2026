@@ -553,6 +553,15 @@ public class CommandSwerveDrivetrain
       MetersPerSecond.of(targetSpeeds.vyMetersPerSecond),
       Robot.shotCalculator.getCalculatedDriveAngle()
     );
+
+    this.setControl(
+      m_driveAtAngle
+        .withVelocityX(MetersPerSecond.of(targetSpeeds.vxMetersPerSecond))
+        .withVelocityY(MetersPerSecond.of(targetSpeeds.vyMetersPerSecond))
+        .withTargetDirection(Robot.shotCalculator.getCalculatedDriveAngle())
+        .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
+        .withMaxAbsRotationalRate(SWERVE.MAX_DRIVE_AT_ANGLE_ANGULAR_RATE)
+    );
   }
 
   /**

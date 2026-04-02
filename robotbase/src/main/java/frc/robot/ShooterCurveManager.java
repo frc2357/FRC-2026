@@ -6,6 +6,7 @@ import edu.wpi.first.units.*;
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.networkTables.CurveTuner;
+import frc.robot.util.InterpolatingTreeMap;
 import frc.robot.util.InterpolationUtil;
 
 public class ShooterCurveManager {
@@ -13,28 +14,28 @@ public class ShooterCurveManager {
   private final String shooterOffsetKey = "shooter offset rps";
   private final String hoodOffsetKey = "hood offset rps";
 
-  private final CurveTuner<
-    DistanceUnit,
+  private final InterpolatingTreeMap<
+    // DistanceUnit,
     Distance,
-    AngularVelocityUnit,
+    // AngularVelocityUnit,
     AngularVelocity
-  > passingShooterCurve = new CurveTuner<>(
-    "Passing Shooter Curve",
-    Inches,
-    RotationsPerSecond,
+  > passingShooterCurve = new InterpolatingTreeMap<>(
+    // "Passing Shooter Curve",
+    // Inches,
+    // RotationsPerSecond,
     InterpolationUtil::InverseInterpolate,
     InterpolationUtil::Interpolate
   );
 
-  private final CurveTuner<
-    DistanceUnit,
+  private final InterpolatingTreeMap<
+    // DistanceUnit,
     Distance,
-    AngleUnit,
+    // AngleUnit,
     Angle
-  > passingHoodCurve = new CurveTuner<>(
-    "Passing Hood Curve",
-    Inches,
-    Degrees,
+  > passingHoodCurve = new InterpolatingTreeMap<>(
+    // "Passing Hood Curve",
+    // Inches,
+    // Degrees,
     InterpolationUtil::InverseInterpolate,
     InterpolationUtil::Interpolate
   );
@@ -118,8 +119,8 @@ public class ShooterCurveManager {
   private void initializeCurves() {
     // Passing shooter
     passingShooterCurve.put(PASS_POINTS.CLOSEST, RotationsPerSecond.of(50));
-    // passingShooterCurve.put(PASS_POINTS.CEILING, RotationsPerSecond.of(95));
-    passingShooterCurve.put(PASS_POINTS.FURTHERST, RotationsPerSecond.of(95));
+    passingShooterCurve.put(PASS_POINTS.CEILING, RotationsPerSecond.of(5));
+    passingShooterCurve.put(PASS_POINTS.FURTHERST, RotationsPerSecond.of(75));
 
     // Passing hood
     passingHoodCurve.put(PASS_POINTS.CLOSEST, Degrees.of(18));
@@ -128,7 +129,7 @@ public class ShooterCurveManager {
 
     scoringShooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(43));
     scoringShooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(45.5));
-    scoringShooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(47));
+    scoringShooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(46));
     scoringShooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(47.5));
     scoringShooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(50.25));
     scoringShooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(52.5));
@@ -140,11 +141,11 @@ public class ShooterCurveManager {
     // Scoring hood
     scoringHoodCurve.put(SHOT_POINTS.HUB, Degrees.of(1));
     scoringHoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(4));
-    scoringHoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(6));
-    scoringHoodCurve.put(SHOT_POINTS.TRENCH, Degrees.of(10.5));
+    scoringHoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(5.5));
+    scoringHoodCurve.put(SHOT_POINTS.TRENCH, Degrees.of(11));
     scoringHoodCurve.put(SHOT_POINTS.POINT_5, Degrees.of(13));
     scoringHoodCurve.put(SHOT_POINTS.POINT_6, Degrees.of(17));
-    scoringHoodCurve.put(SHOT_POINTS.OUTPOST_CORNER, Degrees.of(18));
+    scoringHoodCurve.put(SHOT_POINTS.OUTPOST_CORNER, Degrees.of(19));
 
     // Time of flight
     timeOfFlightCurve.put(SHOT_POINTS.HUB, Seconds.of(0.982));
@@ -187,8 +188,8 @@ public class ShooterCurveManager {
   public void updateCurveValues() {
     scoringShooterCurve.updateCurveValues();
     scoringHoodCurve.updateCurveValues();
-    passingShooterCurve.updateCurveValues();
-    passingHoodCurve.updateCurveValues();
+    // passingShooterCurve.updateCurveValues();
+    // passingHoodCurve.updateCurveValues();
     timeOfFlightCurve.updateCurveValues();
   }
 

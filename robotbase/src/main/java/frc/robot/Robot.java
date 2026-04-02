@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.controller.RumbleDriverController;
@@ -130,7 +131,7 @@ public class Robot extends TimedRobot {
      * Should remove the fms attachment requirement for drive practice
      */
     shiftWarning
-      .and(DriverStation::isFMSAttached)
+      // .and(DriverStation::isFMSAttached)
       .onTrue(new RumbleDriverController());
 
     // DON'T DELETE - Load the april tag field
@@ -162,7 +163,14 @@ public class Robot extends TimedRobot {
     Robot.cameraManager.updateResult();
     Robot.cameraManager.addSwerveEstimates(Robot.swerve::addVisionMeasurement);
     Robot.shotCalculator.updateCalculatedShot();
-
+    SmartDashboard.putBoolean(
+      "fire control approval",
+      shotCalculator.fireControlApproval().getAsBoolean()
+    );
+    SmartDashboard.putBoolean(
+      "in alliance zone",
+      shotCalculator.isInAllianceZone()
+    );
     CommandScheduler.getInstance().run();
 
     m_robotField.setRobotPose(swerve.getFieldRelativePose2d());

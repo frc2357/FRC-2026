@@ -49,7 +49,7 @@ public class CurveTuner<
   public void put(K key, V value) {
     super.put(key, value);
 
-    Preferences.initDouble(
+    Preferences.setDouble(
       getPreferencesKey(key),
       value.in(m_valueConversionUnit)
     );

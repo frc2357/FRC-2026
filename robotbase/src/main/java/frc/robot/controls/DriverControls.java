@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -78,6 +80,13 @@ public class DriverControls implements RumbleInterface {
     m_controller
       .rightTrigger()
       .whileTrue(new TeleopScore(this::getLeftX, this::getLeftY));
+    m_controller
+      .rightTrigger()
+      .whileTrue(
+        Commands.run(() ->
+          SmartDashboard.putBoolean("is shooting", true)
+        ).finallyDo(() -> SmartDashboard.putBoolean("is shooting", false))
+      );
 
     m_controller.rightBumper().whileTrue(new TrenchScore());
     m_controller.y().whileTrue(new OutpostScore());

@@ -162,6 +162,10 @@ public class ShotCalculator {
     );
 
     SmartDashboard.putNumber("target angle", driveAngle.getDegrees());
+    SmartDashboard.putNumber(
+      "target shooter rps",
+      shooterVelocity.in(RotationsPerSecond)
+    );
 
     return new CalculatedShot(
       shooterVelocity,
@@ -231,19 +235,26 @@ public class ShotCalculator {
 
   public Trigger fireControlApproval() {
     return new Trigger(() -> {
-      if (!DriverStation.isFMSAttached()) {
-        return true;
-      }
+      // if (!DriverStation.isFMSAttached()) {
+      //   SmartDashboard.putBoolean("fire control approval", true);
+      //   return true;
+      // }
       if (!isInAllianceZone()) {
         // Always approves when passing
+        SmartDashboard.putBoolean("fire control: not in alliance", true);
         return true;
+      } else {
+        SmartDashboard.putBoolean("fire control: not in alliance", false);
       }
 
       ShiftInfo shiftInfo = Robot.shiftTimer.getShiftInfo();
 
       if (shiftInfo.isHubActive()) {
         // Always approves if the hub is active
+        SmartDashboard.putBoolean("fire control: hub active", true);
         return true;
+      } else {
+        SmartDashboard.putBoolean("fire control: hub active", false);
       }
 
       if (
@@ -257,8 +268,12 @@ public class ShotCalculator {
       ) {
         /* if the hub is not active, BUT the remaining time until activation is LESS THAN the time of flight,
          it will return true */
+        SmartDashboard.putBoolean("fire control: prefire block", true);
         return true;
-      } else return false;
+      } else {
+        SmartDashboard.putBoolean("fire control: prefire block", false);
+        return false;
+      }
     });
   }
 
