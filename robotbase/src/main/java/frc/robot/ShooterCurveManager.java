@@ -6,7 +6,6 @@ import edu.wpi.first.units.*;
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.networkTables.CurveTuner;
-import frc.robot.util.InterpolatingTreeMap;
 import frc.robot.util.InterpolationUtil;
 
 public class ShooterCurveManager {
@@ -14,28 +13,28 @@ public class ShooterCurveManager {
   private final String shooterOffsetKey = "shooter offset rps";
   private final String hoodOffsetKey = "hood offset rps";
 
-  private final InterpolatingTreeMap<
-    // DistanceUnit,
+  private final CurveTuner<
+    DistanceUnit,
     Distance,
-    // AngularVelocityUnit,
+    AngularVelocityUnit,
     AngularVelocity
-  > passingShooterCurve = new InterpolatingTreeMap<>(
-    // "Passing Shooter Curve",
-    // Inches,
-    // RotationsPerSecond,
+  > passingShooterCurve = new CurveTuner<>(
+    "Passing Shooter Curve",
+    Inches,
+    RotationsPerSecond,
     InterpolationUtil::InverseInterpolate,
     InterpolationUtil::Interpolate
   );
 
-  private final InterpolatingTreeMap<
-    // DistanceUnit,
+  private final CurveTuner<
+    DistanceUnit,
     Distance,
-    // AngleUnit,
+    AngleUnit,
     Angle
-  > passingHoodCurve = new InterpolatingTreeMap<>(
-    // "Passing Hood Curve",
-    // Inches,
-    // Degrees,
+  > passingHoodCurve = new CurveTuner<>(
+    "Passing Hood Curve",
+    Inches,
+    Degrees,
     InterpolationUtil::InverseInterpolate,
     InterpolationUtil::Interpolate
   );
@@ -104,7 +103,7 @@ public class ShooterCurveManager {
 
     public static final Distance CLOSEST = Inches.of(200);
     public static final Distance CEILING = Inches.of(400);
-    public static final Distance FURTHERST = Inches.of(
+    public static final Distance FURTHERST = Meters.of(
       Constants.FieldConstants.fieldLength
     );
   }
@@ -119,7 +118,7 @@ public class ShooterCurveManager {
   private void initializeCurves() {
     // Passing shooter
     passingShooterCurve.put(PASS_POINTS.CLOSEST, RotationsPerSecond.of(50));
-    passingShooterCurve.put(PASS_POINTS.CEILING, RotationsPerSecond.of(5));
+    passingShooterCurve.put(PASS_POINTS.CEILING, RotationsPerSecond.of(75));
     passingShooterCurve.put(PASS_POINTS.FURTHERST, RotationsPerSecond.of(75));
 
     // Passing hood
