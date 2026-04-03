@@ -31,7 +31,13 @@ public class TeleopScore extends ParallelCommandGroup {
       ),
       Robot.hood.setAngle(Robot.shotCalculator::getCalculatedHoodAngle),
       new SequentialCommandGroup(
-        new WaitUntilCommand(Robot.shooter.isAtInitialTargetVelocity()),
+        new WaitUntilCommand(
+          Robot.shooter.isAtInitialTargetVelocity()
+        ).raceWith(
+          new WaitUntilCommand(0.5).alongWith(
+            new WaitUntilCommand(() -> !Robot.shotCalculator.isInAllianceZone())
+          )
+        ),
         new ConditionalScoreFeed(
           isPositionedToShoot()
             .and(Robot.shooter.isAtContinuousTargetVelocity())

@@ -32,7 +32,9 @@ public class PitControls {
 
     m_controller
       .rightBumper()
-      .whileTrue(new IntakeRunnerSetSpeed(Constants.INTAKE_RUNNER.CLEAN_SPEED));
+      .whileTrue(
+        new IntakeRunnerSetSpeed(Constants.INTAKE_RUNNER.TELEOP_INTAKING_SPEED)
+      );
 
     m_controller.leftBumper().whileTrue(new CleanFeed());
 

@@ -28,7 +28,6 @@ public class AutoChooserManager {
     new RightTrench(),
     new LeftTrench(),
     new LeftTrenchBump(),
-    new LeftTrenchDepot(),
     new Center(),
     new RightTrenchBump(),
   };
