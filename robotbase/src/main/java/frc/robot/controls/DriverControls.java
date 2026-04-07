@@ -79,7 +79,9 @@ public class DriverControls implements RumbleInterface {
 
     m_controller
       .rightTrigger()
-      .whileTrue(new TeleopScore(this::getLeftX, this::getLeftY));
+      .whileTrue(
+        new TeleopScore(this::getLeftX, this::getLeftY, m_controller.a())
+      );
     m_controller
       .rightTrigger()
       .whileTrue(
@@ -92,10 +94,6 @@ public class DriverControls implements RumbleInterface {
     m_controller.y().whileTrue(new OutpostScore());
     m_controller.x().whileTrue(new HubScore());
     m_controller.leftBumper().whileTrue(new TowerScore());
-
-    m_controller
-      .a()
-      .whileTrue(new DriveTargetLock(this::getLeftX, this::getLeftY));
 
     m_controller
       .povLeft()

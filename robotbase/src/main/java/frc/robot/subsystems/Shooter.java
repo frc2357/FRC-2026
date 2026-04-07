@@ -241,7 +241,7 @@ public class Shooter extends SubsystemBase {
       this.getVelocity().in(RotationsPerSecond)
     );
     SmartDashboard.putBoolean(
-      "at continous velocity",
+      "at continuous velocity",
       isAtContinuousTargetVelocity().getAsBoolean()
     );
     SmartDashboard.putBoolean(

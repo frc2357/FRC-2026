@@ -119,7 +119,7 @@ public class ShooterCurveManager {
     // Passing shooter
     passingShooterCurve.put(PASS_POINTS.CLOSEST, RotationsPerSecond.of(50));
     passingShooterCurve.put(PASS_POINTS.CEILING, RotationsPerSecond.of(75));
-    passingShooterCurve.put(PASS_POINTS.FURTHERST, RotationsPerSecond.of(75));
+    passingShooterCurve.put(PASS_POINTS.FURTHERST, RotationsPerSecond.of(90));
 
     // Passing hood
     passingHoodCurve.put(PASS_POINTS.CLOSEST, Degrees.of(18));

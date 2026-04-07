@@ -676,7 +676,7 @@ public class Constants {
 
     public static final Time TIME_TO_WARN_FOR_ACTIVE_HUB = Seconds.of(10);
 
-    public static final Time TOF_TIMING_BUFFER = Seconds.of(0.4);
+    public static final Time PREFIRE_FEED_LATENCY = Seconds.of(0.5);
 
     public static final Rectangle2d[] NO_SHOOT_ZONES = new Rectangle2d[] {
       // This rect represents a 47in x 47in square centered on the neutral zone side of the hub.

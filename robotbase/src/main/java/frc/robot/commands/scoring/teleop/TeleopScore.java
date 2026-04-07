@@ -15,15 +15,20 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.drive.DriveTargetLock;
 import frc.robot.commands.scoring.ConditionalScoreFeed;
+import frc.robot.commands.util.PressToContinue;
 import java.util.function.Supplier;
 
 public class TeleopScore extends ParallelCommandGroup {
 
-  public TeleopScore(Dimensionless x, Dimensionless y) {
-    this(() -> x, () -> y);
+  public TeleopScore(Dimensionless x, Dimensionless y, Trigger button) {
+    this(() -> x, () -> y, button);
   }
 
-  public TeleopScore(Supplier<Dimensionless> x, Supplier<Dimensionless> y) {
+  public TeleopScore(
+    Supplier<Dimensionless> x,
+    Supplier<Dimensionless> y,
+    Trigger button
+  ) {
     super();
     addCommands(
       Robot.shooter.setVelocity(
@@ -36,12 +41,14 @@ public class TeleopScore extends ParallelCommandGroup {
         ).raceWith(
           new WaitUntilCommand(0.5).alongWith(
             new WaitUntilCommand(() -> !Robot.shotCalculator.isInAllianceZone())
-          )
+          ),
+          new PressToContinue(button)
         ),
         new ConditionalScoreFeed(
           isPositionedToShoot()
             .and(Robot.shooter.isAtContinuousTargetVelocity())
             .and(Robot.shotCalculator.fireControlApproval())
+            .or(button)
         )
       ),
       new DriveTargetLock(x, y)

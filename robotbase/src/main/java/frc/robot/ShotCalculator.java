@@ -261,8 +261,8 @@ public class ShotCalculator {
         (shiftInfo
             .timeRemaining()
             .lte(
-              getCalculatedShot().timeOfFlight.minus(
-                Constants.SCORING.TOF_TIMING_BUFFER
+              getCalculatedShot().timeOfFlight.plus(
+                Constants.SCORING.PREFIRE_FEED_LATENCY
               )
             ))
       ) {
