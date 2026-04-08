@@ -28,6 +28,7 @@ import frc.robot.commands.controller.RumbleDriverController;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
+import frc.robot.commands.hood.HoodSetCoast;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
@@ -193,6 +194,7 @@ public class Robot extends TimedRobot {
       new DriveStop()
         .andThen(new WaitCommand(SWERVE.TIME_TO_COAST))
         .andThen(new DriveSetCoast())
+        .andThen(new HoodSetCoast())
     );
   }
 
