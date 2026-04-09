@@ -114,6 +114,7 @@ public class Robot extends TimedRobot {
 
     swerve.registerTelemetry(logger::telemeterize);
     swerve.setDefaultCommand(m_defaultDrive);
+    swerve.configNeutralMode(NeutralModeValue.Brake);
 
     hood.setDefaultCommand(hood.goHome());
     shooter.setDefaultCommand(shooter.setIdleVelocity());
@@ -204,8 +205,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    swerve.configNeutralMode(NeutralModeValue.Brake);
-
     m_autonomousCommand = m_autoChooserManager.getSelectedCommand();
 
     if (m_autonomousCommand != null) {
@@ -221,7 +220,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    swerve.configNeutralMode(NeutralModeValue.Brake);
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().cancel(m_autonomousCommand);
     }
@@ -236,7 +234,6 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
-    swerve.configNeutralMode(NeutralModeValue.Brake);
     pitControls = new PitControls();
   }
 
