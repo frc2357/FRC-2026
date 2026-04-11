@@ -88,7 +88,7 @@ public class DriveNaiveTargetingHub extends Command {
   }
 
   public Optional<Rotation2d> computeTargetAngle() {
-    double rawYaw = Robot.cameraManager.m_shooter.getTargetYaw(
+    double rawYaw = Robot.cameraManager.m_photonShooter.getTargetYaw(
       DriveNaiveTargetingHub.TARGET_ID,
       PHOTON_VISION.NAIVE_APRIL_TAG_TARGET_TIMEOUT
     );

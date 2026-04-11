@@ -140,23 +140,11 @@ public class Constants {
     public static final String CONNECTION_REGAINED_MESSAGE =
       "CONNECTION REGAINED WITH ORANGE PI*********";
 
-    public static final double MAX_ANGLE = 45;
-
     public static final int NAIVE_APRIL_TAG_PIPELINE = 1;
 
     public static final int MULTI_TAG_PIPELINE = 0;
 
     public static final long NAIVE_APRIL_TAG_TARGET_TIMEOUT = 50;
-
-    // TODO: These values could be fine tuned for the robot
-    public static final class FILTER_PARAM {
-
-      public static final LinearVelocity MAX_ROBOT_TRANSLATION =
-        MetersPerSecond.of(2);
-      public static final AngularVelocity MAX_ROBOT_ROTATION =
-        RadiansPerSecond.of(3);
-      public static final Distance MAX_DISTANCE_FROM_ROBOT = Meters.of(0.5);
-    }
 
     public static final class KELPY_BACK_LEFT_CAM {
 
@@ -278,6 +266,17 @@ public class Constants {
         Double.MAX_VALUE
       );
     }
+  }
+
+  public static final class POSE_FILTER {
+
+    public static final double MAX_ANGLE = 45;
+
+    public static final LinearVelocity MAX_ROBOT_TRANSLATION =
+      MetersPerSecond.of(2);
+    public static final AngularVelocity MAX_ROBOT_ROTATION =
+      RadiansPerSecond.of(3);
+    public static final Distance MAX_DISTANCE_FROM_ROBOT = Meters.of(0.5);
   }
 
   public static final class CHOREO {

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.PHOTON_VISION;
+import frc.robot.Constants.POSE_FILTER;
 import frc.robot.Robot;
 import java.util.List;
 import java.util.Optional;
@@ -237,7 +238,7 @@ public class PhotonVisionCamera {
         Math.pow(speeds.vxMetersPerSecond, 2) +
           Math.pow(speeds.vyMetersPerSecond, 2)
       ) >=
-      PHOTON_VISION.FILTER_PARAM.MAX_ROBOT_TRANSLATION.in(MetersPerSecond)
+      POSE_FILTER.MAX_ROBOT_TRANSLATION.in(MetersPerSecond)
     ) {
       return false;
     }
@@ -245,7 +246,7 @@ public class PhotonVisionCamera {
     // Check if we are rotating too fast
     if (
       speeds.omegaRadiansPerSecond >=
-      PHOTON_VISION.FILTER_PARAM.MAX_ROBOT_ROTATION.in(RadiansPerSecond)
+      POSE_FILTER.MAX_ROBOT_ROTATION.in(RadiansPerSecond)
     ) {
       return false;
     }
@@ -261,7 +262,7 @@ public class PhotonVisionCamera {
         .getTranslation()
         .toTranslation2d()
         .getDistance(robotPose.getTranslation()) >=
-      PHOTON_VISION.FILTER_PARAM.MAX_DISTANCE_FROM_ROBOT.in(Meters)
+      POSE_FILTER.MAX_DISTANCE_FROM_ROBOT.in(Meters)
     ) {
       return false;
     }
@@ -358,8 +359,8 @@ public class PhotonVisionCamera {
 
     return (
       target.timestamp > then ||
-      Math.abs(target.yaw) > PHOTON_VISION.MAX_ANGLE ||
-      Math.abs(target.pitch) > PHOTON_VISION.MAX_ANGLE
+      Math.abs(target.yaw) > POSE_FILTER.MAX_ANGLE ||
+      Math.abs(target.pitch) > POSE_FILTER.MAX_ANGLE
     );
   }
 
