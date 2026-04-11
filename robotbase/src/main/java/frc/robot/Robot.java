@@ -72,6 +72,8 @@ public class Robot extends TimedRobot {
   public static Kicker kicker;
   public static Tunnel tunnel;
 
+  boolean lastDriveMode;
+
   public static CameraManager cameraManager;
   public static ShooterCurveManager shooterCurveManager;
   public static ShotCalculator shotCalculator;
@@ -119,6 +121,8 @@ public class Robot extends TimedRobot {
 
     m_autoChooserManager = new AutoChooserManager();
     m_InitRobotCommand = new InitRobotCommand();
+
+    SmartDashboard.putBoolean("Drive Mode Brake", false);
 
     shiftTimer = new ShiftTimer();
 
@@ -175,11 +179,15 @@ public class Robot extends TimedRobot {
       "in alliance zone",
       shotCalculator.isInAllianceZone()
     );
-    if (SmartDashboard.putBoolean("Drive set break Mode", false)) {
-      new DriveSetBrake();
+    if (SmartDashboard.getBoolean("Drive Mode Brake", false) != lastDriveMode) {
+      lastDriveMode = SmartDashboard.getBoolean("Drive Mode Brake", false);
+      if (
+        SmartDashboard.getBoolean("Drive Mode Brake", true)
+      ) new DriveSetBrake();
     } else {
       new DriveSetCoast();
     }
+
     CommandScheduler.getInstance().run();
 
     m_robotField.setRobotPose(swerve.getFieldRelativePose2d());
