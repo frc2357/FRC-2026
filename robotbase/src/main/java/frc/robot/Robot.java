@@ -26,7 +26,6 @@ import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.controller.RumbleDriverController;
 import frc.robot.commands.drive.DefaultDrive;
-import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.commands.drive.DriveStop;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
@@ -150,6 +149,11 @@ public class Robot extends TimedRobot {
     DriverStation.startDataLog(DataLogManager.getLog());
 
     DriverStation.silenceJoystickConnectionWarning(true);
+
+    // Warmp choreo
+    CommandScheduler.getInstance().schedule(
+      Constants.CHOREO.AUTO_FACTORY.warmupCmd()
+    );
   }
 
   @Override
@@ -188,12 +192,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     CommandScheduler.getInstance().schedule(new StopAllMotors());
-
-    CommandScheduler.getInstance().schedule(
-      new DriveStop()
-        .andThen(new WaitCommand(SWERVE.TIME_TO_COAST))
-        .andThen(new DriveSetCoast())
-    );
   }
 
   @Override
@@ -204,8 +202,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    swerve.configNeutralMode(NeutralModeValue.Brake);
-
     m_autonomousCommand = m_autoChooserManager.getSelectedCommand();
 
     if (m_autonomousCommand != null) {
@@ -221,7 +217,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    swerve.configNeutralMode(NeutralModeValue.Brake);
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().cancel(m_autonomousCommand);
     }
@@ -236,7 +231,6 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
-    swerve.configNeutralMode(NeutralModeValue.Brake);
     pitControls = new PitControls();
   }
 
