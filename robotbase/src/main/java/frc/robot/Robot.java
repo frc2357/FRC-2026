@@ -139,6 +139,8 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putData("Robot Field", m_robotField);
 
+    SmartDashboard.getBoolean("Drive set Coast Mode", false);
+
     SignalLogger.enableAutoLogging(false);
     SignalLogger.stop();
     StatusLogger.disableAutoLogging();
@@ -175,6 +177,10 @@ public class Robot extends TimedRobot {
       "in alliance zone",
       shotCalculator.isInAllianceZone()
     );
+    if (
+      SmartDashboard.getBoolean("Drive set Coast Mode", false)
+    ) new DriveSetCoast();
+
     CommandScheduler.getInstance().run();
 
     m_robotField.setRobotPose(swerve.getFieldRelativePose2d());
