@@ -183,9 +183,9 @@ public class Robot extends TimedRobot {
       lastDriveMode = SmartDashboard.getBoolean("Drive Mode Brake", false);
       if (
         SmartDashboard.getBoolean("Drive Mode Brake", true)
-      ) new DriveSetBrake();
+      ) swerve.configNeutralMode(NeutralModeValue.Brake);
     } else {
-      new DriveSetCoast();
+      swerve.configNeutralMode(NeutralModeValue.Coast);
     }
 
     CommandScheduler.getInstance().run();
