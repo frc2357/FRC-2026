@@ -18,6 +18,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.PHOTON_VISION;
 import frc.robot.Constants.POSE_FILTER;
 import frc.robot.Robot;
+import frc.robot.vision.CameraInterface.SwervePoseEstimate;
 import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
@@ -27,7 +28,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 /** Controls the photon vision camera options. */
-public class PhotonVisionCamera {
+public class PhotonVisionCamera implements CameraInterface {
 
   /*
    * The class for the object we use to cache our target data
@@ -38,15 +39,6 @@ public class PhotonVisionCamera {
     public double pitch = Double.NaN;
     public long timestamp = 0;
   }
-
-  /*
-   * Estimate to add to a swerve pose estimator
-   */
-  public record SwervePoseEstimate(
-    Pose2d pose,
-    Matrix<N3, N1> stdDevs,
-    double timestamp
-  ) {}
 
   // all of these are protected so we can use them in the extended classes
   // which are only extended so we can control which pipelines we are using.
@@ -149,7 +141,7 @@ public class PhotonVisionCamera {
    * <h1>YOU SHOULD NEVER CALL THIS! This is for the Robot periodic ONLY. NEVER call this method
    * outside of it. </h1>
    */
-  protected void updateResult() {
+  public void updateResult() {
     // Clear out member estimates every loop
     m_poseEstimate = Optional.empty();
     m_seedEstimate = Optional.empty();
@@ -369,7 +361,7 @@ public class PhotonVisionCamera {
    *
    * @param index The index to make it be set to.
    */
-  protected void setPipeline(int index) {
+  public void setPipeline(int index) {
     if (m_camera.getPipelineIndex() != index) {
       m_camera.setPipelineIndex(index);
     }

@@ -45,7 +45,7 @@ import frc.robot.Constants.SWERVE;
 import frc.robot.Robot;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.AllianceFlipUtil;
-import frc.robot.vision.PhotonVisionCamera.SwervePoseEstimate;
+import frc.robot.vision.CameraInterface.SwervePoseEstimate;
 import java.util.Optional;
 import java.util.function.Supplier;
 

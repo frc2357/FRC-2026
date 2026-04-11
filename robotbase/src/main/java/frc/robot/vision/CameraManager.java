@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.PHOTON_VISION;
-import frc.robot.vision.PhotonVisionCamera.SwervePoseEstimate;
+import frc.robot.vision.CameraInterface.SwervePoseEstimate;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -33,7 +33,7 @@ public class CameraManager extends SubsystemBase {
     Constants.PHOTON_VISION.BACK_RIGHT_CAM.kMultiTagStdDevs
   );
 
-  PhotonVisionCamera[] m_cameras = {
+  CameraInterface[] m_cameras = {
     m_photonShooter,
     m_photonBackLeft,
     m_photonBackRight,
@@ -70,7 +70,7 @@ public class CameraManager extends SubsystemBase {
   }
 
   private void setPipeline(int pipelineIndex) {
-    for (PhotonVisionCamera camera : m_cameras) {
+    for (CameraInterface camera : m_cameras) {
       camera.setPipeline(pipelineIndex);
     }
   }
