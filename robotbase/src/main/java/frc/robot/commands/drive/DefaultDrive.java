@@ -47,9 +47,9 @@ public class DefaultDrive extends Command {
     );
 
     if (
-      m_x.get().in(Value) == 0 &&
-      m_y.get().in(Value) == 0 &&
-      m_rotation.get().in(Value) == 0
+      m_x.get().in(Percent) == 0 &&
+      m_y.get().in(Percent) == 0 &&
+      m_rotation.get().in(Percent) == 0
     ) {
       Robot.swerve.stopMotors();
     } else {
