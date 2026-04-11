@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.PHOTON_VISION;
 import frc.robot.vision.CameraInterface.SwervePoseEstimate;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -49,7 +48,7 @@ public class CameraManager extends SubsystemBase {
   public CameraManager() {
     SmartDashboard.putData("Vision Field", m_visionField);
     // Set the pipeline, only really necessary if we were testing with another pipeline in the UI beforehand
-    setPipeline(PHOTON_VISION.MULTI_TAG_PIPELINE);
+    setPipeline(VisionPipeline.MULTI_TAG_PIPELINE);
   }
 
   public void updateResult() {
@@ -69,9 +68,9 @@ public class CameraManager extends SubsystemBase {
     }
   }
 
-  private void setPipeline(int pipelineIndex) {
+  private void setPipeline(VisionPipeline pipeline) {
     for (CameraInterface camera : m_cameras) {
-      camera.setPipeline(pipelineIndex);
+      camera.setPipeline(pipeline);
     }
   }
 

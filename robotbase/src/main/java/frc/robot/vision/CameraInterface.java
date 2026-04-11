@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface CameraInterface {
   public abstract void updateResult();
   public abstract Optional<SwervePoseEstimate> getEstimateForSwerve();
-  public abstract void setPipeline(int index);
+  public abstract void setPipeline(VisionPipeline pipeline);
 
   /*
    * Estimate to add to a swerve pose estimator

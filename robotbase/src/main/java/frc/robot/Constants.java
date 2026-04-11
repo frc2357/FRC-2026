@@ -27,6 +27,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -139,10 +140,6 @@ public class Constants {
       "**************LOST CONNECTION WITH ORANGE PI";
     public static final String CONNECTION_REGAINED_MESSAGE =
       "CONNECTION REGAINED WITH ORANGE PI*********";
-
-    public static final int NAIVE_APRIL_TAG_PIPELINE = 1;
-
-    public static final int MULTI_TAG_PIPELINE = 0;
 
     public static final long NAIVE_APRIL_TAG_TARGET_TIMEOUT = 50;
 
@@ -260,6 +257,33 @@ public class Constants {
         4,
         Double.MAX_VALUE
       );
+      public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(
+        0.5,
+        0.5,
+        Double.MAX_VALUE
+      );
+    }
+  }
+
+  public static final class LIMELIGHT {
+
+    public static final class SHOOTER_CAM {
+
+      public static final String NAME = "shooter";
+
+      //TODO: These will need modified for the new mount
+      public static final Pose3d ROBOT_TO_CAM_TRANSFORM = new Pose3d(
+        Inches.of(-9.004),
+        Inches.of(12.554),
+        Inches.of(15.993),
+        new Rotation3d(Degrees.of(10), Degrees.of(0), Degrees.of(90))
+      );
+
+      // The standard deviations of our vision estimated poses, which affect correction rate
+      // (Fake values. Experiment and determine estimation noise on an actual robot.)
+      // These are the default values from PhotonVision docs. They can be tuned per camera
+      // by placing the robot at several points, recording the pose estimate and recording
+      // the standard deviations
       public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(
         0.5,
         0.5,

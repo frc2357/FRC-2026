@@ -359,11 +359,11 @@ public class PhotonVisionCamera implements CameraInterface {
   /**
    * Sets the pipeline index to make the camera go to.
    *
-   * @param index The index to make it be set to.
+   * @param pipeline The index to make it be set to.
    */
-  public void setPipeline(int index) {
-    if (m_camera.getPipelineIndex() != index) {
-      m_camera.setPipelineIndex(index);
+  public void setPipeline(VisionPipeline pipeline) {
+    if (m_camera.getPipelineIndex() != pipeline.getIndex()) {
+      m_camera.setPipelineIndex(pipeline.getIndex());
     }
   }
 
