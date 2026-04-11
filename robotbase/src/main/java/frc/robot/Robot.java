@@ -72,8 +72,6 @@ public class Robot extends TimedRobot {
   public static Kicker kicker;
   public static Tunnel tunnel;
 
-  boolean lastDriveMode;
-
   public static CameraManager cameraManager;
   public static ShooterCurveManager shooterCurveManager;
   public static ShotCalculator shotCalculator;
@@ -179,14 +177,6 @@ public class Robot extends TimedRobot {
       "in alliance zone",
       shotCalculator.isInAllianceZone()
     );
-    if (SmartDashboard.getBoolean("Drive Mode Brake", false) != lastDriveMode) {
-      lastDriveMode = SmartDashboard.getBoolean("Drive Mode Brake", false);
-      if (
-        SmartDashboard.getBoolean("Drive Mode Brake", true)
-      ) swerve.configNeutralMode(NeutralModeValue.Brake);
-    } else {
-      swerve.configNeutralMode(NeutralModeValue.Coast);
-    }
 
     CommandScheduler.getInstance().run();
 
