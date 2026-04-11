@@ -1,13 +1,11 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Value;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
@@ -34,10 +32,6 @@ public class Kicker extends SubsystemBase {
   public void setAxisSpeed(Dimensionless axisSpeed) {
     Dimensionless m_speed = axisSpeed.times(KICKER.AXIS_MAX_SPEED);
     setSpeed(m_speed);
-  }
-
-  public Current getCurrent() {
-    return Amps.of(m_motor.getOutputCurrent());
   }
 
   public void stop() {

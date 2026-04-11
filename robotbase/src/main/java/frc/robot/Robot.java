@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Amps;
-
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.util.StatusLogger;
@@ -162,16 +160,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Floor Current", floor.getCurrent().in(Amps));
-    SmartDashboard.putNumber("Kicker Current", kicker.getCurrent().in(Amps));
-    SmartDashboard.putNumber("Tunnel Current", tunnel.getCurrent().in(Amps));
-    SmartDashboard.putNumber("Feeder Current", feeder.getCurrent().in(Amps));
-
-    SmartDashboard.putNumber("Swerve Current 0", swerve.getCurrent0().in(Amps));
-    SmartDashboard.putNumber("Swerve Current 1", swerve.getCurrent1().in(Amps));
-    SmartDashboard.putNumber("Swerve Current 2", swerve.getCurrent2().in(Amps));
-    SmartDashboard.putNumber("Swerve Current 3", swerve.getCurrent3().in(Amps));
-
     Robot.cameraManager.updateResult();
     Robot.cameraManager.addSwerveEstimates(Robot.swerve::addVisionMeasurement);
     Robot.shotCalculator.updateCalculatedShot();

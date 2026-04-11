@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
@@ -27,7 +26,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -417,30 +415,6 @@ public class CommandSwerveDrivetrain
     return ChassisSpeeds.fromRobotRelativeSpeeds(
       getCurrentRobotRelativeSpeeds(),
       getFieldRelativePose2d().getRotation()
-    );
-  }
-
-  public Current getCurrent0() {
-    return Amps.of(
-      super.getModule(0).getDriveMotor().getSupplyCurrent().getValueAsDouble()
-    );
-  }
-
-  public Current getCurrent1() {
-    return Amps.of(
-      super.getModule(0).getDriveMotor().getSupplyCurrent().getValueAsDouble()
-    );
-  }
-
-  public Current getCurrent2() {
-    return Amps.of(
-      super.getModule(0).getDriveMotor().getSupplyCurrent().getValueAsDouble()
-    );
-  }
-
-  public Current getCurrent3() {
-    return Amps.of(
-      super.getModule(0).getDriveMotor().getSupplyCurrent().getValueAsDouble()
     );
   }
 
