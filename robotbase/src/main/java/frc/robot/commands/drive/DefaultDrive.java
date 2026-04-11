@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.SWERVE;
@@ -32,9 +33,9 @@ public class DefaultDrive extends Command {
     m_y = y;
     m_rotation = rotation;
 
-    m_LimiterX = new SlewRateLimiter(.5);
-    m_LimiterY = new SlewRateLimiter(.5);
-    m_LimiterRotation = new SlewRateLimiter(.5);
+    m_LimiterX = new SlewRateLimiter(SWERVE.SLEW_RATE_LIMIT);
+    m_LimiterY = new SlewRateLimiter(SWERVE.SLEW_RATE_LIMIT);
+    m_LimiterRotation = new SlewRateLimiter(SWERVE.SLEW_RATE_LIMIT);
   }
 
   @Override
@@ -45,15 +46,19 @@ public class DefaultDrive extends Command {
       m_rotation.get().in(Value)
     );
 
-    if (m_xPercent == 0 && m_yPercent == 0 && m_rotationPercent == 0) {
+    if (
+      m_x.get().in(Value) == 0 &&
+      m_y.get().in(Value) == 0 &&
+      m_rotation.get().in(Value) == 0
+    ) {
       Robot.swerve.stopMotors();
     } else {
       Robot.swerve.driveFieldRelative(
         SWERVE.MAX_SPEED.times(Constants.SWERVE.AXIS_MAX_SPEED).times(
-          m_xPercent
+          m_yPercent
         ),
         SWERVE.MAX_SPEED.times(Constants.SWERVE.AXIS_MAX_SPEED).times(
-          m_yPercent
+          m_xPercent
         ),
         SWERVE.MAX_ANGULAR_RATE.times(
           Constants.SWERVE.AXIS_MAX_ANGULAR_RATE
