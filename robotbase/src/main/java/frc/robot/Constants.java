@@ -96,6 +96,8 @@ public class Constants {
     public static final Dimensionless AXIS_MAX_ANGULAR_RATE = Percent.of(100);
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
+    public static final double SLEW_RATE_LIMIT = 3.5; // in units per second relative to stick input (.5 takes 4 seconds to go from -1 to 1)
+
     public static final double HEADING_CONTROLLER_P = 4.5;
     public static final double HEADING_CONTROLLER_I = 0;
     public static final double HEADING_CONTROLLER_D = 0;
