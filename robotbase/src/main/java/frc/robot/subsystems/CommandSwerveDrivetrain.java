@@ -30,6 +30,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -42,8 +43,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.CHOREO;
 import frc.robot.Constants.SWERVE;
 import frc.robot.Robot;
-import frc.robot.commands.drive.DriveSetBrake;
-import frc.robot.commands.drive.DriveSetCoast;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.vision.PhotonVisionCamera.SwervePoseEstimate;
@@ -59,7 +58,7 @@ import java.util.function.Supplier;
  */
 public class CommandSwerveDrivetrain
   extends TunerSwerveDrivetrain
-  implements Subsystem
+  implements Subsystem, Sendable
 {
 
   public static enum AutoDriveMode {
@@ -613,6 +612,7 @@ public class CommandSwerveDrivetrain
       : ChoreoAllianceFlipUtil.flip(curPose);
   }
 
+  @Override
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("Drive Mode");
 

@@ -45,6 +45,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tunnel;
 import frc.robot.triggers.ShiftWarning;
 import frc.robot.vision.CameraManager;
+import java.lang.module.ModuleDescriptor.Builder;
 
 public class Robot extends TimedRobot {
 
@@ -120,9 +121,9 @@ public class Robot extends TimedRobot {
     m_autoChooserManager = new AutoChooserManager();
     m_InitRobotCommand = new InitRobotCommand();
 
-    SmartDashboard.putBoolean("Drive Mode Brake", false);
-
     shiftTimer = new ShiftTimer();
+
+    SmartDashboard.putData("DriveMode", swerve);
 
     Trigger shiftWarning = new ShiftWarning().warn();
     /**
