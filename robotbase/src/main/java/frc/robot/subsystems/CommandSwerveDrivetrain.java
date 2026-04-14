@@ -9,9 +9,11 @@ import static edu.wpi.first.units.Units.Volts;
 import choreo.trajectory.SwerveSample;
 import choreo.util.ChoreoAllianceFlipUtil;
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -28,10 +30,13 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -53,7 +58,7 @@ import java.util.function.Supplier;
  */
 public class CommandSwerveDrivetrain
   extends TunerSwerveDrivetrain
-  implements Subsystem
+  implements Subsystem, Sendable
 {
 
   public static enum AutoDriveMode {
@@ -399,6 +404,14 @@ public class CommandSwerveDrivetrain
   private final SwerveRequest.PointWheelsAt m_pointAt =
     new SwerveRequest.PointWheelsAt();
 
+  private NeutralModeValue m_currentNeutralMode;
+
+  @Override
+  public StatusCode configNeutralMode(NeutralModeValue neutralModeValue) {
+    m_currentNeutralMode = neutralModeValue;
+    return super.configNeutralMode(neutralModeValue);
+  }
+
   public void resetHeading(Rotation2d heading) {
     super.resetRotation(heading);
   }
@@ -597,6 +610,23 @@ public class CommandSwerveDrivetrain
     return Robot.alliance == Alliance.Blue
       ? curPose
       : ChoreoAllianceFlipUtil.flip(curPose);
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("Drive Mode");
+
+    builder.addBooleanProperty(
+      "Is Coast Mode",
+      () -> m_currentNeutralMode == NeutralModeValue.Coast,
+      newIsCoastMode -> {
+        if (newIsCoastMode == false) {
+          configNeutralMode(NeutralModeValue.Brake);
+        } else {
+          configNeutralMode(NeutralModeValue.Coast);
+        }
+      }
+    );
   }
 
   public void setTranslationModifier(Dimensionless modifier) {

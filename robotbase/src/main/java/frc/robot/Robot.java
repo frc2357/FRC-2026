@@ -45,6 +45,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tunnel;
 import frc.robot.triggers.ShiftWarning;
 import frc.robot.vision.CameraManager;
+import java.lang.module.ModuleDescriptor.Builder;
 
 public class Robot extends TimedRobot {
 
@@ -122,6 +123,8 @@ public class Robot extends TimedRobot {
 
     shiftTimer = new ShiftTimer();
 
+    SmartDashboard.putData("DriveMode", swerve);
+
     Trigger shiftWarning = new ShiftWarning().warn();
     /**
      * Making this trigger require being attached to the FMS to
@@ -175,6 +178,7 @@ public class Robot extends TimedRobot {
       "in alliance zone",
       shotCalculator.isInAllianceZone()
     );
+
     CommandScheduler.getInstance().run();
 
     m_robotField.setRobotPose(swerve.getFieldRelativePose2d());
