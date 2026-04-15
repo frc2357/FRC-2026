@@ -11,11 +11,10 @@ import java.util.function.Consumer;
 public class CameraManager extends SubsystemBase {
 
   // TODO: Switch to actual shooter camera
-  public PhotonVisionCamera m_photonShooter = new PhotonVisionCamera(
-    Constants.PHOTON_VISION.SHOOTER_CAM.NAME,
-    Constants.PHOTON_VISION.SHOOTER_CAM.ROBOT_TO_CAM_TRANSFORM,
-    Constants.PHOTON_VISION.SHOOTER_CAM.kSingleTagStdDevs,
-    Constants.PHOTON_VISION.SHOOTER_CAM.kMultiTagStdDevs
+  public LimelightCamera m_limelightShooter = new LimelightCamera(
+    Constants.LIMELIGHT.SHOOTER_CAM.NAME,
+    Constants.LIMELIGHT.SHOOTER_CAM.ROBOT_TO_CAM_TRANSFORM,
+    Constants.LIMELIGHT.SHOOTER_CAM.kMultiTagStdDevs
   );
 
   // TODO: Enable these and add to m_cameras when we are on the robot
@@ -33,9 +32,9 @@ public class CameraManager extends SubsystemBase {
   );
 
   CameraInterface[] m_cameras = {
-    m_photonShooter,
-    m_photonBackLeft,
-    m_photonBackRight,
+    m_limelightShooter,
+    //m_photonBackLeft,
+    //m_photonBackRight,
   };
 
   @SuppressWarnings("unchecked")

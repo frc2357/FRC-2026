@@ -4,8 +4,10 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import frc.robot.Constants.LIMELIGHT;
 import frc.robot.Robot;
 import java.util.Optional;
 import limelight.Limelight;
@@ -43,14 +45,28 @@ public class LimelightCamera implements CameraInterface {
     m_currentStdDevs = multiTagStdDevs;
 
     RobotModeTriggers.disabled().onTrue(
-      Commands.run(() ->
-        m_camera.getSettings().withImuMode(ImuMode.SyncInternalImu)
-      )
+      Commands.run(() -> {
+        SmartDashboard.putBoolean("ll dis", true);
+        SmartDashboard.putBoolean("ll en", false);
+
+        m_camera
+          .getSettings()
+          .withThrottle(LIMELIGHT.DISABLED_THERMAL_THROTTLE)
+          .withImuMode(ImuMode.SyncInternalImu)
+          .save();
+      }).ignoringDisable(true)
     );
     RobotModeTriggers.disabled().onFalse(
-      Commands.run(() ->
-        m_camera.getSettings().withImuMode(ImuMode.InternalImuExternalAssist)
-      )
+      Commands.run(() -> {
+        SmartDashboard.putBoolean("ll en", true);
+        SmartDashboard.putBoolean("ll dis", false);
+
+        m_camera
+          .getSettings()
+          .withThrottle(LIMELIGHT.ENABLED_THERMAL_THROTTLE)
+          .withImuMode(ImuMode.InternalImuExternalAssist)
+          .save();
+      })
     );
   }
 

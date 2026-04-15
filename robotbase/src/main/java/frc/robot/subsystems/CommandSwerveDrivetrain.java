@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
@@ -51,6 +52,7 @@ import frc.robot.util.AllianceFlipUtil;
 import frc.robot.vision.CameraInterface.SwervePoseEstimate;
 import java.util.Optional;
 import java.util.function.Supplier;
+import limelight.networktables.AngularVelocity3d;
 import limelight.networktables.Orientation3d;
 
 /**
@@ -613,14 +615,21 @@ public class CommandSwerveDrivetrain
     Rotation3d pigeonRotation = getRotation3d();
     return new Orientation3d(
       new Rotation3d(
-        pigeonRotation.getMeasureX().in(Degrees),
-        pigeonRotation.getMeasureY().in(Degrees),
-        getAllianceRelativePose2d().getRotation().getDegrees()
+        pigeonRotation.getMeasureX().in(Radians),
+        pigeonRotation.getMeasureY().in(Radians),
+        getFieldRelativePose2d().getRotation().getRadians()
       ),
       super.getPigeon2().getAngularVelocityZWorld().getValue(),
       super.getPigeon2().getAngularVelocityYWorld().getValue(),
       super.getPigeon2().getAngularVelocityXWorld().getValue()
     );
+
+    // return new Orientation3d(
+    //   new Rotation3d(0, 0, getFieldRelativePose2d().getRotation().getRadians()),
+    //   DegreesPerSecond.of(0),
+    //   DegreesPerSecond.of(0),
+    //   DegreesPerSecond.of(0)
+    // );
   }
 
   /**

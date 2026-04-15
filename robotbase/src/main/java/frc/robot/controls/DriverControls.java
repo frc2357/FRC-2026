@@ -99,13 +99,13 @@ public class DriverControls implements RumbleInterface {
       .povLeft()
       .onTrue(
         new InstantCommand(() -> {
-          var estimate =
-            Robot.cameraManager.m_photonShooter.getSeedEstimateForSwerve();
-          if (estimate.isPresent()) {
-            Robot.swerve.setFieldRelativeTranslation2d(
-              estimate.get().estimatedPose.toPose2d().getTranslation()
-            );
-          }
+          // var estimate =
+          //   Robot.cameraManager.m_photonShooter.getSeedEstimateForSwerve();
+          // if (estimate.isPresent()) {
+          //   Robot.swerve.setFieldRelativeTranslation2d(
+          //     estimate.get().estimatedPose.toPose2d().getTranslation()
+          //   );
+          // }
         })
       );
   }

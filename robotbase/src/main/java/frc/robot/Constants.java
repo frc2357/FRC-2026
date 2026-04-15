@@ -267,16 +267,19 @@ public class Constants {
 
   public static final class LIMELIGHT {
 
+    public static double DISABLED_THERMAL_THROTTLE = 100;
+    public static double ENABLED_THERMAL_THROTTLE = 100;
+
     public static final class SHOOTER_CAM {
 
-      public static final String NAME = "shooter";
+      public static final String NAME = "limelight-shooter";
 
       //TODO: These will need modified for the new mount
       public static final Pose3d ROBOT_TO_CAM_TRANSFORM = new Pose3d(
-        Inches.of(-9.004),
-        Inches.of(12.554),
+        Inches.of(-13.442),
+        Inches.of(-9.123),
         Inches.of(15.993),
-        new Rotation3d(Degrees.of(10), Degrees.of(0), Degrees.of(90))
+        new Rotation3d(Degrees.of(0), Degrees.of(18.8), Degrees.of(90))
       );
 
       // The standard deviations of our vision estimated poses, which affect correction rate
