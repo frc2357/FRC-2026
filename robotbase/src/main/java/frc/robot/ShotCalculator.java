@@ -235,10 +235,10 @@ public class ShotCalculator {
 
   public Trigger fireControlApproval() {
     return new Trigger(() -> {
-      // if (!DriverStation.isFMSAttached()) {
-      //   SmartDashboard.putBoolean("fire control approval", true);
-      //   return true;
-      // }
+      if (!DriverStation.isFMSAttached()) {
+        SmartDashboard.putBoolean("fire control approval", true);
+        return true;
+      }
       if (!isInAllianceZone()) {
         // Always approves when passing
         SmartDashboard.putBoolean("fire control: not in alliance", true);
