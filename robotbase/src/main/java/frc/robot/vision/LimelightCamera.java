@@ -1,9 +1,13 @@
 package frc.robot.vision;
 
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -15,7 +19,6 @@ import limelight.networktables.LimelightPoseEstimator.BotPose;
 import limelight.networktables.LimelightSettings.ImuMode;
 import limelight.networktables.LimelightSettings.LEDMode;
 import limelight.networktables.PoseEstimate;
-import org.photonvision.EstimatedRobotPose;
 
 public class LimelightCamera implements CameraInterface {
 
@@ -23,14 +26,14 @@ public class LimelightCamera implements CameraInterface {
 
   protected Optional<PoseEstimate> m_poseEstimate = Optional.empty();
 
-  private Matrix<N3, N1> m_multiTagStdDevs;
+  private Matrix<N3, N1> m_tagStdDevs;
 
-  private Matrix<N3, N1> m_currentStdDevs;
+  private Field2d field = new Field2d();
 
   public LimelightCamera(
     String cameraName,
     Pose3d robotToCameraTransform,
-    Matrix<N3, N1> multiTagStdDevs
+    Matrix<N3, N1> tagStdDevs
   ) {
     m_camera = new Limelight(cameraName);
     m_camera
@@ -38,11 +41,11 @@ public class LimelightCamera implements CameraInterface {
       .withLimelightLEDMode(LEDMode.PipelineControl)
       .withCameraOffset(robotToCameraTransform)
       .withPipelineIndex(VisionPipeline.MULTI_TAG_PIPELINE.getIndex())
+      .withThrottle(LIMELIGHT.DISABLED_THERMAL_THROTTLE)
       .withImuMode(ImuMode.SyncInternalImu)
       .save();
 
-    m_multiTagStdDevs = multiTagStdDevs;
-    m_currentStdDevs = multiTagStdDevs;
+    m_tagStdDevs = tagStdDevs;
 
     RobotModeTriggers.disabled().onTrue(
       Commands.run(() -> {
@@ -68,6 +71,8 @@ public class LimelightCamera implements CameraInterface {
           .save();
       })
     );
+
+    SmartDashboard.putData(cameraName + " field", field);
   }
 
   @Override
@@ -76,10 +81,45 @@ public class LimelightCamera implements CameraInterface {
       .getSettings()
       .withRobotOrientation(Robot.swerve.getFieldRelativeOrientation3d())
       .save();
+    m_poseEstimate = Optional.empty();
 
     Optional<PoseEstimate> visionEstimate = BotPose.BLUE_MEGATAG2.get(m_camera);
+
+    if (visionEstimate.isEmpty()) {
+      return;
+    }
+
+    if (visionEstimate.get().tagCount == 0) {
+      return;
+    }
+
+    if (!passesRobotSpeedFilter(visionEstimate.get())) {
+      return;
+    }
+
     // filter here
     m_poseEstimate = visionEstimate;
+
+    field.setRobotPose(m_poseEstimate.get().pose.toPose2d());
+  }
+
+  /**
+   *
+   * @param estimate The camera's pose estimate
+   * @return true if the vision estimate is within reasonable constraints to the robot
+   */
+  public boolean passesRobotSpeedFilter(PoseEstimate estimate) {
+    ChassisSpeeds speeds = Robot.swerve.getCurrentRobotRelativeSpeeds();
+
+    // Check if we are rotating too fast
+    if (
+      speeds.omegaRadiansPerSecond >=
+      LIMELIGHT.MAX_ROBOT_ROTATION.in(RadiansPerSecond)
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   @Override
@@ -91,7 +131,7 @@ public class LimelightCamera implements CameraInterface {
     return Optional.of(
       new SwervePoseEstimate(
         est.pose.toPose2d(),
-        m_currentStdDevs,
+        m_tagStdDevs,
         est.timestampSeconds
       )
     );

@@ -2,6 +2,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
@@ -143,6 +144,14 @@ public class Constants {
 
     public static final long NAIVE_APRIL_TAG_TARGET_TIMEOUT = 50;
 
+    public static final double MAX_ANGLE = 45;
+
+    public static final LinearVelocity MAX_ROBOT_TRANSLATION =
+      MetersPerSecond.of(2);
+    public static final AngularVelocity MAX_ROBOT_ROTATION =
+      RadiansPerSecond.of(3);
+    public static final Distance MAX_DISTANCE_FROM_ROBOT = Meters.of(0.5);
+
     public static final class KELPY_BACK_LEFT_CAM {
 
       public static final String NAME = "backLeft";
@@ -268,7 +277,10 @@ public class Constants {
   public static final class LIMELIGHT {
 
     public static double DISABLED_THERMAL_THROTTLE = 100;
-    public static double ENABLED_THERMAL_THROTTLE = 100;
+    public static double ENABLED_THERMAL_THROTTLE = 0;
+
+    public static final AngularVelocity MAX_ROBOT_ROTATION =
+      DegreesPerSecond.of(360);
 
     public static final class SHOOTER_CAM {
 
@@ -287,23 +299,9 @@ public class Constants {
       // These are the default values from PhotonVision docs. They can be tuned per camera
       // by placing the robot at several points, recording the pose estimate and recording
       // the standard deviations
-      public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(
-        0.5,
-        0.5,
-        Double.MAX_VALUE
-      );
+      public static final Matrix<N3, N1> TAG_STANDARD_DEVIATIONS =
+        VecBuilder.fill(0.5, 0.5, Double.MAX_VALUE);
     }
-  }
-
-  public static final class POSE_FILTER {
-
-    public static final double MAX_ANGLE = 45;
-
-    public static final LinearVelocity MAX_ROBOT_TRANSLATION =
-      MetersPerSecond.of(2);
-    public static final AngularVelocity MAX_ROBOT_ROTATION =
-      RadiansPerSecond.of(3);
-    public static final Distance MAX_DISTANCE_FROM_ROBOT = Meters.of(0.5);
   }
 
   public static final class CHOREO {

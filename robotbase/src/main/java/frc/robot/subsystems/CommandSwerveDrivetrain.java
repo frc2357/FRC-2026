@@ -623,13 +623,6 @@ public class CommandSwerveDrivetrain
       super.getPigeon2().getAngularVelocityYWorld().getValue(),
       super.getPigeon2().getAngularVelocityXWorld().getValue()
     );
-
-    // return new Orientation3d(
-    //   new Rotation3d(0, 0, getFieldRelativePose2d().getRotation().getRadians()),
-    //   DegreesPerSecond.of(0),
-    //   DegreesPerSecond.of(0),
-    //   DegreesPerSecond.of(0)
-    // );
   }
 
   /**

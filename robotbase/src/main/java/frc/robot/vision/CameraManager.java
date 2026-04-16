@@ -14,7 +14,7 @@ public class CameraManager extends SubsystemBase {
   public LimelightCamera m_limelightShooter = new LimelightCamera(
     Constants.LIMELIGHT.SHOOTER_CAM.NAME,
     Constants.LIMELIGHT.SHOOTER_CAM.ROBOT_TO_CAM_TRANSFORM,
-    Constants.LIMELIGHT.SHOOTER_CAM.kMultiTagStdDevs
+    Constants.LIMELIGHT.SHOOTER_CAM.TAG_STANDARD_DEVIATIONS
   );
 
   // TODO: Enable these and add to m_cameras when we are on the robot
