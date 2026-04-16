@@ -15,6 +15,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 import choreo.auto.AutoFactory;
+import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -520,6 +521,9 @@ public class Constants {
         .idleMode(IdleMode.kCoast)
         .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
         .voltageCompensation(12);
+
+    public static final EncoderConfig ENCODER_CONFIG =
+      SHOOTER_BASE_CONFIG.encoder.quadratureAverageDepth(8);
 
     public static final SparkBaseConfig RIGHT_MOTOR_CONFIG =
       new SparkMaxConfig()
