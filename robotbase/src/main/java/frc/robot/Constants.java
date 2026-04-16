@@ -395,7 +395,7 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50);
 
-    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(-5);
+    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(-10);
 
     public static final Dimensionless RETRACT_SPEED = Percent.of(30);
 
