@@ -12,6 +12,7 @@ import frc.robot.commands.auto.LeftTrenchBump;
 import frc.robot.commands.auto.LeftTrenchDepot;
 import frc.robot.commands.auto.RightTrench;
 import frc.robot.commands.auto.RightTrenchBump;
+import frc.robot.commands.auto.SeedTest;
 import java.util.Map;
 
 public class AutoChooserManager {
@@ -30,6 +31,7 @@ public class AutoChooserManager {
     new LeftTrenchBump(),
     new Center(),
     new RightTrenchBump(),
+    new SeedTest(),
   };
 
   private AutoChooser m_autoChooser = new AutoChooser();
