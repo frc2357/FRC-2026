@@ -65,7 +65,7 @@ public class LimelightCamera implements CameraInterface {
           m_camera
             .getSettings()
             .withThrottle(LIMELIGHT.ENABLED_THERMAL_THROTTLE)
-            .withImuMode(ImuMode.InternalImuExternalAssist)
+            .withImuMode(ImuMode.SyncInternalImu)
             .save();
         })
       );
@@ -89,10 +89,7 @@ public class LimelightCamera implements CameraInterface {
   }
 
   public void useInternalImu() {
-    m_camera
-      .getSettings()
-      .withImuMode(ImuMode.InternalImuExternalAssist)
-      .save();
+    m_camera.getSettings().withImuMode(ImuMode.SyncInternalImu).save();
   }
 
   @Override
