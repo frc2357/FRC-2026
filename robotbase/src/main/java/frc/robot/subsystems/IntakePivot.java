@@ -1,12 +1,12 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
 
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -14,9 +14,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
@@ -33,6 +31,7 @@ import yams.motorcontrollers.local.SparkWrapper;
 public class IntakePivot extends SubsystemBase {
 
   private SparkMax m_motor;
+  private SparkAbsoluteEncoder m_encoder;
 
   private SmartMotorControllerConfig m_smartMotorControllerConfig;
   // Create our SmartMotorController from our Spark and config with the NEO.
@@ -44,6 +43,7 @@ public class IntakePivot extends SubsystemBase {
 
   public IntakePivot() {
     m_motor = new SparkMax(CAN_ID.INTAKE_PIVOT_MOTOR, MotorType.kBrushless);
+    m_encoder = m_motor.getAbsoluteEncoder();
 
     m_smartMotorControllerConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.OPEN_LOOP)
@@ -55,6 +55,10 @@ public class IntakePivot extends SubsystemBase {
       )
       // Gearing from the motor rotor to final shaft.
       .withGearing(INTAKE_PIVOT.GEARING)
+      .withExternalEncoder(m_encoder)
+      .withUseExternalFeedbackEncoder(true)
+      .withExternalEncoderGearing(INTAKE_PIVOT.ENCODER_GEARING)
+      .withExternalEncoderZeroOffset(INTAKE_PIVOT.ADJUSTED_ZERO_OFFSET)
       // Motor properties to prevent over currenting.
       .withStatorCurrentLimit(INTAKE_PIVOT.STALL_LIMIT);
 
@@ -99,7 +103,7 @@ public class IntakePivot extends SubsystemBase {
   }
 
   public AngularVelocity getVelocity() {
-    return RPM.of(m_motor.getEncoder().getVelocity());
+    return RPM.of(m_encoder.getVelocity());
   }
 
   public Dimensionless getAppliedOutput() {
@@ -114,10 +118,6 @@ public class IntakePivot extends SubsystemBase {
 
   public Command stopCommand() {
     return m_arm.set(0);
-  }
-
-  public Command zeroMotorEncoder() {
-    return new InstantCommand(() -> m_motor.getEncoder().setPosition(0));
   }
 
   public void stopMotor() {
@@ -144,13 +144,13 @@ public class IntakePivot extends SubsystemBase {
 
   public Trigger isAbovePositionTrigger(Angle targetAngle) {
     return new Trigger(() ->
-      Rotations.of(m_motor.getEncoder().getPosition()).gte(targetAngle)
+      Rotations.of(m_encoder.getPosition()).gte(targetAngle)
     );
   }
 
   public Trigger isBelowPositionTrigger(Angle targetAngle) {
     return new Trigger(() ->
-      Rotations.of(m_motor.getEncoder().getPosition()).lte(targetAngle)
+      Rotations.of(m_encoder.getPosition()).lte(targetAngle)
     );
   }
 

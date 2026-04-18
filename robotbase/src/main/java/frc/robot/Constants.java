@@ -373,6 +373,22 @@ public class Constants {
       GearBox.fromStages("12:52", "16:54")
     );
 
+    public static final MechanismGearing ENCODER_GEARING = new MechanismGearing(
+      GearBox.fromStages("1:1") // TODO: Make sure this right
+    );
+
+    // This is the number that should be copied from the rev hardware client when
+    // pressing the "zero encoder" button
+    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.0); // TODO: Make sure this right
+
+    // Fabricated offset to prevent wrapping
+    public static final Angle FABRICATED_ADJUSTMENT = Degrees.of(1).times(
+      ENCODER_GEARING.getMechanismToRotorRatio()
+    );
+    public static final Angle ADJUSTED_ZERO_OFFSET = PHYSICAL_ZERO_OFFSET.minus(
+      FABRICATED_ADJUSTMENT
+    );
+
     // Diameter of the arm.
     public static final Distance LENGTH = Inches.of(12.5);
     // Mass of the arm.
@@ -417,11 +433,12 @@ public class Constants {
     public static final Time TIME_TO_STALL = Seconds.of(0.1);
 
     // When intake is zeroed at the upper hard stops, fully deployed is about -175 rotations
+    // TODO: Figure these out once the absolute encoder is on
     public static final Angle INTAKE_DEPLOYED_ENCODER_ROTATIONS = Rotations.of(
-      -125
+      0
     );
     public static final Angle INTAKE_JIGGLE_UP_ENCODER_ROTATIONS = Rotations.of(
-      -100
+      0
     );
 
     // Maximum amount of time we can stall the intake against the hardstop without ripping it off
