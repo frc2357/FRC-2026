@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -52,7 +53,6 @@ import frc.robot.util.AllianceFlipUtil;
 import frc.robot.vision.CameraInterface.SwervePoseEstimate;
 import java.util.Optional;
 import java.util.function.Supplier;
-import limelight.networktables.AngularVelocity3d;
 import limelight.networktables.Orientation3d;
 
 /**
@@ -95,6 +95,8 @@ public class CommandSwerveDrivetrain
     new SwerveRequest.SysIdSwerveSteerGains();
   private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization =
     new SwerveRequest.SysIdSwerveRotation();
+
+  private final Field2d m_choreoField;
 
   /*
    * SysId routine for characterizing translation. This is used to find PID gains
@@ -190,6 +192,8 @@ public class CommandSwerveDrivetrain
     if (Utils.isSimulation()) {
       startSimThread();
     }
+    m_choreoField = new Field2d();
+    SmartDashboard.putData("choreo field", m_choreoField);
   }
 
   /**
@@ -216,6 +220,8 @@ public class CommandSwerveDrivetrain
     if (Utils.isSimulation()) {
       startSimThread();
     }
+    m_choreoField = new Field2d();
+    SmartDashboard.putData("choreo field", m_choreoField);
   }
 
   /**
@@ -262,6 +268,8 @@ public class CommandSwerveDrivetrain
     if (Utils.isSimulation()) {
       startSimThread();
     }
+    m_choreoField = new Field2d();
+    SmartDashboard.putData("choreo field", m_choreoField);
   }
 
   /**
@@ -510,14 +518,7 @@ public class CommandSwerveDrivetrain
   }
 
   public void followChoreoPath(SwerveSample sample) {
-    System.out.println(
-      String.format(
-        "Choreo following path '%s' (%s)",
-        sample.toString(),
-        m_autoDriveMode.name()
-      )
-    );
-
+    m_choreoField.setRobotPose(sample.getPose());
     switch (m_autoDriveMode) {
       case DEFAULT:
         followChoreoPathDefault(sample);
