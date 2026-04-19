@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
-import frc.robot.commands.drive.DriveTargetLock;
 import frc.robot.commands.drive.FlipPerspective;
 import frc.robot.commands.drive.ResetDriveModifiers;
 import frc.robot.commands.drive.ResetPerspective;
