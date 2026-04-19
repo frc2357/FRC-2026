@@ -1,14 +1,18 @@
 package frc.robot.commands.auto;
 
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static frc.robot.Constants.CHOREO.AUTO_FACTORY;
 
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Robot;
 import frc.robot.commands.util.VariableWaitCommand;
 import frc.robot.subsystems.CommandSwerveDrivetrain.AutoDriveMode;
+import limelight.networktables.AngularVelocity3d;
+import limelight.networktables.Orientation3d;
 
 public final class AutoMaker {
 
@@ -36,6 +40,22 @@ public final class AutoMaker {
     // This is how you make a trajectory to put into the AutoRoutine. The trajectoryName is the name of the file in Choreo.
     // Any deviation from that name will result in the file not being found.
     AutoTrajectory startTraj = routine.trajectory(startTrajName);
+
+    // Setup limelight for this auto
+    var initialPose = startTraj.getInitialPose().get();
+    Robot.cameraManager.m_limelightShooter.seedGyroMethod(
+      new Orientation3d(
+        new Rotation3d(initialPose.getRotation()),
+        new AngularVelocity3d(
+          DegreesPerSecond.zero(),
+          DegreesPerSecond.zero(),
+          DegreesPerSecond.zero()
+        )
+      )
+    );
+    Robot.swerve.setFieldRelativePose2d(initialPose);
+    Robot.cameraManager.m_limelightShooter.useInternalImu();
+
     // This is how you reset the odometry and make the routine use a trajectory. This is a veyr regular thing that you will have to do.
     routine
       // .active() returns a trigger that is true while the AutoRoutine is running

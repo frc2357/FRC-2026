@@ -27,22 +27,6 @@ public class SeedTest extends AutoBase {
   @Override
   public AutoRoutine getRoutine() {
     Auto auto = AutoMaker.newAuto(m_name);
-    var startTraj = auto.startTrajectory();
-    var initialPose = startTraj.getInitialPose().get();
-
-    Robot.cameraManager.m_limelightShooter.seedGyroMethod(
-      new Orientation3d(
-        new Rotation3d(initialPose.getRotation()),
-        new AngularVelocity3d(
-          DegreesPerSecond.zero(),
-          DegreesPerSecond.zero(),
-          DegreesPerSecond.zero()
-        )
-      )
-    );
-    Robot.swerve.setFieldRelativePose2d(initialPose);
-    Robot.cameraManager.m_limelightShooter.useInternalImu();
-
     return auto.routine();
   }
 }
