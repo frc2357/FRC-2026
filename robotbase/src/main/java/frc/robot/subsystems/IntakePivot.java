@@ -1,8 +1,6 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Rotations;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
 
@@ -11,7 +9,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -102,14 +99,6 @@ public class IntakePivot extends SubsystemBase {
     return m_sparkSmartMotorController.getStatorCurrent();
   }
 
-  public AngularVelocity getVelocity() {
-    return RPM.of(m_encoder.getVelocity());
-  }
-
-  public Dimensionless getAppliedOutput() {
-    return Value.of(m_motor.getAppliedOutput());
-  }
-
   public Command axisSpeed(Supplier<Dimensionless> axis) {
     return m_arm
       .set(() -> axis.get().times(INTAKE_PIVOT.AXIS_MAX_SPEED).in(Value))
@@ -131,26 +120,15 @@ public class IntakePivot extends SubsystemBase {
     ).debounce(INTAKE_PIVOT.TIME_TO_STALL.in(Seconds));
   }
 
-  // A trigger to check if the pivot is stalling based on motor velocity and applied output
-  public Trigger isIntakeVelocityStallingTrigger() {
-    return new Trigger(
-      () ->
-        getAppliedOutput().abs(Value) >=
-          INTAKE_PIVOT.VELOCITY_STALL_MIN_APPLIED_OUTPUT.in(Value) &&
-        getVelocity().abs(RotationsPerSecond) <=
-        INTAKE_PIVOT.VELOCITY_STALL_THRESHOLD.in(RotationsPerSecond)
-    ).debounce(INTAKE_PIVOT.TIME_TO_STALL.in(Seconds));
-  }
-
   public Trigger isAbovePositionTrigger(Angle targetAngle) {
     return new Trigger(() ->
-      Rotations.of(m_encoder.getPosition()).gte(targetAngle)
+      Rotations.of(m_encoder.getPosition()).lte(targetAngle)
     );
   }
 
   public Trigger isBelowPositionTrigger(Angle targetAngle) {
     return new Trigger(() ->
-      Rotations.of(m_encoder.getPosition()).lte(targetAngle)
+      Rotations.of(m_encoder.getPosition()).gte(targetAngle)
     );
   }
 

@@ -6,7 +6,6 @@ import frc.robot.Robot;
 public class WaitUntilIntakePivotStall extends WaitUntilCommand {
 
   public WaitUntilIntakePivotStall() {
-    //super(Robot.intakePivot.isIntakeVelocityStallingTrigger());
     super(Robot.intakePivot.isIntakeCurrentStallingTrigger());
   }
 }
