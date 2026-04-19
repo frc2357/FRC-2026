@@ -44,12 +44,10 @@ public final class AutoMaker {
       .onTrue(
         // Commands.sequence() lets us sequence commands to run, letting us run multiple commands per trigger.
         Commands.sequence(
-          // Zero the intake pivot builtin encoder
-          // Robot.intakePivot.zeroMotorEncoder(),
           // Wait a certain amount of time based on a value on the SmartDashboard
-          // new VariableWaitCommand(() ->
-          //   SmartDashboard.getNumber("wait seconds", 0)
-          // ),
+          new VariableWaitCommand(() ->
+            SmartDashboard.getNumber("wait seconds", 0)
+          ),
           // This command resets the odometry, and it MUST be run on the starting traj, or very bad things will happen.
           startTraj.resetOdometry(),
           // This runs the trajectory that was loaded earlier. This is needed to make the AutoRoutine actually run the trajectory, instead of doing nothing.

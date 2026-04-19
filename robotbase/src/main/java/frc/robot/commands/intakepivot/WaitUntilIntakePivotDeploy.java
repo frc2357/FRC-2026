@@ -9,7 +9,6 @@ public class WaitUntilIntakePivotDeploy extends WaitUntilCommand {
     super(
       Robot.intakePivot
         .isInDeployedPositionTrigger()
-        //.and(Robot.intakePivot.isIntakeVelocityStallingTrigger())
         .and(Robot.intakePivot.isIntakeCurrentStallingTrigger())
     );
   }
