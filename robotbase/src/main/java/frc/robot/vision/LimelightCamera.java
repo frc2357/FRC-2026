@@ -79,22 +79,13 @@ public class LimelightCamera implements CameraInterface {
         })
       );
     SmartDashboard.putData(cameraName + " field", m_field);
-    SmartDashboard.putBoolean("seeded", false);
   }
 
-  public void seedGyroMethod(Orientation3d robotOrientation) {
-    SmartDashboard.putBoolean("seeded", true);
+  public void seedGyro(Orientation3d robotOrientation) {
     m_camera
       .getSettings()
       .withImuMode(ImuMode.SyncInternalImu)
       .withRobotOrientation(robotOrientation)
-      .save();
-  }
-
-  public void useInternalImu() {
-    m_camera
-      .getSettings()
-      .withImuMode(ImuMode.InternalImuExternalAssist)
       .save();
   }
 

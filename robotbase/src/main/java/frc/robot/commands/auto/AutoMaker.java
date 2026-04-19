@@ -43,7 +43,7 @@ public final class AutoMaker {
 
     // Setup limelight for this auto
     var initialPose = startTraj.getInitialPose().get();
-    Robot.cameraManager.m_limelightShooter.seedGyroMethod(
+    Robot.cameraManager.m_limelightShooter.seedGyro(
       new Orientation3d(
         new Rotation3d(initialPose.getRotation()),
         new AngularVelocity3d(
@@ -54,7 +54,6 @@ public final class AutoMaker {
       )
     );
     Robot.swerve.setFieldRelativePose2d(initialPose);
-    Robot.cameraManager.m_limelightShooter.useInternalImu();
 
     // This is how you reset the odometry and make the routine use a trajectory. This is a veyr regular thing that you will have to do.
     routine
