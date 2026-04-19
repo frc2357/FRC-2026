@@ -1,46 +1,41 @@
 package frc.robot.vision;
 
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meters;
-
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.PHOTON_VISION;
-import frc.robot.Constants.SHOOTER;
-import frc.robot.vision.PhotonVisionCamera.SwervePoseEstimate;
+import frc.robot.vision.CameraInterface.SwervePoseEstimate;
 import java.util.Optional;
 import java.util.function.Consumer;
 
 public class CameraManager extends SubsystemBase {
 
   // TODO: Switch to actual shooter camera
-  public PhotonVisionCamera m_shooter = new PhotonVisionCamera(
-    Constants.PHOTON_VISION.SHOOTER_CAM.NAME,
-    Constants.PHOTON_VISION.SHOOTER_CAM.ROBOT_TO_CAM_TRANSFORM,
-    Constants.PHOTON_VISION.SHOOTER_CAM.kSingleTagStdDevs,
-    Constants.PHOTON_VISION.SHOOTER_CAM.kMultiTagStdDevs
+  public LimelightCamera m_limelightShooter = new LimelightCamera(
+    Constants.LIMELIGHT.SHOOTER_CAM.NAME,
+    Constants.LIMELIGHT.SHOOTER_CAM.ROBOT_TO_CAM_TRANSFORM,
+    Constants.LIMELIGHT.SHOOTER_CAM.TAG_STANDARD_DEVIATIONS
   );
 
   // TODO: Enable these and add to m_cameras when we are on the robot
-  public PhotonVisionCamera m_backLeft = new PhotonVisionCamera(
+  public PhotonVisionCamera m_photonBackLeft = new PhotonVisionCamera(
     Constants.PHOTON_VISION.BACK_LEFT_CAM.NAME,
     Constants.PHOTON_VISION.BACK_LEFT_CAM.ROBOT_TO_CAM_TRANSFORM,
     Constants.PHOTON_VISION.BACK_LEFT_CAM.kSingleTagStdDevs,
     Constants.PHOTON_VISION.BACK_LEFT_CAM.kMultiTagStdDevs
   );
-  public PhotonVisionCamera m_backRight = new PhotonVisionCamera(
+  public PhotonVisionCamera m_photonBackRight = new PhotonVisionCamera(
     Constants.PHOTON_VISION.BACK_RIGHT_CAM.NAME,
     Constants.PHOTON_VISION.BACK_RIGHT_CAM.ROBOT_TO_CAM_TRANSFORM,
     Constants.PHOTON_VISION.BACK_RIGHT_CAM.kSingleTagStdDevs,
     Constants.PHOTON_VISION.BACK_RIGHT_CAM.kMultiTagStdDevs
   );
 
-  //PhotonVisionCamera[] m_cameras = { m_shooter };
-
-  PhotonVisionCamera[] m_cameras = { m_shooter, m_backLeft, m_backRight };
+  CameraInterface[] m_cameras = {
+    m_limelightShooter,
+    // m_photonBackLeft,
+    // m_photonBackRight,
+  };
 
   @SuppressWarnings("unchecked")
   Optional<SwervePoseEstimate>[] m_estimates = (Optional<
@@ -52,7 +47,7 @@ public class CameraManager extends SubsystemBase {
   public CameraManager() {
     SmartDashboard.putData("Vision Field", m_visionField);
     // Set the pipeline, only really necessary if we were testing with another pipeline in the UI beforehand
-    setPipeline(PHOTON_VISION.MULTI_TAG_PIPELINE);
+    setPipeline(VisionPipeline.MULTI_TAG_PIPELINE);
   }
 
   public void updateResult() {
@@ -72,9 +67,9 @@ public class CameraManager extends SubsystemBase {
     }
   }
 
-  private void setPipeline(int pipelineIndex) {
-    for (PhotonVisionCamera camera : m_cameras) {
-      camera.setPipeline(pipelineIndex);
+  private void setPipeline(VisionPipeline pipeline) {
+    for (CameraInterface camera : m_cameras) {
+      camera.setPipeline(pipeline);
     }
   }
 

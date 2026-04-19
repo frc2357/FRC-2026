@@ -2,6 +2,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
@@ -27,6 +28,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rectangle2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -140,23 +142,15 @@ public class Constants {
     public static final String CONNECTION_REGAINED_MESSAGE =
       "CONNECTION REGAINED WITH ORANGE PI*********";
 
-    public static final double MAX_ANGLE = 45;
-
-    public static final int NAIVE_APRIL_TAG_PIPELINE = 1;
-
-    public static final int MULTI_TAG_PIPELINE = 0;
-
     public static final long NAIVE_APRIL_TAG_TARGET_TIMEOUT = 50;
 
-    // TODO: These values could be fine tuned for the robot
-    public static final class FILTER_PARAM {
+    public static final double MAX_ANGLE = 45;
 
-      public static final LinearVelocity MAX_ROBOT_TRANSLATION =
-        MetersPerSecond.of(2);
-      public static final AngularVelocity MAX_ROBOT_ROTATION =
-        RadiansPerSecond.of(3);
-      public static final Distance MAX_DISTANCE_FROM_ROBOT = Meters.of(0.5);
-    }
+    public static final LinearVelocity MAX_ROBOT_TRANSLATION =
+      MetersPerSecond.of(2);
+    public static final AngularVelocity MAX_ROBOT_ROTATION =
+      RadiansPerSecond.of(3);
+    public static final Distance MAX_DISTANCE_FROM_ROBOT = Meters.of(0.5);
 
     public static final class KELPY_BACK_LEFT_CAM {
 
@@ -280,6 +274,36 @@ public class Constants {
     }
   }
 
+  public static final class LIMELIGHT {
+
+    public static double DISABLED_THERMAL_THROTTLE = 100;
+    public static double ENABLED_THERMAL_THROTTLE = 0;
+
+    public static final AngularVelocity MAX_ROBOT_ROTATION =
+      DegreesPerSecond.of(360);
+
+    public static final class SHOOTER_CAM {
+
+      public static final String NAME = "limelight-shooter";
+
+      //TODO: These will need modified for the new mount
+      public static final Pose3d ROBOT_TO_CAM_TRANSFORM = new Pose3d(
+        Inches.of(-13.442),
+        Inches.of(-9.123),
+        Inches.of(15.993),
+        new Rotation3d(Degrees.of(0), Degrees.of(18.8), Degrees.of(90))
+      );
+
+      // The standard deviations of our vision estimated poses, which affect correction rate
+      // (Fake values. Experiment and determine estimation noise on an actual robot.)
+      // These are the default values from PhotonVision docs. They can be tuned per camera
+      // by placing the robot at several points, recording the pose estimate and recording
+      // the standard deviations
+      public static final Matrix<N3, N1> TAG_STANDARD_DEVIATIONS =
+        VecBuilder.fill(0.5, 0.5, Double.MAX_VALUE);
+    }
+  }
+
   public static final class CHOREO {
 
     public static final PIDController X_CONTROLLER = new PIDController(5, 0, 0);
@@ -362,7 +386,7 @@ public class Constants {
         .apply(LEFT_MOTOR_CONFIG)
         .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
 
-    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(80);
+    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(100);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);
     public static final Dimensionless INTAKE_JIGGLING_SPEED = Percent.of(40);
   }

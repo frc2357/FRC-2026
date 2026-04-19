@@ -94,20 +94,6 @@ public class DriverControls implements RumbleInterface {
     m_controller.y().whileTrue(new OutpostScore());
     m_controller.x().whileTrue(new HubScore());
     m_controller.leftBumper().whileTrue(new TowerScore());
-
-    m_controller
-      .povLeft()
-      .onTrue(
-        new InstantCommand(() -> {
-          var estimate =
-            Robot.cameraManager.m_shooter.getSeedEstimateForSwerve();
-          if (estimate.isPresent()) {
-            Robot.swerve.setFieldRelativeTranslation2d(
-              estimate.get().estimatedPose.toPose2d().getTranslation()
-            );
-          }
-        })
-      );
   }
 
   public Dimensionless getRightX() {

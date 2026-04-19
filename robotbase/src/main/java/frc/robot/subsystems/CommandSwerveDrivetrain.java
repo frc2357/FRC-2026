@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
@@ -23,6 +26,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
@@ -36,6 +40,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -45,9 +50,10 @@ import frc.robot.Constants.SWERVE;
 import frc.robot.Robot;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.util.AllianceFlipUtil;
-import frc.robot.vision.PhotonVisionCamera.SwervePoseEstimate;
+import frc.robot.vision.CameraInterface.SwervePoseEstimate;
 import java.util.Optional;
 import java.util.function.Supplier;
+import limelight.networktables.Orientation3d;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -89,6 +95,8 @@ public class CommandSwerveDrivetrain
     new SwerveRequest.SysIdSwerveSteerGains();
   private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization =
     new SwerveRequest.SysIdSwerveRotation();
+
+  private final Field2d m_choreoField;
 
   /*
    * SysId routine for characterizing translation. This is used to find PID gains
@@ -184,6 +192,8 @@ public class CommandSwerveDrivetrain
     if (Utils.isSimulation()) {
       startSimThread();
     }
+    m_choreoField = new Field2d();
+    SmartDashboard.putData("choreo field", m_choreoField);
   }
 
   /**
@@ -210,6 +220,8 @@ public class CommandSwerveDrivetrain
     if (Utils.isSimulation()) {
       startSimThread();
     }
+    m_choreoField = new Field2d();
+    SmartDashboard.putData("choreo field", m_choreoField);
   }
 
   /**
@@ -256,6 +268,8 @@ public class CommandSwerveDrivetrain
     if (Utils.isSimulation()) {
       startSimThread();
     }
+    m_choreoField = new Field2d();
+    SmartDashboard.putData("choreo field", m_choreoField);
   }
 
   /**
@@ -504,14 +518,7 @@ public class CommandSwerveDrivetrain
   }
 
   public void followChoreoPath(SwerveSample sample) {
-    System.out.println(
-      String.format(
-        "Choreo following path '%s' (%s)",
-        sample.toString(),
-        m_autoDriveMode.name()
-      )
-    );
-
+    m_choreoField.setRobotPose(sample.getPose());
     switch (m_autoDriveMode) {
       case DEFAULT:
         followChoreoPathDefault(sample);
@@ -599,6 +606,24 @@ public class CommandSwerveDrivetrain
    */
   public Pose2d getFieldRelativePose2d() {
     return super.getState().Pose;
+  }
+
+  /**
+   * Gets the Orientation3d of the robot
+   * @return The field relative Orientation3d.
+   */
+  public Orientation3d getFieldRelativeOrientation3d() {
+    Rotation3d pigeonRotation = getRotation3d();
+    return new Orientation3d(
+      new Rotation3d(
+        pigeonRotation.getMeasureX().in(Radians),
+        pigeonRotation.getMeasureY().in(Radians),
+        getFieldRelativePose2d().getRotation().getRadians()
+      ),
+      super.getPigeon2().getAngularVelocityZWorld().getValue(),
+      super.getPigeon2().getAngularVelocityYWorld().getValue(),
+      super.getPigeon2().getAngularVelocityXWorld().getValue()
+    );
   }
 
   /**
