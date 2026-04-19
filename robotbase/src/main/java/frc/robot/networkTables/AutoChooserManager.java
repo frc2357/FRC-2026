@@ -9,7 +9,6 @@ import frc.robot.commands.auto.AutoBase;
 import frc.robot.commands.auto.Center;
 import frc.robot.commands.auto.LeftTrench;
 import frc.robot.commands.auto.LeftTrenchBump;
-import frc.robot.commands.auto.LeftTrenchDepot;
 import frc.robot.commands.auto.RightTrench;
 import frc.robot.commands.auto.RightTrenchBump;
 import java.util.Map;

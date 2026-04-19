@@ -5,7 +5,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
 import frc.robot.commands.drive.CrossWheels;
-import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intakepivot.IntakePivotPit;
 import frc.robot.commands.intakerunner.IntakeRunnerSetSpeed;
 import frc.robot.commands.pit.CleanFeed;
