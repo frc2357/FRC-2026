@@ -288,10 +288,10 @@ public class Constants {
 
       //TODO: These will need modified for the new mount
       public static final Pose3d ROBOT_TO_CAM_TRANSFORM = new Pose3d(
-        Inches.of(-13.442),
+        Inches.of(-13.589),
         Inches.of(-9.123),
-        Inches.of(15.993),
-        new Rotation3d(Degrees.of(0), Degrees.of(18.8), Degrees.of(90))
+        Inches.of(15.538),
+        new Rotation3d(Degrees.of(0), Degrees.of(28.2), Degrees.of(90))
       );
 
       // The standard deviations of our vision estimated poses, which affect correction rate
@@ -403,7 +403,7 @@ public class Constants {
 
     // This is the number that should be copied from the rev hardware client when
     // pressing the "zero encoder" button
-    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.84682184);
+    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.12870237);
 
     // Fabricated offset to prevent wrapping
     public static final Angle FABRICATED_ADJUSTMENT = Degrees.of(1).times(

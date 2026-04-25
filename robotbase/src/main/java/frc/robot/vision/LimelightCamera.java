@@ -113,9 +113,9 @@ public class LimelightCamera implements CameraInterface {
 
     // filter here
     m_poseEstimate = visionEstimate;
-    m_currentStdDevs = m_tagStdDevs;
+    //m_currentStdDevs = m_tagStdDevs;
     // Uncomment this if we notice a lot of jitter at long distances
-    //m_currentStdDevs = updateEstimationStdDevs(m_poseEstimate.get());
+    m_currentStdDevs = updateEstimationStdDevs(m_poseEstimate.get());
     m_field.setRobotPose(m_poseEstimate.get().pose.toPose2d());
   }
 

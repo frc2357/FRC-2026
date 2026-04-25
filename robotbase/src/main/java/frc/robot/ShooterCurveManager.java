@@ -102,6 +102,7 @@ public class ShooterCurveManager {
   public static final class PASS_POINTS {
 
     public static final Distance CLOSEST = Inches.of(200);
+    public static final Distance CENTER_LINE = Inches.of(300);
     public static final Distance CEILING = Inches.of(400);
     public static final Distance FURTHERST = Meters.of(
       Constants.FieldConstants.fieldLength
@@ -117,12 +118,14 @@ public class ShooterCurveManager {
 
   private void initializeCurves() {
     // Passing shooter
-    passingShooterCurve.put(PASS_POINTS.CLOSEST, RotationsPerSecond.of(50));
-    passingShooterCurve.put(PASS_POINTS.CEILING, RotationsPerSecond.of(75));
-    passingShooterCurve.put(PASS_POINTS.FURTHERST, RotationsPerSecond.of(90));
+    passingShooterCurve.put(PASS_POINTS.CLOSEST, RotationsPerSecond.of(47));
+    passingShooterCurve.put(PASS_POINTS.CENTER_LINE, RotationsPerSecond.of(57));
+    passingShooterCurve.put(PASS_POINTS.CEILING, RotationsPerSecond.of(70));
+    passingShooterCurve.put(PASS_POINTS.FURTHERST, RotationsPerSecond.of(70));
 
     // Passing hood
-    passingHoodCurve.put(PASS_POINTS.CLOSEST, Degrees.of(18));
+    passingHoodCurve.put(PASS_POINTS.CLOSEST, Degrees.of(16));
+    passingHoodCurve.put(PASS_POINTS.CENTER_LINE, Degrees.of(24));
     passingHoodCurve.put(PASS_POINTS.CEILING, Degrees.of(34));
     passingHoodCurve.put(PASS_POINTS.FURTHERST, Degrees.of(34));
 
