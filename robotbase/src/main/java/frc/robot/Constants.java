@@ -397,7 +397,7 @@ public class Constants {
           .withStatorCurrentLimitEnable(true)
       );
 
-    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(100);
+    public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(90);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);
     public static final Dimensionless INTAKE_JIGGLING_SPEED = Percent.of(40);
   }
@@ -447,7 +447,7 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50);
 
-    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(-10);
+    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(-15);
 
     public static final Dimensionless RETRACT_SPEED = Percent.of(30);
 
@@ -460,10 +460,11 @@ public class Constants {
     public static final Time JIGGLE_UP_TIME = Seconds.of(0.3);
     public static final Time PIT_UP_TIME = Seconds.of(1.5);
 
-    public static final Current AMP_STALL_THRESHOLD = Amps.of(35);
+    public static final Current AMP_STALL_THRESHOLD = Amps.of(30);
     public static final Time TIME_TO_STALL = Seconds.of(0.1);
 
     // When intake is zeroed at the upper hard stops, fully deployed is about 0.67 rotations
+    public static final Angle FULLY_DEPLOYED_ROTATIONS = Rotations.of(0.65);
     public static final Angle INTAKE_DEPLOYED_ENCODER_ROTATIONS = Rotations.of(
       0.60
     );
@@ -648,7 +649,7 @@ public class Constants {
 
     // This is the number that should be copied from the rev hardware client when
     // pressing the "zero encoder" button
-    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.3063058);
+    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.320916);
 
     // Fabricated offset to prevent wrapping
     public static final Angle FABRICATED_ADJUSTMENT = Degrees.of(1).times(

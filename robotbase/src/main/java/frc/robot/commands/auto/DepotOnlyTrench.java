@@ -1,16 +1,14 @@
 package frc.robot.commands.auto;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
-
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import frc.robot.commands.auto.AutoMaker.Auto;
+import frc.robot.commands.drive.AutoTargetLock;
 import frc.robot.commands.intakepivot.AutoIntakePivotDeploy;
 import frc.robot.commands.intaking.AutoIntakeUntil;
-import frc.robot.commands.scoring.auto.AutoScore;
+import frc.robot.commands.scoring.auto.AutoShoot;
 
-public class LeftTrenchDepot extends AutoBase {
+public class DepotOnlyTrench extends AutoBase {
 
   protected AutoRoutine m_routine;
   protected AutoTrajectory m_startTraj;
@@ -20,22 +18,21 @@ public class LeftTrenchDepot extends AutoBase {
    * Will create the first trajectory, and set the routine to wait, reset odometry, and run the first trajectory
    * @param name Name of the auto routine
    */
-  public LeftTrenchDepot() {
-    super("LeftTrenchDepot");
+  public DepotOnlyTrench() {
+    super("DepotOnlyTrench");
   }
 
   @Override
   public AutoRoutine getRoutine() {
     Auto auto = AutoMaker.newAuto(m_name);
     AutoTrajectory traj = auto.startTrajectory();
+
     traj.active().onTrue(new AutoIntakePivotDeploy());
-    traj
-      .atTime("StartIntake1")
-      .onTrue(new AutoIntakeUntil(traj.atTime("StopIntake1")));
-    traj.atTime("StartIntake2").onTrue(new AutoIntakeUntil(traj.done()));
-    traj
-      .atTime("StartShooter")
-      .onTrue(new AutoScore(RotationsPerSecond.of(60), Degrees.of(16)));
+
+    traj.atTime("StartIntake").onTrue(new AutoIntakeUntil(traj.done()));
+
+    traj.done().onTrue(new AutoShoot());
+    traj.done().onTrue(new AutoTargetLock());
 
     return auto.routine();
   }

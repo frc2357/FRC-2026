@@ -7,9 +7,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.auto.AutoBase;
 import frc.robot.commands.auto.Center;
+import frc.robot.commands.auto.DepotOnlyHub;
+import frc.robot.commands.auto.DepotOnlyTrench;
+import frc.robot.commands.auto.DepotSingleSwipeTrench;
 import frc.robot.commands.auto.LeftTrench;
 import frc.robot.commands.auto.LeftTrenchBump;
-import frc.robot.commands.auto.LeftTrenchDepot;
 import frc.robot.commands.auto.RightTrench;
 import frc.robot.commands.auto.RightTrenchBump;
 import frc.robot.commands.auto.SeedTest;
@@ -29,8 +31,11 @@ public class AutoChooserManager {
     new RightTrench(),
     new LeftTrench(),
     new LeftTrenchBump(),
-    new Center(),
     new RightTrenchBump(),
+    new DepotSingleSwipeTrench(),
+    new DepotOnlyTrench(),
+    new DepotOnlyHub(),
+    new Center(),
     new SeedTest(),
   };
 
