@@ -190,8 +190,8 @@ public class ShooterCurveManager {
   public void updateCurveValues() {
     scoringShooterCurve.updateCurveValues();
     scoringHoodCurve.updateCurveValues();
-    // passingShooterCurve.updateCurveValues();
-    // passingHoodCurve.updateCurveValues();
+    passingShooterCurve.updateCurveValues();
+    passingHoodCurve.updateCurveValues();
     timeOfFlightCurve.updateCurveValues();
   }
 
