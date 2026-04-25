@@ -2,39 +2,36 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Value;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
+import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.INTAKE_RUNNER;
 
 public class IntakeRunner extends SubsystemBase {
 
-  private SparkMax m_leftMotor;
+  private TalonFX m_leftMotor = new TalonFX(
+    CAN_ID.LEFT_INTAKE_MOTOR,
+    CANBus.roboRIO()
+  );
 
-  private SparkMax m_rightMotor;
+  private TalonFX m_rightMotor = new TalonFX(
+    CAN_ID.RIGHT_INTAKE_MOTOR,
+    CANBus.roboRIO()
+  );
 
   public IntakeRunner() {
-    m_leftMotor = new SparkMax(CAN_ID.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
+    m_leftMotor.getConfigurator().apply(Constants.INTAKE_RUNNER.MOTOR_CONFIG());
+    m_rightMotor
+      .getConfigurator()
+      .apply(Constants.INTAKE_RUNNER.MOTOR_CONFIG());
 
-    m_leftMotor.configure(
-      INTAKE_RUNNER.LEFT_MOTOR_CONFIG,
-      ResetMode.kNoResetSafeParameters,
-      PersistMode.kNoPersistParameters
-    );
-
-    m_rightMotor = new SparkMax(
-      CAN_ID.RIGHT_INTAKE_MOTOR,
-      MotorType.kBrushless
-    );
-
-    m_rightMotor.configure(
-      INTAKE_RUNNER.RIGHT_MOTOR_CONFIG,
-      ResetMode.kNoResetSafeParameters,
-      PersistMode.kNoPersistParameters
+    m_rightMotor.setControl(
+      new Follower(CAN_ID.LEFT_INTAKE_MOTOR, MotorAlignmentValue.Opposed)
     );
   }
 
