@@ -16,7 +16,11 @@ import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 import choreo.auto.AutoFactory;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SignalsConfig;
@@ -376,16 +380,22 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(75);
 
-    public static TalonFXConfiguration MOTOR_CONFIG() {
-      final TalonFXConfiguration CONFIG = new TalonFXConfiguration();
-
-      CONFIG.MotorOutput.withNeutralMode(NeutralModeValue.Coast);
-
-      CONFIG.ClosedLoopRamps.withDutyCycleClosedLoopRampPeriod(Seconds.of(.25));
-      CONFIG.CurrentLimits.withSupplyCurrentLimit(Amps.of(20));
-      CONFIG.CurrentLimits.withSupplyCurrentLimitEnable(true);
-      return CONFIG;
-    }
+    public static TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
+      .withMotorOutput(
+        new MotorOutputConfigs()
+          .withInverted(InvertedValue.Clockwise_Positive)
+          .withNeutralMode(NeutralModeValue.Coast)
+      )
+      .withOpenLoopRamps(
+        new OpenLoopRampsConfigs().withDutyCycleOpenLoopRampPeriod(
+          Seconds.of(.25)
+        )
+      )
+      .withCurrentLimits(
+        new CurrentLimitsConfigs()
+          .withSupplyCurrentLimit(Amps.of(20))
+          .withSupplyCurrentLimitEnable(true)
+      );
 
     public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(100);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);

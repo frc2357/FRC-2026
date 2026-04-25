@@ -25,10 +25,8 @@ public class IntakeRunner extends SubsystemBase {
   );
 
   public IntakeRunner() {
-    m_leftMotor.getConfigurator().apply(Constants.INTAKE_RUNNER.MOTOR_CONFIG());
-    m_rightMotor
-      .getConfigurator()
-      .apply(Constants.INTAKE_RUNNER.MOTOR_CONFIG());
+    m_leftMotor.getConfigurator().apply(Constants.INTAKE_RUNNER.MOTOR_CONFIG);
+    m_rightMotor.getConfigurator().apply(Constants.INTAKE_RUNNER.MOTOR_CONFIG);
 
     m_rightMotor.setControl(
       new Follower(CAN_ID.LEFT_INTAKE_MOTOR, MotorAlignmentValue.Opposed)
