@@ -16,6 +16,12 @@ import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
 import choreo.auto.AutoFactory;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -374,17 +380,22 @@ public class Constants {
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(75);
 
-    public static final SparkBaseConfig LEFT_MOTOR_CONFIG = new SparkMaxConfig()
-      .idleMode(IdleMode.kCoast)
-      .inverted(false)
-      .smartCurrentLimit(40, 20)
-      .openLoopRampRate(0.25)
-      .voltageCompensation(12);
-
-    public static final SparkBaseConfig RIGHT_MOTOR_CONFIG =
-      new SparkMaxConfig()
-        .apply(LEFT_MOTOR_CONFIG)
-        .follow(CAN_ID.LEFT_INTAKE_MOTOR, true);
+    public static TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
+      .withMotorOutput(
+        new MotorOutputConfigs()
+          .withInverted(InvertedValue.CounterClockwise_Positive)
+          .withNeutralMode(NeutralModeValue.Coast)
+      )
+      .withOpenLoopRamps(
+        new OpenLoopRampsConfigs().withDutyCycleOpenLoopRampPeriod(
+          Seconds.of(.25)
+        )
+      )
+      .withCurrentLimits(
+        new CurrentLimitsConfigs()
+          .withStatorCurrentLimit(Amps.of(40))
+          .withStatorCurrentLimitEnable(true)
+      );
 
     public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(100);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);
@@ -637,7 +648,7 @@ public class Constants {
 
     // This is the number that should be copied from the rev hardware client when
     // pressing the "zero encoder" button
-    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.79932326);
+    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.3063058);
 
     // Fabricated offset to prevent wrapping
     public static final Angle FABRICATED_ADJUSTMENT = Degrees.of(1).times(
