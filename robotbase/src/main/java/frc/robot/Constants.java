@@ -403,7 +403,7 @@ public class Constants {
 
     // This is the number that should be copied from the rev hardware client when
     // pressing the "zero encoder" button
-    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.84682184);
+    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.12870237);
 
     // Fabricated offset to prevent wrapping
     public static final Angle FABRICATED_ADJUSTMENT = Degrees.of(1).times(

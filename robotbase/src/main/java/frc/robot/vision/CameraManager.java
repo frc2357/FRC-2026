@@ -33,8 +33,8 @@ public class CameraManager extends SubsystemBase {
 
   CameraInterface[] m_cameras = {
     m_limelightShooter,
-    // m_photonBackLeft,
-    // m_photonBackRight,
+    m_photonBackLeft,
+    m_photonBackRight,
   };
 
   @SuppressWarnings("unchecked")
