@@ -383,7 +383,7 @@ public class Constants {
     public static TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
       .withMotorOutput(
         new MotorOutputConfigs()
-          .withInverted(InvertedValue.Clockwise_Positive)
+          .withInverted(InvertedValue.CounterClockwise_Positive)
           .withNeutralMode(NeutralModeValue.Coast)
       )
       .withOpenLoopRamps(
@@ -393,8 +393,8 @@ public class Constants {
       )
       .withCurrentLimits(
         new CurrentLimitsConfigs()
-          .withSupplyCurrentLimit(Amps.of(20))
-          .withSupplyCurrentLimitEnable(true)
+          .withStatorCurrentLimit(Amps.of(40))
+          .withStatorCurrentLimitEnable(true)
       );
 
     public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(100);
