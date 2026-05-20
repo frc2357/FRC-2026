@@ -56,44 +56,44 @@ public class DriverControls implements RumbleInterface {
     m_controller.leftTrigger().whileTrue(new TeleopIntake());
 
     isShooting.and(isIntaking.negate()).whileTrue(new IntakePivotJiggle());
-    isShooting
-      .negate()
-      .and(isIntaking.negate())
-      .onTrue(new IntakePivotDeploy());
+    // isShooting
+    //   .negate()
+    //   .and(isIntaking.negate())
+    //   .onTrue(new IntakePivotDeploy());
 
-    isShooting
-      .and(() -> !Robot.shotCalculator.isInAllianceZone())
-      .whileTrue(new SetPassDriveModifiers());
-    isShooting
-      .and(() -> Robot.shotCalculator.isInAllianceZone())
-      .whileTrue(new SetScoreDriveModifiers());
+    // isShooting
+    //   .and(() -> !Robot.shotCalculator.isInAllianceZone())
+    //   .whileTrue(new SetPassDriveModifiers());
+    // isShooting
+    //   .and(() -> Robot.shotCalculator.isInAllianceZone())
+    //   .whileTrue(new SetScoreDriveModifiers());
 
-    isIntaking
-      .and(isShooting.negate())
-      .whileTrue(new SetIntakeDriveModifiers());
+    // isIntaking
+    //   .and(isShooting.negate())
+    //   .whileTrue(new SetIntakeDriveModifiers());
 
-    isShooting
-      .negate()
-      .and(isIntaking.negate())
-      .whileTrue(new ResetDriveModifiers());
+    // isShooting
+    //   .negate()
+    //   .and(isIntaking.negate())
+    //   .whileTrue(new ResetDriveModifiers());
 
     m_controller
       .rightTrigger()
       .whileTrue(
         new TeleopScore(this::getLeftX, this::getLeftY, m_controller.a())
       );
-    m_controller
-      .rightTrigger()
-      .whileTrue(
-        Commands.run(() ->
-          SmartDashboard.putBoolean("is shooting", true)
-        ).finallyDo(() -> SmartDashboard.putBoolean("is shooting", false))
-      );
+    // m_controller
+    //   .rightTrigger()
+    //   .whileTrue(
+    //     Commands.run(() ->
+    //       SmartDashboard.putBoolean("is shooting", true)
+    //     ).finallyDo(() -> SmartDashboard.putBoolean("is shooting", false))
+    //   );
 
-    m_controller.rightBumper().whileTrue(new TrenchScore());
-    m_controller.y().whileTrue(new OutpostScore());
-    m_controller.x().whileTrue(new HubScore());
-    m_controller.leftBumper().whileTrue(new TowerScore());
+    // m_controller.rightBumper().whileTrue(new TrenchScore());
+    // m_controller.y().whileTrue(new OutpostScore());
+    // m_controller.x().whileTrue(new HubScore());
+    // m_controller.leftBumper().whileTrue(new TowerScore());
   }
 
   public Dimensionless getRightX() {

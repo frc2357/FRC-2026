@@ -598,7 +598,7 @@ public class Constants {
       );
 
       public static final AngularVelocity TRENCH_SHOT = RotationsPerSecond.of(
-        49
+        46
       );
 
       // Farthest corner possible
