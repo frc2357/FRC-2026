@@ -4,17 +4,42 @@
 
 package frc.robot;
 
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.drive.DefaultDrive;
+import frc.robot.controls.CoDriverControls;
+import frc.robot.controls.DriverControls;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class Robot extends TimedRobot {
+
   private Command m_autonomousCommand;
 
-  private final RobotContainer m_robotContainer;
+  private DriverControls driverControls;
+  private CoDriverControls coDriverControls;
+
+  private static Command m_defaultDrive;
+
+  public static CommandSwerveDrivetrain swerve;
+
+  private final Telemetry logger = new Telemetry(
+      Constants.SWERVE.MAX_SPEED.in(Units.MetersPerSecond));
 
   public Robot() {
-    m_robotContainer = new RobotContainer();
+    swerve = TunerConstants.createDrivetrain();
+
+    driverControls = new DriverControls();
+    coDriverControls = new CoDriverControls();
+    m_defaultDrive = new DefaultDrive(
+        driverControls::getLeftY,
+        driverControls::getLeftX,
+        driverControls::getRightX);
+
+    swerve.registerTelemetry(logger::telemeterize);
+    swerve.setDefaultCommand(m_defaultDrive);
   }
 
   @Override
@@ -23,28 +48,28 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
-
-  @Override
-  public void disabledPeriodic() {}
-
-  @Override
-  public void disabledExit() {}
-
-  @Override
-  public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    if (m_autonomousCommand != null) {
-      CommandScheduler.getInstance().schedule(m_autonomousCommand);
-    }
+  public void disabledInit() {
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   @Override
-  public void autonomousExit() {}
+  public void disabledExit() {
+  }
+
+  @Override
+  public void autonomousInit() {
+  }
+
+  @Override
+  public void autonomousPeriodic() {
+  }
+
+  @Override
+  public void autonomousExit() {
+  }
 
   @Override
   public void teleopInit() {
@@ -54,10 +79,12 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
-  public void teleopExit() {}
+  public void teleopExit() {
+  }
 
   @Override
   public void testInit() {
@@ -65,8 +92,10 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   @Override
-  public void testExit() {}
+  public void testExit() {
+  }
 }
