@@ -15,26 +15,23 @@ import frc.robot.Constants.INTAKE_RUNNER;
 public class IntakeRunner extends SubsystemBase {
 
   private TalonFX m_leftMotor = new TalonFX(
-    CAN_ID.LEFT_INTAKE_MOTOR,
-    CANBus.roboRIO()
-  );
+      CAN_ID.LEFT_INTAKE_MOTOR,
+      CANBus.roboRIO());
 
   private TalonFX m_rightMotor = new TalonFX(
-    CAN_ID.RIGHT_INTAKE_MOTOR,
-    CANBus.roboRIO()
-  );
+      CAN_ID.RIGHT_INTAKE_MOTOR,
+      CANBus.roboRIO());
 
   public IntakeRunner() {
     m_leftMotor.getConfigurator().apply(Constants.INTAKE_RUNNER.MOTOR_CONFIG);
     m_rightMotor.getConfigurator().apply(Constants.INTAKE_RUNNER.MOTOR_CONFIG);
 
-    m_rightMotor.setControl(
-      new Follower(CAN_ID.LEFT_INTAKE_MOTOR, MotorAlignmentValue.Opposed)
-    );
+    m_leftMotor.setControl(
+        new Follower(CAN_ID.RIGHT_INTAKE_MOTOR, MotorAlignmentValue.Opposed));
   }
 
   public void setSpeed(Dimensionless percentOutput) {
-    m_leftMotor.set(percentOutput.in(Value));
+    m_rightMotor.set(percentOutput.in(Value));
   }
 
   public void setAxisSpeed(Dimensionless axisSpeed) {
@@ -43,6 +40,6 @@ public class IntakeRunner extends SubsystemBase {
   }
 
   public void stop() {
-    m_leftMotor.stopMotor();
+    m_rightMotor.stopMotor();
   }
 }

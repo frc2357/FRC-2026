@@ -1,40 +1,40 @@
 package frc.robot.controls;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
-import frc.robot.Robot;
-import frc.robot.commands.drive.DriveTargetLock;
 import frc.robot.commands.drive.FlipPerspective;
-import frc.robot.commands.drive.ResetDriveModifiers;
 import frc.robot.commands.drive.ResetPerspective;
-import frc.robot.commands.drive.SetIntakeDriveModifiers;
-import frc.robot.commands.drive.SetPassDriveModifiers;
-import frc.robot.commands.drive.SetScoreDriveModifiers;
-import frc.robot.commands.intakepivot.IntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intaking.TeleopIntake;
-import frc.robot.commands.scoring.teleop.HubScore;
-import frc.robot.commands.scoring.teleop.OutpostScore;
-import frc.robot.commands.scoring.teleop.TeleopScore;
-import frc.robot.commands.scoring.teleop.TowerScore;
-import frc.robot.commands.scoring.teleop.TrenchScore;
+import frc.robot.commands.scoring.auto.AutoScore;
 import frc.robot.controls.util.RumbleInterface;
 
 public class DriverControls implements RumbleInterface {
+
+  private final String KID_SHOT_SHOOTER_KEY = "Kid Shot Shooter Velocity";
+  private final String KID_SHOT_HOOD_KEY = "Kid Shot Hood Angle";
 
   private CommandXboxController m_controller;
 
   public DriverControls() {
     m_controller = new CommandXboxController(CONTROLLER.DRIVER_CONTROLLER_PORT);
+
+    SmartDashboard.putNumber(
+        KID_SHOT_SHOOTER_KEY,
+        Constants.SHOOTER.SETPOINTS.KID_SHOT.in(RotationsPerSecond));
+    SmartDashboard.putNumber(
+        KID_SHOT_HOOD_KEY,
+        Constants.HOOD.SETPOINTS.KID_SHOT.in(Degrees));
+
     mapControls();
   }
 
@@ -44,51 +44,63 @@ public class DriverControls implements RumbleInterface {
 
     // Button chord for all buttons that cause shooting
     Trigger isShooting = m_controller
-      .rightTrigger()
-      .or(m_controller.rightBumper())
-      .or(m_controller.leftBumper())
-      .or(m_controller.y())
-      .or(m_controller.x());
+        .rightTrigger()
+        .or(m_controller.rightBumper())
+        .or(m_controller.leftBumper())
+        .or(m_controller.y())
+        .or(m_controller.x());
 
     m_controller.back().onTrue(new FlipPerspective());
     m_controller.start().onTrue(new ResetPerspective());
 
     m_controller.leftTrigger().whileTrue(new TeleopIntake());
 
-    isShooting.and(isIntaking.negate()).whileTrue(new IntakePivotJiggle());
+    // isShooting.and(isIntaking.negate()).whileTrue(new IntakePivotJiggle());
     // isShooting
-    //   .negate()
-    //   .and(isIntaking.negate())
-    //   .onTrue(new IntakePivotDeploy());
+    // .negate()
+    // .and(isIntaking.negate())
+    // .onTrue(new IntakePivotDeploy());
 
     // isShooting
-    //   .and(() -> !Robot.shotCalculator.isInAllianceZone())
-    //   .whileTrue(new SetPassDriveModifiers());
+    // .and(() -> !Robot.shotCalculator.isInAllianceZone())
+    // .whileTrue(new SetPassDriveModifiers());
     // isShooting
-    //   .and(() -> Robot.shotCalculator.isInAllianceZone())
-    //   .whileTrue(new SetScoreDriveModifiers());
+    // .and(() -> Robot.shotCalculator.isInAllianceZone())
+    // .whileTrue(new SetScoreDriveModifiers());
 
     // isIntaking
-    //   .and(isShooting.negate())
-    //   .whileTrue(new SetIntakeDriveModifiers());
+    // .and(isShooting.negate())
+    // .whileTrue(new SetIntakeDriveModifiers());
 
     // isShooting
-    //   .negate()
-    //   .and(isIntaking.negate())
-    //   .whileTrue(new ResetDriveModifiers());
+    // .negate()
+    // .and(isIntaking.negate())
+    // .whileTrue(new ResetDriveModifiers());
 
     m_controller
-      .rightTrigger()
-      .whileTrue(
-        new TeleopScore(this::getLeftX, this::getLeftY, m_controller.a())
-      );
+        .rightTrigger()
+        .whileTrue(
+            new AutoScore(
+                () -> RotationsPerSecond.of(
+                    SmartDashboard.getNumber(
+                        KID_SHOT_SHOOTER_KEY,
+                        Constants.SHOOTER.SETPOINTS.KID_SHOT.in(RotationsPerSecond))),
+                () -> Degrees.of(
+                    SmartDashboard.getNumber(
+                        KID_SHOT_HOOD_KEY,
+                        Constants.HOOD.SETPOINTS.KID_SHOT.in(Degrees)))));
     // m_controller
-    //   .rightTrigger()
-    //   .whileTrue(
-    //     Commands.run(() ->
-    //       SmartDashboard.putBoolean("is shooting", true)
-    //     ).finallyDo(() -> SmartDashboard.putBoolean("is shooting", false))
-    //   );
+    // .rightTrigger()
+    // .whileTrue(
+    // new TeleopScore(this::getLeftX, this::getLeftY, m_controller.a())
+    // );
+    // m_controller
+    // .rightTrigger()
+    // .whileTrue(
+    // Commands.run(() ->
+    // SmartDashboard.putBoolean("is shooting", true)
+    // ).finallyDo(() -> SmartDashboard.putBoolean("is shooting", false))
+    // );
 
     // m_controller.rightBumper().whileTrue(new TrenchScore());
     // m_controller.y().whileTrue(new OutpostScore());
@@ -123,9 +135,8 @@ public class DriverControls implements RumbleInterface {
   private double modifyAxis(double value) {
     value = deadband(value, CONTROLLER.DRIVER_CONTROLLER_DEADBAND);
     value = Math.copySign(
-      Math.pow(value, Constants.CONTROLLER.JOYSTICK_RAMP_EXPONENT),
-      value
-    );
+        Math.pow(value, Constants.CONTROLLER.JOYSTICK_RAMP_EXPONENT),
+        value);
     return value;
   }
 
