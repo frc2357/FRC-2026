@@ -105,7 +105,8 @@ public class Constants {
     public static final Dimensionless AXIS_MAX_ANGULAR_RATE = Percent.of(100);
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
 
-    public static final double SLEW_RATE_LIMIT = 3.5; // in units per second relative to stick input (.5 takes 4 seconds to go from -1 to 1)
+    public static final double SLEW_RATE_LIMIT = 3.5; // in units per second relative to stick input (.5 takes 4 seconds
+    // to go from -1 to 1)
 
     public static final double HEADING_CONTROLLER_P = 4.5;
     public static final double HEADING_CONTROLLER_I = 0;
@@ -170,10 +171,13 @@ public class Constants {
         new Rotation3d(Degrees.of(0), Degrees.of(-10), Degrees.of(180))
       );
 
-      // The standard deviations of our vision estimated poses, which affect correction rate
+      // The standard deviations of our vision estimated poses, which affect
+      // correction rate
       // (Fake values. Experiment and determine estimation noise on an actual robot.)
-      // These are the default values from PhotonVision docs. They can be tuned per camera
-      // by placing the robot at several points, recording the pose estimate and recording
+      // These are the default values from PhotonVision docs. They can be tuned per
+      // camera
+      // by placing the robot at several points, recording the pose estimate and
+      // recording
       // the standard deviations
       public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(
         4,
@@ -198,10 +202,13 @@ public class Constants {
         new Rotation3d(Degrees.of(10), Degrees.of(0), Degrees.of(90))
       );
 
-      // The standard deviations of our vision estimated poses, which affect correction rate
+      // The standard deviations of our vision estimated poses, which affect
+      // correction rate
       // (Fake values. Experiment and determine estimation noise on an actual robot.)
-      // These are the default values from PhotonVision docs. They can be tuned per camera
-      // by placing the robot at several points, recording the pose estimate and recording
+      // These are the default values from PhotonVision docs. They can be tuned per
+      // camera
+      // by placing the robot at several points, recording the pose estimate and
+      // recording
       // the standard deviations
       public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(
         4,
@@ -230,10 +237,13 @@ public class Constants {
         )
       );
 
-      // The standard deviations of our vision estimated poses, which affect correction rate
+      // The standard deviations of our vision estimated poses, which affect
+      // correction rate
       // (Fake values. Experiment and determine estimation noise on an actual robot.)
-      // These are the default values from PhotonVision docs. They can be tuned per camera
-      // by placing the robot at several points, recording the pose estimate and recording
+      // These are the default values from PhotonVision docs. They can be tuned per
+      // camera
+      // by placing the robot at several points, recording the pose estimate and
+      // recording
       // the standard deviations
       public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(
         4,
@@ -262,10 +272,13 @@ public class Constants {
         )
       );
 
-      // The standard deviations of our vision estimated poses, which affect correction rate
+      // The standard deviations of our vision estimated poses, which affect
+      // correction rate
       // (Fake values. Experiment and determine estimation noise on an actual robot.)
-      // These are the default values from PhotonVision docs. They can be tuned per camera
-      // by placing the robot at several points, recording the pose estimate and recording
+      // These are the default values from PhotonVision docs. They can be tuned per
+      // camera
+      // by placing the robot at several points, recording the pose estimate and
+      // recording
       // the standard deviations
       public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(
         4,
@@ -292,7 +305,7 @@ public class Constants {
 
       public static final String NAME = "limelight-shooter";
 
-      //TODO: These will need modified for the new mount
+      // TODO: These will need modified for the new mount
       public static final Pose3d ROBOT_TO_CAM_TRANSFORM = new Pose3d(
         Inches.of(-13.589),
         Inches.of(-9.123),
@@ -300,10 +313,13 @@ public class Constants {
         new Rotation3d(Degrees.of(0), Degrees.of(28.2), Degrees.of(90))
       );
 
-      // The standard deviations of our vision estimated poses, which affect correction rate
+      // The standard deviations of our vision estimated poses, which affect
+      // correction rate
       // (Fake values. Experiment and determine estimation noise on an actual robot.)
-      // These are the default values from PhotonVision docs. They can be tuned per camera
-      // by placing the robot at several points, recording the pose estimate and recording
+      // These are the default values from PhotonVision docs. They can be tuned per
+      // camera
+      // by placing the robot at several points, recording the pose estimate and
+      // recording
       // the standard deviations
       public static final Matrix<N3, N1> TAG_STANDARD_DEVIATIONS =
         VecBuilder.fill(0.5, 0.5, Double.MAX_VALUE);
@@ -331,7 +347,8 @@ public class Constants {
 
   public static final class CAN_ID {
 
-    public static final int FLOOR_MOTOR = 23; //TODO: make sure that the old spindexter motor is the same for the floor (or just change the CAN ID)
+    public static final int FLOOR_MOTOR = 23; // TODO: make sure that the old spindexter motor is the same for the floor
+    // (or just change the CAN ID)
     public static final int TUNNEL_MOTOR = 34;
 
     public static final int LEFT_INTAKE_MOTOR = 24;
@@ -383,7 +400,7 @@ public class Constants {
     public static TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
       .withMotorOutput(
         new MotorOutputConfigs()
-          .withInverted(InvertedValue.CounterClockwise_Positive)
+          .withInverted(InvertedValue.Clockwise_Positive)
           .withNeutralMode(NeutralModeValue.Coast)
       )
       .withOpenLoopRamps(
@@ -453,7 +470,8 @@ public class Constants {
       -100
     );
 
-    // Maximum amount of time we can stall the intake against the hardstop without ripping it off
+    // Maximum amount of time we can stall the intake against the hardstop without
+    // ripping it off
     public static final Time INTAKE_MAXIMUM_STALL_TIME = Seconds.of(3);
   }
 
@@ -486,7 +504,8 @@ public class Constants {
     public static final String MECHANISM_NETWORK_KEY = "FeederMech";
     public static final String MOTOR_NETWORK_KEY = "FeederMotor";
 
-    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
+    // TODO: PID, Feedforward, max angular acceleration still need tuned for
+    // mechanism
     public static final double P = 0.005;
     public static final double I = 0;
     public static final double D = 0;
@@ -572,6 +591,8 @@ public class Constants {
     );
 
     public static final class SETPOINTS {
+
+      public static final AngularVelocity KID_SHOT = RotationsPerSecond.of(30);
 
       public static final AngularVelocity PIT_SHOT = RotationsPerSecond.of(15);
 
@@ -659,6 +680,8 @@ public class Constants {
 
     public static final class SETPOINTS {
 
+      public static final Angle KID_SHOT = Degrees.of(12);
+
       public static final Angle PIT_SHOT = Degrees.of(10);
 
       public static final Angle HOME = Degrees.of(1);
@@ -681,11 +704,12 @@ public class Constants {
   public class SCORING {
 
     /**
-     * The latency compensation to account for the time a ball is feeding, in the shooter,
+     * The latency compensation to account for the time a ball is feeding, in the
+     * shooter,
      * or signals being sent to the motors for shoot on the fly algorithm
      *
      * I do not understand why the best value for this is zero
-     *  */
+     */
     public static final Time SOTF_LATENCY_COMPENSATION = Seconds.of(0);
 
     public static final String IS_SOTF_KEY = "Enable SOTF";
@@ -698,7 +722,8 @@ public class Constants {
     public static final Time PREFIRE_FEED_LATENCY = Seconds.of(0.5);
 
     public static final Rectangle2d[] NO_SHOOT_ZONES = new Rectangle2d[] {
-      // This rect represents a 47in x 47in square centered on the neutral zone side of the hub.
+      // This rect represents a 47in x 47in square centered on the neutral zone side
+      // of the hub.
       // Basically the hub if it were translated 47in towards the neutral zone.
       new Rectangle2d(
         FieldConstants.Hub.farRightCorner,
