@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.tunnel;
 
 import static edu.wpi.first.units.Units.Value;
 
@@ -7,6 +7,8 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.TUNNEL;
@@ -15,6 +17,8 @@ public class Tunnel extends SubsystemBase {
 
   private SparkMax m_motor;
 
+  private final TunnelSim m_sim;
+
   public Tunnel() {
     m_motor = new SparkMax(CAN_ID.TUNNEL_MOTOR, MotorType.kBrushless);
     m_motor.configure(
@@ -22,6 +26,8 @@ public class Tunnel extends SubsystemBase {
       ResetMode.kNoResetSafeParameters,
       PersistMode.kPersistParameters
     );
+
+    m_sim = RobotBase.isSimulation() ? new TunnelSim(m_motor) : null;
   }
 
   public void setAxisSpeed(Dimensionless axisSpeed) {
@@ -35,5 +41,23 @@ public class Tunnel extends SubsystemBase {
 
   public void stop() {
     m_motor.stopMotor();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    m_sim.update();
+
+    SmartDashboard.putNumber(
+      "Tunnel Motor Velocity (RPM)",
+      m_motor.getEncoder().getVelocity()
+    );
+    SmartDashboard.putNumber(
+      "Tunnel Flywheel Velocity (RPM)",
+      m_sim.getVelocityRPM()
+    );
+    SmartDashboard.putNumber(
+      "Tunnel Current Draw (A)",
+      m_sim.getCurrentDrawAmps()
+    );
   }
 }

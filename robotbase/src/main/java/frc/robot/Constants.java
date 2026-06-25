@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Percent;
@@ -44,6 +45,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
@@ -53,6 +55,7 @@ import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.generated.TunerConstants;
 import yams.gearing.GearBox;
@@ -354,11 +357,19 @@ public class Constants {
       .inverted(true)
       .smartCurrentLimit(40, 20)
       .openLoopRampRate(0.25)
-      .voltageCompensation(10);
+      .voltageCompensation(12);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless SLOW_FLOOR_SPEED = Percent.of(10);
     public static final Dimensionless FLOOR_SPEED = Percent.of(80);
+
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(
+      0.000138272236
+    );
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("32:14")
+    );
+    public static final DCMotor GEARBOX = DCMotor.getNEO(1);
   }
 
   public static final class TUNNEL {
@@ -374,6 +385,14 @@ public class Constants {
     public static final Dimensionless TUNNEL_SPEED = Percent.of(92.07);
     public static final Dimensionless SLOW_TUNNEL_SPEED = Percent.of(10);
     public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-92.07);
+
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(
+      0.00000226503092
+    );
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("28:14", "28:16", "18:19")
+    );
+    public static final DCMotor GEARBOX = DCMotor.getNEO(1);
   }
 
   public static final class INTAKE_RUNNER {
