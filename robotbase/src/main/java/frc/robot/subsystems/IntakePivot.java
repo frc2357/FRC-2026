@@ -1,13 +1,11 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
 
-import com.revrobotics.spark.SparkAbsoluteEncoder;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
+import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
@@ -25,12 +23,11 @@ import yams.mechanisms.positional.Arm;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
-import yams.motorcontrollers.local.SparkWrapper;
+import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class IntakePivot extends SubsystemBase {
 
-  private SparkMax m_motor;
-  private SparkAbsoluteEncoder m_encoder;
+  private TalonFX m_motor;
 
   private SmartMotorControllerConfig m_smartMotorControllerConfig;
   // Create our SmartMotorController from our Spark and config with the NEO.
@@ -41,8 +38,7 @@ public class IntakePivot extends SubsystemBase {
   private Arm m_arm;
 
   public IntakePivot() {
-    m_motor = new SparkMax(CAN_ID.INTAKE_PIVOT_MOTOR, MotorType.kBrushless);
-    m_encoder = m_motor.getAbsoluteEncoder();
+    m_motor = new TalonFX(CAN_ID.INTAKE_PIVOT_MOTOR, CANBus.roboRIO());
 
     m_smartMotorControllerConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.OPEN_LOOP)
@@ -54,16 +50,12 @@ public class IntakePivot extends SubsystemBase {
       )
       // Gearing from the motor rotor to final shaft.
       .withGearing(INTAKE_PIVOT.GEARING)
-      .withExternalEncoder(m_encoder)
-      .withUseExternalFeedbackEncoder(true)
-      .withExternalEncoderGearing(INTAKE_PIVOT.ENCODER_GEARING)
-      .withExternalEncoderZeroOffset(INTAKE_PIVOT.ADJUSTED_ZERO_OFFSET)
       // Motor properties to prevent over currenting.
       .withStatorCurrentLimit(INTAKE_PIVOT.STALL_LIMIT);
 
-    m_sparkSmartMotorController = new SparkWrapper(
+    m_sparkSmartMotorController = new TalonFXWrapper(
       m_motor,
-      DCMotor.getNEO(1),
+      DCMotor.getKrakenX60(1),
       m_smartMotorControllerConfig
     );
 
@@ -123,15 +115,11 @@ public class IntakePivot extends SubsystemBase {
   }
 
   public Trigger isAbovePositionTrigger(Angle targetAngle) {
-    return new Trigger(() ->
-      Rotations.of(m_encoder.getPosition()).lte(targetAngle)
-    );
+    return new Trigger(() -> true);
   }
 
   public Trigger isBelowPositionTrigger(Angle targetAngle) {
-    return new Trigger(() ->
-      Rotations.of(m_encoder.getPosition()).gte(targetAngle)
-    );
+    return new Trigger(() -> true);
   }
 
   public Trigger isInDeployedPositionTrigger() {
