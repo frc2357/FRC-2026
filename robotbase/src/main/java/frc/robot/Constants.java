@@ -423,15 +423,9 @@ public class Constants {
 
     public static final Current STALL_LIMIT = Amps.of(40);
 
-    public static final SparkBaseConfig INTAKE_PIVOT_BASE_CONFIG =
-      new SparkMaxConfig()
-        .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
-        .voltageCompensation(12);
-
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50);
 
-    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(-15);
+    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(-10);
 
     public static final Dimensionless RETRACT_SPEED = Percent.of(30);
 

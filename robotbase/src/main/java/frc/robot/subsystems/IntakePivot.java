@@ -26,6 +26,7 @@ import yams.mechanisms.positional.Arm;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class IntakePivot extends SubsystemBase {
@@ -45,7 +46,7 @@ public class IntakePivot extends SubsystemBase {
 
     m_smartMotorControllerConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.OPEN_LOOP)
-      .withVendorConfig(INTAKE_PIVOT.INTAKE_PIVOT_BASE_CONFIG)
+      .withIdleMode(MotorMode.BRAKE)
       // Telemetry name and verbosity level
       .withTelemetry(
         INTAKE_PIVOT.MOTOR_NETWORK_KEY,
