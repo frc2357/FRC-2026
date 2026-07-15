@@ -1,16 +1,12 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Percent;
-import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -101,11 +97,11 @@ public class IntakePivot extends SubsystemBase {
   }
 
   public AngularVelocity getVelocity() {
-    return RPM.of(m_motor.getEncoder().getVelocity());
+    return m_motor.getVelocity().getValue();
   }
 
   public Dimensionless getAppliedOutput() {
-    return Value.of(m_motor.getAppliedOutput());
+    return Value.of(m_motor.getDutyCycle().getValue());
   }
 
   public Command axisSpeed(Supplier<Dimensionless> axis) {
@@ -119,7 +115,7 @@ public class IntakePivot extends SubsystemBase {
   }
 
   public Command zeroMotorEncoder() {
-    return new InstantCommand(() -> m_motor.getEncoder().setPosition(0));
+    return new InstantCommand(() -> m_motor.setPosition(0));
   }
 
   public void stopMotor() {
@@ -145,15 +141,11 @@ public class IntakePivot extends SubsystemBase {
   }
 
   public Trigger isAbovePositionTrigger(Angle targetAngle) {
-    return new Trigger(() ->
-      Rotations.of(m_motor.getEncoder().getPosition()).gte(targetAngle)
-    );
+    return new Trigger(() -> m_motor.getPosition().getValue().gte(targetAngle));
   }
 
   public Trigger isBelowPositionTrigger(Angle targetAngle) {
-    return new Trigger(() ->
-      Rotations.of(m_motor.getEncoder().getPosition()).lte(targetAngle)
-    );
+    return new Trigger(() -> m_motor.getPosition().getValue().lte(targetAngle));
   }
 
   public Trigger isInDeployedPositionTrigger() {
