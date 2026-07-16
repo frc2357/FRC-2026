@@ -11,7 +11,10 @@ public class AutoIntakePivotDeploy extends SequentialCommandGroup {
   public AutoIntakePivotDeploy() {
     super(
       new ParallelRaceGroup(
-        new WaitUntilIntakePivotDeploy(),
+        new SequentialCommandGroup(
+          Robot.intakePivot.zeroMotorEncoder(),
+          new WaitUntilIntakePivotDeploy()
+        ),
         new WaitCommand(Constants.INTAKE_PIVOT.INTAKE_MAXIMUM_STALL_TIME),
         Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.DEPLOY_SPEED)
       )

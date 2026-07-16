@@ -408,22 +408,6 @@ public class Constants {
       GearBox.fromStages("12:52", "16:54")
     );
 
-    public static final MechanismGearing ENCODER_GEARING = new MechanismGearing(
-      GearBox.fromStages("1:1") // This is not accurate but it doesn't wrap so it's fine
-    );
-
-    // This is the number that should be copied from the rev hardware client when
-    // pressing the "zero encoder" button
-    public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.12870237);
-
-    // Fabricated offset to prevent wrapping
-    public static final Angle FABRICATED_ADJUSTMENT = Degrees.of(1).times(
-      ENCODER_GEARING.getMechanismToRotorRatio()
-    );
-    public static final Angle ADJUSTED_ZERO_OFFSET = PHYSICAL_ZERO_OFFSET.minus(
-      FABRICATED_ADJUSTMENT
-    );
-
     // Diameter of the arm.
     public static final Distance LENGTH = Inches.of(12.5);
     // Mass of the arm.
@@ -439,15 +423,9 @@ public class Constants {
 
     public static final Current STALL_LIMIT = Amps.of(40);
 
-    public static final SparkBaseConfig INTAKE_PIVOT_BASE_CONFIG =
-      new SparkMaxConfig()
-        .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
-        .voltageCompensation(12);
-
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50);
 
-    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(-15);
+    public static final Dimensionless HOLD_DOWN_SPEED = Percent.of(-7);
 
     public static final Dimensionless RETRACT_SPEED = Percent.of(30);
 
@@ -460,16 +438,19 @@ public class Constants {
     public static final Time JIGGLE_UP_TIME = Seconds.of(0.3);
     public static final Time PIT_UP_TIME = Seconds.of(1.5);
 
-    public static final Current AMP_STALL_THRESHOLD = Amps.of(30);
+    public static final Current AMP_STALL_THRESHOLD = Amps.of(35);
+    public static final AngularVelocity VELOCITY_STALL_THRESHOLD =
+      RotationsPerSecond.of(0.5);
+    public static final Dimensionless VELOCITY_STALL_MIN_APPLIED_OUTPUT =
+      Percent.of(1);
     public static final Time TIME_TO_STALL = Seconds.of(0.1);
 
-    // When intake is zeroed at the upper hard stops, fully deployed is about 0.67 rotations
-    public static final Angle FULLY_DEPLOYED_ROTATIONS = Rotations.of(0.65);
+    // When intake is zeroed at the upper hard stops, fully deployed is about -175 rotations
     public static final Angle INTAKE_DEPLOYED_ENCODER_ROTATIONS = Rotations.of(
-      0.60
+      -125
     );
     public static final Angle INTAKE_JIGGLE_UP_ENCODER_ROTATIONS = Rotations.of(
-      0.45
+      -100
     );
 
     // Maximum amount of time we can stall the intake against the hardstop without ripping it off
