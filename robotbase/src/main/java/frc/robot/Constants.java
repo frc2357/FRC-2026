@@ -405,7 +405,7 @@ public class Constants {
   public static final class INTAKE_PIVOT {
 
     public static final MechanismGearing GEARING = new MechanismGearing(
-      GearBox.fromStages("12:52", "16:54")
+      GearBox.fromStages("9:1", "3.375:1")
     );
 
     // Diameter of the arm.

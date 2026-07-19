@@ -4,9 +4,17 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig;
@@ -135,5 +143,36 @@ public final class Constants {
         .velocityConversionFactor(ENCODER_GEARING.getRotorToMechanismRatio());
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
+  }
+
+  public static final class INTAKE_PIVOT {
+
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("9:1", "3.375:1")
+    );
+
+    public static final TalonFXConfiguration MOTOR_CONFIGURATION =
+      new TalonFXConfiguration()
+        .withMotorOutput(
+          new MotorOutputConfigs()
+            .withInverted(InvertedValue.CounterClockwise_Positive)
+            .withNeutralMode(NeutralModeValue.Brake)
+        )
+        .withCurrentLimits(
+          new CurrentLimitsConfigs()
+            .withStatorCurrentLimit(Amps.of(40))
+            .withStatorCurrentLimitEnable(true)
+        )
+        .withFeedback(
+          new FeedbackConfigs().withSensorToMechanismRatio(
+            GEARING.getMechanismToRotorRatio()
+          )
+        );
+
+    public static final AngularVelocity EFFICIENT_VELOCITY = RPM.of(
+      (5000 / 60) * GEARING.getRotorToMechanismRatio()
+    ); // ~2.743 RPS
+
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(20);
   }
 }

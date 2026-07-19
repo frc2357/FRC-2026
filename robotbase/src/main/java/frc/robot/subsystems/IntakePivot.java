@@ -27,6 +27,7 @@ import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.SmartMotorControllerConfig.TelemetryVerbosity;
 import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class IntakePivot extends SubsystemBase {
@@ -50,7 +51,7 @@ public class IntakePivot extends SubsystemBase {
       // Telemetry name and verbosity level
       .withTelemetry(
         INTAKE_PIVOT.MOTOR_NETWORK_KEY,
-        Constants.ROBOT.MECHANISM_VERBOSITY
+        TelemetryVerbosity.HIGH //Constants.ROBOT.MECHANISM_VERBOSITY
       )
       // Gearing from the motor rotor to final shaft.
       .withGearing(INTAKE_PIVOT.GEARING)
