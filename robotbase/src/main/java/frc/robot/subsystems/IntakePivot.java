@@ -51,7 +51,7 @@ public class IntakePivot extends SubsystemBase {
       // Telemetry name and verbosity level
       .withTelemetry(
         INTAKE_PIVOT.MOTOR_NETWORK_KEY,
-        TelemetryVerbosity.HIGH //Constants.ROBOT.MECHANISM_VERBOSITY
+        Constants.ROBOT.MECHANISM_VERBOSITY
       )
       // Gearing from the motor rotor to final shaft.
       .withGearing(INTAKE_PIVOT.GEARING)
