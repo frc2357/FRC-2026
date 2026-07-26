@@ -3,15 +3,14 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Value;
+import static edu.wpi.first.units.Units.Volts;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkBaseConfig;
+import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -25,10 +24,8 @@ import frc.robot.Constants.SHOOTER;
 
 public class ShooterTuningSubsystem implements Sendable {
 
-  private SparkMax m_motorLeft;
-  private SparkMax m_motorRight;
-  private SparkClosedLoopController m_PIDController;
-  private RelativeEncoder m_encoder;
+  private TalonFX m_motorLeft;
+  private TalonFX m_motorRight;
 
   public double P = 0.004;
   public double I = 0;
@@ -36,37 +33,30 @@ public class ShooterTuningSubsystem implements Sendable {
   public double staticFF = 0.14;
   public double velocityFF = 0.1255;
   public double accelerationFF = 0.01;
-  public AngularVelocity maxVelocity = RotationsPerSecond.of(77); // Max at free speed is ~96, 80% is 77
   public AngularAcceleration maxAcceleration = RotationsPerSecondPerSecond.of(
     150
   );
   public double rpsTolerance = 0.01;
 
-  private SparkBaseConfig m_motorconfig = SHOOTER.MOTOR_CONFIG_LEFT;
+  private TalonFXConfiguration m_motorconfig = SHOOTER.MOTOR_CONFIG;
   // private ShooterCurveTuner m_curveTuner; TODO: implement later
 
   private AngularVelocity m_targetVelocity = Units.RotationsPerSecond.of(0);
 
+  private MotionMagicVelocityVoltage m_velocityRequest =
+    new MotionMagicVelocityVoltage(0);
+
   public ShooterTuningSubsystem() {
-    m_motorLeft = new SparkMax(CAN_ID.LEFT_SHOOTER_MOTOR, MotorType.kBrushless);
+    m_motorLeft = new TalonFX(CAN_ID.LEFT_SHOOTER_MOTOR, CANBus.roboRIO());
 
-    m_motorRight = new SparkMax(
-      CAN_ID.RIGHT_SHOOTER_MOTOR,
-      MotorType.kBrushless
-    );
+    m_motorRight = new TalonFX(CAN_ID.RIGHT_SHOOTER_MOTOR, CANBus.roboRIO());
 
-    m_motorLeft.configure(
-      m_motorconfig,
-      ResetMode.kNoResetSafeParameters,
-      PersistMode.kNoPersistParameters
+    m_motorLeft.getConfigurator().apply(m_motorconfig);
+    m_motorRight.getConfigurator().apply(m_motorconfig);
+
+    m_motorRight.setControl(
+      new Follower(CAN_ID.LEFT_SHOOTER_MOTOR, MotorAlignmentValue.Opposed)
     );
-    m_motorRight.configure(
-      SHOOTER.MOTOR_CONFIG_RIGHT,
-      ResetMode.kNoResetSafeParameters,
-      PersistMode.kNoPersistParameters
-    );
-    m_PIDController = m_motorLeft.getClosedLoopController();
-    m_encoder = m_motorLeft.getEncoder();
 
     Preferences.initDouble("shooterP", P);
     Preferences.initDouble("shooterI", I);
@@ -74,10 +64,6 @@ public class ShooterTuningSubsystem implements Sendable {
     Preferences.initDouble("shooterStaticFF", staticFF);
     Preferences.initDouble("shooterVelocityFF", velocityFF);
     Preferences.initDouble("shooterAccelerationFF", accelerationFF);
-    Preferences.initDouble(
-      "shooterMaxVelocity",
-      maxVelocity.in(RotationsPerSecond)
-    );
     Preferences.initDouble(
       "shooterMaxAcceleration",
       maxAcceleration.in(RotationsPerSecondPerSecond)
@@ -92,12 +78,6 @@ public class ShooterTuningSubsystem implements Sendable {
     accelerationFF = Preferences.getDouble(
       "shooterAccelerationFF",
       accelerationFF
-    );
-    maxVelocity = RotationsPerSecond.of(
-      Preferences.getDouble(
-        "shooterMaxVelocity",
-        maxVelocity.in(RotationsPerSecond)
-      )
     );
     maxAcceleration = RotationsPerSecondPerSecond.of(
       Preferences.getDouble(
@@ -120,19 +100,21 @@ public class ShooterTuningSubsystem implements Sendable {
     SmartDashboard.putNumber("Shooter Acceleration FF", accelerationFF);
 
     SmartDashboard.putNumber(
-      "Shooter MaxVel RPS",
-      maxVelocity.in(RotationsPerSecond)
-    );
-    SmartDashboard.putNumber(
       "Shooter MaxAccel RPS",
       maxAcceleration.in(RotationsPerSecondPerSecond)
     );
     SmartDashboard.putNumber("RPS Tolerance", rpsTolerance);
-    SmartDashboard.putNumber("Motor Velocity RPS", m_encoder.getVelocity());
+    SmartDashboard.putNumber(
+      "Motor Velocity RPS",
+      getVelocity().in(RotationsPerSecond)
+    );
     SmartDashboard.putNumber("Shooter Target RPS", 0);
 
     SmartDashboard.putBoolean("Is At Target", isAtTargetSpeed());
-    SmartDashboard.putNumber("Voltage", m_motorLeft.getBusVoltage());
+    SmartDashboard.putNumber(
+      "Voltage",
+      m_motorLeft.getMotorVoltage().getValue().in(Volts)
+    );
     SmartDashboard.putBoolean(
       "Shooter Running",
       !getVelocity().isNear(RotationsPerSecond.zero(), rpsTolerance)
@@ -141,23 +123,23 @@ public class ShooterTuningSubsystem implements Sendable {
   }
 
   public void updatePIDs() {
-    m_motorconfig.closedLoop.pid(P, I, D);
-    m_motorconfig.closedLoop.feedForward.sva(
-      staticFF,
-      velocityFF,
-      accelerationFF
-    );
+    // set slot 0 gains
+    var slot0Configs = m_motorconfig.Slot0;
+    slot0Configs.kS = staticFF;
+    slot0Configs.kV = velocityFF;
+    slot0Configs.kA = accelerationFF;
+    slot0Configs.kP = P;
+    slot0Configs.kI = I;
+    slot0Configs.kD = D;
 
-    m_motorconfig.closedLoop.maxMotion
-      .maxAcceleration(maxAcceleration.in(RotationsPerSecondPerSecond))
-      .cruiseVelocity(maxVelocity.in(RotationsPerSecond))
-      .allowedProfileError(rpsTolerance);
-
-    m_motorLeft.configure(
-      m_motorconfig,
-      ResetMode.kNoResetSafeParameters,
-      PersistMode.kNoPersistParameters
+    // set Motion Magic settings
+    var motionMagicConfigs = m_motorconfig.MotionMagic;
+    motionMagicConfigs.MotionMagicAcceleration = maxAcceleration.in(
+      RotationsPerSecondPerSecond
     );
+    motionMagicConfigs.MotionMagicJerk = 4000; // Target jerk of 4000 rps/s/s (0.1 seconds)
+
+    m_motorLeft.getConfigurator().apply(m_motorconfig);
   }
 
   public void updateDashboard() {
@@ -171,7 +153,6 @@ public class ShooterTuningSubsystem implements Sendable {
       0
     );
 
-    double newMaxVelocity = SmartDashboard.getNumber("Shooter MaxVel RPS", 0);
     double newMaxAcceleration = SmartDashboard.getNumber(
       "Shooter MaxAccel RPS",
       0
@@ -186,7 +167,10 @@ public class ShooterTuningSubsystem implements Sendable {
       getVelocity().in(RotationsPerSecond)
     );
 
-    SmartDashboard.putNumber("Voltage", m_motorLeft.getBusVoltage());
+    SmartDashboard.putNumber(
+      "Voltage",
+      m_motorLeft.getMotorVoltage().getValue().in(Volts)
+    );
     SmartDashboard.putBoolean(
       "Shooter Running",
       !getVelocity().isNear(RotationsPerSecond.zero(), rpsTolerance)
@@ -207,7 +191,6 @@ public class ShooterTuningSubsystem implements Sendable {
       newStaticFF != staticFF ||
       newVelocityFF != velocityFF ||
       newAccelerationFF != accelerationFF ||
-      newMaxVelocity != maxVelocity.in(RotationsPerSecond) ||
       newMaxAcceleration != maxAcceleration.in(RotationsPerSecondPerSecond) ||
       newRpsTolerance != rpsTolerance
     ) {
@@ -217,7 +200,6 @@ public class ShooterTuningSubsystem implements Sendable {
       staticFF = newStaticFF;
       velocityFF = newVelocityFF;
       accelerationFF = newAccelerationFF;
-      maxVelocity = RotationsPerSecond.of(newMaxVelocity);
       maxAcceleration = RotationsPerSecondPerSecond.of(newMaxAcceleration);
       rpsTolerance = newRpsTolerance;
       updatePIDs();
@@ -237,14 +219,11 @@ public class ShooterTuningSubsystem implements Sendable {
   }
 
   public AngularVelocity getVelocity() {
-    return RotationsPerSecond.of(m_encoder.getVelocity());
+    return m_motorLeft.getVelocity().getValue();
   }
 
   public void setTargetVelocity(AngularVelocity targetVelocity) {
-    m_PIDController.setSetpoint(
-      targetVelocity.in(RotationsPerSecond),
-      ControlType.kMAXMotionVelocityControl
-    );
+    m_motorLeft.setControl(m_velocityRequest.withVelocity(targetVelocity));
   }
 
   public boolean isAtVel(AngularVelocity vel) {
@@ -273,10 +252,6 @@ public class ShooterTuningSubsystem implements Sendable {
         Preferences.setDouble("shooterStaticFF", staticFF);
         Preferences.setDouble("shooterVelocityFF", velocityFF);
         Preferences.setDouble("shooterAccelerationFF", accelerationFF);
-        Preferences.setDouble(
-          "shooterMaxVelocity",
-          maxVelocity.in(RotationsPerSecond)
-        );
         Preferences.setDouble(
           "shooterMaxAcceleration",
           maxAcceleration.in(RotationsPerSecondPerSecond)

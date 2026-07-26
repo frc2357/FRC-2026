@@ -29,16 +29,16 @@ public class Robot extends TimedRobot {
     m_shooter = new ShooterTuningSubsystem();
     //m_hood = new HoodTuningSubsystem();
     //m_feeder = new FeederTuningSubsystem();
-    m_intakePivot = new IntakePivotTuningSubsystem();
+    //m_intakePivot = new IntakePivotTuningSubsystem();
     m_controller = new XboxController(0);
   }
 
   @Override
   public void robotPeriodic() {
-    //m_shooter.updateDashboard();
+    m_shooter.updateDashboard();
     //m_hood.updateDashboard();
     //m_feeder.updateDashboard();
-    m_intakePivot.updateDashboard();
+    //m_intakePivot.updateDashboard();
   }
 
   @Override
@@ -52,10 +52,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    //m_shooter.teleopPeriodic();
+    m_shooter.teleopPeriodic();
     //m_hood.teleopPeriodic();
     //m_feeder.teleopPeriodic();
-    m_intakePivot.teleopPeriodic();
+    //m_intakePivot.teleopPeriodic();
   }
 
   @Override
@@ -63,9 +63,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-    //m_shooter.setAxisSpeed(Value.of(-m_controller.getRightY()));
+    m_shooter.setAxisSpeed(Value.of(-m_controller.getRightY()));
     //m_hood.setAxisSpeed(Value.of(-m_controller.getRightY()));
     //m_feeder.setAxisSpeed(Value.of(-m_controller.getRightY()));
-    m_intakePivot.setAxisSpeed(Value.of(-m_controller.getRightY()));
+    //m_intakePivot.setAxisSpeed(Value.of(-m_controller.getRightY()));
   }
 }
