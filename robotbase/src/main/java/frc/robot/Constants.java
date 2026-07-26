@@ -545,22 +545,6 @@ public class Constants {
 
     public static final Current STALL_LIMIT = Amps.of(40);
 
-    public static final SparkBaseConfig SHOOTER_BASE_CONFIG =
-      new SparkMaxConfig()
-        .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
-        .voltageCompensation(12);
-
-    public static final EncoderConfig ENCODER_CONFIG =
-      SHOOTER_BASE_CONFIG.encoder.quadratureAverageDepth(8);
-
-    public static final SparkBaseConfig RIGHT_MOTOR_CONFIG =
-      new SparkMaxConfig()
-        .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
-        .voltageCompensation(12)
-        .follow(CAN_ID.LEFT_SHOOTER_MOTOR, true);
-
     // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
     public static final double P = 0.004;
     public static final double I = 0;

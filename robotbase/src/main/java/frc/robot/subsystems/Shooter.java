@@ -6,17 +6,15 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
+import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
@@ -28,12 +26,13 @@ import yams.mechanisms.velocity.FlyWheel;
 import yams.motorcontrollers.SmartMotorController;
 import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
-import yams.motorcontrollers.local.SparkWrapper;
+import yams.motorcontrollers.SmartMotorControllerConfig.MotorMode;
+import yams.motorcontrollers.remote.TalonFXWrapper;
 
 public class Shooter extends SubsystemBase {
 
-  private SparkMax m_motorLeft;
-  private SparkMax m_motorRight;
+  private TalonFX m_motorLeft;
+  private TalonFX m_motorRight;
 
   private SmartMotorControllerConfig m_smartMotorControllerConfig;
   // Create our SmartMotorController from our Spark and config with the NEO.
@@ -44,21 +43,13 @@ public class Shooter extends SubsystemBase {
   private FlyWheel m_shooter;
 
   public Shooter() {
-    m_motorLeft = new SparkMax(CAN_ID.LEFT_SHOOTER_MOTOR, MotorType.kBrushless);
-    m_motorRight = new SparkMax(
-      CAN_ID.RIGHT_SHOOTER_MOTOR,
-      MotorType.kBrushless
-    );
-
-    m_motorRight.configure(
-      SHOOTER.RIGHT_MOTOR_CONFIG,
-      ResetMode.kNoResetSafeParameters,
-      PersistMode.kPersistParameters
-    );
+    m_motorLeft = new TalonFX(CAN_ID.LEFT_SHOOTER_MOTOR, CANBus.roboRIO());
+    m_motorRight = new TalonFX(CAN_ID.RIGHT_SHOOTER_MOTOR, CANBus.roboRIO());
 
     m_smartMotorControllerConfig = new SmartMotorControllerConfig(this)
       .withControlMode(ControlMode.CLOSED_LOOP)
-      .withVendorConfig(SHOOTER.SHOOTER_BASE_CONFIG)
+      .withIdleMode(MotorMode.COAST)
+      .withStatorCurrentLimit(Amps.of(40))
       // Feedback Constants (PID Constants)
       .withClosedLoopController(
         SHOOTER.P,
@@ -86,10 +77,12 @@ public class Shooter extends SubsystemBase {
       .withGearing(SHOOTER.GEARING)
       // Motor properties to prevent over currenting.
       .withStatorCurrentLimit(SHOOTER.STALL_LIMIT)
-      .withClosedLoopTolerance(Rotations.of(0.01));
-    m_sparkSmartMotorController = new SparkWrapper(
+      .withClosedLoopTolerance(Rotations.of(0.01))
+      .withFollowers(new Pair<Object, Boolean>(m_motorRight, true));
+
+    m_sparkSmartMotorController = new TalonFXWrapper(
       m_motorLeft,
-      DCMotor.getNEO(1),
+      DCMotor.getKrakenX60(1),
       m_smartMotorControllerConfig
     );
 
