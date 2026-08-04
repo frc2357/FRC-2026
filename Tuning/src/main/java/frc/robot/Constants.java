@@ -7,11 +7,12 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -70,25 +71,25 @@ public final class Constants {
 
   public static final class SHOOTER {
 
-    public static final SparkBaseConfig MOTOR_CONFIG_LEFT = new SparkMaxConfig()
-      .idleMode(IdleMode.kCoast)
-      .inverted(false)
-      .openLoopRampRate(0.25)
-      .smartCurrentLimit(40, 40)
-      .voltageCompensation(12);
-
-    public static final SparkBaseConfig MOTOR_CONFIG_RIGHT =
-      new SparkMaxConfig()
-        .apply(MOTOR_CONFIG_LEFT)
-        .follow(CAN_ID.LEFT_SHOOTER_MOTOR, true);
+    public static final TalonFXConfiguration MOTOR_CONFIG =
+      new TalonFXConfiguration()
+        .withMotorOutput(
+          new MotorOutputConfigs()
+            .withNeutralMode(NeutralModeValue.Coast)
+            .withInverted(InvertedValue.CounterClockwise_Positive)
+        )
+        .withOpenLoopRamps(
+          new OpenLoopRampsConfigs().withDutyCycleOpenLoopRampPeriod(
+            Seconds.of(0.25)
+          )
+        )
+        .withCurrentLimits(
+          new CurrentLimitsConfigs().withStatorCurrentLimit(40)
+        );
 
     public static final MechanismGearing GEARING = new MechanismGearing(
       GearBox.fromStages("1:1")
     );
-
-    public static final EncoderConfig ENCODER_CONFIG = MOTOR_CONFIG_LEFT.encoder
-      .positionConversionFactor(GEARING.getRotorToMechanismRatio())
-      .velocityConversionFactor(GEARING.getRotorToMechanismRatio() / 60.0);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
   }
