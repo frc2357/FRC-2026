@@ -27,11 +27,11 @@ public class ShooterTuningSubsystem implements Sendable {
   private TalonFX m_motorLeft;
   private TalonFX m_motorRight;
 
-  public double P = 0.004;
+  public double P = 0.08;
   public double I = 0;
   public double D = 0;
-  public double staticFF = 0.14;
-  public double velocityFF = 0.1255;
+  public double staticFF = 0.18;
+  public double velocityFF = 0.113;
   public double accelerationFF = 0.01;
   public AngularAcceleration maxAcceleration = RotationsPerSecondPerSecond.of(
     150

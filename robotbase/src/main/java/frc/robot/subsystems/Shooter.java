@@ -77,7 +77,6 @@ public class Shooter extends SubsystemBase {
       .withGearing(SHOOTER.GEARING)
       // Motor properties to prevent over currenting.
       .withStatorCurrentLimit(SHOOTER.STALL_LIMIT)
-      .withClosedLoopTolerance(Rotations.of(0.01))
       .withFollowers(new Pair<Object, Boolean>(m_motorRight, true));
 
     m_sparkSmartMotorController = new TalonFXWrapper(

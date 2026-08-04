@@ -546,15 +546,15 @@ public class Constants {
     public static final Current STALL_LIMIT = Amps.of(40);
 
     // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
-    public static final double P = 0.004;
+    public static final double P = 0.08;
     public static final double I = 0;
     public static final double D = 0;
-    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(5676);
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(5800);
     public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
       RotationsPerSecondPerSecond.of(150);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(0.14, 0.1255, 0.01);
+      new SimpleMotorFeedforward(0.18, 0.113, 0.01);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);
