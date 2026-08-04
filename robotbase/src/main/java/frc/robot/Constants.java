@@ -90,6 +90,11 @@ public class Constants {
     public static final double JOYSTICK_RAMP_EXPONENT = 1;
   }
 
+  public static final class SPEED_LIMIT_BUTTON {
+    public static final Dimensionless SPEED_LIMIT_AXIS = Percent.of(20);
+    public static final Dimensionless SPEED_LIMIT_ANGULAR = Percent.of(20);
+  }
+
   public static final class SWERVE {
 
     public static final Time TIME_TO_COAST = Seconds.of(3);

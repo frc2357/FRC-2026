@@ -43,6 +43,7 @@ import frc.robot.subsystems.IntakeRunner;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tunnel;
+import frc.robot.triggers.LimitSpeedButton;
 import frc.robot.triggers.ShiftWarning;
 import frc.robot.vision.CameraManager;
 import java.lang.module.ModuleDescriptor.Builder;
@@ -163,6 +164,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     CommandScheduler.getInstance().schedule(m_InitRobotCommand);
     m_curveUpdateTimer.start();
+    SmartDashboard.putData("Limit Speed", new LimitSpeedButton());
   }
 
   @Override
