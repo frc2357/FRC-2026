@@ -1,5 +1,6 @@
 package frc.robot.controls;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
@@ -11,8 +12,9 @@ import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.debug.FloorAndKickerAxis;
-import frc.robot.commands.debug.TunnelFeed;
 import frc.robot.commands.debug.TunnelFeedReverse;
+import frc.robot.commands.hood.HoodAxisSpeed;
+import frc.robot.commands.hood.HoodSetAngle;
 import frc.robot.commands.hood.ToggleDefaultHood;
 import frc.robot.commands.intakepivot.IntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
@@ -99,9 +101,7 @@ public class CoDriverControls implements RumbleInterface {
       );
     onlyUp
       .and(noLetterButtons)
-      .whileTrue(
-        Robot.hood.axisSpeed(() -> Value.of(-m_controller.getRightY()))
-      );
+      .whileTrue(new HoodAxisSpeed(() -> Value.of(-m_controller.getRightY())));
     onlyUp.and(m_controller.a()).whileTrue(new ToggleDefaultHood());
     onlyUp.and(m_controller.x()).whileTrue(new ToggleDefaultShooter());
 
@@ -158,8 +158,8 @@ public class CoDriverControls implements RumbleInterface {
       );
 
     // Tunnel/Feeder
-    m_controller.rightBumper().whileTrue(new TunnelFeed());
-    m_controller.leftBumper().whileTrue(new TunnelFeedReverse());
+    m_controller.rightBumper().toggleOnTrue(new HoodSetAngle(Degrees.of(30)));
+    m_controller.leftBumper().toggleOnTrue(new HoodSetAngle(Degrees.of(10)));
   }
 
   private double modifyAxis(double value) {

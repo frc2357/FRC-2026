@@ -23,7 +23,12 @@ import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.config.AbsoluteEncoderConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
+import com.revrobotics.spark.config.FeedForwardConfig;
 import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -666,6 +671,8 @@ public class Constants {
       GearBox.fromStages("166:20")
     );
 
+    public static final DCMotor GEARBOX = DCMotor.getNeo550(1);
+
     // This is the number that should be copied from the rev hardware client when
     // pressing the "zero encoder" button
     public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.320916);
@@ -680,7 +687,7 @@ public class Constants {
 
     public static final Angle LOWER_ANGLE_LIMIT = Degrees.of(0.9);
     public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(34);
-    public static final Angle SIM_STARTING_POSITION = Degrees.zero();
+    public static final Angle SIM_STARTING_POSITION = Degrees.of(0.9);
 
     // Mass of the flywheel.
     // Telemetry name and verbosity for the arm.
@@ -694,16 +701,61 @@ public class Constants {
       .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 10)
       .voltageCompensation(12);
 
-    public static final SignalsConfig SIGNAL_CONFIG = HOOD_BASE_CONFIG.signals
-      .absoluteEncoderPositionPeriodMs(20)
-      .absoluteEncoderVelocityPeriodMs(20);
-
+    public static final ClosedLoopSlot CLOSED_LOOP_SLOT = ClosedLoopSlot.kSlot0;
     public static final double P = 50;
     public static final double I = 0;
     public static final double D = 0;
+    public static final double KS = 0.1;
+    public static final double KV = 0.0;
+    public static final double KA = 0.0;
+    public static final double TOLERANCE = Degrees.of(0.1).in(Rotations);
+
+    public static final ClosedLoopSlot SIM_CLOSED_LOOP_SLOT =
+      ClosedLoopSlot.kSlot1;
+    public static final double SIM_P = 0.1;
+    public static final double SIM_I = 0;
+    public static final double SIM_D = 0;
+    public static final double SIM_KS = 0.0;
+    public static final double SIM_KV = 0.0;
+    public static final double SIM_KA = 0.0;
+    public static final double SIM_TOLERANCE = Degrees.of(0.01).in(Rotations);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(0.1, 0.0, 0.0);
+      new SimpleMotorFeedforward(KS, KV, KA);
+
+    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
+      .idleMode(IdleMode.kBrake)
+      .inverted(false)
+      .openLoopRampRate(.25)
+      .voltageCompensation(12)
+      .smartCurrentLimit(
+        (int) STALL_LIMIT.in(Amps),
+        (int) STALL_LIMIT.in(Amps)
+      );
+
+    public static final ClosedLoopConfig CLOSED_LOOP_CONFIG =
+      MOTOR_CONFIG.closedLoop
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        .allowedClosedLoopError(TOLERANCE, CLOSED_LOOP_SLOT)
+        .pid(P, I, D, CLOSED_LOOP_SLOT)
+        .allowedClosedLoopError(SIM_TOLERANCE, SIM_CLOSED_LOOP_SLOT)
+        .pid(SIM_P, SIM_I, SIM_D, SIM_CLOSED_LOOP_SLOT);
+    public static final FeedForwardConfig FEED_FORWARD_CONFIG =
+      CLOSED_LOOP_CONFIG.feedForward
+        .sva(KS, KV, KA, CLOSED_LOOP_SLOT)
+        .sva(SIM_KS, SIM_KV, SIM_KA, SIM_CLOSED_LOOP_SLOT);
+    public static final EncoderConfig ENCODER_CONFIG = MOTOR_CONFIG.encoder
+      .positionConversionFactor(GEARING.getRotorToMechanismRatio())
+      .velocityConversionFactor(GEARING.getRotorToMechanismRatio());
+    public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER_CONFIG =
+      MOTOR_CONFIG.absoluteEncoder
+        .positionConversionFactor(ENCODER_GEARING.getRotorToMechanismRatio())
+        .velocityConversionFactor(ENCODER_GEARING.getRotorToMechanismRatio());
+    // .zeroOffset(ADJUSTED_ZERO_OFFSET.in(Rotations));
+
+    public static final SignalsConfig SIGNAL_CONFIG = HOOD_BASE_CONFIG.signals
+      .absoluteEncoderPositionPeriodMs(20)
+      .absoluteEncoderVelocityPeriodMs(20);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(30);
     public static final Dimensionless MANUAL_HOOD_SPEED = Percent.of(10);

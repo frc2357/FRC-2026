@@ -5,6 +5,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
 import frc.robot.commands.drive.CrossWheels;
+import frc.robot.commands.hood.HoodSetSpeed;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intakepivot.IntakePivotPit;
 import frc.robot.commands.intakerunner.IntakeRunnerSetSpeed;
@@ -40,12 +41,10 @@ public class PitControls {
 
     m_controller
       .povUp()
-      .whileTrue(Robot.hood.setSpeed(Constants.HOOD.MANUAL_HOOD_SPEED));
+      .whileTrue(new HoodSetSpeed(Constants.HOOD.MANUAL_HOOD_SPEED));
 
     m_controller
       .povDown()
-      .whileTrue(
-        Robot.hood.setSpeed(Constants.HOOD.MANUAL_HOOD_SPEED.times(-1))
-      );
+      .whileTrue(new HoodSetSpeed(Constants.HOOD.MANUAL_HOOD_SPEED.times(-1)));
   }
 }

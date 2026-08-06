@@ -1,5 +1,6 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.hood;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Value;
 
 import com.revrobotics.PersistMode;
@@ -11,6 +12,8 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -24,7 +27,9 @@ import yams.motorcontrollers.SmartMotorControllerConfig;
 import yams.motorcontrollers.SmartMotorControllerConfig.ControlMode;
 import yams.motorcontrollers.local.SparkWrapper;
 
-public class Hood extends SubsystemBase {
+public class _Hood extends SubsystemBase {
+
+  private final HoodSim m_sim;
 
   private SparkMax m_motor;
   private SparkAbsoluteEncoder m_encoder;
@@ -37,7 +42,7 @@ public class Hood extends SubsystemBase {
   // HOOD Mechanism
   private Pivot m_hood;
 
-  public Hood() {
+  public _Hood() {
     m_motor = new SparkMax(CAN_ID.HOOD_MOTOR, MotorType.kBrushless);
     m_encoder = m_motor.getAbsoluteEncoder();
 
@@ -65,6 +70,11 @@ public class Hood extends SubsystemBase {
       .withExternalEncoderGearing(HOOD.ENCODER_GEARING)
       .withExternalEncoderZeroOffset(HOOD.ADJUSTED_ZERO_OFFSET)
       .withSoftLimit(HOOD.LOWER_ANGLE_LIMIT, HOOD.UPPER_ANGLE_LIMIT);
+
+    System.out.println(
+      "smc config trapezoid profile: " +
+        m_smartMotorControllerConfig.getTrapezoidProfile()
+    );
 
     m_sparkSmartMotorController = new SparkWrapper(
       m_motor,
@@ -99,6 +109,8 @@ public class Hood extends SubsystemBase {
       ResetMode.kNoResetSafeParameters,
       PersistMode.kPersistParameters
     );
+
+    m_sim = RobotBase.isSimulation() ? new HoodSim(m_motor) : null;
   }
 
   /**
@@ -153,7 +165,10 @@ public class Hood extends SubsystemBase {
 
   public Command axisSpeed(Supplier<Dimensionless> axis) {
     return m_hood
-      .set(() -> axis.get().times(HOOD.AXIS_MAX_SPEED).in(Value))
+      .set(() -> {
+        System.out.println("Axis Speed: " + axis.get().in(Value));
+        return axis.get().times(HOOD.AXIS_MAX_SPEED).in(Value);
+      })
       .finallyDo(() -> this.stopMotor());
   }
 
@@ -174,7 +189,17 @@ public class Hood extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
     m_hood.simIterate();
+    m_sim.update();
+
+    SmartDashboard.putNumber(
+      "Hood Motor Applied Output",
+      m_motor.getAppliedOutput()
+    );
+    SmartDashboard.putNumber(
+      "Hood Motor Velocity (RPM)",
+      m_motor.getEncoder().getVelocity()
+    );
+    SmartDashboard.putNumber("Hood Angle (Degrees)", getAngle().in(Degrees));
   }
 }

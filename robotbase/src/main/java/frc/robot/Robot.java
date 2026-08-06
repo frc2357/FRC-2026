@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.controller.RumbleDriverController;
 import frc.robot.commands.drive.DefaultDrive;
+import frc.robot.commands.hood.HoodHome;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
@@ -31,12 +32,12 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.networkTables.AutoChooserManager;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
-import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.IntakePivot;
 import frc.robot.subsystems.IntakeRunner;
 import frc.robot.subsystems.Kicker;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.floor.Floor;
+import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.tunnel.Tunnel;
 import frc.robot.triggers.ShiftWarning;
 import frc.robot.vision.CameraManager;
@@ -109,7 +110,7 @@ public class Robot extends TimedRobot {
     swerve.registerTelemetry(logger::telemeterize);
     swerve.setDefaultCommand(m_defaultDrive);
 
-    hood.setDefaultCommand(hood.goHome());
+    hood.setDefaultCommand(new HoodHome());
     shooter.setDefaultCommand(shooter.setIdleVelocity());
 
     m_autoChooserManager = new AutoChooserManager();
