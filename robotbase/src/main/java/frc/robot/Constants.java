@@ -555,8 +555,6 @@ public class Constants {
 
   public static final class KICKER {
 
-    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
-
     public static final SparkBaseConfig KICKER_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
       .inverted(true)
@@ -564,9 +562,18 @@ public class Constants {
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);
     public static final Dimensionless KICK_SPEED = Percent.of(100);
     public static final Dimensionless REVERSE_KICK_SPEED = Percent.of(-100);
+
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(
+      0.000033609
+    );
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("9:1")
+    );
+    public static final DCMotor GEARBOX = DCMotor.getNeo550(1);
   }
 
   public static final class SHOOTER {
