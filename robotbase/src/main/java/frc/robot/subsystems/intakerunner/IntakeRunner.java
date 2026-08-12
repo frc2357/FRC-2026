@@ -1,5 +1,6 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.intakerunner;
 
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.CANBus;
@@ -7,6 +8,8 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CAN_ID;
@@ -24,6 +27,8 @@ public class IntakeRunner extends SubsystemBase {
     CANBus.roboRIO()
   );
 
+  private final IntakeRunnerSim m_sim;
+
   public IntakeRunner() {
     m_leftMotor.getConfigurator().apply(Constants.INTAKE_RUNNER.MOTOR_CONFIG);
     m_rightMotor.getConfigurator().apply(Constants.INTAKE_RUNNER.MOTOR_CONFIG);
@@ -31,6 +36,10 @@ public class IntakeRunner extends SubsystemBase {
     m_rightMotor.setControl(
       new Follower(CAN_ID.LEFT_INTAKE_MOTOR, MotorAlignmentValue.Opposed)
     );
+
+    m_sim = RobotBase.isSimulation()
+      ? new IntakeRunnerSim(m_leftMotor, m_rightMotor)
+      : null;
   }
 
   public void setSpeed(Dimensionless percentOutput) {
@@ -44,5 +53,23 @@ public class IntakeRunner extends SubsystemBase {
 
   public void stop() {
     m_leftMotor.stopMotor();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    m_sim.update();
+
+    SmartDashboard.putNumber(
+      "Intake Runner Motor Velocity (RPM)",
+      m_leftMotor.getRotorVelocity().getValue().in(RPM)
+    );
+    SmartDashboard.putNumber(
+      "Intake Runner Flywheel Velocity (RPM)",
+      m_sim.getVelocityRPM()
+    );
+    SmartDashboard.putNumber(
+      "Intake Runner Current Draw (A)",
+      m_sim.getCurrentDrawAmps()
+    );
   }
 }

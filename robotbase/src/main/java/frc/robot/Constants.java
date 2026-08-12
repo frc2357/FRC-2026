@@ -402,8 +402,6 @@ public class Constants {
 
   public static final class INTAKE_RUNNER {
 
-    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(75);
-
     public static TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
       .withMotorOutput(
         new MotorOutputConfigs()
@@ -421,9 +419,16 @@ public class Constants {
           .withStatorCurrentLimitEnable(true)
       );
 
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(75);
     public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(90);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);
     public static final Dimensionless INTAKE_JIGGLING_SPEED = Percent.of(40);
+
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(0.00005);
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("14:28")
+    );
+    public static final DCMotor GEARBOX = DCMotor.getKrakenX60(2);
   }
 
   public static final class INTAKE_PIVOT {
