@@ -33,7 +33,9 @@ public class IntakeRunnerSim {
     m_leaderMotorSim.setSupplyVoltage(RoboRioSim.getVInVoltage());
     m_followerMotorSim.setSupplyVoltage(RoboRioSim.getVInVoltage());
 
-    m_flywheelSim.setInputVoltage(m_leaderMotorSim.getMotorVoltage());
+    m_flywheelSim.setInputVoltage(
+      m_leaderMotorSim.getMotorVoltage() + m_followerMotorSim.getMotorVoltage()
+    );
     m_flywheelSim.update(0.02);
 
     double rotorRPS =

@@ -29,6 +29,7 @@ import com.revrobotics.spark.config.AbsoluteEncoderConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.FeedForwardConfig;
+import com.revrobotics.spark.config.MAXMotionConfig;
 import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -589,6 +590,12 @@ public class Constants {
       GearBox.fromStages("1:1")
     );
 
+    public static final DCMotor GEARBOX = DCMotor.getNEO(2);
+
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(
+      0.00290152313
+    );
+
     // Diameter of the flywheel.
     public static final Distance DIAMETER = Inches.of(4);
     // Mass of the flywheel.
@@ -600,6 +607,31 @@ public class Constants {
 
     public static final Current STALL_LIMIT = Amps.of(40);
 
+    public static final ClosedLoopSlot CLOSED_LOOP_SLOT = ClosedLoopSlot.kSlot0;
+    public static final double P = 0.004;
+    public static final double I = 0;
+    public static final double D = 0;
+    public static final double KS = 0.14;
+    public static final double KV = 0.1255;
+    public static final double KA = 0.01;
+    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(5676);
+    public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
+      RotationsPerSecondPerSecond.of(150);
+    public static final double TOLERANCE = 50; // RPM
+
+    public static final ClosedLoopSlot SIM_CLOSED_LOOP_SLOT =
+      ClosedLoopSlot.kSlot0;
+    public static final double SIM_P = 0.004;
+    public static final double SIM_I = 0;
+    public static final double SIM_D = 0;
+    public static final double SIM_KS = 0.14;
+    public static final double SIM_KV = 0.002;
+    public static final double SIM_KA = 0.01;
+    public static final AngularVelocity SIM_MAX_ANGULAR_VELOCITY = RPM.of(5676);
+    public static final AngularAcceleration SIM_MAX_ANGULAR_ACCELERATION =
+      RotationsPerSecondPerSecond.of(150);
+    public static final double SIM_TOLERANCE = 50; // RPM
+
     public static final SparkBaseConfig SHOOTER_BASE_CONFIG =
       new SparkMaxConfig()
         .idleMode(IdleMode.kCoast)
@@ -609,23 +641,36 @@ public class Constants {
     public static final EncoderConfig ENCODER_CONFIG =
       SHOOTER_BASE_CONFIG.encoder.quadratureAverageDepth(8);
 
+    public static final ClosedLoopConfig CLOSED_LOOP_CONFIG =
+      SHOOTER_BASE_CONFIG.closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        .pid(P, I, D, CLOSED_LOOP_SLOT)
+        .maxOutput(MAX_ANGULAR_VELOCITY.in(RPM), CLOSED_LOOP_SLOT)
+        .allowedClosedLoopError(TOLERANCE, CLOSED_LOOP_SLOT)
+        .pid(SIM_P, SIM_I, SIM_D, SIM_CLOSED_LOOP_SLOT)
+        .maxOutput(SIM_MAX_ANGULAR_VELOCITY.in(RPM), SIM_CLOSED_LOOP_SLOT)
+        .allowedClosedLoopError(SIM_TOLERANCE, SIM_CLOSED_LOOP_SLOT);
+
+    public static final FeedForwardConfig FEEDFORWARD_CONFIG =
+      CLOSED_LOOP_CONFIG.feedForward
+        .sva(KS, KV, KA, CLOSED_LOOP_SLOT)
+        .sva(SIM_KS, SIM_KV, SIM_KA, SIM_CLOSED_LOOP_SLOT);
+
+    public static final MAXMotionConfig MAX_MOTION_CONFIG =
+      CLOSED_LOOP_CONFIG.maxMotion
+        .maxAcceleration(
+          MAX_ANGULAR_ACCELERATION.in(RotationsPerSecondPerSecond),
+          CLOSED_LOOP_SLOT
+        )
+        .maxAcceleration(
+          SIM_MAX_ANGULAR_ACCELERATION.in(RotationsPerSecondPerSecond),
+          SIM_CLOSED_LOOP_SLOT
+        );
+
     public static final SparkBaseConfig RIGHT_MOTOR_CONFIG =
       new SparkMaxConfig()
-        .idleMode(IdleMode.kCoast)
-        .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
-        .voltageCompensation(12)
+        .apply(SHOOTER_BASE_CONFIG)
         .follow(CAN_ID.LEFT_SHOOTER_MOTOR, true);
-
-    // TODO: PID, Feedforward, max angular acceleration still need tuned for mechanism
-    public static final double P = 0.004;
-    public static final double I = 0;
-    public static final double D = 0;
-    public static final AngularVelocity MAX_ANGULAR_VELOCITY = RPM.of(5676);
-    public static final AngularAcceleration MAX_ANGULAR_ACCELERATION =
-      RotationsPerSecondPerSecond.of(150);
-
-    public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(0.14, 0.1255, 0.01);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);

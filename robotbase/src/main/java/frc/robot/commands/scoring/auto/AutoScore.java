@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.commands.hood.HoodSetAngle;
 import frc.robot.commands.scoring.ScoreFeed;
+import frc.robot.commands.shooter.ShooterSetVelocity;
 import java.util.function.Supplier;
 
 public class AutoScore extends ParallelCommandGroup {
@@ -21,7 +22,7 @@ public class AutoScore extends ParallelCommandGroup {
     Supplier<Angle> hoodAngle
   ) {
     super(
-      Robot.shooter.setVelocity(shooterVelocity),
+      new ShooterSetVelocity(shooterVelocity),
       new HoodSetAngle(hoodAngle),
       new SequentialCommandGroup(
         new WaitUntilCommand(Robot.shooter.isAtContinuousTargetVelocity()),

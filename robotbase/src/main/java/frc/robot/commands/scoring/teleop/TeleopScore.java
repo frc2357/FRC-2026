@@ -2,9 +2,6 @@ package frc.robot.commands.scoring.teleop;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rectangle2d;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -16,6 +13,7 @@ import frc.robot.Robot;
 import frc.robot.commands.drive.DriveTargetLock;
 import frc.robot.commands.hood.HoodSetAngle;
 import frc.robot.commands.scoring.ConditionalScoreFeed;
+import frc.robot.commands.shooter.ShooterSetVelocity;
 import frc.robot.commands.util.PressToContinue;
 import java.util.function.Supplier;
 
@@ -32,7 +30,7 @@ public class TeleopScore extends ParallelCommandGroup {
   ) {
     super();
     addCommands(
-      Robot.shooter.setVelocity(
+      new ShooterSetVelocity(
         Robot.shotCalculator::getCalculatedShooterVelocity
       ),
       new HoodSetAngle(Robot.shotCalculator::getCalculatedHoodAngle),

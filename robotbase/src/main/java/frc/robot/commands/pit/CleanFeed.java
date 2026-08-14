@@ -7,6 +7,7 @@ import frc.robot.Robot;
 import frc.robot.commands.floor.FloorSetSpeed;
 import frc.robot.commands.intakerunner.IntakeRunnerSetSpeed;
 import frc.robot.commands.kicker.KickerSetSpeed;
+import frc.robot.commands.shooter.ShooterSetSpeed;
 import frc.robot.commands.tunnel.TunnelSetSpeed;
 
 public class CleanFeed extends ParallelCommandGroup {
@@ -18,7 +19,7 @@ public class CleanFeed extends ParallelCommandGroup {
       new FloorSetSpeed(Constants.FLOOR.SLOW_FLOOR_SPEED),
       new IntakeRunnerSetSpeed(Constants.INTAKE_RUNNER.CLEAN_SPEED),
       new KickerSetSpeed(Constants.KICKER.CLEAN_SPEED),
-      Robot.shooter.setSpeed(SHOOTER.CLEAN_SPEED)
+      new ShooterSetSpeed(SHOOTER.CLEAN_SPEED)
     );
   }
 }

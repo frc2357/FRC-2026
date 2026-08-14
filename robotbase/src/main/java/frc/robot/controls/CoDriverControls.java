@@ -1,6 +1,7 @@
 package frc.robot.controls;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Value;
 
 import edu.wpi.first.units.measure.Dimensionless;
@@ -19,6 +20,8 @@ import frc.robot.commands.hood.ToggleDefaultHood;
 import frc.robot.commands.intakepivot.IntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intakerunner.IntakeRunnerAxis;
+import frc.robot.commands.shooter.ShooterSetVelocity;
+import frc.robot.commands.shooter.ShooterStepAxisSpeed;
 import frc.robot.commands.shooter.ToggleDefaultShooter;
 import frc.robot.controls.util.RumbleInterface;
 
@@ -84,7 +87,7 @@ public class CoDriverControls implements RumbleInterface {
           Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
       )
       .whileTrue(
-        Robot.shooter.stepAxisSpeed(() ->
+        new ShooterStepAxisSpeed(() ->
           Value.of(m_controller.getRightTriggerAxis())
         )
       );
@@ -95,10 +98,13 @@ public class CoDriverControls implements RumbleInterface {
           Constants.CONTROLLER.CODRIVER_CONTROLLER_DEADBAND
       )
       .whileTrue(
-        Robot.shooter.stepAxisSpeed(() ->
+        new ShooterStepAxisSpeed(() ->
           Value.of(-m_controller.getLeftTriggerAxis())
         )
       );
+    onlyUp
+      .and(m_controller.rightBumper())
+      .whileTrue(new ShooterSetVelocity(RPM.of(4000)));
     onlyUp
       .and(noLetterButtons)
       .whileTrue(new HoodAxisSpeed(() -> Value.of(-m_controller.getRightY())));
@@ -158,8 +164,12 @@ public class CoDriverControls implements RumbleInterface {
       );
 
     // Tunnel/Feeder
-    m_controller.rightBumper().toggleOnTrue(new HoodSetAngle(Degrees.of(30)));
-    m_controller.leftBumper().toggleOnTrue(new HoodSetAngle(Degrees.of(10)));
+    // noDpad.and(
+    //   m_controller.rightBumper().toggleOnTrue(new HoodSetAngle(Degrees.of(30)))
+    // );
+    // noDpad.and(
+    //   m_controller.leftBumper().toggleOnTrue(new HoodSetAngle(Degrees.of(10)))
+    // );
   }
 
   private double modifyAxis(double value) {

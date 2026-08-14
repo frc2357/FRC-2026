@@ -25,7 +25,7 @@ import frc.robot.Constants.HOOD;
 public class Hood extends SubsystemBase {
 
   private HoodSim m_sim;
-  private ClosedLoopSlot m_closedLoopSlot = ClosedLoopSlot.kSlot0;
+  private ClosedLoopSlot m_closedLoopSlot = HOOD.CLOSED_LOOP_SLOT;
 
   private SparkMax m_motor;
   private SparkAbsoluteEncoder m_encoder;

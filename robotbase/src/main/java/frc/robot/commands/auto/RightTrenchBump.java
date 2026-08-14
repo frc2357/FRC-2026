@@ -3,13 +3,13 @@ package frc.robot.commands.auto;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.commands.auto.AutoMaker.Auto;
 import frc.robot.commands.drive.AutoTargetLock;
 import frc.robot.commands.intakepivot.AutoIntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotDeploy;
 import frc.robot.commands.intaking.AutoIntakeUntil;
 import frc.robot.commands.scoring.auto.AutoShoot;
+import frc.robot.commands.shooter.ShooterSetVelocity;
 import frc.robot.subsystems.CommandSwerveDrivetrain.AutoDriveMode;
 
 public class RightTrenchBump extends AutoBase {
@@ -38,7 +38,7 @@ public class RightTrenchBump extends AutoBase {
       .onTrue(new AutoIntakeUntil(traj.atTime("StopIntake")));
     traj
       .atTime("StopIntake")
-      .onTrue(Robot.shooter.autoSetVelocity(Constants.AUTO.AUTO_SHOOTER_IDLE));
+      .onTrue(new ShooterSetVelocity(Constants.AUTO.AUTO_SHOOTER_IDLE, false));
 
     // Shoot and move from bump to trench
     traj
@@ -62,7 +62,7 @@ public class RightTrenchBump extends AutoBase {
 
     traj
       .atTime("StopIntake2")
-      .onTrue(Robot.shooter.autoSetVelocity(Constants.AUTO.AUTO_SHOOTER_IDLE));
+      .onTrue(new ShooterSetVelocity(Constants.AUTO.AUTO_SHOOTER_IDLE, false));
 
     // End with shooting by the bump
     traj.done().onTrue(new AutoShoot());

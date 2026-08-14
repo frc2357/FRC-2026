@@ -3,12 +3,12 @@ package frc.robot.commands.auto;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.commands.auto.AutoMaker.Auto;
 import frc.robot.commands.drive.AutoTargetLock;
 import frc.robot.commands.intakepivot.AutoIntakePivotDeploy;
 import frc.robot.commands.intaking.AutoIntakeUntil;
 import frc.robot.commands.scoring.auto.AutoShoot;
+import frc.robot.commands.shooter.ShooterSetVelocity;
 
 public class RightTrench extends AutoBase {
 
@@ -34,7 +34,7 @@ public class RightTrench extends AutoBase {
       .onTrue(new AutoIntakeUntil(traj.atTime("StopIntake")));
     traj
       .atTime("StopIntake")
-      .onTrue(Robot.shooter.autoSetVelocity(Constants.AUTO.AUTO_SHOOTER_IDLE));
+      .onTrue(new ShooterSetVelocity(Constants.AUTO.AUTO_SHOOTER_IDLE, false));
     traj.done().onTrue(new AutoShoot());
     traj.done().onTrue(new AutoTargetLock());
 
