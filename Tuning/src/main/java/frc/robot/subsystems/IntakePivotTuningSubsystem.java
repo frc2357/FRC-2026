@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
@@ -8,7 +9,6 @@ import static edu.wpi.first.units.Units.Value;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -24,12 +24,13 @@ public class IntakePivotTuningSubsystem implements Sendable {
 
   private TalonFX m_motor;
 
-  public double P = 0.00;
+  public double P = 80;
   public double I = 0;
   public double D = 0;
-  public double staticFF = 0;
-  public double velocityFF = 0;
-  public double accelerationFF = 0.0;
+  public double staticFF = 0.07;
+  public double gravityFF = 0.36;
+  public double velocityFF = 4.5;
+  public double accelerationFF = 0.01;
   public AngularVelocity maxVelocity = RotationsPerSecond.of(1);
   public AngularAcceleration maxAcceleration = RotationsPerSecondPerSecond.of(
     0.2
@@ -51,6 +52,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
     Preferences.initDouble("intakePivotI", I);
     Preferences.initDouble("intakePivotD", D);
     Preferences.initDouble("intakePivotStaticFF", staticFF);
+    Preferences.initDouble("intakePivotGravityFF", gravityFF);
     Preferences.initDouble("intakePivotVelocityFF", velocityFF);
     Preferences.initDouble("intakePivotAccelerationFF", accelerationFF);
     Preferences.initDouble(
@@ -67,6 +69,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
     I = Preferences.getDouble("intakePivotI", I);
     D = Preferences.getDouble("intakePivotD", D);
     staticFF = Preferences.getDouble("intakePivotStaticFF", staticFF);
+    gravityFF = Preferences.getDouble("intakePivotGravityFF", gravityFF);
     velocityFF = Preferences.getDouble("intakePivotVelocityFF", velocityFF);
     accelerationFF = Preferences.getDouble(
       "intakePivotAccelerationFF",
@@ -98,6 +101,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
     SmartDashboard.putNumber("IntakePivot I", I);
     SmartDashboard.putNumber("IntakePivot D", D);
     SmartDashboard.putNumber("IntakePivot Static FF", staticFF);
+    SmartDashboard.putNumber("IntakePivot Gravity FF", gravityFF);
     SmartDashboard.putNumber("IntakePivot Velocity FF", velocityFF);
     SmartDashboard.putNumber("IntakePivot Acceleration FF", accelerationFF);
 
@@ -115,7 +119,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
       m_motor.getVelocity().getValue().in(RotationsPerSecond)
     );
     SmartDashboard.putNumber("Motor Position", getPosition().in(Rotations));
-    SmartDashboard.putNumber("IntakePivot Target Position", 0);
+    SmartDashboard.putNumber("IntakePivot Target Angle", 0);
 
     SmartDashboard.putBoolean("Is At Target", isAtTargetPosition());
     SmartDashboard.putNumber(
@@ -133,6 +137,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
     // set slot 0 gains
     var slot0Configs = m_motorconfig.Slot0;
     slot0Configs.kS = staticFF;
+    slot0Configs.kG = gravityFF;
     slot0Configs.kV = velocityFF;
     slot0Configs.kA = accelerationFF;
     slot0Configs.kP = P;
@@ -157,6 +162,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
     double newI = SmartDashboard.getNumber("IntakePivot I", 0);
     double newD = SmartDashboard.getNumber("IntakePivot D", 0);
     double newStaticFF = SmartDashboard.getNumber("IntakePivot Static FF", 0);
+    double newGravityFF = SmartDashboard.getNumber("IntakePivot Gravity FF", 0);
     double newVelocityFF = SmartDashboard.getNumber(
       "IntakePivot Velocity FF",
       0
@@ -184,6 +190,10 @@ public class IntakePivotTuningSubsystem implements Sendable {
       getVelocity().in(RotationsPerSecond)
     );
     SmartDashboard.putNumber("Motor Position", getPosition().in(Rotations));
+    SmartDashboard.putNumber(
+      "Motor Position Degrees",
+      getPosition().in(Degrees)
+    );
 
     SmartDashboard.putNumber(
       "Voltage",
@@ -195,10 +205,10 @@ public class IntakePivotTuningSubsystem implements Sendable {
     );
     SmartDashboard.putBoolean("Is At Target", isAtTargetPosition());
 
-    m_targetPosition = Rotations.of(
+    m_targetPosition = Degrees.of(
       SmartDashboard.getNumber(
-        "IntakePivot Target Position",
-        m_targetPosition.in(Rotations)
+        "IntakePivot Target Angle",
+        m_targetPosition.in(Degrees)
       )
     );
 
@@ -207,6 +217,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
       newI != I ||
       newD != D ||
       newStaticFF != staticFF ||
+      newGravityFF != gravityFF ||
       newVelocityFF != velocityFF ||
       newAccelerationFF != accelerationFF ||
       newMaxVelocity != maxVelocity.in(RotationsPerSecond) ||
@@ -217,6 +228,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
       I = newI;
       D = newD;
       staticFF = newStaticFF;
+      gravityFF = newGravityFF;
       velocityFF = newVelocityFF;
       accelerationFF = newAccelerationFF;
       maxVelocity = RotationsPerSecond.of(newMaxVelocity);
@@ -224,6 +236,10 @@ public class IntakePivotTuningSubsystem implements Sendable {
       positionTolerance = newRpsTolerance;
       updatePIDs();
     }
+  }
+
+  public void zeroEncoder() {
+    m_motor.setPosition(Degrees.of(0));
   }
 
   public void setSpeed(Dimensionless percentOutput) {
@@ -274,6 +290,7 @@ public class IntakePivotTuningSubsystem implements Sendable {
         Preferences.setDouble("intakePivotI", I);
         Preferences.setDouble("intakePivotD", D);
         Preferences.setDouble("intakePivotStaticFF", staticFF);
+        Preferences.setDouble("intakePivotGravityFF", gravityFF);
         Preferences.setDouble("intakePivotVelocityFF", velocityFF);
         Preferences.setDouble("intakePivotAccelerationFF", accelerationFF);
         Preferences.setDouble(
