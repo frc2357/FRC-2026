@@ -177,4 +177,8 @@ public class Hood extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
     m_hood.simIterate();
   }
+
+    public Pivot getHood() {
+    return m_hood;
+  }
 }
