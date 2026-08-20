@@ -18,7 +18,7 @@ public class ConditionalScoreFeed extends Command {
   public void execute() {
     if (m_condition.getAsBoolean()) {
       SmartDashboard.putBoolean("feeding", true);
-      Robot.feeder.setVelocitySetpoint(Constants.FEEDER.FEED_SPEED);
+      Robot.feeder.setVelocity(Constants.FEEDER.FEED_SPEED);
       Robot.kicker.setSpeed(Constants.KICKER.KICK_SPEED);
       Robot.tunnel.setSpeed(Constants.TUNNEL.TUNNEL_SPEED);
       Robot.floor.setSpeed(Constants.FLOOR.FLOOR_SPEED);
@@ -40,7 +40,7 @@ public class ConditionalScoreFeed extends Command {
   }
 
   private void stopAllFeeding() {
-    Robot.feeder.stopMotor();
+    Robot.feeder.stop();
     Robot.kicker.stop();
     Robot.tunnel.stop();
     Robot.floor.stop();

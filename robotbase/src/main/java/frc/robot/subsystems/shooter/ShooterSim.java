@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkMax;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
@@ -24,8 +25,8 @@ public class ShooterSim {
       SHOOTER.GEARBOX
     );
 
-    m_leaderMotorSim = new SparkMaxSim(leaderMotor, SHOOTER.GEARBOX);
-    m_followerMotorSim = new SparkMaxSim(followerMotor, SHOOTER.GEARBOX);
+    m_leaderMotorSim = new SparkMaxSim(leaderMotor, DCMotor.getNEO(1));
+    m_followerMotorSim = new SparkMaxSim(followerMotor, DCMotor.getNEO(1));
   }
 
   public void update() {

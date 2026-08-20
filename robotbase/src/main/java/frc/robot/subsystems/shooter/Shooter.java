@@ -66,6 +66,14 @@ public class Shooter extends SubsystemBase {
     }
   }
 
+  public AngularVelocity getVelocity() {
+    m_currentVelocityHolder.mut_replace(
+      m_leftMotor.getEncoder().getPosition(),
+      RPM
+    );
+    return m_currentVelocityHolder;
+  }
+
   public void setVelocity(AngularVelocity velocity) {
     m_targetVelocity.mut_replace(velocity);
     m_pidController.setSetpoint(
