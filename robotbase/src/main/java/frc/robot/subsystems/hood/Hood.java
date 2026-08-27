@@ -61,18 +61,6 @@ public class Hood extends SubsystemBase {
 
   public void setAngle(Angle angle) {
     m_targetAngle.mut_replace(angle);
-    System.out.println(
-      "Hood.setAngle() - m_targetAngle: " +
-        m_targetAngle.in(Degrees) +
-        " degrees | m_encoder.getPosition(): " +
-        m_encoder.getPosition() +
-        " rotations | m_encoder.getPosition() in degrees: " +
-        m_encoder.getPosition() * 360 +
-        " degrees | m_motor.getAppliedOutput(): " +
-        m_motor.getAppliedOutput() +
-        " | m_pidController.isAtSetpoint(): " +
-        m_pidController.isAtSetpoint()
-    );
     m_pidController.setSetpoint(
       m_targetAngle.in(Degrees),
       ControlType.kPosition,

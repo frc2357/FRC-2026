@@ -4,7 +4,7 @@ import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import frc.robot.commands.auto.AutoMaker.Auto;
 import frc.robot.commands.drive.AutoTargetLock;
-import frc.robot.commands.intakepivot.AutoIntakePivotDeploy;
+import frc.robot.commands.intakepivot.groups.AutoIntakePivotDeploy;
 import frc.robot.commands.scoring.auto.AutoShoot;
 
 public class Center extends AutoBase {

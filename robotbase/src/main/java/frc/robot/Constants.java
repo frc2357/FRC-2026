@@ -63,6 +63,7 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.generated.TunerConstants;
 import yams.gearing.GearBox;
 import yams.gearing.MechanismGearing;
@@ -442,6 +443,8 @@ public class Constants {
       GearBox.fromStages("1:1") // This is not accurate but it doesn't wrap so it's fine
     );
 
+    public static final DCMotor GEARBOX = DCMotor.getNEO(1);
+
     // This is the number that should be copied from the rev hardware client when
     // pressing the "zero encoder" button
     public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.12870237);
@@ -459,21 +462,36 @@ public class Constants {
     // Mass of the arm.
     public static final Mass MASS = Pounds.of(7);
 
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(
+      SingleJointedArmSim.estimateMOI(
+        LENGTH.baseUnitMagnitude(),
+        MASS.baseUnitMagnitude()
+      )
+    );
+
     // Telemetry name and verbosity for the arm.
     public static final String MECHANISM_NETWORK_KEY = "IntakePivotMech";
     public static final String MOTOR_NETWORK_KEY = "IntakePivotMotor";
 
-    public static final Angle SIM_LOWER_ANGLE = Degrees.of(0);
-    public static final Angle SIM_UPPER_ANGLE = Degrees.of(123.3);
-    public static final Angle SIM_STARTING_POSITION = Degrees.of(20);
+    public static final Angle SIM_LOWER_ANGLE = Rotations.of(0);
+    public static final Angle SIM_UPPER_ANGLE = Rotations.of(0.67);
+    public static final Angle SIM_STARTING_POSITION = Rotations.of(0);
 
     public static final Current STALL_LIMIT = Amps.of(40);
 
     public static final SparkBaseConfig INTAKE_PIVOT_BASE_CONFIG =
       new SparkMaxConfig()
         .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 40)
-        .voltageCompensation(12);
+        .voltageCompensation(12)
+        .smartCurrentLimit(
+          (int) STALL_LIMIT.in(Amps),
+          (int) STALL_LIMIT.in(Amps)
+        );
+
+    public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER_CONFIG =
+      INTAKE_PIVOT_BASE_CONFIG.absoluteEncoder
+        .positionConversionFactor(ENCODER_GEARING.getRotorToMechanismRatio())
+        .velocityConversionFactor(ENCODER_GEARING.getRotorToMechanismRatio());
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(50);
 
@@ -830,7 +848,6 @@ public class Constants {
 
     public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kBrake)
-      .inverted(false)
       .openLoopRampRate(.25)
       .voltageCompensation(12)
       .smartCurrentLimit(

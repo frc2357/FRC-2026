@@ -2,7 +2,7 @@ package frc.robot.commands.scoring.auto;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Robot;
-import frc.robot.commands.intakepivot.IntakePivotJiggle;
+import frc.robot.commands.intakepivot.groups.IntakePivotJiggle;
 
 public class AutoShoot extends ParallelCommandGroup {
 

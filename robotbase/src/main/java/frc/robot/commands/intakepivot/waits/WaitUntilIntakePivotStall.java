@@ -1,4 +1,4 @@
-package frc.robot.commands.intakepivot;
+package frc.robot.commands.intakepivot.waits;
 
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;

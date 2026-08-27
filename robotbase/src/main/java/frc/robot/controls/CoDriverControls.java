@@ -1,6 +1,5 @@
 package frc.robot.controls;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Value;
 
@@ -10,15 +9,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
-import frc.robot.Robot;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.debug.FloorAndKickerAxis;
-import frc.robot.commands.debug.TunnelFeedReverse;
 import frc.robot.commands.hood.HoodAxisSpeed;
-import frc.robot.commands.hood.HoodSetAngle;
 import frc.robot.commands.hood.ToggleDefaultHood;
-import frc.robot.commands.intakepivot.IntakePivotDeploy;
-import frc.robot.commands.intakepivot.IntakePivotJiggle;
+import frc.robot.commands.intakepivot.IntakePivotAxisSpeed;
+import frc.robot.commands.intakepivot.groups.IntakePivotDeploy;
+import frc.robot.commands.intakepivot.groups.IntakePivotJiggle;
 import frc.robot.commands.intakerunner.IntakeRunnerAxis;
 import frc.robot.commands.shooter.ShooterSetVelocity;
 import frc.robot.commands.shooter.ShooterStepAxisSpeed;
@@ -133,7 +130,7 @@ public class CoDriverControls implements RumbleInterface {
     onlyLeft
       .and(noLetterButtons)
       .whileTrue(
-        Robot.intakePivot.axisSpeed(() -> Value.of(-m_controller.getRightY()))
+        new IntakePivotAxisSpeed(() -> Value.of(-m_controller.getRightY()))
       );
     // Force the intake down incase deploy fails
     onlyLeft.and(m_controller.a()).whileTrue(new IntakePivotDeploy());
