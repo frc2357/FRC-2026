@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.commands.drive.DriveTargetLock;
+import frc.robot.commands.hood.HoodSetAngle;
 import frc.robot.commands.scoring.ConditionalScoreFeed;
 import frc.robot.commands.util.PressToContinue;
 import java.util.function.Supplier;
@@ -34,7 +35,7 @@ public class TeleopScore extends ParallelCommandGroup {
       Robot.shooter.setVelocity(
         Robot.shotCalculator::getCalculatedShooterVelocity
       ),
-      Robot.hood.setAngle(Robot.shotCalculator::getCalculatedHoodAngle),
+      new HoodSetAngle(Robot.shotCalculator::getCalculatedHoodAngle),
       new SequentialCommandGroup(
         new WaitUntilCommand(
           Robot.shooter.isAtInitialTargetVelocity()

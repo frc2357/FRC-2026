@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.KilogramSquareMeters;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Percent;
@@ -22,7 +23,12 @@ import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.config.AbsoluteEncoderConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.EncoderConfig;
+import com.revrobotics.spark.config.FeedForwardConfig;
 import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -44,6 +50,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
@@ -53,6 +60,7 @@ import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.units.measure.MomentOfInertia;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.generated.TunerConstants;
 import yams.gearing.GearBox;
@@ -354,11 +362,19 @@ public class Constants {
       .inverted(true)
       .smartCurrentLimit(40, 20)
       .openLoopRampRate(0.25)
-      .voltageCompensation(10);
+      .voltageCompensation(12);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless SLOW_FLOOR_SPEED = Percent.of(10);
     public static final Dimensionless FLOOR_SPEED = Percent.of(80);
+
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(
+      0.000138272236
+    );
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("32:14")
+    );
+    public static final DCMotor GEARBOX = DCMotor.getNEO(1);
   }
 
   public static final class TUNNEL {
@@ -374,11 +390,17 @@ public class Constants {
     public static final Dimensionless TUNNEL_SPEED = Percent.of(92.07);
     public static final Dimensionless SLOW_TUNNEL_SPEED = Percent.of(10);
     public static final Dimensionless REVERSE_TUNNEL_SPEED = Percent.of(-92.07);
+
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(
+      0.00000226503092
+    );
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("28:14", "28:16", "18:19")
+    );
+    public static final DCMotor GEARBOX = DCMotor.getNEO(1);
   }
 
   public static final class INTAKE_RUNNER {
-
-    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(75);
 
     public static TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
       .withMotorOutput(
@@ -397,9 +419,16 @@ public class Constants {
           .withStatorCurrentLimitEnable(true)
       );
 
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(75);
     public static final Dimensionless TELEOP_INTAKING_SPEED = Percent.of(90);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);
     public static final Dimensionless INTAKE_JIGGLING_SPEED = Percent.of(40);
+
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(0.00005);
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("14:28")
+    );
+    public static final DCMotor GEARBOX = DCMotor.getKrakenX60(2);
   }
 
   public static final class INTAKE_PIVOT {
@@ -512,8 +541,6 @@ public class Constants {
 
   public static final class KICKER {
 
-    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
-
     public static final SparkBaseConfig KICKER_CONFIG = new SparkMaxConfig()
       .idleMode(IdleMode.kCoast)
       .inverted(true)
@@ -521,9 +548,18 @@ public class Constants {
       .openLoopRampRate(0.25)
       .voltageCompensation(12);
 
+    public static final Dimensionless AXIS_MAX_SPEED = Percent.of(100);
     public static final Dimensionless CLEAN_SPEED = Percent.of(10);
     public static final Dimensionless KICK_SPEED = Percent.of(100);
     public static final Dimensionless REVERSE_KICK_SPEED = Percent.of(-100);
+
+    public static final MomentOfInertia MOI = KilogramSquareMeters.of(
+      0.000033609
+    );
+    public static final MechanismGearing GEARING = new MechanismGearing(
+      GearBox.fromStages("9:1")
+    );
+    public static final DCMotor GEARBOX = DCMotor.getNeo550(1);
   }
 
   public static final class SHOOTER {
@@ -628,6 +664,8 @@ public class Constants {
       GearBox.fromStages("166:20")
     );
 
+    public static final DCMotor GEARBOX = DCMotor.getNeo550(1);
+
     // This is the number that should be copied from the rev hardware client when
     // pressing the "zero encoder" button
     public static final Angle PHYSICAL_ZERO_OFFSET = Rotations.of(0.320916);
@@ -642,7 +680,7 @@ public class Constants {
 
     public static final Angle LOWER_ANGLE_LIMIT = Degrees.of(0.9);
     public static final Angle UPPER_ANGLE_LIMIT = Degrees.of(34);
-    public static final Angle SIM_STARTING_POSITION = Degrees.zero();
+    public static final Angle SIM_STARTING_POSITION = Degrees.of(0.9);
 
     // Mass of the flywheel.
     // Telemetry name and verbosity for the arm.
@@ -656,16 +694,61 @@ public class Constants {
       .smartCurrentLimit((int) STALL_LIMIT.in(Amps), 10)
       .voltageCompensation(12);
 
-    public static final SignalsConfig SIGNAL_CONFIG = HOOD_BASE_CONFIG.signals
-      .absoluteEncoderPositionPeriodMs(20)
-      .absoluteEncoderVelocityPeriodMs(20);
-
+    public static final ClosedLoopSlot CLOSED_LOOP_SLOT = ClosedLoopSlot.kSlot0;
     public static final double P = 50;
     public static final double I = 0;
     public static final double D = 0;
+    public static final double KS = 0.1;
+    public static final double KV = 0.0;
+    public static final double KA = 0.0;
+    public static final double TOLERANCE = Degrees.of(0.1).in(Rotations);
+
+    public static final ClosedLoopSlot SIM_CLOSED_LOOP_SLOT =
+      ClosedLoopSlot.kSlot1;
+    public static final double SIM_P = 0.1;
+    public static final double SIM_I = 0;
+    public static final double SIM_D = 0;
+    public static final double SIM_KS = 0.0;
+    public static final double SIM_KV = 0.0;
+    public static final double SIM_KA = 0.0;
+    public static final double SIM_TOLERANCE = Degrees.of(0.01).in(Rotations);
 
     public static final SimpleMotorFeedforward FEEDFORWARD =
-      new SimpleMotorFeedforward(0.1, 0.0, 0.0);
+      new SimpleMotorFeedforward(KS, KV, KA);
+
+    public static final SparkBaseConfig MOTOR_CONFIG = new SparkMaxConfig()
+      .idleMode(IdleMode.kBrake)
+      .inverted(false)
+      .openLoopRampRate(.25)
+      .voltageCompensation(12)
+      .smartCurrentLimit(
+        (int) STALL_LIMIT.in(Amps),
+        (int) STALL_LIMIT.in(Amps)
+      );
+
+    public static final ClosedLoopConfig CLOSED_LOOP_CONFIG =
+      MOTOR_CONFIG.closedLoop
+        .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+        .allowedClosedLoopError(TOLERANCE, CLOSED_LOOP_SLOT)
+        .pid(P, I, D, CLOSED_LOOP_SLOT)
+        .allowedClosedLoopError(SIM_TOLERANCE, SIM_CLOSED_LOOP_SLOT)
+        .pid(SIM_P, SIM_I, SIM_D, SIM_CLOSED_LOOP_SLOT);
+    public static final FeedForwardConfig FEED_FORWARD_CONFIG =
+      CLOSED_LOOP_CONFIG.feedForward
+        .sva(KS, KV, KA, CLOSED_LOOP_SLOT)
+        .sva(SIM_KS, SIM_KV, SIM_KA, SIM_CLOSED_LOOP_SLOT);
+    public static final EncoderConfig ENCODER_CONFIG = MOTOR_CONFIG.encoder
+      .positionConversionFactor(GEARING.getRotorToMechanismRatio())
+      .velocityConversionFactor(GEARING.getRotorToMechanismRatio());
+    public static final AbsoluteEncoderConfig ABSOLUTE_ENCODER_CONFIG =
+      MOTOR_CONFIG.absoluteEncoder
+        .positionConversionFactor(ENCODER_GEARING.getRotorToMechanismRatio())
+        .velocityConversionFactor(ENCODER_GEARING.getRotorToMechanismRatio());
+    // .zeroOffset(ADJUSTED_ZERO_OFFSET.in(Rotations));
+
+    public static final SignalsConfig SIGNAL_CONFIG = HOOD_BASE_CONFIG.signals
+      .absoluteEncoderPositionPeriodMs(20)
+      .absoluteEncoderVelocityPeriodMs(20);
 
     public static final Dimensionless AXIS_MAX_SPEED = Percent.of(30);
     public static final Dimensionless MANUAL_HOOD_SPEED = Percent.of(10);

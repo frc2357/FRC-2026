@@ -13,10 +13,10 @@ public class ToggleDefaultHood extends Command {
   public void initialize() {
     if (Robot.hood.getDefaultCommand() != null) {
       Robot.hood.removeDefaultCommand();
-      Robot.hood.stopMotor();
+      Robot.hood.stop();
       System.out.println("----- DISABLED HOOD DEFAULT COMMAND ----");
     } else {
-      Robot.hood.setDefaultCommand(Robot.hood.goHome());
+      Robot.hood.setDefaultCommand(new HoodHome());
       System.out.println("---- ENABLED HOOD DEFAULT COMMAND ----");
     }
   }
