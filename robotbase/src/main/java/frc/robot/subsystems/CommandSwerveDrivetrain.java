@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Radians;
@@ -49,7 +47,6 @@ import frc.robot.Constants.CHOREO;
 import frc.robot.Constants.SWERVE;
 import frc.robot.Robot;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
-import frc.robot.triggers.LimitSpeedButton;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.vision.CameraInterface.SwervePoseEstimate;
 import java.util.Optional;
@@ -96,7 +93,7 @@ public class CommandSwerveDrivetrain
     new SwerveRequest.SysIdSwerveSteerGains();
   private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization =
     new SwerveRequest.SysIdSwerveRotation();
-
+    
   private final Field2d m_choreoField;
 
   /*
@@ -126,7 +123,7 @@ public class CommandSwerveDrivetrain
   @SuppressWarnings("unused")
   private final SysIdRoutine m_sysIdRoutineSteer = new SysIdRoutine(
     new SysIdRoutine.Config(
-      null, // Use default ramp rate (1 V/s)
+      null, // Use default ramp rate (1 V/s)f
       Volts.of(7), // Use dynamic voltage of 7 V
       null, // Use default timeout (10 s)
       // Log state with SignalLogger class

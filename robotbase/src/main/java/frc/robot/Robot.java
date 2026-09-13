@@ -5,9 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.util.StatusLogger;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -19,14 +17,10 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.SWERVE;
 import frc.robot.commands.StopAllMotors;
 import frc.robot.commands.controller.RumbleDriverController;
 import frc.robot.commands.drive.DefaultDrive;
-import frc.robot.commands.drive.DriveStop;
 import frc.robot.commands.util.InitRobotCommand;
 import frc.robot.controls.CoDriverControls;
 import frc.robot.controls.DriverControls;
@@ -46,7 +40,8 @@ import frc.robot.subsystems.Tunnel;
 import frc.robot.triggers.LimitSpeedButton;
 import frc.robot.triggers.ShiftWarning;
 import frc.robot.vision.CameraManager;
-import java.lang.module.ModuleDescriptor.Builder;
+import yams.mechanisms.config.FlyWheelConfig;
+import yams.mechanisms.velocity.FlyWheel;
 
 public class Robot extends TimedRobot {
 
@@ -68,6 +63,8 @@ public class Robot extends TimedRobot {
   public static IntakeRunner intake;
   public static IntakePivot intakePivot;
   public static Shooter shooter;
+  public static FlyWheel flyWheel;
+  public static FlyWheelConfig flyWheelConfig;
   public static Hood hood;
   public static Floor floor;
   public static Feeder feeder;
@@ -98,6 +95,7 @@ public class Robot extends TimedRobot {
     feeder = new Feeder();
     kicker = new Kicker();
     tunnel = new Tunnel();
+  
 
     cameraManager = new CameraManager();
 
@@ -139,7 +137,6 @@ public class Robot extends TimedRobot {
 
     // DON'T DELETE - Load the april tag field
     // This prevents a loop overrun when we first access the constants
-    AprilTagFieldLayout layout = Constants.FieldConstants.FIELD_LAYOUT;
 
     SmartDashboard.putData("Robot Field", m_robotField);
 
@@ -164,7 +161,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     CommandScheduler.getInstance().schedule(m_InitRobotCommand);
     m_curveUpdateTimer.start();
-    SmartDashboard.putData("Limit Speed", new LimitSpeedButton());
+    SmartDashboard.putData("Limit Speed", new LimitSpeedButton(shooter));
+    SmartDashboard.putString("ButtonState", "Speed: Full");
   }
 
   @Override

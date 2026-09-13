@@ -22,7 +22,6 @@ import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SignalsConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -598,6 +597,10 @@ public class Constants {
       public static final AngularVelocity IDLE_SPEED = RotationsPerSecond.of(
         43
       );
+
+      public static final AngularVelocity STOP_SPEED = RotationsPerSecond.of(
+        0
+      );
     }
 
     public static final AngularVelocity TUNING_STEP = RotationsPerSecond.of(
@@ -722,6 +725,9 @@ public class Constants {
 
     public static final AngularVelocity AUTO_SHOOTER_IDLE =
       RotationsPerSecond.of(47);
+
+    public static final AngularVelocity AUTO_SHOOTER_STOP = 
+      RotationsPerSecond.of(0); 
   }
 
   public class SHIFT {

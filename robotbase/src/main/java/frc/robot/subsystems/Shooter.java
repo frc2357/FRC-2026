@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
@@ -20,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.CAN_ID;
 import frc.robot.Constants.SHOOTER;
+import frc.robot.commands.intakepivot.LimitShooter;
+
 import java.util.function.Supplier;
 import yams.mechanisms.config.FlyWheelConfig;
 import yams.mechanisms.velocity.FlyWheel;
@@ -130,6 +131,10 @@ public class Shooter extends SubsystemBase {
     return m_shooter.run(SHOOTER.SETPOINTS.IDLE_SPEED);
   }
 
+  public Command setStopVelocity() {
+    return m_shooter.run(SHOOTER.SETPOINTS.STOP_SPEED);
+  }
+
   /**
    * Set the shooter velocity.
    *
@@ -226,20 +231,23 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    m_shooter.updateTelemetry();
-    SmartDashboard.putNumber(
-      "shooter rps",
-      this.getVelocity().in(RotationsPerSecond)
-    );
-    SmartDashboard.putBoolean(
-      "at continuous velocity",
-      isAtContinuousTargetVelocity().getAsBoolean()
-    );
-    SmartDashboard.putBoolean(
-      "at initial velocity",
-      isAtInitialTargetVelocity().getAsBoolean()
-    );
+    if (LimitShooter.m_isShooterLimited == false) {
+      System.out.println("Shooter: " + LimitShooter.m_isShooterLimited);
+      // This method will be called once per scheduler run
+      m_shooter.updateTelemetry();
+      SmartDashboard.putNumber(
+        "shooter rps",
+        this.getVelocity().in(RotationsPerSecond)
+      );
+      SmartDashboard.putBoolean(
+        "at continuous velocity",
+        isAtContinuousTargetVelocity().getAsBoolean()
+      );
+      SmartDashboard.putBoolean(
+        "at initial velocity",
+        isAtInitialTargetVelocity().getAsBoolean()
+      ); 
+    }
   }
 
   @Override

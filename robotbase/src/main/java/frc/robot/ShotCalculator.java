@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SCORING;
 import frc.robot.ShiftTimer.ShiftInfo;
-import frc.robot.networkTables.CurveTuner;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.MathUtil;
 

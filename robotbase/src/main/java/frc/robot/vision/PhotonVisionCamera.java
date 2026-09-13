@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.PHOTON_VISION;
 import frc.robot.Robot;
-import frc.robot.vision.CameraInterface.SwervePoseEstimate;
 import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
