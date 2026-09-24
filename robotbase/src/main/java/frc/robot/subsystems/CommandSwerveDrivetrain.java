@@ -72,8 +72,8 @@ public class CommandSwerveDrivetrain
     TARGET_LOCK,
   }
 
-  private Dimensionless m_translationModifier = Percent.of(100);
-  private Dimensionless m_rotationModifier = Percent.of(100);
+  private Dimensionless m_translationModifier = Percent.of(30);
+  private Dimensionless m_rotationModifier = Percent.of(30);
 
   private static final double kSimLoopPeriod = 0.004; // 4 ms
   private Notifier m_simNotifier = null;
@@ -194,6 +194,14 @@ public class CommandSwerveDrivetrain
     }
     m_choreoField = new Field2d();
     SmartDashboard.putData("choreo field", m_choreoField);
+    SmartDashboard.putNumber(
+      "translation modifier",
+      m_translationModifier.in(Percent)
+    );
+    SmartDashboard.putNumber(
+      "rotation modifier",
+      m_rotationModifier.in(Percent)
+    );
   }
 
   /**
@@ -222,6 +230,14 @@ public class CommandSwerveDrivetrain
     }
     m_choreoField = new Field2d();
     SmartDashboard.putData("choreo field", m_choreoField);
+    SmartDashboard.putNumber(
+      "translation modifier",
+      m_translationModifier.in(Percent)
+    );
+    SmartDashboard.putNumber(
+      "rotation modifier",
+      m_rotationModifier.in(Percent)
+    );
   }
 
   /**
@@ -270,6 +286,14 @@ public class CommandSwerveDrivetrain
     }
     m_choreoField = new Field2d();
     SmartDashboard.putData("choreo field", m_choreoField);
+    SmartDashboard.putNumber(
+      "translation modifier",
+      m_translationModifier.in(Percent)
+    );
+    SmartDashboard.putNumber(
+      "rotation modifier",
+      m_rotationModifier.in(Percent)
+    );
   }
 
   /**
@@ -318,6 +342,12 @@ public class CommandSwerveDrivetrain
      * This ensures driving behavior doesn't change until an explicit disable event
      * occurs during testing.
      */
+    setTranslationModifier(
+      Percent.of(SmartDashboard.getNumber("translation modifier", 30))
+    );
+    setRotationModifier(
+      Percent.of(SmartDashboard.getNumber("rotation modifier", 30))
+    );
   }
 
   private void startSimThread() {
