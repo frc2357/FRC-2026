@@ -400,7 +400,7 @@ public class Constants {
     public static TalonFXConfiguration MOTOR_CONFIG = new TalonFXConfiguration()
       .withMotorOutput(
         new MotorOutputConfigs()
-          .withInverted(InvertedValue.Clockwise_Positive)
+          .withInverted(InvertedValue.CounterClockwise_Positive)
           .withNeutralMode(NeutralModeValue.Coast)
       )
       .withOpenLoopRamps(
