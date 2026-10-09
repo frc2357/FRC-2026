@@ -124,6 +124,7 @@ public class Robot extends TimedRobot {
     shiftTimer = new ShiftTimer();
 
     SmartDashboard.putData("DriveMode", swerve);
+    SmartDashboard.putData("shifttimer", shiftTimer);
 
     Trigger shiftWarning = new ShiftWarning().warn();
     /**
