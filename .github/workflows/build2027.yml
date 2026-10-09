@@ -1,0 +1,29 @@
+name: Build 2027 Robot Code
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'larre2027/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container: wpilib/systemcore-cross-ubuntu:2027-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add repository to git safe directories
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./larre2027/gradlew
+
+      - name: Compile and run tests on robot code
+        uses: gradle/gradle-build-action@v2
+        with:
+          build-root-directory: ./larre2027
+          arguments: build
