@@ -1,4 +1,4 @@
-name: Build And Prettify
+name: Build 2026 Robot Code
 
 on:
   pull_request:
