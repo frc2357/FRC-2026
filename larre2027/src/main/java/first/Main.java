@@ -12,6 +12,7 @@ import org.wpilib.framework.RobotBase;
  * call.
  */
 public final class Main {
+
   private Main() {}
 
   /**

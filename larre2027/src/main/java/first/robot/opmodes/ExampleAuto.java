@@ -4,13 +4,12 @@
 
 package first.robot.opmodes;
 
+import first.robot.Robot;
 import org.wpilib.opmode.Autonomous;
 import org.wpilib.opmode.OpMode;
 
-import first.robot.Robot;
-
 @Autonomous
 public class ExampleAuto implements OpMode {
-  public ExampleAuto(Robot robot) {
-  }
+
+  public ExampleAuto(Robot robot) {}
 }

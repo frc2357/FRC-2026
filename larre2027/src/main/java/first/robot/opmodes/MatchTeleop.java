@@ -4,13 +4,12 @@
 
 package first.robot.opmodes;
 
+import first.robot.Robot;
 import org.wpilib.opmode.OpMode;
 import org.wpilib.opmode.Teleop;
 
-import first.robot.Robot;
-
 @Teleop(name = "Match")
 public class MatchTeleop implements OpMode {
-  public MatchTeleop(Robot robot) {
-  }
+
+  public MatchTeleop(Robot robot) {}
 }

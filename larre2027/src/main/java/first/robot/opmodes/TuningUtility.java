@@ -4,13 +4,12 @@
 
 package first.robot.opmodes;
 
+import first.robot.Robot;
 import org.wpilib.opmode.OpMode;
 import org.wpilib.opmode.Utility;
 
-import first.robot.Robot;
-
 @Utility(name = "Tuning")
 public class TuningUtility implements OpMode {
-  public TuningUtility(Robot robot) {
-  }
+
+  public TuningUtility(Robot robot) {}
 }
