@@ -447,10 +447,10 @@ public class Constants {
 
     // When intake is zeroed at the upper hard stops, fully deployed is about -175 rotations
     public static final Angle INTAKE_DEPLOYED_ENCODER_ROTATIONS = Rotations.of(
-      -125
+      -0.33
     );
     public static final Angle INTAKE_JIGGLE_UP_ENCODER_ROTATIONS = Rotations.of(
-      -100
+      -0.16
     );
 
     // Maximum amount of time we can stall the intake against the hardstop without ripping it off

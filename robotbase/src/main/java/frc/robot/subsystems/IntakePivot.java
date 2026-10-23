@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Value;
@@ -163,6 +164,10 @@ public class IntakePivot extends SubsystemBase {
       "intake pivot current",
       getStatorCurrent().in(Amps)
     );
+    // SmartDashboard.putNumber(
+    //   "Intake Pivot Position",
+    //   m_motor.getPosition().getValue().in(Rotations)
+    // );
   }
 
   @Override

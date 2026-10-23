@@ -124,6 +124,7 @@ public class Robot extends TimedRobot {
     shiftTimer = new ShiftTimer();
 
     SmartDashboard.putData("DriveMode", swerve);
+    // SmartDashboard.putData("shifttimer", shiftTimer);
 
     Trigger shiftWarning = new ShiftWarning().warn();
     /**
@@ -133,7 +134,7 @@ public class Robot extends TimedRobot {
      * Should remove the fms attachment requirement for drive practice
      */
     shiftWarning
-      .and(DriverStation::isFMSAttached)
+      // .and(DriverStation::isFMSAttached)
       .onTrue(new RumbleDriverController());
 
     // DON'T DELETE - Load the april tag field
