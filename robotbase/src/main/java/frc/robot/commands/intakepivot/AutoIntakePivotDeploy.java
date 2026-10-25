@@ -16,7 +16,7 @@ public class AutoIntakePivotDeploy extends SequentialCommandGroup {
           new WaitUntilIntakePivotDeploy()
         ),
         new WaitCommand(Constants.INTAKE_PIVOT.INTAKE_MAXIMUM_STALL_TIME),
-        Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.DEPLOY_SPEED)
+        Robot.intakePivot.setSpeed(Constants.INTAKE_PIVOT.GO_DOWN_REAL_FAST)
       )
     );
   }

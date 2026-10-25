@@ -430,6 +430,7 @@ public class Constants {
     public static final Dimensionless RETRACT_SPEED = Percent.of(30);
 
     public static final Dimensionless DEPLOY_SPEED = Percent.of(-30);
+    public static final Dimensionless GO_DOWN_REAL_FAST = Percent.of(-50);
 
     public static final Dimensionless PIT_UP_SPEED = Percent.of(10);
     public static final Dimensionless JIGGLE_UP_SPEED = Percent.of(20);

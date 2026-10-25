@@ -5,6 +5,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.CONTROLLER;
 import frc.robot.Robot;
 import frc.robot.commands.drive.CrossWheels;
+import frc.robot.commands.intakepivot.AutoIntakePivotDeploy;
 import frc.robot.commands.intakepivot.IntakePivotJiggle;
 import frc.robot.commands.intakepivot.IntakePivotPit;
 import frc.robot.commands.intakerunner.IntakeRunnerSetSpeed;
@@ -35,6 +36,8 @@ public class PitControls {
       .whileTrue(
         new IntakeRunnerSetSpeed(Constants.INTAKE_RUNNER.TELEOP_INTAKING_SPEED)
       );
+
+    m_controller.povLeft().whileTrue(new AutoIntakePivotDeploy());
 
     m_controller.leftBumper().whileTrue(new CleanFeed());
 
