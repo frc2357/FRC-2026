@@ -132,22 +132,22 @@ public class ShooterCurveManager {
     scoringShooterCurve.put(SHOT_POINTS.HUB, RotationsPerSecond.of(43));
     scoringShooterCurve.put(SHOT_POINTS.POINT_2, RotationsPerSecond.of(45.5));
     scoringShooterCurve.put(SHOT_POINTS.POINT_3, RotationsPerSecond.of(46));
-    scoringShooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(48.5));
-    scoringShooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(52.25));
-    scoringShooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(54.5));
+    scoringShooterCurve.put(SHOT_POINTS.TRENCH, RotationsPerSecond.of(49.5));
+    scoringShooterCurve.put(SHOT_POINTS.POINT_5, RotationsPerSecond.of(54.25));
+    scoringShooterCurve.put(SHOT_POINTS.POINT_6, RotationsPerSecond.of(56.5));
     scoringShooterCurve.put(
       SHOT_POINTS.OUTPOST_CORNER,
-      RotationsPerSecond.of(56)
+      RotationsPerSecond.of(58)
     );
 
     // Scoring hood
     scoringHoodCurve.put(SHOT_POINTS.HUB, Degrees.of(1));
     scoringHoodCurve.put(SHOT_POINTS.POINT_2, Degrees.of(4));
     scoringHoodCurve.put(SHOT_POINTS.POINT_3, Degrees.of(5.5));
-    scoringHoodCurve.put(SHOT_POINTS.TRENCH, Degrees.of(11));
-    scoringHoodCurve.put(SHOT_POINTS.POINT_5, Degrees.of(13));
-    scoringHoodCurve.put(SHOT_POINTS.POINT_6, Degrees.of(17));
-    scoringHoodCurve.put(SHOT_POINTS.OUTPOST_CORNER, Degrees.of(19));
+    scoringHoodCurve.put(SHOT_POINTS.TRENCH, Degrees.of(12));
+    scoringHoodCurve.put(SHOT_POINTS.POINT_5, Degrees.of(14));
+    scoringHoodCurve.put(SHOT_POINTS.POINT_6, Degrees.of(18));
+    scoringHoodCurve.put(SHOT_POINTS.OUTPOST_CORNER, Degrees.of(20));
 
     // Time of flight
     timeOfFlightCurve.put(SHOT_POINTS.HUB, Seconds.of(0.982));
