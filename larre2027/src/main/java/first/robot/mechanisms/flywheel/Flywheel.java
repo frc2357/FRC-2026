@@ -53,7 +53,7 @@ public Flywheel() {
 
         public Command FlywheelAxis(Supplier<Dimensionless> axis) {
     return this.run((coro) -> {
-         setSpeed(axis.get());
+         setAxisSpeed(axis.get());
     }).named("Set Flywheel Axis");
     }
 
