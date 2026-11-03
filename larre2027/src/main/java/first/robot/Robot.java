@@ -7,9 +7,15 @@ package first.robot;
 import org.wpilib.command3.Scheduler;
 import org.wpilib.framework.OpModeRobot;
 
+import first.robot.mechanisms.flywheel.Flywheel;
+
 public class Robot extends OpModeRobot {
 
-  public Robot() {}
+  public static Flywheel flywheel;
+  public Robot() {
+    flywheel = new Flywheel();
+  }
+
 
   @Override
   public void robotPeriodic() {
